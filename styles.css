@@ -52,12 +52,18 @@
   --placeholder: #9b9b9b;
 
   /* --- BASE SURFACES --- */
-  --app-bg: #000000; /* APP BACKGROUND */
-  --surface-0: #0b0b0b; /* TOPBAR */
-  --surface-1: #1c1c1c; /* SCHEDULE */
-  --surface-2: #1c1c1c; /* CARDS*/
-  --surface-3: #2a2a2a; /* INPUTS / CONTROLS (Darkened from #5e5e5e) */
-  --surface-4: #2c2c2c; /* HOVER/ACTIVE */
+  --app-bg: #000000;
+  /* APP BACKGROUND */
+  --surface-0: #0b0b0b;
+  /* TOPBAR */
+  --surface-1: #1c1c1c;
+  /* SCHEDULE */
+  --surface-2: #1c1c1c;
+  /* CARDS*/
+  --surface-3: #2a2a2a;
+  /* INPUTS / CONTROLS (Darkened from #5e5e5e) */
+  --surface-4: #2c2c2c;
+  /* HOVER/ACTIVE */
 
   /* BORDERS & DIVIDERS */
   --border: #2c2c2c;
@@ -93,7 +99,8 @@
   --color-surface-2: var(--surface-2);
   --color-surface-3: var(--surface-3);
   --color-text-1: var(--text);
-  --color-text-2: var(--text-muted); /* Approx */
+  --color-text-2: var(--text-muted);
+  /* Approx */
   --color-text-3: var(--text-muted);
   --color-border-1: var(--border);
   --color-border-2: var(--border);
@@ -104,23 +111,33 @@
 
   /* --- BUTTON TOKENS --- */
 
-  --color-button-bg: var(--surface-3); /* Linked to surface-3 for consistency */
-  --color-button-border: #3a3a3a; /* default button border, can be subtle or more defined based on design preference */
-  --color-button-text: e5e5e5; /* default button text color, should have good contrast against button-bg */
+  --color-button-bg: var(--surface-3);
+  /* Linked to surface-3 for consistency */
+  --color-button-border: #3a3a3a;
+  /* default button border, can be subtle or more defined based on design preference */
+  --color-button-text: e5e5e5;
+  /* default button text color, should have good contrast against button-bg */
 
-  --color-button-hover-text: #e5e5e5; /* hover overlay for buttons, can be a subtle lightening effect */
-  --color-button-hover-border: #4a4a4a; /* hover border color for buttons, slightly lighter than default border */
-  --color-button-hover-bg: #333333; /* hover background for buttons, can be a subtle darkening effect */
+  --color-button-hover-text: #e5e5e5;
+  /* hover overlay for buttons, can be a subtle lightening effect */
+  --color-button-hover-border: #4a4a4a;
+  /* hover border color for buttons, slightly lighter than default border */
+  --color-button-hover-bg: #333333;
+  /* hover background for buttons, can be a subtle darkening effect */
 
   /* --- FORM TOKENS --- */
 
   --color-input-bg: var(--surface-3);
-  --color-input-border: rgba(255, 255, 255, 0.1); /* Slightly more subtle */
-  --color-input-text: var(--color-text-1); /* input text color, should have good contrast against input-bg */
+  --color-input-border: rgba(255, 255, 255, 0.1);
+  /* Slightly more subtle */
+  --color-input-text: var(--color-text-1);
+  /* input text color, should have good contrast against input-bg */
 
   --color-input-hover-text: var(--color-text-1);
-  --color-input-hover-bg: #1f1f1f; /* input hover background, can be a subtle darkening effect */
-  --color-input-hover-border: rgba(255, 255, 255, 0.18); /* input hover border, slightly more visible than default */
+  --color-input-hover-bg: #1f1f1f;
+  /* input hover background, can be a subtle darkening effect */
+  --color-input-hover-border: rgba(255, 255, 255, 0.18);
+  /* input hover border, slightly more visible than default */
 
   /* --- TYPE SCALE --- */
   --font-size-1: 12px;
@@ -451,6 +468,7 @@ samp {
 :where(button, .btn, .icon-chip, .theme-toggle, .seg__btn):active {
   transform: translateY(1px);
 }
+
 :where(input[type="date"].weekpicker):active {
   transform: none;
 }
@@ -513,7 +531,8 @@ samp {
 
 /* Keep the base border so hover/pressed borders work */
 :where(#tripInputBtn, #driversBtn, #waitingListBtn) {
-  border: 1px solid transparent; /* instead of border: none */
+  border: 1px solid transparent;
+  /* instead of border: none */
   background-color: var(--color-button-bg);
   color: var(--color-button-text);
 }
@@ -1144,7 +1163,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     overflow: visible;
   }
 
-  .scheduler-right > .card {
+  .scheduler-right>.card {
     /* max-height: calc(10 * var(--schedule-row-height) + 24px); */
     max-height: 100%;
     height: auto;
@@ -1173,8 +1192,8 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   }
 
   /* Restore visible shadow specifically here or globally */
-  .scheduler-right > .card,
-  .scheduler-left > .card {
+  .scheduler-right>.card,
+  .scheduler-left>.card {
     box-shadow:
       0 4px 6px -1px rgba(0, 0, 0, 0.3),
       0 2px 4px -1px rgba(0, 0, 0, 0.16) !important;
@@ -1199,7 +1218,8 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   background:
     /* Shadow Cover TOP */
     linear-gradient(var(--surface-1) 30%, rgba(255, 255, 255, 0)),
-    /* Shadow TOP */ radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+    /* Shadow TOP */
+    radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
   background-repeat: no-repeat;
   background-color: var(--surface-1);
   background-size:
@@ -1362,11 +1382,11 @@ th.is-today .day-name {
 }
 
 /* Bus color on hover */
-.week-table tbody tr.has-bus-color > td:first-child {
+.week-table tbody tr.has-bus-color>td:first-child {
   transition: background-color 0.15s ease;
 }
 
-.week-table tbody tr.has-bus-color > td:first-child:hover {
+.week-table tbody tr.has-bus-color>td:first-child:hover {
   background-color: var(--bus-accent-color, var(--color-surface-1));
 }
 
@@ -1437,16 +1457,14 @@ th.is-today .day-name {
   align-content: center;
   align-items: center;
   grid-template-rows:
-    var(--tripbar-line-height-major) var(--tripbar-line-height-minor) var(--tripbar-line-height-minor)
-    var(--tripbar-line-height-major) var(--tripbar-line-height-major) var(--tripbar-line-height-minor)
-    var(--tripbar-line-height-minor);
+    var(--tripbar-line-height-major) var(--tripbar-line-height-minor) var(--tripbar-line-height-minor) var(--tripbar-line-height-major) var(--tripbar-line-height-major) var(--tripbar-line-height-minor) var(--tripbar-line-height-minor);
   row-gap: var(--tripbar-row-gap);
   height: var(--tripbar-height);
   padding: 0 var(--space-1);
   border: 1px solid var(--blue);
   border-radius: var(--control-radius);
   overflow: hidden;
-  background: color-mix(in srgb, var(--blue) 100%, black);
+  background: color-mix(in srgb, var(--blue) 66%, transparent);
   cursor: pointer;
   container-type: inline-size;
   /* Smooth transition for the hover effect */
@@ -1454,37 +1472,38 @@ th.is-today .day-name {
     transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
     box-shadow 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
     filter 0.2s ease,
-    z-index 0s linear 0.01s; /* Delay z-index reset so it doesn't clip instantly on mouseleave */
+    z-index 0s linear 0.01s;
+  /* Delay z-index reset so it doesn't clip instantly on mouseleave */
 }
 
 /* Trip Bar Alternative Colors */
 .trip-bar.unconfirmed {
-  background: color-mix(in srgb, var(--red) 100%, black);
+  background: color-mix(in srgb, var(--red) 66%, transparent);
   border-color: var(--red);
 }
 
 .trip-bar.color-green {
-  background: color-mix(in srgb, var(--green) 100%, black);
+  background: color-mix(in srgb, var(--green) 66%, transparent);
   border-color: var(--green);
 }
 
 .trip-bar.color-yellow {
-  background: color-mix(in srgb, var(--amber) 100%, black);
+  background: color-mix(in srgb, var(--amber) 66%, transparent);
   border-color: var(--amber);
 }
 
 .trip-bar.color-gray {
-  background: color-mix(in srgb, var(--gray) 100%, black);
+  background: color-mix(in srgb, var(--gray) 66%, transparent);
   border-color: var(--gray);
 }
 
 .trip-bar.color-violet {
-  background: color-mix(in srgb, var(--purple) 100%, black);
+  background: color-mix(in srgb, var(--purple) 66%, transparent);
   border-color: var(--purple);
 }
 
 .trip-bar.color-pink {
-  background: color-mix(in srgb, var(--pink) 100%, black);
+  background: color-mix(in srgb, var(--pink) 66%, transparent);
   border-color: var(--pink);
 }
 
@@ -1499,16 +1518,18 @@ th.is-today .day-name {
   box-shadow:
     0 8px 24px rgba(0, 0, 0, 0.5),
     0 2px 6px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(255, 255, 255, 0.2); /* Inner highlight */
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+  /* Inner highlight */
   transition:
     transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
     box-shadow 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
     filter 0.2s ease,
-    z-index 0s linear 0s; /* Z-index happens immediately on hover */
+    z-index 0s linear 0s;
+  /* Z-index happens immediately on hover */
 }
 
 /* Trip Bar Content */
-.trip-bar > * {
+.trip-bar>* {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1559,7 +1580,7 @@ th.is-today .day-name {
 
 .trip-bar .bar-pre-drivers {
   font-size: var(--tripbar-font-size-minor);
-  color: #fff59d;
+  color: var(--amber);
   font-weight: var(--font-weight-light);
   text-transform: uppercase;
   letter-spacing: -0.05em;
@@ -1575,7 +1596,7 @@ th.is-today .day-name {
   font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
   line-height: var(--tripbar-line-height-major);
-  color: #ff9e80;
+  color: var(--white);
 }
 
 .trip-bar .bar-status-row {
@@ -1650,6 +1671,7 @@ th.is-today .day-name {
 }
 
 @keyframes arrow-left-bounce {
+
   0%,
   100% {
     transform: translate(0, -50%);
@@ -1661,6 +1683,7 @@ th.is-today .day-name {
 }
 
 @keyframes arrow-right-bounce {
+
   0%,
   100% {
     transform: translate(0, -50%);
@@ -1724,6 +1747,7 @@ th.is-today .day-name {
 }
 
 @media (max-width: 800px) {
+
   .col-2,
   .col-4,
   .col-6 {
@@ -1970,6 +1994,7 @@ select.status-confirmed {
 #notesWeekTitle.text-muted {
   color: var(--color-text-3);
 }
+
 .notes-textarea {
   width: 100%;
   height: 1010px;
@@ -2085,7 +2110,7 @@ select.status-confirmed {
     min-height: 0;
   }
 
-  .scheduler-right > .card {
+  .scheduler-right>.card {
     flex: 1;
     height: 100%;
     width: 100%;
@@ -2119,6 +2144,7 @@ select.status-confirmed {
 /* ========================================================================== */
 
 @media print {
+
   .topbar,
   .theme-toggle,
   button:not(.trip-bar),
