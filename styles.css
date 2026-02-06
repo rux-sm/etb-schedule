@@ -21,7 +21,7 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
   /* --- BASE HUES --- */
-  --blue: #1976d2;
+  --blue: #3b82f5;
   --red: #d32f2f;
   --green: #388e3c;
   --teal: #00796b;
@@ -1464,7 +1464,7 @@ th.is-today .day-name {
   border: 1px solid var(--blue);
   border-radius: var(--control-radius);
   overflow: hidden;
-  background: color-mix(in srgb, var(--blue) 66%, transparent);
+  background: color-mix(in srgb, var(--blue) 20%, transparent);
   cursor: pointer;
   container-type: inline-size;
   /* Smooth transition for the hover effect */
@@ -1478,32 +1478,32 @@ th.is-today .day-name {
 
 /* Trip Bar Alternative Colors */
 .trip-bar.unconfirmed {
-  background: color-mix(in srgb, var(--red) 60%, transparent);
+  background: color-mix(in srgb, var(--red) 20%, transparent);
   border-color: var(--red);
 }
 
 .trip-bar.color-green {
-  background: color-mix(in srgb, var(--green) 60%, transparent);
+  background: color-mix(in srgb, var(--green) 20%, transparent);
   border-color: var(--green);
 }
 
 .trip-bar.color-yellow {
-  background: color-mix(in srgb, var(--amber) 60%, transparent);
+  background: color-mix(in srgb, var(--amber) 20%, transparent);
   border-color: var(--amber);
 }
 
 .trip-bar.color-gray {
-  background: color-mix(in srgb, var(--gray) 60%, transparent);
+  background: color-mix(in srgb, var(--gray) 20%, transparent);
   border-color: var(--gray);
 }
 
 .trip-bar.color-violet {
-  background: color-mix(in srgb, var(--purple) 60%, transparent);
+  background: color-mix(in srgb, var(--purple) 20%, transparent);
   border-color: var(--purple);
 }
 
 .trip-bar.color-pink {
-  background: color-mix(in srgb, var(--pink) 60%, transparent);
+  background: color-mix(in srgb, var(--pink) 20%, transparent);
   border-color: var(--pink);
 }
 
