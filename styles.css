@@ -260,7 +260,7 @@
   --surface-4: #e5e5e5;
 
   /* --- Text --- */
-  --text: #171717;
+  --text: #000000;
   --text-muted: #737373;
   --placeholder: #a3a3a3;
   --color-text-inverse: #ffffff;
@@ -1415,11 +1415,11 @@ th.is-today .day-name {
 }
 
 .bus-id-wrap .bus-lift {
-  color: var(--blue);
+  color: color-mix(in srgb, var(--blue) 60%, transparent);
 }
 
 .bus-id-wrap .bus-sleeper {
-  color: var(--gray);
+  color: color-mix(in srgb, var(--gray) 60%, transparent);
 }
 
 .week-table td:first-child {
@@ -1478,32 +1478,32 @@ th.is-today .day-name {
 
 /* Trip Bar Alternative Colors */
 .trip-bar.unconfirmed {
-  background: color-mix(in srgb, var(--red) 66%, transparent);
+  background: color-mix(in srgb, var(--red) 60%, transparent);
   border-color: var(--red);
 }
 
 .trip-bar.color-green {
-  background: color-mix(in srgb, var(--green) 66%, transparent);
+  background: color-mix(in srgb, var(--green) 60%, transparent);
   border-color: var(--green);
 }
 
 .trip-bar.color-yellow {
-  background: color-mix(in srgb, var(--amber) 66%, transparent);
+  background: color-mix(in srgb, var(--amber) 60%, transparent);
   border-color: var(--amber);
 }
 
 .trip-bar.color-gray {
-  background: color-mix(in srgb, var(--gray) 66%, transparent);
+  background: color-mix(in srgb, var(--gray) 60%, transparent);
   border-color: var(--gray);
 }
 
 .trip-bar.color-violet {
-  background: color-mix(in srgb, var(--purple) 66%, transparent);
+  background: color-mix(in srgb, var(--purple) 60%, transparent);
   border-color: var(--purple);
 }
 
 .trip-bar.color-pink {
-  background: color-mix(in srgb, var(--pink) 66%, transparent);
+  background: color-mix(in srgb, var(--pink) 60%, transparent);
   border-color: var(--pink);
 }
 
@@ -1542,7 +1542,7 @@ th.is-today .day-name {
 }
 
 .trip-bar .bar-title {
-  color: #fff;
+  color: var(--text);
   font-size: 12px;
   font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
@@ -1550,7 +1550,7 @@ th.is-today .day-name {
 }
 
 .trip-bar .bar-sub {
-  color: var(--text-primary);
+  color: var(--text);
   font-size: var(--tripbar-font-size-minor);
   font-weight: var(--font-weight-light);
   text-transform: uppercase;
@@ -1563,7 +1563,7 @@ th.is-today .day-name {
   width: 100%;
   font-weight: var(--font-weight-semibold);
   font-size: 12px;
-  color: #fff;
+  color: var(--text);
   min-width: auto !important;
   line-height: var(--tripbar-line-height-major);
 }
@@ -1580,7 +1580,7 @@ th.is-today .day-name {
 
 .trip-bar .bar-pre-drivers {
   font-size: var(--tripbar-font-size-minor);
-  color: var(--amber);
+  color: var(--yellow-status);
   font-weight: var(--font-weight-light);
   text-transform: uppercase;
   letter-spacing: -0.05em;
@@ -1596,7 +1596,7 @@ th.is-today .day-name {
   font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
   line-height: var(--tripbar-line-height-major);
-  color: var(--white);
+  color: var(--text);
 }
 
 .trip-bar .bar-status-row {
@@ -1831,27 +1831,27 @@ th.is-today .day-name {
 }
 
 select.status-pending {
-  background: color-mix(in srgb, var(--red) 66%, black);
+  background: color-mix(in srgb, var(--red) 60%, transparent);
   border-color: var(--red);
 }
 
 select.status-ok {
-  background: color-mix(in srgb, var(--green) 66%, black);
+  background: color-mix(in srgb, var(--green) 60%, transparent);
   border-color: var(--green);
 }
 
 select.status-assigned {
-  background: color-mix(in srgb, var(--amber) 66%, black);
+  background: color-mix(in srgb, var(--amber) 60%, transparent);
   border-color: var(--amber);
 }
 
 select.status-blue {
-  background: color-mix(in srgb, var(--blue) 66%, black);
+  background: color-mix(in srgb, var(--blue) 60%, transparent);
   border-color: var(--blue);
 }
 
 select.status-confirmed {
-  background: color-mix(in srgb, var(--green) 66%, black);
+  background: color-mix(in srgb, var(--green) 60%, transparent);
   border-color: var(--green);
 }
 
