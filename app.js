@@ -2195,7 +2195,7 @@ function enforceDesktopEditing() {
 
   if (dom.tripInputBtn) {
     dom.tripInputBtn.disabled = mobile;
-    dom.tripInputBtn.title = mobile ? "Trip editing is available on desktop" : "";
+    dom.tripInputBtn.title = mobile ? "Trip editing is available on desktop" : "Trip Editor";
     dom.tripInputBtn.setAttribute("aria-disabled", mobile ? "true" : "false");
   }
 
