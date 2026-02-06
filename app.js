@@ -79,12 +79,12 @@ const CACHE = {
         expiry: Date.now() + ttlMs,
       };
       localStorage.setItem(key, JSON.stringify(payload));
-    } catch {}
+    } catch { }
   },
   remove(key) {
     try {
       localStorage.removeItem(key);
-    } catch {}
+    } catch { }
   },
   clearAll() {
     try {
@@ -96,7 +96,7 @@ const CACHE = {
           localStorage.removeItem(k);
         }
       });
-    } catch {}
+    } catch { }
   },
 };
 
@@ -217,12 +217,22 @@ const state = {
   // Notes dirty tracking
   notesDirty: false,
   savedNotesValue: "",
-  
+
   // Abort controller for cancelling in-flight requests on week change
   activeAbortController: null,
-  
+
   // Flag to prevent duplicate event listener wiring
   formListenersWired: false,
+
+  // Driver unavailability tracking
+  unavailabilityByDriver: {}, // { "Driver Name": { "YYYY-MM-DD": true } }
+
+  dragSelection: {
+    active: false,
+    driver: null,
+    mode: null, // "add" or "remove"
+    dates: new Set(),
+  },
 };
 
 // ======================================================
@@ -245,7 +255,7 @@ function clamp(n, min, max) {
 function safeUUID() {
   try {
     return crypto.randomUUID();
-  } catch {}
+  } catch { }
   return `tk_${Date.now()}_${Math.floor(Math.random() * 1e9)}`;
 }
 
@@ -523,7 +533,15 @@ function sanitizeWeekResp(resp) {
   // Preserve weekNotes for caching
   const weekNotes = asStr(resp?.weekNotes);
 
-  return { ok, trips, assignments, weekNotes, error: resp?.error };
+  // Preserve unavailability data
+  const unavailability = asArray(resp?.unavailability)
+    .map((u) => ({
+      driverName: asStr(u?.driverName).trim(),
+      dateYmd: asStr(u?.dateYmd).trim(),
+    }))
+    .filter((u) => u.driverName && u.dateYmd);
+
+  return { ok, trips, assignments, weekNotes, unavailability, error: resp?.error };
 }
 
 // ======================================================
@@ -669,6 +687,18 @@ const api = {
 
   getBusAssignments(tripKey) {
     return fetchAPI("getBusAssignments", { tripKey });
+  },
+
+  toggleUnavailability(driverName, dateYmd) {
+    return fetchAPI("toggleUnavailability", { driverName, dateYmd });
+  },
+
+  batchUnavailability(driverName, dates, mode) {
+    return fetchAPI("batchUnavailability", {
+      driverName,
+      dates: dates.join(","),
+      mode
+    });
   },
 };
 
@@ -898,7 +928,7 @@ function syncEmptyStateForForm() {
   // Only wire event listeners once to prevent memory leak
   if (!state.formListenersWired) {
     state.formListenersWired = true;
-    
+
     fields.forEach((el) => {
       el.addEventListener("input", () => syncOne(el));
       el.addEventListener("change", () => syncOne(el));
@@ -928,7 +958,7 @@ function applyWeekStart(isMonday) {
 
   try {
     localStorage.setItem("weekStartMonday", state.weekStartsOnMonday ? "1" : "0");
-  } catch {}
+  } catch { }
 
   syncWeekStartUI();
 
@@ -1073,6 +1103,17 @@ function applyWeekRespToState(resp) {
     state.savedNotesValue = notesValue;
     state.notesDirty = false;
   }
+
+  // Populate Unavailability
+  state.unavailabilityByDriver = {};
+  if (ok && resp.unavailability) {
+    for (const u of asArray(resp.unavailability)) {
+      const name = String(u.driverName || "").trim();
+      const date = String(u.dateYmd || "").trim();
+      if (!name || !date) continue;
+      (state.unavailabilityByDriver[name] ||= {})[date] = true;
+    }
+  }
 }
 
 let _prefetchTimer = null;
@@ -1089,7 +1130,7 @@ function prefetchAdjacentWeeks() {
 
     // ✅ FIX: Calculate Monday for the adjacent week
     const { notesKey } = getWeekRange(targetDate); // We will update getWeekRange to support a date arg
-    fetchWeekDataCached(start, end, notesKey).catch(() => {});
+    fetchWeekDataCached(start, end, notesKey).catch(() => { });
   }
 }
 
@@ -2122,9 +2163,14 @@ function renderDriverWeekGrid() {
       const set = onDaysByDriver.get(name) || new Set();
 
       const cells = weekDates
-        .map((_, idx) => {
+        .map((dStr, idx) => {
           const on = set.has(idx);
-          return `<td class="${on ? "driver-cell-on" : "driver-cell-off"}"></td>`;
+          const unavailable = state.unavailabilityByDriver[name]?.[dStr];
+          let cls = "driver-cell-off";
+          if (on) cls = "driver-cell-on";
+          else if (unavailable) cls = "driver-cell-unavailable";
+
+          return `<td class="${cls}" data-driver="${escHtml(name)}" data-date="${dStr}"></td>`;
         })
         .join("");
 
@@ -2387,13 +2433,13 @@ function changeWeek(direction) {
     if (!confirm("You have unsaved notes changes. Discard them?")) return;
     state.notesDirty = false;
   }
-  
+
   // Abort any in-flight requests to prevent stale data
   if (state.activeAbortController) {
     state.activeAbortController.abort();
     state.activeAbortController = null;
   }
-  
+
   const selected = dom.weekPicker?.value ? new Date(dom.weekPicker.value + "T00:00:00") : new Date();
   const moved = addDays(selected, direction * 7);
   if (dom.weekPicker) dom.weekPicker.value = toLocalDateInputValue(moved);
@@ -3027,9 +3073,89 @@ function wireEvents() {
     setLeftPanelMode(isOn ? "off" : "drivers");
   });
 
+  dom.driverWeekBody.addEventListener("mousedown", (e) => {
+    const td = e.target.closest("td");
+    if (!td || !td.dataset.driver || !td.dataset.date) return;
+    if (td.classList.contains("driver-cell-on")) return;
+
+    state.dragSelection.active = true;
+    state.dragSelection.driver = td.dataset.driver;
+    state.dragSelection.mode = td.classList.contains("driver-cell-unavailable") ? "remove" : "add";
+    state.dragSelection.dates.clear();
+
+    // Toggle first cell immediately
+    toggleDragCell(td);
+  });
+
+  dom.driverWeekBody.addEventListener("mouseover", (e) => {
+    if (!state.dragSelection.active) return;
+    const td = e.target.closest("td");
+    if (!td || td.dataset.driver !== state.dragSelection.driver || !td.dataset.date) return;
+    if (td.classList.contains("driver-cell-on")) return;
+
+    // Don't re-toggle the same cell in one drag pass
+    if (state.dragSelection.dates.has(td.dataset.date)) return;
+
+    toggleDragCell(td);
+  }, true);
+
+  window.addEventListener("mouseup", async () => {
+    if (!state.dragSelection.active) return;
+
+    const { driver, mode, dates } = state.dragSelection;
+    state.dragSelection.active = false;
+
+    if (dates.size === 0) return;
+
+    const dateList = Array.from(dates);
+    const action = mode === "add" ? "unavailable" : "available";
+    const dayCount = dateList.length;
+    const dayWord = dayCount === 1 ? "day" : "days";
+
+    // Confirmation dialog
+    if (!confirm(`Mark ${driver} as ${action} for ${dayCount} ${dayWord}?`)) {
+      // User cancelled - rollback UI
+      refreshWeekData({ silent: true });
+      return;
+    }
+
+    toastShow(mode === "add" ? "Marking as unavailable..." : "Marking as available...", "loading");
+
+    try {
+      const resp = await api.batchUnavailability(driver, dateList, mode);
+      if (resp.ok) {
+        toast(mode === "add" ? "Marked as unavailable ✓" : "Marked as available ✓", "success", 1500);
+      } else {
+        toast("Failed to update status", "danger", 2500);
+        refreshWeekData({ silent: true }); // Rollback UI
+      }
+    } catch (err) {
+      console.error(err);
+      toast("Error updating status", "danger", 2500);
+      refreshWeekData({ silent: true }); // Rollback UI
+    }
+  });
+
+  function toggleDragCell(td) {
+    const date = td.dataset.date;
+    const driver = td.dataset.driver;
+    const mode = state.dragSelection.mode;
+
+    if (mode === "add") {
+      td.className = "driver-cell-unavailable";
+      (state.unavailabilityByDriver[driver] ||= {})[date] = true;
+    } else {
+      td.className = "driver-cell-off";
+      if (state.unavailabilityByDriver[driver]) {
+        delete state.unavailabilityByDriver[driver][date];
+      }
+    }
+    state.dragSelection.dates.add(date);
+  }
+
   dom.notesBtn.addEventListener("click", () => {
     const isOn = dom.notesBtn.getAttribute("aria-pressed") === "true";
-    
+
     // Warn if closing with unsaved changes
     if (isOn && state.notesDirty) {
       if (!confirm("You have unsaved notes changes. Discard them?")) return;
@@ -3037,7 +3163,7 @@ function wireEvents() {
       dom.scheduleNotes.value = state.savedNotesValue;
       state.notesDirty = false;
     }
-    
+
     setLeftPanelMode(isOn ? "off" : "notes");
   });
 
@@ -3393,7 +3519,7 @@ function wireSettingsMenu() {
 .week-table-container.is-loading-bars .trip-bar { opacity: 0.18; pointer-events: none; }
 `;
     document.head.appendChild(style);
-  } catch {}
+  } catch { }
 
   setLeftPanelMode("off");
   enforceDesktopEditing();

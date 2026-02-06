@@ -39,7 +39,7 @@
   --red-status: #ff5252;
   --yellow-status: #ffd740;
   --cyan-status: #18ffff;
-  --green-status: #69f0ae;
+  --green-status: #69F0AE;
 
   /* --- ACCENT COLOR --- */
   --accent: var(--blue);
@@ -1776,6 +1776,7 @@ th.is-today .day-name {
   border-collapse: collapse;
   /* Better for gridlines than separate */
   table-layout: fixed;
+  user-select: none;
 }
 
 .driver-week-table th {
@@ -1789,7 +1790,7 @@ th.is-today .day-name {
   font-size: var(--font-size-1);
   text-align: center;
   white-space: nowrap;
-  position: relative;
+  cursor: pointer;
   border-right: 1px solid var(--color-surface-2);
   border-bottom: 1px solid var(--color-surface-2);
 }
@@ -1816,6 +1817,11 @@ th.is-today .day-name {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.02em;
+}
+
+.driver-cell-unavailable {
+  background: var(--red-status) !important;
+  color: #fff !important;
 }
 
 .driver-cell-on {
@@ -1851,8 +1857,8 @@ select.status-blue {
 }
 
 select.status-confirmed {
-  background: color-mix(in srgb, var(--green) 60%, transparent);
-  border-color: var(--green);
+  background: color-mix(in srgb, var(--blue) 60%, transparent);
+  border-color: var(--blue);
 }
 
 #busGrid.bus-assign {
