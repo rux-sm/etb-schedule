@@ -3,35 +3,36 @@
 // ======================================================
 function initThemeSystem() {
   const html = document.documentElement;
-  const themeToggle = document.getElementById("themeToggle");
-  const themeText = document.getElementById("themeText");
+  const toggles = [document.getElementById("themeToggle"), document.getElementById("themeToggle2")].filter(Boolean);
 
   const savedTheme = localStorage.getItem("theme") || "dark";
   html.setAttribute("data-theme", savedTheme);
 
-  // Icon Handling
-  const iconSpan = themeToggle?.querySelector("span");
-
-  const updateIcon = (theme) => {
-    if (!iconSpan) return;
-    // Light theme -> show 'dark_mode' (moon) to indicate action to switch to dark
-    // Dark theme -> show 'light_mode' (sun) to indicate action to switch to light
-    iconSpan.textContent = theme === "light" ? "dark_mode" : "light_mode";
+  const updateIcons = (theme) => {
+    const iconName = theme === "light" ? "dark_mode" : "light_mode";
+    toggles.forEach((btn) => {
+      // For themeToggle2 (dropdown), the icon is the first span.
+      // For themeToggle (topbar), it's also the first/only span.
+      const span = btn.querySelector("span");
+      if (span) span.textContent = iconName;
+    });
   };
 
   // Initial state
-  updateIcon(savedTheme);
+  updateIcons(savedTheme);
 
-  themeToggle?.addEventListener("click", () => {
+  const switchTheme = () => {
     const currentTheme = html.getAttribute("data-theme");
     const newTheme = currentTheme === "light" ? "dark" : "light";
 
     html.setAttribute("data-theme", newTheme);
     localStorage.setItem("theme", newTheme);
 
-    updateIcon(newTheme);
+    updateIcons(newTheme);
+  };
 
-    if (themeText) themeText.textContent = newTheme === "light" ? "Light" : "Dark";
+  toggles.forEach((btn) => {
+    if (btn) btn.addEventListener("click", switchTheme);
   });
 }
 
@@ -79,12 +80,12 @@ const CACHE = {
         expiry: Date.now() + ttlMs,
       };
       localStorage.setItem(key, JSON.stringify(payload));
-    } catch { }
+    } catch {}
   },
   remove(key) {
     try {
       localStorage.removeItem(key);
-    } catch { }
+    } catch {}
   },
   clearAll() {
     try {
@@ -96,7 +97,7 @@ const CACHE = {
           localStorage.removeItem(k);
         }
       });
-    } catch { }
+    } catch {}
   },
 };
 
@@ -142,6 +143,9 @@ const dom = {
   tripInputBtn: $("tripInputBtn"),
   schedulerLayout: $("schedulerLayout"),
   tripScheduler: $("tripScheduler"),
+
+  headerWeek: $("headerWeek"), // Added for date title updates
+  weekWrapper: $("dateWrapper"), // Added for width sync
 
   prevWeekBtn: $("prevWeekBtn"),
   nextWeekBtn: $("nextWeekBtn"),
@@ -255,7 +259,7 @@ function clamp(n, min, max) {
 function safeUUID() {
   try {
     return crypto.randomUUID();
-  } catch { }
+  } catch {}
   return `tk_${Date.now()}_${Math.floor(Math.random() * 1e9)}`;
 }
 
@@ -622,7 +626,14 @@ async function fetchAPI(fn, params = {}, timeoutMs = CONFIG.JSONP_TIMEOUT) {
  */
 async function withRetry(
   fn,
-  { tries = 3, baseDelayMs = 350, maxDelayMs = 2000, jitter = 0.25, totalTimeoutMs = 15000, shouldRetry = (err) => true } = {},
+  {
+    tries = 3,
+    baseDelayMs = 350,
+    maxDelayMs = 2000,
+    jitter = 0.25,
+    totalTimeoutMs = 15000,
+    shouldRetry = (err) => true,
+  } = {},
 ) {
   const deadline = Date.now() + totalTimeoutMs;
   let lastErr;
@@ -697,7 +708,7 @@ const api = {
     return fetchAPI("batchUnavailability", {
       driverName,
       dates: dates.join(","),
-      mode
+      mode,
     });
   },
 };
@@ -958,7 +969,7 @@ function applyWeekStart(isMonday) {
 
   try {
     localStorage.setItem("weekStartMonday", state.weekStartsOnMonday ? "1" : "0");
-  } catch { }
+  } catch {}
 
   syncWeekStartUI();
 
@@ -991,6 +1002,52 @@ function updateWeekTitle() {
   const sameMonth = start.getMonth() === end.getMonth();
   const sameYear = start.getFullYear() === end.getFullYear();
 
+  // Check for mobile
+  // const isMobile = window.innerWidth < 900;
+
+  // if (isMobile) {
+  //   // Short format: "Feb 1 – 7" or "Jan 28 – Feb 3"
+  //   // Omit year on mobile to save space
+  //   const monthShort = (d) => d.toLocaleDateString("en-US", { month: "short" });
+
+  //   // Update text
+  //   const text = sameMonth
+  //     ? `${monthShort(start)} ${start.getDate()} – ${end.getDate()}`
+  //     : `${monthShort(start)} ${start.getDate()} – ${monthShort(end)} ${end.getDate()}`;
+
+  //   if (dom.headerWeek) dom.headerWeek.textContent = text;
+
+  //   // Fix: Ensure the date picker input doesn't overflow its container
+  //   // The CSS rule .brand-title-wrapper .date-input-overlay handles the size,
+  //   // but we ensure the container itself doesn't grow too large.
+  //   return;
+  // }
+
+  // Check for mobile
+  const isMobile = window.innerWidth < 900;
+
+  if (isMobile) {
+    // Short format: "Feb 1 – 7, 26"
+    const monthShort = (d) => d.toLocaleDateString("en-US", { month: "short" });
+    const yy = (d) => String(d.getFullYear()).slice(-2);
+
+    let text = "";
+
+    if (sameMonth && sameYear) {
+      // "Feb 1 – 7, 26"
+      text = `${monthShort(start)} ${start.getDate()} – ${end.getDate()}, ${yy(start)}`;
+    } else if (sameYear) {
+      // "Jan 28 – Feb 3, 26"
+      text = `${monthShort(start)} ${start.getDate()} – ${monthShort(end)} ${end.getDate()}, ${yy(start)}`;
+    } else {
+      // "Dec 29, 25 – Jan 4, 26"
+      text = `${monthShort(start)} ${start.getDate()}, ${yy(start)} – ${monthShort(end)} ${end.getDate()}, ${yy(end)}`;
+    }
+
+    if (dom.headerWeek) dom.headerWeek.textContent = text;
+    return;
+  }
+
   const monthLong = (d) => d.toLocaleDateString("en-US", { month: "long" });
 
   let title = "";
@@ -1005,8 +1062,7 @@ function updateWeekTitle() {
       `${monthLong(end)} ${end.getDate()}, ${end.getFullYear()}`;
   }
 
-  const headerWeek = document.getElementById("headerWeek");
-  if (headerWeek) headerWeek.textContent = title;
+  if (dom.headerWeek) dom.headerWeek.textContent = title;
 }
 
 // ======================================================
@@ -1130,7 +1186,7 @@ function prefetchAdjacentWeeks() {
 
     // ✅ FIX: Calculate Monday for the adjacent week
     const { notesKey } = getWeekRange(targetDate); // We will update getWeekRange to support a date arg
-    fetchWeekDataCached(start, end, notesKey).catch(() => { });
+    fetchWeekDataCached(start, end, notesKey).catch(() => {});
   }
 }
 
@@ -1532,7 +1588,7 @@ function renderAgenda() {
   try {
     _renderAgendaInner();
   } catch (err) {
-    console.error('renderAgenda failed:', err);
+    console.error("renderAgenda failed:", err);
     // Show error state with retry option
     if (dom.agendaBody) {
       dom.agendaBody.innerHTML = `
@@ -1542,7 +1598,7 @@ function renderAgenda() {
         </td></tr>
       `;
     }
-    toast('Render error - try refreshing', 'danger', 3000);
+    toast("Render error - try refreshing", "danger", 3000);
   }
 }
 
@@ -3087,17 +3143,21 @@ function wireEvents() {
     toggleDragCell(td);
   });
 
-  dom.driverWeekBody.addEventListener("mouseover", (e) => {
-    if (!state.dragSelection.active) return;
-    const td = e.target.closest("td");
-    if (!td || td.dataset.driver !== state.dragSelection.driver || !td.dataset.date) return;
-    if (td.classList.contains("driver-cell-on")) return;
+  dom.driverWeekBody.addEventListener(
+    "mouseover",
+    (e) => {
+      if (!state.dragSelection.active) return;
+      const td = e.target.closest("td");
+      if (!td || td.dataset.driver !== state.dragSelection.driver || !td.dataset.date) return;
+      if (td.classList.contains("driver-cell-on")) return;
 
-    // Don't re-toggle the same cell in one drag pass
-    if (state.dragSelection.dates.has(td.dataset.date)) return;
+      // Don't re-toggle the same cell in one drag pass
+      if (state.dragSelection.dates.has(td.dataset.date)) return;
 
-    toggleDragCell(td);
-  }, true);
+      toggleDragCell(td);
+    },
+    true,
+  );
 
   window.addEventListener("mouseup", async () => {
     if (!state.dragSelection.active) return;
@@ -3445,6 +3505,12 @@ function wireEvents() {
     dom.weekPicker.value = toLocalDateInputValue(today);
     updateWeekDates();
   });
+
+  $("todayBtnMobile")?.addEventListener("click", () => {
+    const today = new Date();
+    dom.weekPicker.value = toLocalDateInputValue(today);
+    updateWeekDates();
+  });
 }
 
 // ======================================================
@@ -3519,7 +3585,7 @@ function wireSettingsMenu() {
 .week-table-container.is-loading-bars .trip-bar { opacity: 0.18; pointer-events: none; }
 `;
     document.head.appendChild(style);
-  } catch { }
+  } catch {}
 
   setLeftPanelMode("off");
   enforceDesktopEditing();
