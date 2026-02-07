@@ -21,8 +21,10 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
   /* --- BASE HUES --- */
-  --blue: #3b82f5;
-  --red: #d32f2f;
+  --blue-light: rgb(0, 136, 255);
+  --blue-dark: rgb(0, 145, 255);
+  --red-light: rgb(255, 56, 60);
+  --red-dark: rgb(255, 66, 69);
   --green: #388e3c;
   --teal: #00796b;
   --cyan: #0097a7;
@@ -39,7 +41,7 @@
   --red-status: #ff5252;
   --yellow-status: #ffd740;
   --cyan-status: #18ffff;
-  --green-status: #69F0AE;
+  --green-status: #69f0ae;
 
   /* --- ACCENT COLOR --- */
   --accent: var(--blue);
@@ -52,21 +54,16 @@
   --placeholder: #9b9b9b;
 
   /* --- BASE SURFACES --- */
-  --app-bg: #000000;
-  /* APP BACKGROUND */
-  --surface-0: #0b0b0b;
-  /* TOPBAR */
-  --surface-1: #1c1c1c;
-  /* SCHEDULE */
-  --surface-2: #1c1c1c;
-  /* CARDS*/
-  --surface-3: #2a2a2a;
-  /* INPUTS / CONTROLS (Darkened from #5e5e5e) */
-  --surface-4: #2c2c2c;
-  /* HOVER/ACTIVE */
+
+  --app-bg: #1d1d1f; /* APP BACKGROUND */
+  --surface-0: #1d1d1f; /* TOPBAR BACKGROUND */
+  --surface-1: #000000; /* SCHEDULE BACKGROUND  */
+  --surface-2: #1c1c1c; /* CARDS BACKGROUND*/
+  --surface-3: #2a2a2a; /* INPUTS / CONTROLS (Darkened from #5e5e5e) */
+  --surface-4: #2c2c2c; /* HOVER/ACTIVE */
 
   /* BORDERS & DIVIDERS */
-  --border: #2c2c2c;
+  --border: #424242;
   --border-strong: #3a3a3a;
 
   /* FOCUS */
@@ -754,6 +751,14 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   transition: box-shadow var(--dur-2) var(--ease-standard);
   position: relative;
   isolation: isolate;
+  /* Hide scrollbars but keep scroll functionality */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Hide scrollbars for Chrome, Safari, and Opera */
+.card::-webkit-scrollbar {
+  display: none;
 }
 
 .card.compact {
@@ -1030,7 +1035,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   top: 0;
   z-index: 10000;
   background: var(--surface-0);
-  border-bottom: 1px solid var(--surface-0);
+  border-bottom: 1px solid var(--border);
 }
 
 .topbar-inner {
@@ -1135,6 +1140,20 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   padding: var(--space-2);
 }
 
+@media (max-width: 899px) {
+  .scheduler-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .scheduler-left {
+    display: none; /* Hide sidebar on mobile by default or manage via JS toggle */
+  }
+
+  .scheduler-left.is-active {
+    display: block;
+  }
+}
+
 .scheduler-left,
 .scheduler-right {
   min-width: 0;
@@ -1163,7 +1182,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     overflow: visible;
   }
 
-  .scheduler-right>.card {
+  .scheduler-right > .card {
     /* max-height: calc(10 * var(--schedule-row-height) + 24px); */
     max-height: 100%;
     height: auto;
@@ -1192,8 +1211,8 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   }
 
   /* Restore visible shadow specifically here or globally */
-  .scheduler-right>.card,
-  .scheduler-left>.card {
+  .scheduler-right > .card,
+  .scheduler-left > .card {
     box-shadow:
       0 4px 6px -1px rgba(0, 0, 0, 0.3),
       0 2px 4px -1px rgba(0, 0, 0, 0.16) !important;
@@ -1218,8 +1237,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   background:
     /* Shadow Cover TOP */
     linear-gradient(var(--surface-1) 30%, rgba(255, 255, 255, 0)),
-    /* Shadow TOP */
-    radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+    /* Shadow TOP */ radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
   background-repeat: no-repeat;
   background-color: var(--surface-1);
   background-size:
@@ -1228,14 +1246,18 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   background-attachment: local, scroll;
   border-radius: inherit;
   border-left: none;
+  /* Hide scrollbars but keep scroll functionality */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
 }
 
+/* Hide scrollbars for Chrome, Safari, and Opera */
 .week-table-container::-webkit-scrollbar {
   display: none;
 }
 
 .week-table {
-  width: 100%;
+  width: max(100%, 880px);
   height: 100%;
   table-layout: fixed;
   border-collapse: separate;
@@ -1267,7 +1289,14 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   position: sticky;
   top: 0;
   z-index: 2000;
+  z-index: 2000;
   /* margin-top: 6px; Removed to fix gap */
+}
+
+/* Enforce min-width on day columns to trigger scroll */
+.week-table th:not(:first-child),
+.week-table td:not(:first-child) {
+  min-width: 120px;
 }
 
 /* Table Cells */
@@ -1363,6 +1392,10 @@ th.is-today .day-name {
   width: var(--bus-col-w);
 }
 
+/* .week-table col.col-day {
+  min-width: 120px;
+} REMOVED - applying to cells instead */
+
 /* Bus Icons (in first column) */
 .bus-id-wrap {
   display: flex;
@@ -1382,11 +1415,11 @@ th.is-today .day-name {
 }
 
 /* Bus color on hover */
-.week-table tbody tr.has-bus-color>td:first-child {
+.week-table tbody tr.has-bus-color > td:first-child {
   transition: background-color 0.15s ease;
 }
 
-.week-table tbody tr.has-bus-color>td:first-child:hover {
+.week-table tbody tr.has-bus-color > td:first-child:hover {
   background-color: var(--bus-accent-color, var(--color-surface-1));
 }
 
@@ -1457,14 +1490,17 @@ th.is-today .day-name {
   align-content: center;
   align-items: center;
   grid-template-rows:
-    var(--tripbar-line-height-major) var(--tripbar-line-height-minor) var(--tripbar-line-height-minor) var(--tripbar-line-height-major) var(--tripbar-line-height-major) var(--tripbar-line-height-minor) var(--tripbar-line-height-minor);
+    var(--tripbar-line-height-major) var(--tripbar-line-height-minor) var(--tripbar-line-height-minor)
+    var(--tripbar-line-height-major) var(--tripbar-line-height-major) var(--tripbar-line-height-minor) var(
+      --tripbar-line-height-minor
+    );
   row-gap: var(--tripbar-row-gap);
   height: var(--tripbar-height);
   padding: 0 var(--space-1);
-  border: 1px solid var(--blue);
+  border: 1px solid var(--blue-dark);
   border-radius: var(--control-radius);
   overflow: hidden;
-  background: color-mix(in srgb, var(--blue) 20%, transparent);
+  background: color-mix(in srgb, var(--blue-dark) 100%, transparent);
   cursor: pointer;
   container-type: inline-size;
   /* Smooth transition for the hover effect */
@@ -1478,8 +1514,8 @@ th.is-today .day-name {
 
 /* Trip Bar Alternative Colors */
 .trip-bar.unconfirmed {
-  background: color-mix(in srgb, var(--red) 20%, transparent);
-  border-color: var(--red);
+  background: color-mix(in srgb, var(--red-dark) 100%, transparent);
+  border-color: var(--red-dark);
 }
 
 .trip-bar.color-green {
@@ -1529,7 +1565,7 @@ th.is-today .day-name {
 }
 
 /* Trip Bar Content */
-.trip-bar>* {
+.trip-bar > * {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1671,7 +1707,6 @@ th.is-today .day-name {
 }
 
 @keyframes arrow-left-bounce {
-
   0%,
   100% {
     transform: translate(0, -50%);
@@ -1683,7 +1718,6 @@ th.is-today .day-name {
 }
 
 @keyframes arrow-right-bounce {
-
   0%,
   100% {
     transform: translate(0, -50%);
@@ -1747,7 +1781,6 @@ th.is-today .day-name {
 }
 
 @media (max-width: 800px) {
-
   .col-2,
   .col-4,
   .col-6 {
@@ -2116,7 +2149,7 @@ select.status-confirmed {
     min-height: 0;
   }
 
-  .scheduler-right>.card {
+  .scheduler-right > .card {
     flex: 1;
     height: 100%;
     width: 100%;
@@ -2150,7 +2183,6 @@ select.status-confirmed {
 /* ========================================================================== */
 
 @media print {
-
   .topbar,
   .theme-toggle,
   button:not(.trip-bar),
