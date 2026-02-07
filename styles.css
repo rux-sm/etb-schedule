@@ -321,6 +321,7 @@ html,
 body {
   height: 100%;
   overscroll-behavior: none;
+  touch-action: manipulation;
 }
 
 body {
