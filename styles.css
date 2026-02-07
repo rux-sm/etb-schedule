@@ -21,30 +21,30 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
   /* --- BASE HUES --- */
-  --blue-light: rgb(0, 136, 255);
-  --blue-dark: rgb(0, 145, 255);
-  --red-light: rgb(255, 56, 60);
-  --red-dark: rgb(255, 66, 69);
-  --green: #388e3c;
-  --teal: #00796b;
-  --cyan: #0097a7;
-  --indigo: #303f9f;
-  --purple: #512da8;
-  --amber: #ffa000;
-  --orange: #e64a19;
-  --pink: #c2185b;
-  --gray: #616161;
-  --black: #000;
-  --white: #fff;
+  --red-dark: rgb(255 56 60);
+  --orange-dark: rgb(255 141 40);
+  --yellow-dark: rgb(255 204 0);
+  --green-dark: rgb(52 199 89);
+  --mint-dark: rgb(0 200 179);
+  --teal-dark: rgb(0 195 208);
+  --cyan-dark: rgb(0 192 232);
+  --blue-dark: rgb(0 136 255);
+  --indigo-dark: rgb(97 85 245);
+  --purple-dark: rgb(203 48 224);
+  --pink-dark: rgb(255 45 85);
+  --brown-dark: rgb(172 127 94);
+  --black: rgb(0 0 0);
+  --gray: rgb(108 108 108);
+  --white: rgb(255 255 255);
 
   /* --- STATUS COLORS ---  */
-  --red-status: #ff5252;
-  --yellow-status: #ffd740;
-  --cyan-status: #18ffff;
-  --green-status: #69f0ae;
+  --red-status: rgb(255 97 101);
+  --yellow-status: rgb(254 223 67);
+  --cyan-status: rgb(92 184 255);
+  --green-status: rgb(74 217 104);
 
   /* --- ACCENT COLOR --- */
-  --accent: var(--blue);
+  --accent: var(--blue-dark);
 
   /* TEXT */
 
@@ -55,15 +55,15 @@
 
   /* --- BASE SURFACES --- */
 
-  --app-bg: #1d1d1f; /* APP BACKGROUND */
-  --surface-0: #1d1d1f; /* TOPBAR BACKGROUND */
-  --surface-1: #000000; /* SCHEDULE BACKGROUND  */
-  --surface-2: #1c1c1c; /* CARDS BACKGROUND*/
-  --surface-3: #2a2a2a; /* INPUTS / CONTROLS (Darkened from #5e5e5e) */
-  --surface-4: #2c2c2c; /* HOVER/ACTIVE */
+  --app-bg: rgb(0, 0, 0); /* APP BACKGROUND */
+  --surface-0: rgb(28 28 28 / 55%); /* TOPBAR BACKGROUND */
+  --surface-1: rgb(28 28 28); /* SCHEDULE BACKGROUND  */
+  --surface-2: #151515; /* CARDS BACKGROUND*/
+  --surface-3: #3b3b3b; /* INPUTS / CONTROLS (Darkened from #5e5e5e) */
+  --surface-4: #919191; /* HOVER/ACTIVE */
 
   /* BORDERS & DIVIDERS */
-  --border: #424242;
+  --border: rgb(53, 53, 53);
   --border-strong: #3a3a3a;
 
   /* FOCUS */
@@ -224,7 +224,7 @@
   --layout-logo-max-width: 420px;
 
   /* Schedule Grid */
-  --schedule-row-height: 108px;
+  --schedule-row-height: 92px;
   --schedule-col-width: 50px;
   --bus-col-w: 40px;
   --day-row-h: 40px;
@@ -232,16 +232,17 @@
   --color-conflict-accent: var(--color-danger);
 
   /* Trip Bars */
-  --tripbar-height: 100px;
+  --tripbar-height: 84px;
   --tripbar-gap: 0px;
   --tripbar-lane-step: calc(var(--tripbar-height) + var(--tripbar-gap));
-  --waiting-list-height: 108px;
+  --waiting-list-height: 84px;
   --tripbar-inset: 4px;
-  --tripbar-font-size-major: 10px;
-  --tripbar-font-size-minor: 10px;
-  --tripbar-line-height-major: 12px;
-  --tripbar-line-height-minor: 12px;
-  --tripbar-row-gap: 1px;
+  --tripbar-font-size-major: 11px;
+  --tripbar-font-size-minor: 9px;
+  --tripbar-line-height-major: 11px;
+  --tripbar-line-height-minor: 9px;
+  --tripbar-row-gap: 2px;
+  --tripbar-padding-vertical: 4px;
 }
 
 /* --- Light Theme --- */
@@ -1013,7 +1014,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 }
 
 .main {
-  padding: 0 var(--space-2) var(--space-2);
+  padding: var(--space-2);
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -1045,7 +1046,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   justify-content: space-between;
   gap: var(--space-4);
   padding: 0 var(--space-4);
-  height: 50px;
+  height: auto;
   overflow: visible;
 }
 
@@ -1064,7 +1065,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 }
 
 .logo-img {
-  height: var(--control-height);
+  height: 24px;
   width: auto;
   object-fit: contain;
   line-height: 1;
@@ -1077,7 +1078,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 }
 
 .brand-title-wrapper {
-  height: var(--control-height);
+  height: 44px;
   display: flex;
   align-items: center;
   gap: 0;
@@ -1102,8 +1103,8 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 
 .brand-title {
   font-family: var(--font-sans);
-  font-size: 22px;
-  font-weight: 400;
+  font-size: 20px;
+  font-weight: 600;
   color: var(--color-text-1);
   margin: 0;
   line-height: 1;
@@ -1263,6 +1264,13 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   min-width: 0;
 }
 
+.scheduler-right > .card {
+  max-height: calc(var(--day-row-h) + (10 * var(--schedule-row-height)));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 .scheduler-layout.is-collapsed {
   grid-template-columns: 1fr;
 }
@@ -1289,7 +1297,6 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   .scheduler-right > .card {
     /* max-height: calc(10 * var(--schedule-row-height) + 24px); */
     max-height: 100%;
-    height: auto;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -1315,6 +1322,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   /* Make visible cards expand to fill available height */
   .scheduler-left > .card:not(.is-hidden) {
     flex: 1;
+    max-height: calc(var(--day-row-h) + (10 * var(--schedule-row-height)));
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -1353,6 +1361,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 /* --- Week Table --- */
 .week-table-container {
   width: 100%;
+  max-height: calc(var(--day-row-h) + (10 * var(--schedule-row-height)));
   overflow-x: auto;
   overflow-y: auto;
   /* Scroll Shadows */
@@ -1380,7 +1389,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 
 .week-table {
   width: max(100%, 880px);
-  height: 100%;
+  height: auto;
   table-layout: fixed;
   border-collapse: separate;
   border-spacing: 0;
@@ -1467,16 +1476,19 @@ th.is-today .day-name {
 }
 
 .week-table tbody tr {
-  height: var(--schedule-row-height);
+  height: var(--schedule-row-height) !important;
+  max-height: var(--schedule-row-height) !important;
+  min-height: var(--schedule-row-height) !important;
   /* background-color: var(--color-surface-1); REMOVED so container shadow shows */
   position: relative;
+  overflow: hidden;
 }
 
 .week-table td {
   vertical-align: top;
   padding: 0;
-  height: var(--schedule-row-height);
-  max-height: var(--schedule-row-height);
+  height: var(--schedule-row-height) !important;
+  max-height: var(--schedule-row-height) !important;
   position: relative;
 }
 
@@ -1622,74 +1634,65 @@ th.is-today .day-name {
   position: absolute;
   z-index: 200;
   display: grid;
-  align-content: center;
-  align-items: center;
-  grid-template-rows:
-    var(--tripbar-line-height-major) var(--tripbar-line-height-minor) var(--tripbar-line-height-minor)
-    var(--tripbar-line-height-major) var(--tripbar-line-height-major) var(--tripbar-line-height-minor) var(
-      --tripbar-line-height-minor
-    );
+
+  grid-template-rows: repeat(7, 9px);
   row-gap: var(--tripbar-row-gap);
+  padding: var(--tripbar-padding-vertical) 4px;
+
+  font-variant-numeric: tabular-nums;
   height: var(--tripbar-height);
-  padding: 0 var(--space-1);
-  border: 1px solid var(--blue-dark);
+  box-sizing: border-box; /* ✅ height includes border */
+  border: 1.5px solid var(--blue-dark);
   border-radius: var(--control-radius);
   overflow: hidden;
-  background: color-mix(in srgb, var(--blue-dark) 100%, transparent);
+  background: color-mix(in srgb, var(--blue-dark) 33%, transparent);
   cursor: pointer;
   container-type: inline-size;
-  /* Smooth transition for the hover effect */
-  transition:
-    transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
-    filter 0.2s ease,
-    z-index 0s linear 0.01s;
-  /* Delay z-index reset so it doesn't clip instantly on mouseleave */
 }
 
 /* Trip Bar Alternative Colors */
 .trip-bar.unconfirmed {
-  background: color-mix(in srgb, var(--red-dark) 100%, transparent);
+  background: color-mix(in srgb, var(--red-dark) 33%, transparent);
   border-color: var(--red-dark);
 }
 
 .trip-bar.color-green {
-  background: color-mix(in srgb, var(--green) 20%, transparent);
-  border-color: var(--green);
+  background: color-mix(in srgb, var(--green-dark) 33%, transparent);
+  border-color: var(--green-dark);
 }
 
 .trip-bar.color-yellow {
-  background: color-mix(in srgb, var(--amber) 20%, transparent);
-  border-color: var(--amber);
+  background: color-mix(in srgb, var(--yellow-dark) 33%, transparent);
+  border-color: var(--yellow-dark);
 }
 
 .trip-bar.color-gray {
-  background: color-mix(in srgb, var(--gray) 20%, transparent);
+  background: color-mix(in srgb, var(--gray) 33%, transparent);
   border-color: var(--gray);
 }
 
 .trip-bar.color-violet {
-  background: color-mix(in srgb, var(--purple) 20%, transparent);
-  border-color: var(--purple);
+  background: color-mix(in srgb, var(--purple-dark) 33%, transparent);
+  border-color: var(--purple-dark);
 }
 
 .trip-bar.color-pink {
-  background: color-mix(in srgb, var(--pink) 20%, transparent);
-  border-color: var(--pink);
+  background: color-mix(in srgb, var(--pink-dark) 33%, transparent);
+  border-color: var(--pink-dark);
 }
 
 /* "Glassy Spotlight" Hover Effect */
 .trip-bar:hover {
   z-index: 500;
   /* Lift the card up towards the user */
-  transform: translateY(-4px) scale(1.01);
+  transform: translateY(-2px) scale(1.02);
   /* Make it slightly brighter to simulate light hitting it */
-  filter: brightness(1.15) contrast(1.05);
+
   /* Strong, crisp shadow for depth + subtle white glow/border for glassiness */
   box-shadow:
     0 8px 24px rgba(0, 0, 0, 0.5),
-    0 2px 6px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(255, 255, 255, 0.2);
+    0 2px 6px rgba(0, 0, 0, 0.3);
+
   /* Inner highlight */
   transition:
     transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -1699,41 +1702,40 @@ th.is-today .day-name {
   /* Z-index happens immediately on hover */
 }
 
-/* Trip Bar Content */
 .trip-bar > * {
   display: flex;
   align-items: center;
   justify-content: center;
   min-width: 0;
   padding: 0;
-  line-height: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1;
 }
 
 .trip-bar .bar-title {
   color: var(--text);
-  font-size: 12px;
-  font-weight: var(--font-weight-semibold);
+  font-size: var(--tripbar-font-size-major);
+  font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   line-height: var(--tripbar-line-height-major);
 }
 
 .trip-bar .bar-sub {
-  color: var(--text);
+  color: rgba(255, 255, 255, 0.75);
   font-size: var(--tripbar-font-size-minor);
-  font-weight: var(--font-weight-light);
+  font-weight: var(--font-weight-regular);
   text-transform: uppercase;
-  line-height: var(--tripbar-line-height-major);
+  line-height: var(--tripbar-line-height-minor);
 }
 
 .trip-bar .bar-time-row {
   display: flex !important;
   justify-content: space-between !important;
   width: 100%;
-  font-weight: var(--font-weight-semibold);
-  font-size: 12px;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--tripbar-font-size-major);
   color: var(--text);
   min-width: auto !important;
   line-height: var(--tripbar-line-height-major);
@@ -1751,38 +1753,43 @@ th.is-today .day-name {
 
 .trip-bar .bar-pre-drivers {
   font-size: var(--tripbar-font-size-minor);
-  color: var(--yellow-status);
-  font-weight: var(--font-weight-light);
+  color: rgba(255, 204, 0, 0.75);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--tripbar-line-height-minor);
   text-transform: uppercase;
   letter-spacing: -0.05em;
 }
 
 .bar-drivers {
   display: flex;
+  align-items: center; /* add this */
+  justify-content: center;
   gap: 8px;
 }
 
 .driver {
-  font-size: 12px;
-  font-weight: var(--font-weight-semibold);
+  font-size: var(--tripbar-font-size-major);
+  font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   line-height: var(--tripbar-line-height-major);
-  color: var(--text);
+  color: var(--yellow-dark);
 }
 
 .trip-bar .bar-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 4px;
-  line-height: var(--tripbar-line-height-major);
 }
 
 /* Trip Bar Status Badges */
 
 .trip-bar .mini-badge {
-  width: 12px;
-  height: 12px;
-  font-size: 10px;
-  font-weight: var(--font-weight-light);
-  border-radius: 1px;
+  width: 10px;
+  height: 10px;
+  font-size: 8px;
+  font-weight: var(--font-weight-regular);
+  border-radius: 2px;
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -2264,7 +2271,7 @@ select.status-confirmed {
   }
 
   .brand-title {
-    font-size: 18px;
+    font-size: 14px;
     line-height: 1;
     display: flex;
     align-items: center;
