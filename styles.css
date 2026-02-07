@@ -1317,6 +1317,14 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   min-width: 120px;
 }
 
+/* Sticky top-left corner (bus header) */
+.week-table th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 3000;
+  background: var(--color-surface-1);
+}
+
 /* Table Cells */
 .day-label {
   display: flex;
@@ -1369,7 +1377,7 @@ th.is-today .day-name {
 .week-table td:first-child {
   position: sticky;
   left: 0;
-  z-index: 10;
+  z-index: 500;
   background: var(--color-surface-1);
   font-size: 22px;
   font-weight: 500;
@@ -1477,7 +1485,7 @@ th.is-today .day-name {
   position: sticky;
   left: 0;
   background: var(--color-surface-1);
-  z-index: 10;
+  z-index: 500;
 }
 
 .week-table th:first-child {
