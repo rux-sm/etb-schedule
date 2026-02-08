@@ -181,6 +181,13 @@ const dom = {
   weekSun2: $("weekSun2"),
   weekMon2: $("weekMon2"),
   refreshBtn2: $("refreshBtn2"),
+
+  // Context Menu
+  ctxMenu: $("tripContextMenu"),
+  ctxHeader: $("ctxHeader"),
+  ctxEditBtn: $("ctxEditBtn"),
+  ctxViewBtn: $("ctxViewBtn"),
+  ctxCopyBtn: $("ctxCopyBtn"),
 };
 
 // ======================================================
@@ -1962,7 +1969,7 @@ function _renderAgendaInner() {
         }
       }
 
-      bar._preDrivers.textContent = t.notes ? clipText(t.notes, 28) : "";
+      bar._preDrivers.textContent = t.notes ? clipText(t.notes, 500) : "";
 
       bar._drivers.innerHTML = `
             <span class="driver">${escHtml(d1)}</span>
@@ -2644,51 +2651,73 @@ function closeItineraryModal() {
 // ======================================================
 // 28) MOBILE TRIP DETAILS MODAL
 // ======================================================
+// ======================================================
 function renderTripDetailsModalFromData(t, assigns) {
-  const lines = [];
+  let html = "";
+
+  function row(label, val) {
+    if (!val) return "";
+    return `<div class="detail-row"><strong>${label}:</strong> <span>${escHtml(val)}</span></div>`;
+  }
+
+  function section(title) {
+    return `<div class="detail-section-title">${title}</div>`;
+  }
 
   const depDate = String(t.departureDate || "").slice(0, 10);
   const arrDate = String(t.arrivalDate || "").slice(0, 10);
   const depTime = formatTime12(t.departureTime);
   const arrTime = formatTime12(t.arrivalTime);
 
-  lines.push(`DESTINATION: ${t.destination || "—"}`);
-  lines.push(`CUSTOMER: ${t.customer || "—"}`);
-  lines.push(`CONTACT: ${t.contactName || "—"}`);
-  lines.push(`PHONE: ${t.phone || "—"}`);
-  lines.push("");
-  lines.push(`DEPART: ${depDate || "—"} ${depTime ? `@ ${depTime}` : ""}`.trim());
-  lines.push(`ARRIVE: ${arrDate || "—"} ${arrTime ? `@ ${arrTime}` : ""}`.trim());
-  lines.push(`BUSES NEEDED: ${t.busesNeeded || "—"}`);
-  lines.push("");
-  lines.push(`ITINERARY STATUS: ${t.itineraryStatus || "—"}`);
-  lines.push(`CONTACT STATUS: ${t.contactStatus || "—"}`);
-  lines.push(`PAYMENT STATUS: ${t.paymentStatus || "—"}`);
-  lines.push(`DRIVER STATUS: ${t.driverStatus || "—"}`);
-  lines.push("");
+  html += row("DESTINATION", t.destination);
+  html += row("CUSTOMER", t.customer);
+  html += row("CONTACT", t.contactName);
+  html += row("PHONE", t.phone);
+
+  html += `<div class="detail-divider"></div>`;
+
+  html += row("DEPART", `${depDate || "—"} ${depTime ? `@ ${depTime}` : ""}`);
+  html += row("ARRIVE", `${arrDate || "—"} ${arrTime ? `@ ${arrTime}` : ""}`);
+  html += row("BUSES NEEDED", t.busesNeeded);
+
+  html += `<div class="detail-divider"></div>`;
+
+  html += row("ITINERARY STATUS", t.itineraryStatus);
+  html += row("CONTACT STATUS", t.contactStatus);
+  html += row("PAYMENT STATUS", t.paymentStatus);
+  html += row("DRIVER STATUS", t.driverStatus);
 
   if (assigns && assigns.length) {
-    lines.push("ASSIGNMENTS:");
+    html += `<div class="detail-divider"></div>`;
+    html += section("ASSIGNMENTS");
     assigns.forEach((a) => {
       const n = a.busNumber ? `#${a.busNumber}` : "";
       const bus = a.busId ? `Bus ${a.busId}` : "Bus —";
       const d1 = a.driver1 && a.driver1 !== "None" ? a.driver1 : "—";
       const d2 = a.driver2 && a.driver2 !== "None" ? a.driver2 : "";
-      lines.push(`  ${n} ${bus} • ${d1}${d2 ? " / " + d2 : ""}`.trim());
+      html += `<div class="detail-assignment">• ${n} ${bus}: ${d1}${d2 ? " / " + d2 : ""}</div>`;
     });
-    lines.push("");
   }
 
-  lines.push("NOTES:");
-  lines.push(t.notes ? String(t.notes) : "—");
-  lines.push("");
-  lines.push("COMMENTS:");
-  lines.push(t.comments ? String(t.comments) : "—");
-  lines.push("");
-  lines.push("ITINERARY:");
-  lines.push(t.itinerary ? String(t.itinerary) : "—");
+  if (t.notes) {
+    html += `<div class="detail-divider"></div>`;
+    html += section("NOTES");
+    html += `<div class="detail-text">${escHtml(t.notes)}</div>`;
+  }
 
-  dom.tripDetailsBody.textContent = lines.join("\n");
+  if (t.comments) {
+    html += `<div class="detail-divider"></div>`;
+    html += section("COMMENTS");
+    html += `<div class="detail-text">${escHtml(t.comments)}</div>`;
+  }
+
+  if (t.itinerary) {
+    html += `<div class="detail-divider"></div>`;
+    html += section("ITINERARY");
+    html += `<div class="detail-text pre-wrap">${escHtml(t.itinerary)}</div>`;
+  }
+
+  dom.tripDetailsBody.innerHTML = html;
   dom.tripDetailsModal.hidden = false;
 }
 
@@ -2753,6 +2782,9 @@ async function openTripForEdit(tripKey) {
   toastShow("Loading trip… 0%", "loading");
   toastProgress(0);
   dom.saveBtn.disabled = true;
+
+  // Ensure the left panel is open and showing the trip card
+  setLeftPanelMode("trip");
 
   try {
     toastProgress(15, "Fetching trip… 15%");
@@ -3056,9 +3088,78 @@ async function loadDriversAndBuses(forceRefresh = false) {
 // ======================================================
 // 34) DELEGATED BAR EVENTS
 // ======================================================
+// ======================================================
+// 34) DELEGATED BAR EVENTS (CONTEXT MENU)
+// ======================================================
+let activeContextTripKey = null;
+
+function closeTripContextMenu() {
+  if (dom.ctxMenu) dom.ctxMenu.hidden = true;
+  activeContextTripKey = null;
+}
+
+function showTripContextMenu(x, y, tripKey) {
+  if (!dom.ctxMenu) return;
+
+  activeContextTripKey = tripKey;
+
+  // Update Header (optional, could fetch trip details to show dest)
+  // For now just generic "Trip Actions" or maybe the destination from the DOM?
+  // Let's keep it simple for now.
+
+  dom.ctxMenu.style.left = `${x}px`;
+  dom.ctxMenu.style.top = `${y}px`;
+  dom.ctxMenu.hidden = false;
+
+  // Adjust if off-screen (using clientX to avoid scroll math complexity)
+  const rect = dom.ctxMenu.getBoundingClientRect();
+  const winW = window.innerWidth;
+  const winH = window.innerHeight;
+  const scrollX = window.scrollX || 0;
+  const scrollY = window.scrollY || 0;
+
+  // Calculate viewport-relative X
+  const clientX = x - scrollX;
+
+  // If click is in the right 250px of the screen, force alignment to LEFT of cursor
+  // This avoids waiting for rect.width to be valid (which might be 0 during animation)
+  if (clientX > winW - 250) {
+    // Force menu to be ~200px wide properties to left
+    // x is pageX.
+    dom.ctxMenu.style.left = `${Math.max(scrollX, x - 210)}px`;
+  }
+
+  // Check overflow bottom
+  if (rect.bottom > winH) {
+    dom.ctxMenu.style.top = `${y - rect.height}px`;
+  }
+}
+
 function wireDelegatedBarEvents() {
   const containers = document.querySelectorAll(".week-table-container");
   if (!containers.length) return;
+
+  // Close context menu on any click outside
+  document.addEventListener("click", (e) => {
+    if (!dom.ctxMenu.hidden && !dom.ctxMenu.contains(e.target)) {
+      closeTripContextMenu();
+    }
+  });
+
+  // Wire Context Actions
+  dom.ctxEditBtn?.addEventListener("click", () => {
+    if (activeContextTripKey) {
+      openTripForEdit(activeContextTripKey);
+      closeTripContextMenu();
+    }
+  });
+
+  dom.ctxViewBtn?.addEventListener("click", () => {
+    if (activeContextTripKey) {
+      openTripDetailsModal(activeContextTripKey);
+      closeTripContextMenu();
+    }
+  });
 
   containers.forEach((container) => {
     container.addEventListener("click", (e) => {
@@ -3068,10 +3169,15 @@ function wireDelegatedBarEvents() {
       const tripKey = bar.dataset.tripkey;
       if (!tripKey) return;
 
-      if (isMobileOnly()) openTripDetailsModal(tripKey);
-      else openTripForEdit(tripKey);
+      // Stop propagation so document click doesn't immediately close it
+      e.stopPropagation();
+
+      // Position menu near mouse click
+      showTripContextMenu(e.pageX, e.pageY, tripKey);
     });
 
+    // Keep Enter/Space for accessibility (default to Edit for now, or open menu?)
+    // Let's act like left click -> Open Menu
     container.addEventListener("keydown", (e) => {
       if (e.key !== "Enter" && e.key !== " ") return;
       const bar = e.target.closest(".trip-bar");
@@ -3081,7 +3187,12 @@ function wireDelegatedBarEvents() {
       const tripKey = bar.dataset.tripkey;
       if (!tripKey) return;
 
-      openTripForEdit(tripKey);
+      // Calculate center of bar for position
+      const rect = bar.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2 + window.scrollY;
+
+      showTripContextMenu(x, y, tripKey);
     });
   });
 }

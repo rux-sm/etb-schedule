@@ -292,9 +292,17 @@
                         <option value="" selected>Auto</option>
                         <option value="green">Green</option>
                         <option value="yellow">Yellow</option>
-                        <option value="gray">Gray</option>
+                        <option value="orange">Orange</option>
+                        <option value="mint">Mint</option>
+                        <option value="teal">Teal</option>
+                        <option value="cyan">Cyan</option>
+                        <option value="indigo">Indigo</option>
                         <option value="violet">Violet</option>
                         <option value="pink">Pink</option>
+                        <option value="brown">Brown</option>
+                        <option value="gray">Gray</option>
+                        <option value="black">Black</option>
+                        <option value="white">White</option>
                       </select>
                     </div>
 
@@ -587,6 +595,19 @@
     </div>
 
     <div id="printRoot" class="is-hidden"></div>
+
+    <!-- Context Menu -->
+    <div id="tripContextMenu" class="context-menu" hidden>
+      <div class="context-header" id="ctxHeader">Trip Actions</div>
+      <button id="ctxEditBtn" class="context-item">
+        <span class="material-symbols-outlined">edit</span>
+        <span>Edit Trip</span>
+      </button>
+      <button id="ctxViewBtn" class="context-item">
+        <span class="material-symbols-outlined">visibility</span>
+        <span>View Details</span>
+      </button>
+    </div>
 
     <script src="app.js?v=20"></script>
   </body>

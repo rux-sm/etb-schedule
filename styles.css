@@ -21,30 +21,30 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
   /* --- BASE HUES --- */
-  --red-dark: rgb(255 56 60);
-  --orange-dark: rgb(255 141 40);
-  --yellow-dark: rgb(255 204 0);
-  --green-dark: rgb(52 199 89);
-  --mint-dark: rgb(0 200 179);
-  --teal-dark: rgb(0 195 208);
-  --cyan-dark: rgb(0 192 232);
-  --blue-dark: rgb(0 136 255);
-  --indigo-dark: rgb(97 85 245);
-  --purple-dark: rgb(203 48 224);
-  --pink-dark: rgb(255 45 85);
-  --brown-dark: rgb(172 127 94);
+  --red: rgb(255 56 60);
+  --orange: rgb(255 141 40);
+  --yellow: rgb(255 204 0);
+  --green: rgb(52 199 89);
+  --mint: rgb(0 200 179);
+  --teal: rgb(0 195 208);
+  --cyan: rgb(0 192 232);
+  --blue: rgb(0 136 255);
+  --indigo: rgb(97 85 245);
+  --purple: rgb(203 48 224);
+  --pink: rgb(255 45 85);
+  --brown: rgb(172 127 94);
   --black: rgb(0 0 0);
-  --gray: rgb(108 108 108);
+  --gray: rgb(142 142 142);
   --white: rgb(255 255 255);
 
   /* --- STATUS COLORS ---  */
   --red-status: rgb(255 97 101);
   --yellow-status: rgb(254 223 67);
-  --cyan-status: rgb(92 184 255);
+  --blue-status: rgb(92 184 255);
   --green-status: rgb(74 217 104);
 
   /* --- ACCENT COLOR --- */
-  --accent: var(--blue-dark);
+  --accent: var(--blue);
 
   /* TEXT */
 
@@ -52,6 +52,9 @@
   --text-primary: #f4f4f4;
   --text-muted: #bdbdbd;
   --placeholder: #9b9b9b;
+
+  /* --- SEMANTIC TOKENS --- */
+  --text-driver: var(--yellow); /* Default (Dark Mode) */
 
   /* --- BASE SURFACES --- */
 
@@ -188,8 +191,8 @@
   --z-sticky: 100;
   --z-dropdown: 1000;
   --z-overlay: 1100;
-  --z-modal: 1200;
-  --z-toast: 1300;
+  --z-modal: 10100;
+  --z-toast: 10200;
 
   /* Danger specific */
   --color-danger-surface: #a50e0e;
@@ -224,7 +227,7 @@
   --layout-logo-max-width: 420px;
 
   /* Schedule Grid */
-  --schedule-row-height: 92px;
+  --schedule-row-height: 100px; /* Increased to fit 94px bars + margin */
   --schedule-col-width: 50px;
   --bus-col-w: 40px;
   --day-row-h: 40px;
@@ -232,7 +235,7 @@
   --color-conflict-accent: var(--color-danger);
 
   /* Trip Bars */
-  --tripbar-height: 84px;
+  --tripbar-height: 94px; /* 7 rows * 11px + 6 gaps * 1px + 8px padding + 3px border */
   --tripbar-gap: 0px;
   --tripbar-lane-step: calc(var(--tripbar-height) + var(--tripbar-gap));
   --waiting-list-height: 84px;
@@ -240,8 +243,8 @@
   --tripbar-font-size-major: 11px;
   --tripbar-font-size-minor: 9px;
   --tripbar-line-height-major: 11px;
-  --tripbar-line-height-minor: 9px;
-  --tripbar-row-gap: 2px;
+  --tripbar-line-height-minor: 11px;
+  --tripbar-row-gap: 1px;
   --tripbar-padding-vertical: 4px;
 }
 
@@ -250,8 +253,8 @@
   color-scheme: light;
 
   /* --- Base Surfaces --- */
-  --app-bg: #f4f4f4;
-  --surface-0: #ffffff;
+  --app-bg: #bdbdbd;
+  --surface-0: #f5f5f5;
   --surface-1: #ffffff;
   --surface-2: #ffffff;
   --surface-3: #f0f0f0;
@@ -262,6 +265,10 @@
   --text-muted: #737373;
   --placeholder: #a3a3a3;
   --color-text-inverse: #ffffff;
+  --white: #000000;
+
+  /* --- Semantic Overrides (Light Mode) --- */
+  --text-driver: #000000; /* High Contrast Black for Light Mode */
 
   /* --- Borders --- */
   --border: #e5e5e5;
@@ -754,11 +761,13 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   position: relative;
   isolation: isolate;
   /* Hide scrollbars but keep scroll functionality */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  /* Standard: Firefox, Chrome 121+, Edge 121+ */
+  scrollbar-width: none;
+  /* Legacy: IE and Edge */
+  -ms-overflow-style: none;
 }
 
-/* Hide scrollbars for Chrome, Safari, and Opera */
+/* Fallback: Chrome <121, Safari, Opera */
 .card::-webkit-scrollbar {
   display: none;
 }
@@ -821,13 +830,18 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .modal-card {
   position: relative;
   width: min(720px, calc(100vw - 24px));
-  margin: 8vh auto 0;
-  background: var(--color-surface-2);
+  /* Center properly */
+  margin: 0 auto;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #151515; /* Explicitly opaque for mobile */
   border: 1px solid var(--color-border-2);
   border-radius: var(--radius-lg);
   box-shadow: var(--elevation-2);
   padding: var(--space-2);
-  max-height: calc(100vh - 6vh);
+  /* Dynamic height: auto to fit content, but max 90% of screen */
+  height: auto;
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
 }
@@ -838,20 +852,23 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   justify-content: space-between;
   gap: var(--space-2);
   margin-bottom: var(--space-2);
+  flex-shrink: 0;
 }
 
 .modal-body {
   display: flex;
   flex-direction: column;
-  flex: 1 1 auto;
-  overflow: hidden;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  /* Add padding for scrollbar space */
+  padding-right: 4px;
 }
 
 .modal-body textarea {
-  flex: 1 1 auto;
+  flex: 1;
   min-height: 240px;
-  max-height: 100%;
-  overflow-y: auto;
+  resize: vertical;
 }
 
 .modal-actions {
@@ -1593,11 +1610,11 @@ th.is-today .day-name {
 }
 
 .bus-id-wrap .bus-lift {
-  color: color-mix(in srgb, var(--blue) 60%, transparent);
+  color: color-mix(in srgb, var(--blue) 33%, transparent);
 }
 
 .bus-id-wrap .bus-sleeper {
-  color: color-mix(in srgb, var(--gray) 60%, transparent);
+  color: color-mix(in srgb, var(--gray) 33%, transparent);
 }
 
 .week-table td:first-child {
@@ -1635,35 +1652,35 @@ th.is-today .day-name {
   z-index: 200;
   display: grid;
 
-  grid-template-rows: repeat(7, 9px);
+  grid-template-rows: repeat(7, 11px);
   row-gap: var(--tripbar-row-gap);
   padding: var(--tripbar-padding-vertical) 4px;
 
   font-variant-numeric: tabular-nums;
   height: var(--tripbar-height);
-  box-sizing: border-box; /* ✅ height includes border */
-  border: 1.5px solid var(--blue-dark);
+  box-sizing: border-box;
+  border: 1.5px solid var(--blue);
   border-radius: var(--control-radius);
   overflow: hidden;
-  background: color-mix(in srgb, var(--blue-dark) 33%, transparent);
+  background: color-mix(in srgb, var(--blue) 33%, transparent);
   cursor: pointer;
   container-type: inline-size;
 }
 
 /* Trip Bar Alternative Colors */
 .trip-bar.unconfirmed {
-  background: color-mix(in srgb, var(--red-dark) 33%, transparent);
-  border-color: var(--red-dark);
+  background: color-mix(in srgb, var(--red) 33%, transparent);
+  border-color: var(--red);
 }
 
 .trip-bar.color-green {
-  background: color-mix(in srgb, var(--green-dark) 33%, transparent);
-  border-color: var(--green-dark);
+  background: color-mix(in srgb, var(--green) 33%, transparent);
+  border-color: var(--green);
 }
 
 .trip-bar.color-yellow {
-  background: color-mix(in srgb, var(--yellow-dark) 33%, transparent);
-  border-color: var(--yellow-dark);
+  background: color-mix(in srgb, var(--yellow) 33%, transparent);
+  border-color: var(--yellow);
 }
 
 .trip-bar.color-gray {
@@ -1672,18 +1689,57 @@ th.is-today .day-name {
 }
 
 .trip-bar.color-violet {
-  background: color-mix(in srgb, var(--purple-dark) 33%, transparent);
-  border-color: var(--purple-dark);
+  background: color-mix(in srgb, var(--purple) 33%, transparent);
+  border-color: var(--purple);
 }
 
 .trip-bar.color-pink {
-  background: color-mix(in srgb, var(--pink-dark) 33%, transparent);
-  border-color: var(--pink-dark);
+  background: color-mix(in srgb, var(--pink) 33%, transparent);
+  border-color: var(--pink);
+}
+
+.trip-bar.color-orange {
+  background: color-mix(in srgb, var(--orange) 33%, transparent);
+  border-color: var(--orange);
+}
+
+.trip-bar.color-teal {
+  background: color-mix(in srgb, var(--teal) 33%, transparent);
+  border-color: var(--teal);
+}
+
+.trip-bar.color-cyan {
+  background: color-mix(in srgb, var(--cyan) 33%, transparent);
+  border-color: var(--cyan);
+}
+
+.trip-bar.color-indigo {
+  background: color-mix(in srgb, var(--indigo) 33%, transparent);
+  border-color: var(--indigo);
+}
+
+.trip-bar.color-brown {
+  background: color-mix(in srgb, var(--brown) 33%, transparent);
+  border-color: var(--brown);
+}
+
+.trip-bar.color-mint {
+  background: color-mix(in srgb, var(--mint) 33%, transparent);
+  border-color: var(--mint);
+}
+
+.trip-bar.color-black {
+  background: color-mix(in srgb, var(--black) 33%, transparent);
+  border-color: var(--black);
+}
+
+.trip-bar.color-white {
+  background: color-mix(in srgb, var(--white) 33%, transparent);
+  border-color: var(--white);
 }
 
 /* "Glassy Spotlight" Hover Effect */
 .trip-bar:hover {
-  z-index: 500;
   /* Lift the card up towards the user */
   transform: translateY(-2px) scale(1.02);
   /* Make it slightly brighter to simulate light hitting it */
@@ -1723,7 +1779,7 @@ th.is-today .day-name {
 }
 
 .trip-bar .bar-sub {
-  color: rgba(255, 255, 255, 0.75);
+  color: color-mix(in srgb, var(--white) 80%, transparent);
   font-size: var(--tripbar-font-size-minor);
   font-weight: var(--font-weight-regular);
   text-transform: uppercase;
@@ -1753,7 +1809,7 @@ th.is-today .day-name {
 
 .trip-bar .bar-pre-drivers {
   font-size: var(--tripbar-font-size-minor);
-  color: rgba(255, 204, 0, 0.75);
+  color: color-mix(in srgb, var(--text-driver) 80%, transparent);
   font-weight: var(--font-weight-regular);
   line-height: var(--tripbar-line-height-minor);
   text-transform: uppercase;
@@ -1772,7 +1828,7 @@ th.is-today .day-name {
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   line-height: var(--tripbar-line-height-major);
-  color: var(--yellow-dark);
+  color: var(--text-driver);
 }
 
 .trip-bar .bar-status-row {
@@ -1785,9 +1841,9 @@ th.is-today .day-name {
 /* Trip Bar Status Badges */
 
 .trip-bar .mini-badge {
-  width: 10px;
-  height: 10px;
-  font-size: 8px;
+  width: 11px;
+  height: 11px;
+  font-size: 11px;
   font-weight: var(--font-weight-regular);
   border-radius: 2px;
   position: relative;
@@ -1806,7 +1862,7 @@ th.is-today .day-name {
 }
 
 .trip-bar .mini-badge.is-blue {
-  background: var(--cyan-status);
+  background: var(--blue-status);
 }
 
 .trip-bar .mini-badge.is-yellow {
@@ -1824,10 +1880,10 @@ th.is-today .day-name {
   font-family: "Material Symbols Outlined";
   content: "keyboard_double_arrow_left";
   left: 4px;
-  top: 50%;
+  top: 51%;
   position: absolute;
   transform: translateY(-50%);
-  font-size: 20px;
+  font-size: 16px;
   animation: arrow-left-bounce 0.75s infinite ease-in-out;
 }
 
@@ -1841,10 +1897,10 @@ th.is-today .day-name {
   font-family: "Material Symbols Outlined";
   content: "keyboard_double_arrow_right";
   right: 4px;
-  top: 50%;
+  top: 51%;
   position: absolute;
   transform: translateY(-50%);
-  font-size: 20px;
+  font-size: 16px;
   animation: arrow-right-bounce 0.75s infinite ease-in-out;
 }
 
@@ -1951,6 +2007,7 @@ th.is-today .day-name {
   border-collapse: collapse;
   /* Better for gridlines than separate */
   table-layout: fixed;
+  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -2079,6 +2136,72 @@ select.status-confirmed {
 .hidden,
 .is-hidden {
   display: none !important;
+}
+
+/* --- Context Menu --- */
+.context-menu {
+  position: absolute;
+  background: var(--surface-2);
+  border: 1px solid var(--color-border-2);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  padding: 4px;
+  z-index: 1000;
+  min-width: 180px;
+  animation: fadeIn 0.1s ease-out;
+}
+
+.context-header {
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-2);
+  border-bottom: 1px solid var(--color-border-1);
+  margin-bottom: 4px;
+  opacity: 0.7;
+  text-align: left;
+}
+
+.context-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  color: var(--text);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.1s;
+}
+
+@media (max-width: 899px) {
+  #ctxEditBtn {
+    display: none !important;
+  }
+}
+
+.context-item:hover {
+  background: var(--surface-3);
+}
+
+.context-item .material-symbols-outlined {
+  font-size: 18px;
+  opacity: 0.8;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .block {
@@ -2410,4 +2533,65 @@ select.status-confirmed {
     border: 1px solid rgba(0, 0, 0, 0.25);
     background: #fff;
   }
+}
+
+/* ========================================================================== */
+/*  TRIP DETAILS MODAL                                                       */
+/* ========================================================================== */
+.detail-row {
+  display: flex;
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+.detail-row strong {
+  min-width: 140px;
+  color: var(--text-2);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.detail-row span {
+  flex: 1;
+  color: var(--text-1);
+}
+
+.detail-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+  margin-top: 4px;
+}
+
+.detail-divider {
+  height: 1px;
+  background: var(--color-border-1);
+  margin: 12px 0;
+}
+
+.detail-text {
+  color: var(--text-1);
+  line-height: 1.5;
+  font-size: 13px;
+  background: var(--surface-1);
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border-1);
+}
+
+.detail-text.pre-wrap {
+  white-space: pre-wrap;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.detail-assignment {
+  margin-left: 8px;
+  margin-bottom: 4px;
+  color: var(--text-1);
 }
