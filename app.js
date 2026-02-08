@@ -473,7 +473,8 @@ function isMobileOnly() {
 
 function stackOffset(rowH, barH, step, laneCount) {
   const stackH = barH + (laneCount - 1) * step;
-  return Math.max(0, (rowH - stackH) / 2);
+  // Subtract 1px for the bottom border to center in the *visible* whitespace
+  return Math.max(0, (rowH - 1 - stackH) / 2);
 }
 
 function waitForAgendaPaint(timeoutMs = 2000) {
@@ -1980,9 +1981,10 @@ function _renderAgendaInner() {
 
       positionBarWithinOverlay(bar, bars, col, startIdx, endIdx);
 
-      const itin = clipText(t.itinerary, 1200);
-      const namePhone = [name, phone].filter(Boolean).join(" • ");
-      bar.title = `${namePhone || "—"}\n\nITINERARY\n${itin || "—"}`;
+      /* Tooltip removed by user request (modal is used instead) */
+      // const itin = clipText(t.itinerary, 1200);
+      // const namePhone = [name, phone].filter(Boolean).join(" • ");
+      // bar.title = `${namePhone || "—"}\n\nITINERARY\n${itin || "—"}`;
 
       let frag = fragByRow.get(rowIdx);
       if (!frag) {
@@ -2267,6 +2269,17 @@ function setLeftCardMode(mode) {
   const showDrivers = mode === "drivers";
   const showNotes = mode === "notes";
 
+  // Helper to reset animation
+  const resetAnim = (el) => {
+    el.classList.remove("fade-in");
+    void el.offsetWidth; // force reflow
+    el.classList.add("fade-in");
+  };
+
+  if (showTrip) resetAnim(dom.tripInfoCard);
+  if (showDrivers) resetAnim(dom.driverWeekCard);
+  if (showNotes) resetAnim(dom.notesCard);
+
   dom.tripInfoCard.classList.toggle("is-hidden", !showTrip);
   dom.driverWeekCard.classList.toggle("is-hidden", !showDrivers);
   dom.notesCard.classList.toggle("is-hidden", !showNotes);
@@ -2289,8 +2302,12 @@ function updateNotesWeekTitle() {
 function setLeftPanelMode(mode) {
   const showLeft = mode !== "off";
 
-  dom.tripScheduler.classList.toggle("is-hidden", !showLeft);
-  dom.schedulerLayout.classList.toggle("is-collapsed", !showLeft);
+  // dom.tripScheduler.classList.toggle("is-hidden", !showLeft);
+  // Use collapsed class for animation instead of hiding
+  dom.tripScheduler.classList.toggle("scheduler-collapsed", !showLeft);
+
+  // Remove is-collapsed from layout so flex can animate width
+  // dom.schedulerLayout.classList.toggle("is-collapsed", !showLeft);
 
   if (showLeft) setLeftCardMode(mode);
 
