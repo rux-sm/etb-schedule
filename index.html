@@ -22,16 +22,8 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
     />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-    />
 
-    <link rel="stylesheet" href="styles.css?v=20" />
+    <link rel="stylesheet" href="styles.css?v=25" />
   </head>
 
   <body>
@@ -71,7 +63,7 @@
                 </button>
 
                 <button id="todayBtn" class="btn-icon" type="button" aria-label="Today" title="Today">
-                  <span class="material-symbols-outlined">today</span>
+                  <span class="material-symbols-outlined">calendar_today</span>
                 </button>
               </div>
 
@@ -95,11 +87,11 @@
               <!-- Hidden buttons that JS might look for (can be cleaned up later, keeping for safety) -->
               <!-- Tools -->
               <button id="tripInputBtn" class="btn-icon" type="button" title="Trip Editor" aria-label="Trip Editor">
-                <span class="material-symbols-outlined">add</span>
+                <span class="material-symbols-outlined">add_ad</span>
               </button>
 
               <button id="notesBtn" class="btn-icon" type="button" title="Weekly Notes" aria-label="Weekly Notes">
-                <span class="material-symbols-outlined">description</span>
+                <span class="material-symbols-outlined">sticky_note_2</span>
               </button>
 
               <button
@@ -109,15 +101,11 @@
                 title="Driver Assignments"
                 aria-label="Driver Assignments"
               >
-                <span class="material-symbols-sharp">groups</span>
+                <span class="material-symbols-outlined">groups</span>
               </button>
 
               <button id="waitingListBtn" class="btn-icon" type="button" title="Waiting List" aria-label="Waiting List">
-                <span class="material-symbols-outlined">pending_actions</span>
-              </button>
-
-              <button id="themeToggle" class="btn-icon" type="button" aria-label="Theme" title="Theme">
-                <span class="material-symbols-outlined">dark_mode</span>
+                <span class="material-symbols-outlined">low_priority</span>
               </button>
 
               <!-- Settings Dropdown -->
@@ -141,45 +129,32 @@
                   title="Settings"
                   aria-label="Settings"
                 >
-                  <span class="material-symbols-rounded">settings</span>
+                  <span class="material-symbols-outlined">settings</span>
                 </button>
 
                 <div id="settingsMenu" class="dropdown-menu" hidden>
+                  <button id="refreshBtn2" class="dropdown-item" type="button">
+                    <span class="dropdown-icon material-symbols-outlined">refresh</span>
+                    <span>Refresh Data</span>
+                  </button>
+
+                  <hr class="dropdown-divider" />
+
                   <button id="themeToggle2" class="dropdown-item" type="button">
                     <span class="dropdown-icon material-symbols-outlined">dark_mode</span>
                     <span>Toggle Theme</span>
                   </button>
 
-                  <hr class="dropdown-divider" />
-                  <button id="todayBtn2" class="dropdown-item" type="button">
-                    <span class="dropdown-icon">📅</span>
-                    <span>Jump to Today</span>
-                  </button>
-
                   <button id="printBtn2" class="dropdown-item" type="button">
-                    <span class="dropdown-icon">🖨️</span>
+                    <span class="dropdown-icon material-symbols-outlined">print</span>
                     <span>Print Schedule</span>
                   </button>
 
                   <hr class="dropdown-divider" />
 
-                  <div class="dropdown-item-label">Week Starts On:</div>
-
-                  <button id="weekSun2" class="dropdown-item" type="button">
-                    <span class="dropdown-icon">📆</span>
-                    <span>Sunday</span>
-                  </button>
-
-                  <button id="weekMon2" class="dropdown-item" type="button">
-                    <span class="dropdown-icon">📆</span>
-                    <span>Monday</span>
-                  </button>
-
-                  <hr class="dropdown-divider" />
-
-                  <button id="refreshBtn2" class="dropdown-item" type="button">
-                    <span class="dropdown-icon">🔄</span>
-                    <span>Refresh Data</span>
+                  <button id="weekStartToggle" class="dropdown-item" type="button">
+                    <span class="dropdown-icon material-symbols-outlined">toggle_off</span>
+                    <span>Week starts Monday</span>
                   </button>
                 </div>
               </div>
@@ -591,6 +566,15 @@
       </button>
     </div>
 
-    <script src="app.js?v=20"></script>
+    <!-- Empty Cell Context Menu -->
+    <div id="cellContextMenu" class="context-menu" hidden>
+      <div class="context-header">New Entry</div>
+      <button id="ctxNewTripBtn" class="context-item">
+        <span class="material-symbols-outlined">add</span>
+        <span>New Trip</span>
+      </button>
+    </div>
+
+    <script src="app.js?v=32" defer></script>
   </body>
 </html>

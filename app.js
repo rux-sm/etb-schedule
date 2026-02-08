@@ -179,8 +179,7 @@ const dom = {
   themeToggle: $("themeToggle"),
   themeText2: $("themeText2"),
   printBtn2: $("printBtn2"),
-  weekSun2: $("weekSun2"),
-  weekMon2: $("weekMon2"),
+  weekStartToggle: $("weekStartToggle"),
   refreshBtn2: $("refreshBtn2"),
 
   // Context Menu
@@ -189,6 +188,10 @@ const dom = {
   ctxEditBtn: $("ctxEditBtn"),
   ctxViewBtn: $("ctxViewBtn"),
   ctxCopyBtn: $("ctxCopyBtn"),
+
+  // Cell Context Menu
+  cellCtxMenu: $("cellContextMenu"),
+  ctxNewTripBtn: $("ctxNewTripBtn"),
 };
 
 // ======================================================
@@ -968,9 +971,14 @@ function syncWeekStartUI() {
   if (dom.weekStartMonBtn) dom.weekStartMonBtn.setAttribute("aria-pressed", isMon ? "true" : "false");
   if (dom.weekStartSunBtn) dom.weekStartSunBtn.setAttribute("aria-pressed", isMon ? "false" : "true");
 
-  // Update dropdown items
-  if (dom.weekMon2) dom.weekMon2.classList.toggle("is-active", isMon);
-  if (dom.weekSun2) dom.weekSun2.classList.toggle("is-active", !isMon);
+  // Update toggle button icon and text
+  if (dom.weekStartToggle) {
+    const icon = dom.weekStartToggle.querySelector(".dropdown-icon");
+    if (icon) {
+      icon.textContent = isMon ? "toggle_on" : "toggle_off";
+      icon.classList.toggle("is-on", isMon);
+    }
+  }
 }
 
 function applyWeekStart(isMonday) {
@@ -1279,6 +1287,11 @@ function buildAgendaRows() {
   const liftSet = computeLiftSet();
   const sleeperSet = computeSleeperSet();
 
+  // Calculate today's column index for highlighting
+  const todayYmd = ymd(new Date());
+  const weekDates = getWeekDates(state.currentDate);
+  const todayColIndex = weekDates.indexOf(todayYmd); // -1 if not in this week
+
   dom.agendaBody.innerHTML = "";
   state.busRowIndex = new Map();
 
@@ -1334,7 +1347,7 @@ function buildAgendaRows() {
 
     if (sleeperSet.has(busKey)) {
       const icon = document.createElement("span");
-      icon.className = "bus-sleeper material-symbols-rounded";
+      icon.className = "bus-sleeper material-symbols-outlined";
       icon.textContent = "airline_seat_flat";
       icon.title = "Sleeper bus";
       icon.setAttribute("aria-label", "Sleeper bus");
@@ -1349,6 +1362,7 @@ function buildAgendaRows() {
       const td = document.createElement("td");
       td.className = "day-cell";
       td.dataset.dayId = dayIds[i];
+      if (i === todayColIndex) td.classList.add("day-today");
       tr.appendChild(td);
     }
 
@@ -1377,13 +1391,14 @@ function buildAgendaRows() {
 
     const tdBus = document.createElement("td");
     tdBus.className = "bus-id-cell";
-    tdBus.innerHTML = `<div class="bus-id-wrap"><span class="material-symbols-outlined" style="font-size: 24px;">pending_actions</span></div>`;
+    tdBus.innerHTML = `<div class="bus-id-wrap"><span class="material-symbols-outlined" style="font-size: 24px;">low_priority</span></div>`;
     tr.appendChild(tdBus);
 
     for (let i = 0; i < 7; i++) {
       const td = document.createElement("td");
       td.className = "day-cell";
       td.dataset.dayId = dayIds[i];
+      if (i === todayColIndex) td.classList.add("day-today");
       tr.appendChild(td);
     }
 
@@ -2487,7 +2502,14 @@ function updateWeekDates() {
     const th = document.getElementById(dayId);
     const dateSpan = th?.querySelector?.(".day-date");
     if (dateSpan) dateSpan.textContent = `${date.getDate()}`;
-    th?.classList.toggle("day-today", ymd(date) === todayYmd);
+
+    const isToday = ymd(date) === todayYmd;
+    th?.classList.toggle("day-today", isToday);
+
+    // Update body cells in this column too
+    document.querySelectorAll(`td[data-day-id="${dayId}"]`).forEach((td) => {
+      td.classList.toggle("day-today", isToday);
+    });
   });
 
   const { start, end } = getWeekRange();
@@ -3111,11 +3133,21 @@ async function loadDriversAndBuses(forceRefresh = false) {
 // 34) DELEGATED BAR EVENTS (CONTEXT MENU)
 // ======================================================
 let activeContextTripKey = null;
+let activeCellContext = null;
 
 function closeTripContextMenu() {
   if (dom.ctxMenu) dom.ctxMenu.hidden = true;
   activeContextTripKey = null;
 }
+
+function closeCellContextMenu() {
+  if (dom.cellCtxMenu) dom.cellCtxMenu.hidden = true;
+  activeCellContext = null;
+}
+
+// Auto-close menus on mouse leave
+dom.ctxMenu?.addEventListener("mouseleave", closeTripContextMenu);
+dom.cellCtxMenu?.addEventListener("mouseleave", closeCellContextMenu);
 
 function showTripContextMenu(x, y, tripKey) {
   if (!dom.ctxMenu) return;
@@ -3154,14 +3186,52 @@ function showTripContextMenu(x, y, tripKey) {
   }
 }
 
+function showCellContextMenu(x, y, busId, dateStr) {
+  // console.log("showCellContextMenu called", { x, y, busId, dateStr, menu: dom.cellCtxMenu });
+  if (!dom.cellCtxMenu) {
+    console.error("cellCtxMenu DOM element not found!");
+    return;
+  }
+
+  activeCellContext = { busId, dateStr };
+
+  dom.cellCtxMenu.style.left = `${x}px`;
+  dom.cellCtxMenu.style.top = `${y}px`;
+  dom.cellCtxMenu.hidden = false;
+  // dom.cellCtxMenu.style.display = "block"; // Removed, relies on hidden attribute
+  // dom.cellCtxMenu.style.zIndex = "99999"; // Removed
+  // ... rest of function default ...
+
+  // Adjust if off-screen
+  const rect = dom.cellCtxMenu.getBoundingClientRect();
+  const winW = window.innerWidth;
+  const winH = window.innerHeight;
+  const scrollX = window.scrollX || 0;
+  const scrollY = window.scrollY || 0;
+
+  // X adjustment
+  const clientX = x - scrollX;
+  if (clientX > winW - 200) {
+    dom.cellCtxMenu.style.left = `${Math.max(scrollX, x - 180)}px`;
+  }
+
+  // Y adjustment
+  if (rect.bottom > winH) {
+    dom.cellCtxMenu.style.top = `${Math.max(scrollY, y - rect.height)}px`;
+  }
+}
+
 function wireDelegatedBarEvents() {
   const containers = document.querySelectorAll(".week-table-container");
   if (!containers.length) return;
 
   // Close context menu on any click outside
   document.addEventListener("click", (e) => {
-    if (!dom.ctxMenu.hidden && !dom.ctxMenu.contains(e.target)) {
+    if (dom.ctxMenu && !dom.ctxMenu.hidden && !dom.ctxMenu.contains(e.target)) {
       closeTripContextMenu();
+    }
+    if (dom.cellCtxMenu && !dom.cellCtxMenu.hidden && !dom.cellCtxMenu.contains(e.target)) {
+      closeCellContextMenu();
     }
   });
 
@@ -3180,19 +3250,91 @@ function wireDelegatedBarEvents() {
     }
   });
 
+  // NEW TRIP BUTTON (Cell Context Menu)
+  dom.ctxNewTripBtn?.addEventListener("click", () => {
+    if (activeCellContext) {
+      const { busId, dateStr } = activeCellContext;
+      closeCellContextMenu();
+
+      // Switch to Trip Editor
+      // dom.newBtn.click() calls setModeNew() which calls setLeftPanelMode("trip")
+      // But we call it explicit just in case
+      setLeftPanelMode("trip");
+
+      // Trigger "New Trip" logic (resets form)
+      dom.newBtn.click();
+
+      // Force 1 bus needed -> triggers row visibility
+      if (dom.busesNeeded) {
+        dom.busesNeeded.value = "1";
+        dom.busesNeeded.dispatchEvent(new Event("input"));
+        dom.busesNeeded.dispatchEvent(new Event("change"));
+      }
+
+      // Allow a microtab for DOM to update bus rows? Usually synchronous if no animation delay blocks it.
+      // But let's try setting it immediately.
+
+      // Target the dynamic "bus1" select
+      const bus1Input = document.querySelector('select[name="bus1"]');
+      if (bus1Input) {
+        bus1Input.value = busId;
+      } else {
+        console.warn("Could not find select[name='bus1']");
+      }
+
+      // Trip Date
+      const tripDateInput = document.getElementById("tripDate");
+      if (tripDateInput) {
+        tripDateInput.value = dateStr;
+        tripDateInput.dispatchEvent(new Event("change")); // To auto-fill arrival
+      }
+    }
+  });
+
   containers.forEach((container) => {
     container.addEventListener("click", (e) => {
+      // 1. Check for Trip Bar (existing logic)
       const bar = e.target.closest(".trip-bar");
-      if (!bar) return;
+      if (bar) {
+        const tripKey = bar.dataset.tripkey;
+        if (!tripKey) return;
+        e.stopPropagation();
+        showTripContextMenu(e.pageX, e.pageY, tripKey);
+        return;
+      }
 
-      const tripKey = bar.dataset.tripkey;
-      if (!tripKey) return;
+      // 2. Check for Day Cell (Context Menu)
+      const cell = e.target.closest("td.day-cell");
+      if (cell) {
+        e.stopPropagation(); // Prevent immediate close via document listener
 
-      // Stop propagation so document click doesn't immediately close it
-      e.stopPropagation();
+        // Get the bus ID from the row
+        const tr = cell.closest("tr");
+        if (!tr) return;
 
-      // Position menu near mouse click
-      showTripContextMenu(e.pageX, e.pageY, tripKey);
+        let busId = "";
+        const busCell = tr.querySelector(".bus-id-num");
+        if (busCell) {
+          busId = busCell.textContent.trim();
+        } else if (tr.classList.contains("waiting-list-row")) {
+          busId = "Waiting List";
+        }
+
+        // Get the date
+        const colIdx = cell.cellIndex;
+        if (colIdx < 1) return;
+        const dayIndex = colIdx - 1;
+        const weekDates = getWeekDates();
+        if (dayIndex < 0 || dayIndex >= weekDates.length) return;
+        const dateStr = weekDates[dayIndex];
+
+        if (busId && dateStr) {
+          console.log("showCellContextMenu called with:", { x: e.pageX, y: e.pageY, busId, dateStr });
+          showCellContextMenu(e.pageX, e.pageY, busId, dateStr);
+        } else {
+          console.warn("Missing busId or dateStr", { busId, dateStr });
+        }
+      }
     });
 
     // Keep Enter/Space for accessibility (default to Edit for now, or open menu?)
@@ -3437,77 +3579,7 @@ function wireEvents() {
     }
   });
 
-  dom.agendaBody.addEventListener("click", (e) => {
-    // Find if we clicked a day cell (but NOT a trip bar)
-    const cell = e.target.closest("td.day-cell");
-    if (!cell) return;
-    if (e.target.closest(".trip-bar")) return; // Ignore if clicking a trip
-
-    // Get the bus ID from the row
-    const tr = cell.closest("tr");
-    if (!tr) return;
-    const busCell = tr.querySelector(".bus-id-num");
-    const busId = busCell ? busCell.textContent.trim() : "";
-
-    // Get the date using standard cellIndex
-    // cellIndex 0 is bus-id-cell, so day 0 is cellIndex 1.
-    const colIdx = cell.cellIndex;
-    if (colIdx < 1) return;
-
-    const dayIndex = colIdx - 1; // 0..6
-    const weekDates = getWeekDates();
-
-    // Safety check: ensure dayIndex is valid
-    if (dayIndex < 0 || dayIndex >= weekDates.length) return;
-
-    const dateStr = weekDates[dayIndex]; // YYYY-MM-DD
-
-    if (busId && dateStr) {
-      // Pre-fill "New Trip" form
-      dom.newBtn.click();
-
-      // Set Bus
-      if (dom.busesNeeded) {
-        // 1. Defaul to 1 bus
-        dom.busesNeeded.value = "1";
-        updateBusRowVisibility();
-        syncBusPanelState();
-
-        // 2. Set the first bus select to the chosen bus
-        // We need to wait for the options? No, they should be there.
-        // state.busRows is populated in initBusGrid()
-        if (state.busRows && state.busRows.length > 0) {
-          const firstRow = state.busRows[0];
-          if (firstRow && firstRow.busSel) {
-            // Try to set it
-            // Check if option exists first to be safe, or just set it
-            const opts = Array.from(firstRow.busSel.options);
-            const match = opts.some((o) => o.value === busId);
-            if (match) {
-              firstRow.busSel.value = busId;
-              syncBusSelectEmptyState(); // update UI color
-            }
-          }
-        }
-      }
-
-      // Set Date
-      if ($("tripDate")) {
-        $("tripDate").value = dateStr;
-        // Trigger change to update arrival date auto-fill logic
-        $("tripDate").dispatchEvent(new Event("change", { bubbles: true }));
-      }
-
-      // Provide feedback
-      // Simplified toast to confirm action
-      toast(`New Trip: Bus ${busId} • ${formatDateForToast(dateStr)}`, "info", 1800);
-
-      // Ensure panel is visible on mobile if needed
-      if (isMobileOnly() && dom.tripInputBtn && dom.tripInputBtn.getAttribute("aria-pressed") !== "true") {
-        dom.tripInputBtn.click();
-      }
-    }
-  });
+  /* agendaBody click listener removed - refactoring to use delegation in wireDelegatedBarEvents */
   dom.busGrid.addEventListener("change", (e) => {
     if (e.target && e.target.tagName === "SELECT") syncBusSelectEmptyState();
   });
@@ -3688,14 +3760,9 @@ function wireSettingsMenu() {
   });
 
   // 4. Week Start
-  dom.weekSun2?.addEventListener("click", () => {
-    applyWeekStart(false);
-    dom.settingsMenu.hidden = true;
-  });
-
-  dom.weekMon2?.addEventListener("click", () => {
-    applyWeekStart(true);
-    dom.settingsMenu.hidden = true;
+  dom.weekStartToggle?.addEventListener("click", () => {
+    applyWeekStart(!state.weekStartsOnMonday);
+    // Don't close menu so user can see the toggle change
   });
 
   // 5. Refresh

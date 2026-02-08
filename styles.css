@@ -515,7 +515,7 @@ samp {
    ========================= */
 
 /* Keep the base border so hover/pressed borders work */
-:where(#tripInputBtn, #driversBtn, #waitingListBtn) {
+:where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn) {
   border: 1px solid transparent;
   /* instead of border: none */
   background-color: var(--color-button-bg);
@@ -523,29 +523,29 @@ samp {
 }
 
 /* Unpressed hover */
-:where(#tripInputBtn, #driversBtn, #waitingListBtn):hover {
+:where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn):hover {
   background-color: var(--color-button-hover-bg);
   border-color: var(--color-button-hover-border);
 }
 
 /* Pressed */
-:where(#tripInputBtn, #driversBtn, #waitingListBtn)[aria-pressed="true"] {
-  background-color: var(--color-primary);
-  border-color: var(--color-primary-border);
-  color: var(--color-on-primary);
+:where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn)[aria-pressed="true"] {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary-border) !important;
+  color: var(--accent) !important;
 }
 
 /* Pressed hover/active */
-:where(#tripInputBtn, #driversBtn, #waitingListBtn)[aria-pressed="true"]:hover {
+:where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn)[aria-pressed="true"]:hover {
   background-color: var(--color-primary-hover);
 }
 
-:where(#tripInputBtn, #driversBtn, #waitingListBtn)[aria-pressed="true"]:active {
+:where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn)[aria-pressed="true"]:active {
   background-color: var(--color-primary-active);
 }
 
 /* Optional: focus ring on toggles (keeps consistent with your base rule) */
-:where(#tripInputBtn, #driversBtn, #waitingListBtn):focus-visible {
+:where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn):focus-visible {
   outline: none;
   border-color: var(--focus);
   box-shadow: 0 0 0 3px var(--focus-ring);
@@ -984,6 +984,10 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   flex-shrink: 0;
   justify-content: center;
   font-size: 16px;
+}
+
+.dropdown-icon.is-on {
+  color: var(--accent);
 }
 
 /* ========================================================================== */
@@ -1496,13 +1500,23 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   line-height: 1;
 }
 
-th.is-today .day-date {
-  background: var(--color-primary);
-  color: var(--color-on-primary);
+th.day-today {
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border-bottom: 2px solid var(--accent);
 }
 
-th.is-today .day-name {
-  color: var(--color-primary);
+th.day-today .day-date {
+  color: var(--text);
+  font-weight: 600;
+}
+
+th.day-today .day-name {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+td.day-today {
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
 }
 
 .week-table tbody tr {
@@ -1550,8 +1564,9 @@ th.is-today .day-name {
   cursor: pointer;
 }
 
+/* Day cell hover - accent border glow */
 .week-table td.day-cell:not(:has(.trip-bar:hover)):hover {
-  background-color: var(--overlay-hover);
+  box-shadow: inset 0 0 0 1px var(--accent);
 }
 
 .week-table td.conflict {
@@ -1675,6 +1690,7 @@ th.is-today .day-name {
   overflow: hidden;
   background: color-mix(in srgb, var(--blue) 33%, transparent);
   cursor: pointer;
+  pointer-events: auto; /* Restore clicks */
   container-type: inline-size;
 }
 
@@ -2141,9 +2157,19 @@ select.status-confirmed {
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   padding: 4px;
-  z-index: 1000;
+  z-index: 9999; /* Boosted z-index */
   min-width: 180px;
   animation: fadeIn 0.1s ease-out;
+}
+
+.row-bars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Crucial: let clicks pass through to cells/bars */
+  z-index: 5;
 }
 
 .context-header {
