@@ -169,6 +169,7 @@ const dom = {
   driversBtn: $("driversBtn"),
   notesBtn: $("notesBtn"),
   waitingListBtn: $("waitingListBtn"),
+  waitingBody: $("waitingBody"),
   waitingCard: $("waitingCard"),
 
   // Settings Menu
@@ -1359,7 +1360,7 @@ function buildAgendaRows() {
     dom.agendaBody.appendChild(tr);
   });
 
-  // WAITING LIST ROW -> Render into separate table
+  // WAITING LIST ROW -> Render into SAME table (it's a tbody now)
   const waitingBody = document.getElementById("waitingBody");
   if (waitingBody) {
     waitingBody.innerHTML = "";
@@ -1415,7 +1416,8 @@ function ensureAgendaGrid() {
 
   // Check waiting body too
   const waitingBody = document.getElementById("waitingBody");
-  const okWait = waitingBody && waitingBody.rows.length === 1;
+  // It's in the same table now, so just check if it exists
+  const okWait = !!waitingBody;
 
   if (!okMain || !okWait) buildAgendaRows();
 
@@ -3376,8 +3378,10 @@ function wireEvents() {
   const wlVisible = false; // Always start hidden (User Request)
 
   function setWaitingListVisible(visible) {
-    if (dom.waitingCard) {
-      dom.waitingCard.style.display = visible ? "block" : "none";
+    if (dom.waitingBody) {
+      dom.waitingBody.hidden = !visible;
+      // Also ensure the display property style is removed if we are using the hidden attribute
+      dom.waitingBody.style.display = visible ? "table-row-group" : "none";
     }
     if (dom.waitingListBtn) {
       dom.waitingListBtn.setAttribute("aria-pressed", String(visible));
@@ -3391,7 +3395,7 @@ function wireEvents() {
   setWaitingListVisible(wlVisible);
 
   dom.waitingListBtn?.addEventListener("click", () => {
-    const isVisible = dom.waitingCard.style.display !== "none";
+    const isVisible = !dom.waitingBody.hidden && dom.waitingBody.style.display !== "none";
     setWaitingListVisible(!isVisible);
   });
 

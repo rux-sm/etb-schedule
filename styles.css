@@ -238,7 +238,7 @@
   --tripbar-height: 94px; /* 7 rows * 11px + 6 gaps * 1px + 8px padding + 3px border */
   --tripbar-gap: 0px;
   --tripbar-lane-step: calc(var(--tripbar-height) + var(--tripbar-gap));
-  --waiting-list-height: 84px;
+  --waiting-list-height: 100px;
   --tripbar-inset: 4px;
   --tripbar-font-size-major: 11px;
   --tripbar-font-size-minor: 9px;
@@ -366,27 +366,6 @@ pre,
 kbd,
 samp {
   font-family: var(--font-mono);
-}
-
-/* Scrollbars */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-border-2);
-  border-radius: 99px;
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: var(--color-text-3);
 }
 
 /* Keyboard Access */
@@ -760,16 +739,6 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   transition: box-shadow var(--dur-2) var(--ease-standard);
   position: relative;
   isolation: isolate;
-  /* Hide scrollbars but keep scroll functionality */
-  /* Standard: Firefox, Chrome 121+, Edge 121+ */
-  scrollbar-width: none;
-  /* Legacy: IE and Edge */
-  -ms-overflow-style: none;
-}
-
-/* Fallback: Chrome <121, Safari, Opera */
-.card::-webkit-scrollbar {
-  display: none;
 }
 
 .card.compact {
@@ -861,8 +830,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  /* Add padding for scrollbar space */
-  padding-right: 4px;
+  scrollbar-gutter: stable;
 }
 
 .modal-body textarea {
@@ -1282,7 +1250,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 }
 
 .scheduler-right > .card {
-  max-height: calc(var(--day-row-h) + (10 * var(--schedule-row-height)));
+  max-height: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1320,7 +1288,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   }
 
   .scheduler-right .week-table-container {
-    flex: 1;
+    flex: 0 1 auto;
     overflow-y: auto;
   }
 
@@ -1378,9 +1346,9 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 /* --- Week Table --- */
 .week-table-container {
   width: 100%;
-  max-height: calc(var(--day-row-h) + (10 * var(--schedule-row-height)));
-  overflow-x: auto;
-  overflow-y: auto;
+  height: auto;
+  max-height: none; /* adjust for topbar/padding */
+  overflow: auto;
   /* Scroll Shadows */
   background:
     /* Shadow Cover TOP */
@@ -1394,18 +1362,11 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   background-attachment: local, scroll;
   border-radius: inherit;
   border-left: none;
-  /* Hide scrollbars but keep scroll functionality */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
-}
-
-/* Hide scrollbars for Chrome, Safari, and Opera */
-.week-table-container::-webkit-scrollbar {
-  display: none;
+  scrollbar-gutter: stable;
 }
 
 .week-table {
-  width: max(100%, 880px);
+  width: max(100%, 1150px);
   height: auto;
   table-layout: fixed;
   border-collapse: separate;
@@ -1445,7 +1406,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 /* Enforce min-width on day columns to trigger scroll */
 .week-table th:not(:first-child),
 .week-table td:not(:first-child) {
-  min-width: 120px;
+  min-width: 150px;
 }
 
 /* Sticky top-left corner (bus header) */
@@ -1553,10 +1514,6 @@ th.is-today .day-name {
 .week-table col.col-bus {
   width: var(--bus-col-w);
 }
-
-/* .week-table col.col-day {
-  min-width: 120px;
-} REMOVED - applying to cells instead */
 
 /* Bus Icons (in first column) */
 .bus-id-wrap {
@@ -2104,6 +2061,7 @@ select.status-confirmed {
   background-color: var(--color-calendar-bg) !important;
   height: var(--waiting-list-height);
   vertical-align: top;
+  border-top: 1px solid var(--color-border-1); /* Separator */
 }
 
 .waiting-list-row .bus-id-cell {
@@ -2111,22 +2069,6 @@ select.status-confirmed {
   color: var(--color-text-3);
   font-size: 11px;
   border-right: 1px solid var(--color-border-1);
-}
-
-#waitingCard {
-  height: var(--waiting-list-height);
-  min-height: var(--waiting-list-height);
-  max-height: var(--waiting-list-height);
-  display: flex;
-  flex-direction: column;
-}
-
-#waitingCard .week-table-container {
-  overflow-y: auto;
-  flex: 1;
-  /* fills remaining height */
-  min-height: 0;
-  /* important for flex scrolling to work */
 }
 
 /* ========================================================================== */
@@ -2428,13 +2370,15 @@ select.status-confirmed {
   }
 
   .scheduler-right > .card {
-    flex: 1;
-    height: 100%;
+    flex: 0 1 auto;
+    height: auto;
     width: 100%;
+    max-height: 100%;
+    overflow: hidden;
   }
 
   .scheduler-right .week-table-container {
-    flex: 1;
+    flex: 0 1 auto;
     display: block;
     overflow: auto;
   }
