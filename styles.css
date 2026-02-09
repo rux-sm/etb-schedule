@@ -115,7 +115,7 @@
   /* Linked to surface-3 for consistency */
   --color-button-border: #3a3a3a;
   /* default button border, can be subtle or more defined based on design preference */
-  --color-button-text: e5e5e5;
+  --color-button-text: #e5e5e5;
   /* default button text color, should have good contrast against button-bg */
 
   --color-button-hover-text: #e5e5e5;
@@ -239,7 +239,7 @@
   --tripbar-gap: 0px;
   --tripbar-lane-step: calc(var(--tripbar-height) + var(--tripbar-gap));
   --waiting-list-height: 100px;
-  --tripbar-inset: 3px;
+  --tripbar-inset: 4px;
   --tripbar-font-size-major: 11px;
   --tripbar-font-size-minor: 9px;
   --tripbar-line-height-major: 11px;
@@ -291,6 +291,14 @@
 
   --color-neutral-soft: rgba(75, 85, 99, 0.1);
   --color-neutral-border: rgba(75, 85, 99, 0.3);
+
+  /* --- Button Tokens (Light Mode) --- */
+  --color-button-bg: #ffffff;
+  --color-button-border: #d4d4d4;
+  --color-button-text: #1a1a1a;
+  --color-button-hover-bg: #f5f5f5;
+  --color-button-hover-border: #a3a3a3;
+  --color-button-hover-text: #000000;
 
   /* --- Shadows --- */
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.05), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
@@ -487,27 +495,31 @@ samp {
 }
 
 /* =========================
-   Destructive Button
+   Destructive Button (Soft Tinted Fill)
    ========================= */
-#deleteBtn {
+#deleteBtn,
+.btn-danger {
   color: var(--red);
-  border-color: rgba(var(--red), 0.45);
+  background: var(--color-danger-soft);
+  border-color: var(--color-danger-border);
 }
 
-#deleteBtn:hover {
-  background-color: rgba(var(--red), 0.14);
+#deleteBtn:hover,
+.btn-danger:hover {
+  background: color-mix(in srgb, var(--red) 22%, transparent);
   border-color: var(--red);
 }
 
-#deleteBtn:active {
-  background-color: rgba(var(--red), 0.2);
+#deleteBtn:active,
+.btn-danger:active {
+  background: color-mix(in srgb, var(--red) 28%, transparent);
   border-color: var(--red);
 }
 
-/* Optional: stronger focus ring for destructive */
-#deleteBtn:focus-visible {
+#deleteBtn:focus-visible,
+.btn-danger:focus-visible {
   border-color: var(--red);
-  box-shadow: 0 0 0 3px rgba(var(--red), 0.28);
+  box-shadow: 0 0 0 3px var(--color-danger-soft);
 }
 
 /* =========================
@@ -1603,10 +1615,6 @@ th.day-today .day-name {
   font-weight: 600;
 }
 
-td.day-today {
-  background: color-mix(in srgb, var(--accent) 5%, transparent);
-}
-
 .week-table tbody tr {
   height: var(--schedule-row-height) !important;
   max-height: var(--schedule-row-height) !important;
@@ -1614,6 +1622,16 @@ td.day-today {
   /* background-color: var(--color-surface-1); REMOVED so container shadow shows */
   position: relative;
   overflow: hidden;
+}
+
+.row-bars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Let clicks pass through to cells/bars */
+  z-index: 5;
 }
 
 .week-table td {
@@ -1778,11 +1796,13 @@ td.day-today {
   height: var(--tripbar-height);
   box-sizing: border-box;
 
-  border: 1.5px solid var(--blue);
-  border-radius: var(--control-radius);
+  border: 2px solid var(--blue);
+  border-radius: 6px;
   overflow: hidden;
 
   background: color-mix(in srgb, var(--blue) 33%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   cursor: pointer;
   pointer-events: auto;
   container-type: inline-size;
@@ -2677,4 +2697,137 @@ select.status-confirmed {
   width: 0%;
   background: var(--color-primary);
   transition: width 0.3s ease;
+}
+
+/* ========================================================================== */
+/*  MODALS                                                                    */
+/* ========================================================================== */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: block; /* Reset flex/grid */
+  width: 100%;
+  height: 100%;
+}
+
+.modal[hidden] {
+  display: none;
+}
+
+/* Backdrop */
+.modal::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  z-index: 1;
+}
+
+.modal-backdrop {
+  display: none;
+}
+
+.modal-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Robust centering */
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+  width: 90%; /* Responsive width */
+  max-width: 600px;
+  max-height: 80vh;
+
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-2);
+  overflow: hidden;
+  animation: modalPopIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPopIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-1);
+}
+
+.modal-head .section-title {
+  font-size: var(--font-size-3);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text);
+  margin: 0;
+}
+
+.modal-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4);
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.modal-body-scroll {
+  overflow-y: auto;
+}
+
+/* Textarea inside modal - allow resize */
+.modal-body textarea {
+  flex: 1 1 auto;
+  min-height: 200px;
+  max-height: none;
+  resize: vertical;
+  width: 100%;
+  padding: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-1);
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.modal-body textarea:focus {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+  outline: none;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.modal-foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--border);
+  background: var(--surface-1);
 }

@@ -1519,9 +1519,12 @@ function positionBarWithinOverlay(bar, bars, col, startIdx, endIdx) {
   let spanW = 0;
   for (let i = startIdx; i <= endIdx; i++) spanW += col.widths[i] ?? 0;
 
-  let widthPx = Math.max(0, spanW - inset * 2);
+  // Saturday (last cell) has no right border, so don't subtract 1px for it
+  const isTableEnd = endIdx === 6;
+  const visualRoom = isTableEnd ? spanW : spanW - 1;
+
+  const widthPx = Math.max(0, visualRoom - inset * 2);
   const max = Math.max(0, col.total ?? col.widths.reduce((a, b) => a + (b || 0), 0));
-  const EPS = 1;
 
   if (leftPx >= max) {
     bar.style.left = `${max}px`;
@@ -1529,9 +1532,16 @@ function positionBarWithinOverlay(bar, bars, col, startIdx, endIdx) {
     return;
   }
 
-  widthPx = Math.max(0, Math.min(widthPx, max - leftPx - EPS));
-  bar.style.left = `${leftPx}px`;
-  bar.style.width = `${widthPx}px`;
+  // Round LEFT and RIGHT edges independently, then derive width from difference.
+  // This ensures symmetrical centering regardless of sub-pixel values from zoom.
+  const clampedWidth = Math.max(0, Math.min(widthPx, max - leftPx));
+  const rightPx = leftPx + clampedWidth;
+
+  const roundedLeft = Math.round(leftPx);
+  const roundedRight = Math.round(rightPx);
+
+  bar.style.left = `${roundedLeft}px`;
+  bar.style.width = `${roundedRight - roundedLeft}px`;
 }
 
 // ======================================================
