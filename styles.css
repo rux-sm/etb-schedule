@@ -21,17 +21,18 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
   /* --- BASE HUES --- */
-  --red: rgb(255 56 60);
-  --orange: rgb(255 141 40);
-  --yellow: rgb(255 204 0);
-  --green: rgb(52 199 89);
-  --mint: rgb(0 200 179);
-  --teal: rgb(0 195 208);
-  --cyan: rgb(0 192 232);
-  --blue: rgb(0 136 255);
-  --indigo: rgb(97 85 245);
-  --purple: rgb(203 48 224);
-  --pink: rgb(255 45 85);
+--red:    rgb(255 40 70);
+--orange: rgb(255 130 30);
+--yellow: rgb(255 215 0);
+--lime:   rgb(190 255 60);
+--green:  rgb(40 235 110);
+--mint:   rgb(0 230 200);
+--teal:   rgb(0 220 235);
+--cyan:   rgb(0 210 255);
+--blue:   rgb(0 150 255);
+--indigo: rgb(110 95 255);
+--purple: rgb(200 70 255);
+--pink:   rgb(255 15 180);
   --brown: rgb(172 127 94);
   --black: rgb(0 0 0);
   --gray: rgb(142 142 142);
@@ -47,6 +48,10 @@
   --accent: var(--blue);
   --color-accent: var(--accent);
 
+  /* --- DISABLED STATES (using color-mix for better theme adaptability) --- */
+  --color-text-disabled: var(--text-muted);
+  --color-border-disabled: color-mix(in srgb, var(--border) 55%, transparent);
+
   /* TEXT */
 
   --text: #ffffff;
@@ -55,16 +60,23 @@
   --placeholder: #9b9b9b;
 
   /* --- SEMANTIC TOKENS --- */
-  --text-driver: var(--yellow); /* Default (Dark Mode) */
+  --text-driver: var(--yellow);
+  /* Default (Dark Mode) */
 
   /* --- BASE SURFACES --- */
 
-  --app-bg: rgb(0, 0, 0); /* APP BACKGROUND */
-  --surface-0: rgb(28 28 28 / 55%); /* TOPBAR BACKGROUND */
-  --surface-1: rgb(28 28 28); /* SCHEDULE BACKGROUND  */
-  --surface-2: #151515; /* CARDS BACKGROUND*/
-  --surface-3: #3b3b3b; /* INPUTS / CONTROLS (Darkened from #5e5e5e) */
-  --surface-4: #919191; /* HOVER/ACTIVE */
+  --app-bg: rgb(0, 0, 0);
+  /* APP BACKGROUND */
+  --surface-0: rgb(28 28 28 / 55%);
+  /* TOPBAR BACKGROUND */
+  --surface-1: rgb(28 28 28);
+  /* SCHEDULE BACKGROUND  */
+  --surface-2: #151515;
+  /* CARDS BACKGROUND*/
+  --surface-3: #3b3b3b;
+  /* INPUTS / CONTROLS (Darkened from #5e5e5e) */
+  --surface-4: #919191;
+  /* HOVER/ACTIVE */
 
   /* BORDERS & DIVIDERS */
   --border: rgb(53, 53, 53);
@@ -228,7 +240,8 @@
   --layout-logo-max-width: 420px;
 
   /* Schedule Grid */
-  --schedule-row-height: 100px; /* Increased to fit 94px bars + margin */
+  --schedule-row-height: 100px;
+  /* Increased to fit 94px bars + margin */
   --schedule-col-width: 50px;
   --bus-col-w: 40px;
   --day-row-h: 40px;
@@ -236,7 +249,8 @@
   --color-conflict-accent: var(--color-danger);
 
   /* Trip Bars */
-  --tripbar-height: 93px; /* 7 rows * 11px + 6 gaps * 1px + 7px padding + 3px border */
+  --tripbar-height: 93px;
+  /* 7 rows * 11px + 6 gaps * 1px + 7px padding + 3px border */
   --tripbar-gap: 0px;
   --tripbar-lane-step: calc(var(--tripbar-height) + var(--tripbar-gap));
   --waiting-list-height: 100px;
@@ -269,7 +283,8 @@
   --white: #000000;
 
   /* --- Semantic Overrides (Light Mode) --- */
-  --text-driver: #000000; /* High Contrast Black for Light Mode */
+  --text-driver: #000000;
+  /* High Contrast Black for Light Mode */
 
   /* --- Borders --- */
   --border: #e5e5e5;
@@ -515,7 +530,7 @@ input[type="date"].weekpicker[aria-disabled="true"] {
 
   color: var(--color-text-disabled);
   background-color: var(--overlay-hover);
-  border-color: var(--color-border-disabled);
+  border-color: transparent;
 
   box-shadow: none;
   transform: none;
@@ -860,7 +875,8 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   margin: 0 auto;
   top: 50%;
   transform: translateY(-50%);
-  background: var(--surface-3); /* Themed background (white in light, dark in dark) */
+  background: var(--surface-3);
+  /* Themed background (white in light, dark in dark) */
   border: 1px solid var(--color-border-2);
   border-radius: var(--radius-lg);
   box-shadow: var(--elevation-2);
@@ -912,7 +928,8 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 99999; /* Ensure on top of everything */
+  z-index: 99999;
+  /* Ensure on top of everything */
   padding: 6px 12px;
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border-2);
@@ -1029,7 +1046,8 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .context-item {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* force left alignment */
+  justify-content: flex-start;
+  /* force left alignment */
   gap: var(--space-2, 8px);
 
   width: 100%;
@@ -1077,6 +1095,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     opacity: 0;
     transform: translateY(-4px) scale(0.98);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -1088,7 +1107,8 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 2px 10px 0 10px; /* Visual center nudge */
+  padding: 2px 10px 0 10px;
+  /* Visual center nudge */
   font-size: 16px;
   font-weight: 400;
   border-radius: 4px;
@@ -1102,7 +1122,8 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   background: color-mix(in srgb, var(--accent) 33%, transparent);
   color: var(--color-text-1);
   border: 1px solid var(--accent);
-  vertical-align: middle; /* Ensure inline vertical alignment */
+  vertical-align: middle;
+  /* Ensure inline vertical alignment */
 }
 
 .badge-error {
@@ -1258,7 +1279,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .scheduler-layout {
   display: grid;
   grid-template-columns: 400px 1fr;
-  gap: var(--space-2);
+  gap: 0;
   align-items: start;
   overflow: visible;
   padding: var(--space-2);
@@ -1270,7 +1291,8 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   }
 
   .scheduler-left {
-    display: none; /* Hide sidebar on mobile by default or manage via JS toggle */
+    display: none;
+    /* Hide sidebar on mobile by default or manage via JS toggle */
   }
 
   .scheduler-left.is-active {
@@ -1278,7 +1300,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   }
 
   /* Fix sticky positioning on mobile */
-  .scheduler-right > .card {
+  .scheduler-right>.card {
     overflow: visible;
     display: flex;
     flex-direction: column;
@@ -1341,7 +1363,8 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     min-width: 0;
     flex: 1;
     justify-content: center;
-    height: 36px; /* Match button height */
+    height: 36px;
+    /* Match button height */
   }
 
   /* Ensure date picker overlay is contained */
@@ -1387,7 +1410,15 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   min-width: 0;
 }
 
-.scheduler-right > .card {
+.scheduler-left:not(.scheduler-collapsed) {
+  padding-left: var(--space-3);
+}
+
+.scheduler-left>.card:not(.is-hidden)+.card:not(.is-hidden) {
+  margin-top: var(--space-2);
+}
+
+.scheduler-right>.card {
   max-height: 100%;
   display: flex;
   flex-direction: column;
@@ -1406,7 +1437,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     flex: 1;
     overflow: visible;
     min-height: 0;
-    gap: var(--space-4);
+    gap: 0;
   }
 
   .scheduler-right {
@@ -1417,7 +1448,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     overflow: visible;
   }
 
-  .scheduler-right > .card {
+  .scheduler-right>.card {
     /* max-height: calc(10 * var(--schedule-row-height) + 24px); */
     max-height: 100%;
     display: flex;
@@ -1458,8 +1489,9 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   }
 
   /* Prevent card squashing */
-  .scheduler-left > .card {
-    min-width: 400px;
+  .scheduler-left>.card {
+    min-width: 100%;
+    width: 100%;
   }
 
   /* Animations */
@@ -1489,6 +1521,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
       opacity: 0;
       transform: translateY(-12px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -1496,7 +1529,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   }
 
   /* Make visible cards expand to fill available height */
-  .scheduler-left > .card:not(.is-hidden) {
+  .scheduler-left>.card:not(.is-hidden) {
     flex: 1;
     max-height: calc(var(--day-row-h) + (10 * var(--schedule-row-height)));
     display: flex;
@@ -1505,7 +1538,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   }
 
   /* Ensure card content can scroll */
-  .scheduler-left > .card:not(.is-hidden) .card-content {
+  .scheduler-left>.card:not(.is-hidden) .card-content {
     flex: 1;
     overflow-y: auto;
     min-height: 0;
@@ -1517,8 +1550,8 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   }
 
   /* Restore visible shadow specifically here or globally */
-  .scheduler-right > .card,
-  .scheduler-left > .card {
+  .scheduler-right>.card,
+  .scheduler-left>.card {
     box-shadow:
       0 4px 6px -1px rgba(0, 0, 0, 0.3),
       0 2px 4px -1px rgba(0, 0, 0, 0.16) !important;
@@ -1538,13 +1571,15 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .week-table-container {
   width: 100%;
   height: auto;
-  max-height: none; /* adjust for topbar/padding */
+  max-height: none;
+  /* adjust for topbar/padding */
   overflow: auto;
   /* Scroll Shadows */
   background:
     /* Shadow Cover TOP */
     linear-gradient(var(--surface-1) 30%, rgba(255, 255, 255, 0)),
-    /* Shadow TOP */ radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+    /* Shadow TOP */
+    radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
   background-repeat: no-repeat;
   background-color: var(--surface-1);
   background-size:
@@ -1663,7 +1698,8 @@ th.day-today .day-name {
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none; /* Let clicks pass through to cells/bars */
+  pointer-events: none;
+  /* Let clicks pass through to cells/bars */
   z-index: 5;
 }
 
@@ -1744,11 +1780,11 @@ th.day-today .day-name {
 }
 
 /* Bus color on hover */
-.week-table tbody tr.has-bus-color > td:first-child {
+.week-table tbody tr.has-bus-color>td:first-child {
   transition: background-color 0.15s ease;
 }
 
-.week-table tbody tr.has-bus-color > td:first-child:hover {
+.week-table tbody tr.has-bus-color>td:first-child:hover {
   background-color: var(--bus-accent-color, var(--color-surface-1));
 }
 
@@ -1790,7 +1826,8 @@ th.day-today .day-name {
   left: 0;
   background: var(--color-surface-1);
   z-index: 500;
-  border-right: none; /* Handled by ::after for sticky overlap */
+  border-right: none;
+  /* Handled by ::after for sticky overlap */
 }
 
 .week-table th:first-child {
@@ -1856,54 +1893,67 @@ th.day-today .day-name {
   background: color-mix(in srgb, var(--red) 33%, transparent);
   border-color: var(--red);
 }
+
 .trip-bar.color-green {
   background: color-mix(in srgb, var(--green) 33%, transparent);
   border-color: var(--green);
 }
+
 .trip-bar.color-yellow {
   background: color-mix(in srgb, var(--yellow) 33%, transparent);
   border-color: var(--yellow);
 }
+
 .trip-bar.color-gray {
   background: color-mix(in srgb, var(--gray) 33%, transparent);
   border-color: var(--gray);
 }
+
 .trip-bar.color-violet {
   background: color-mix(in srgb, var(--purple) 33%, transparent);
   border-color: var(--purple);
 }
+
 .trip-bar.color-pink {
   background: color-mix(in srgb, var(--pink) 33%, transparent);
   border-color: var(--pink);
 }
+
 .trip-bar.color-orange {
   background: color-mix(in srgb, var(--orange) 33%, transparent);
   border-color: var(--orange);
 }
+
 .trip-bar.color-teal {
   background: color-mix(in srgb, var(--teal) 33%, transparent);
   border-color: var(--teal);
 }
+
 .trip-bar.color-cyan {
   background: color-mix(in srgb, var(--cyan) 33%, transparent);
   border-color: var(--cyan);
 }
+
 .trip-bar.color-indigo {
   background: color-mix(in srgb, var(--indigo) 33%, transparent);
   border-color: var(--indigo);
 }
+
 .trip-bar.color-brown {
   background: color-mix(in srgb, var(--brown) 33%, transparent);
   border-color: var(--brown);
 }
+
 .trip-bar.color-mint {
   background: color-mix(in srgb, var(--mint) 33%, transparent);
   border-color: var(--mint);
 }
+
 .trip-bar.color-black {
   background: color-mix(in srgb, var(--black) 33%, transparent);
   border-color: var(--black);
 }
+
 .trip-bar.color-white {
   background: color-mix(in srgb, var(--white) 33%, transparent);
   border-color: var(--white);
@@ -1913,7 +1963,8 @@ th.day-today .day-name {
    Hover Effect: Inset Glow + Lift (NO outside paint)
    ========================= */
 .trip-bar:hover {
-  transform: translateY(-3px); /* only vertical movement */
+  transform: translateY(-3px);
+  /* only vertical movement */
   filter: brightness(1.05) saturate(1.06);
 
   /* Inset glow stays INSIDE the bar => no horizontal growth/scrollbar risk */
@@ -1932,7 +1983,7 @@ th.day-today .day-name {
 }
 
 /* Trip bar contents */
-.trip-bar > * {
+.trip-bar>* {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2029,12 +2080,15 @@ th.day-today .day-name {
 .trip-bar .mini-badge.is-pending {
   background: var(--red-status);
 }
+
 .trip-bar .mini-badge.is-ok {
   background: var(--green-status);
 }
+
 .trip-bar .mini-badge.is-blue {
   background: var(--blue-status);
 }
+
 .trip-bar .mini-badge.is-yellow {
   background: var(--yellow-status);
 }
@@ -2077,20 +2131,24 @@ th.day-today .day-name {
 }
 
 @keyframes arrow-left-bounce {
+
   0%,
   100% {
     transform: translate(0, -50%);
   }
+
   50% {
     transform: translate(-3px, -50%);
   }
 }
 
 @keyframes arrow-right-bounce {
+
   0%,
   100% {
     transform: translate(0, -50%);
   }
+
   50% {
     transform: translate(3px, -50%);
   }
@@ -2147,6 +2205,7 @@ th.day-today .day-name {
 }
 
 @media (max-width: 800px) {
+
   .col-2,
   .col-4,
   .col-6 {
@@ -2272,7 +2331,8 @@ select.status-confirmed {
   background-color: var(--color-calendar-bg) !important;
   height: var(--waiting-list-height);
   vertical-align: top;
-  border-top: 1px solid var(--color-border-1); /* Separator */
+  border-top: 1px solid var(--color-border-1);
+  /* Separator */
 }
 
 .waiting-list-row .bus-id-cell {
@@ -2445,7 +2505,8 @@ select.status-confirmed {
     justify-content: space-between;
     gap: 4px;
     padding: 0 8px;
-    height: 44px; /* Force height match */
+    height: 44px;
+    /* Force height match */
     flex-wrap: nowrap;
   }
 
@@ -2454,10 +2515,12 @@ select.status-confirmed {
   }
 
   .header-left {
-    display: flex !important; /* Ensure it's a flex container */
+    display: flex !important;
+    /* Ensure it's a flex container */
     align-items: center;
     gap: 2px;
-    flex: 1; /* Allow it to take available space */
+    flex: 1;
+    /* Allow it to take available space */
     min-width: 0;
   }
 
@@ -2465,7 +2528,8 @@ select.status-confirmed {
     display: flex;
     align-items: center;
     gap: 4px;
-    margin-left: auto; /* Push to right */
+    margin-left: auto;
+    /* Push to right */
     flex-shrink: 0;
   }
 
@@ -2519,7 +2583,7 @@ select.status-confirmed {
     min-height: 0;
   }
 
-  .scheduler-right > .card {
+  .scheduler-right>.card {
     flex: 0 1 auto;
     height: auto;
     width: 100%;
@@ -2592,6 +2656,7 @@ select.status-confirmed {
 /* ========================================================================== */
 
 @media print {
+
   .topbar,
   .theme-toggle,
   button:not(.trip-bar),
@@ -2703,9 +2768,11 @@ select.status-confirmed {
   justify-content: center;
   animation: fadeIn 0.2s ease-out;
 }
+
 .loading-overlay[hidden] {
   display: none;
 }
+
 .loading-content {
   display: flex;
   flex-direction: column;
@@ -2713,11 +2780,13 @@ select.status-confirmed {
   gap: 16px;
   width: 240px;
 }
+
 .loading-text {
   font-weight: 500;
   color: var(--text-primary);
   font-size: 14px;
 }
+
 .loading-bar {
   width: 100%;
   height: 4px;
@@ -2725,6 +2794,7 @@ select.status-confirmed {
   border-radius: 99px;
   overflow: hidden;
 }
+
 .loading-bar__inner {
   height: 100%;
   width: 0%;
@@ -2740,7 +2810,8 @@ select.status-confirmed {
   position: fixed;
   inset: 0;
   z-index: var(--z-modal);
-  display: block; /* Reset flex/grid */
+  display: block;
+  /* Reset flex/grid */
   width: 100%;
   height: 100%;
 }
@@ -2768,12 +2839,14 @@ select.status-confirmed {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* Robust centering */
+  transform: translate(-50%, -50%);
+  /* Robust centering */
   z-index: 2;
 
   display: flex;
   flex-direction: column;
-  width: 90%; /* Responsive width */
+  width: 90%;
+  /* Responsive width */
   max-width: 600px;
   max-height: 80vh;
 
@@ -2790,6 +2863,7 @@ select.status-confirmed {
     opacity: 0;
     transform: translate(-50%, -48%) scale(0.96);
   }
+
   to {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
@@ -2863,4 +2937,24 @@ select.status-confirmed {
   padding: var(--space-3) var(--space-4);
   border-top: 1px solid var(--border);
   background: var(--surface-1);
+}
+
+/* ========================================================================== */
+/*  UTILITIES                                                                 */
+/* ========================================================================== */
+
+.is-hidden {
+  display: none !important;
+}
+
+.is-visible {
+  display: block !important;
+}
+
+.is-flex-visible {
+  display: flex !important;
+}
+
+.is-invisible {
+  visibility: hidden !important;
 }

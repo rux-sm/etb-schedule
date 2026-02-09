@@ -80,12 +80,12 @@ const CACHE = {
         expiry: Date.now() + ttlMs,
       };
       localStorage.setItem(key, JSON.stringify(payload));
-    } catch {}
+    } catch { }
   },
   remove(key) {
     try {
       localStorage.removeItem(key);
-    } catch {}
+    } catch { }
   },
   clearAll() {
     try {
@@ -97,7 +97,7 @@ const CACHE = {
           localStorage.removeItem(k);
         }
       });
-    } catch {}
+    } catch { }
   },
 };
 
@@ -248,6 +248,8 @@ const state = {
     mode: null, // "add" or "remove"
     dates: new Set(),
   },
+
+  lastFocusedElement: null,
 };
 
 // ======================================================
@@ -270,7 +272,7 @@ function clamp(n, min, max) {
 function safeUUID() {
   try {
     return crypto.randomUUID();
-  } catch {}
+  } catch { }
   return `tk_${Date.now()}_${Math.floor(Math.random() * 1e9)}`;
 }
 
@@ -738,6 +740,41 @@ const api = {
   },
 };
 
+/**
+ * Proactive Conflict Check
+ * Returns conflict details if trip overlaps with existing trip on same bus
+ */
+function checkPotentialConflicts(trip, assignments) {
+  const depY = ymd(parseYMD(trip.departureDate));
+  const arrY = ymd(parseYMD(trip.arrivalDate) || parseYMD(trip.departureDate));
+
+  for (const a of assignments) {
+    const busId = String(a.busId || "").trim();
+    if (!busId || busId === "None" || busId === "WAITING_LIST") continue;
+
+    // Filter out the current trip if we are updating
+    const existingTrips = state.trips.filter((t) => String(t.tripKey) !== String(trip.tripKey));
+
+    for (const t of existingTrips) {
+      const tDepY = ymd(parseYMD(t.departureDate));
+      const tArrY = ymd(parseYMD(t.arrivalDate) || parseYMD(t.departureDate));
+
+      // Overlap logic: (StartA <= EndB) and (EndA >= StartB)
+      if (depY <= tArrY && arrY >= tDepY) {
+        const tAssigns = state.assignmentsByTripKey[t.tripKey] || [];
+        if (tAssigns.some((ta) => String(ta.busId).trim() === busId)) {
+          return {
+            busId,
+            dateRange: depY === arrY ? depY : `${depY} to ${arrY}`,
+            otherTrip: t.destination || "another trip",
+          };
+        }
+      }
+    }
+  }
+  return null;
+}
+
 // ======================================================
 // ERROR LOGGING (Production Debugging)
 // ======================================================
@@ -908,6 +945,33 @@ function setSelectToPlaceholder(id) {
   el.dispatchEvent(new Event("change", { bubbles: true }));
 }
 
+function hasSelectedBusForTrip() {
+  const busSel = document.querySelector("#busGrid select[name='bus1']");
+  if (!busSel) return false;
+  const v = String(busSel.value || "").trim();
+  return v && v !== "None";
+}
+
+function maybeApplyPendingDefaults() {
+  if (!dom.tripForm || dom.action?.value !== "create") return;
+
+  const dep = $("tripDate")?.value;
+  if (!dep || !hasSelectedBusForTrip()) return;
+
+  const ids = ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus"];
+  let changed = false;
+
+  ids.forEach((id) => {
+    const el = $(id);
+    if (!el || el.value) return;
+    el.value = "Pending";
+    el.dispatchEvent(new Event("change", { bubbles: true }));
+    changed = true;
+  });
+
+  if (changed) ids.forEach((id) => updateStatusSelect($(id)));
+}
+
 function refreshEmptyStateUI() {
   const ids = [
     "destination",
@@ -999,7 +1063,7 @@ function applyWeekStart(isMonday) {
 
   try {
     localStorage.setItem("weekStartMonday", state.weekStartsOnMonday ? "1" : "0");
-  } catch {}
+  } catch { }
 
   syncWeekStartUI();
 
@@ -1216,7 +1280,7 @@ function prefetchAdjacentWeeks() {
 
     // ✅ FIX: Calculate Monday for the adjacent week
     const { notesKey } = getWeekRange(targetDate); // We will update getWeekRange to support a date arg
-    fetchWeekDataCached(start, end, notesKey).catch(() => {});
+    fetchWeekDataCached(start, end, notesKey).catch(() => { });
   }
 }
 
@@ -1453,28 +1517,6 @@ function ensureAgendaGrid() {
   return dom.agendaBody.rows.length === expected;
 }
 
-function getDayColumnMetricsRelativeToRows() {
-  const firstBodyRow = dom.agendaBody?.rows?.[0];
-  if (!firstBodyRow || firstBodyRow.cells.length < 8) return null;
-
-  const startCell = firstBodyRow.cells[1];
-  const baseRect = startCell.getBoundingClientRect();
-
-  const starts = [];
-  const widths = [];
-
-  for (let i = 1; i <= 7; i++) {
-    const cell = firstBodyRow.cells[i];
-    if (!cell) continue;
-
-    const r = cell.getBoundingClientRect();
-    starts.push(r.left - baseRect.left);
-    widths.push(r.width);
-  }
-
-  return { starts, widths };
-}
-
 function getColMetricsCached() {
   const firstBodyRow = dom.agendaBody?.rows?.[0];
   if (!firstBodyRow || firstBodyRow.cells.length < 8) return null;
@@ -1485,11 +1527,23 @@ function getColMetricsCached() {
 
   if (state.lastColMetrics?.key === key) return state.lastColMetrics.col;
 
-  const col = getDayColumnMetricsRelativeToRows();
-  if (!col) return null;
-  const total = col.widths.reduce((a, b) => a + (b || 0), 0);
+  const baseRect = r;
+  const starts = [];
+  const widths = [];
+  let total = 0;
 
-  state.lastColMetrics = { key, col: { ...col, total } };
+  for (let i = 1; i <= 7; i++) {
+    const cell = firstBodyRow.cells[i];
+    if (!cell) continue;
+
+    const cellRect = cell.getBoundingClientRect();
+    const w = cellRect.width;
+    starts.push(cellRect.left - baseRect.left);
+    widths.push(w);
+    total += w;
+  }
+
+  state.lastColMetrics = { key, col: { starts, widths, total } };
   return state.lastColMetrics.col;
 }
 
@@ -1557,13 +1611,12 @@ function clearConflictStyles() {
 }
 
 function showConflictsPanel(conflicts) {
-  if (!conflicts || conflicts.length === 0) {
-    dom.conflictPanel.style.display = "none";
+  const hasConflicts = !!(conflicts && conflicts.length > 0);
+  dom.conflictPanel?.classList.toggle("is-hidden", !hasConflicts);
+  if (!hasConflicts) {
     dom.conflictList.innerHTML = "";
     return;
   }
-
-  dom.conflictPanel.style.display = "block";
 
   const html = conflicts
     .map((c, idx) => {
@@ -1657,7 +1710,7 @@ function _renderAgendaInner() {
 
   clearConflictStyles();
   showConflictsPanel([]);
-  dom.conflictBadge.style.display = "none";
+  dom.conflictBadge?.classList.add("is-hidden");
 
   const week = getWeekDates();
   const weekStart = week[0];
@@ -2074,7 +2127,7 @@ function _renderAgendaInner() {
     }
 
     showConflictsPanel(conflicts);
-    dom.conflictBadge.style.display = conflicts.length ? "inline-block" : "none";
+    dom.conflictBadge?.classList.toggle("is-hidden", !conflicts.length);
   } else if (deferConflicts) {
     const thisReq = state.weekReqId;
     const { start, end } = getWeekRange();
@@ -2162,7 +2215,7 @@ function _renderAgendaInner() {
       }
 
       showConflictsPanel(conflicts);
-      dom.conflictBadge.style.display = conflicts.length ? "inline-block" : "none";
+      dom.conflictBadge?.classList.toggle("is-hidden", !conflicts.length);
     };
 
     if ("requestIdleCallback" in window) requestIdleCallback(run, { timeout: 600 });
@@ -2437,9 +2490,9 @@ function updateBusRowVisibility() {
     const show = idx < n;
     const enabled = raw > 0 && show;
 
-    r.busSel.style.display = show ? "" : "none";
-    r.d1Sel.style.display = show ? "" : "none";
-    r.d2Sel.style.display = show ? "" : "none";
+    r.busSel.classList.toggle("is-hidden", !show);
+    r.d1Sel.classList.toggle("is-hidden", !show);
+    r.d2Sel.classList.toggle("is-hidden", !show);
 
     r.busSel.disabled = !enabled;
     r.d1Sel.disabled = !enabled;
@@ -2622,7 +2675,7 @@ async function refreshWeekData({ silent = false } = {}) {
 
     clearConflictStyles();
     showConflictsPanel([]);
-    dom.conflictBadge.style.display = "none";
+    dom.conflictBadge?.classList.add("is-hidden");
 
     if (!silent) toastProgress(20, "Fetching… 20%");
 
@@ -2701,6 +2754,7 @@ function clearTripInfoCardForNextTrip() {
 // 27) ITINERARY MODAL
 // ======================================================
 function openItineraryModal() {
+  state.lastFocusedElement = document.activeElement;
   dom.itineraryModalField.value = dom.itineraryField.value || "";
   dom.itineraryModal.hidden = false;
   dom.itineraryModalField.focus();
@@ -2710,6 +2764,10 @@ function closeItineraryModal() {
   dom.itineraryField.value = dom.itineraryModalField.value || "";
   dom.itineraryField.dispatchEvent(new Event("input", { bubbles: true }));
   dom.itineraryModal.hidden = true;
+  if (state.lastFocusedElement) {
+    state.lastFocusedElement.focus();
+    state.lastFocusedElement = null;
+  }
 }
 
 // ======================================================
@@ -2782,7 +2840,10 @@ function renderTripDetailsModalFromData(t, assigns) {
   }
 
   dom.tripDetailsBody.innerHTML = html;
+  state.lastFocusedElement = document.activeElement;
   dom.tripDetailsModal.hidden = false;
+  const firstBtn = dom.tripDetailsModal.querySelector("button");
+  if (firstBtn) firstBtn.focus();
 }
 
 async function openTripDetailsModal(tripKey) {
@@ -2843,6 +2904,10 @@ async function openTripDetailsModal(tripKey) {
 
 function closeTripDetailsModal() {
   dom.tripDetailsModal.hidden = true;
+  if (state.lastFocusedElement) {
+    state.lastFocusedElement.focus();
+    state.lastFocusedElement = null;
+  }
 }
 
 // ======================================================
@@ -3426,6 +3491,18 @@ function loadPrefs() {
 // 36) EVENTS
 // ======================================================
 function wireEvents() {
+  // Ensure status fields update to 'Pending' when a bus is selected after date is picked
+  // (fix for manual entry case)
+  const observeBusGrid = () => {
+    // Listen for changes on any select in the busGrid
+    dom.busGrid.addEventListener("change", (e) => {
+      if (e.target && e.target.tagName === "SELECT") {
+        maybeApplyPendingDefaults();
+      }
+    });
+  };
+  // Call once on load
+  observeBusGrid();
   ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus"].forEach((id) => {
     const el = $(id);
     updateStatusSelect(el);
@@ -3592,8 +3669,7 @@ function wireEvents() {
   function setWaitingListVisible(visible) {
     if (dom.waitingBody) {
       dom.waitingBody.hidden = !visible;
-      // Also ensure the display property style is removed if we are using the hidden attribute
-      dom.waitingBody.style.display = visible ? "table-row-group" : "none";
+      dom.waitingBody.classList.toggle("is-hidden", !visible);
     }
     if (dom.waitingListBtn) {
       dom.waitingListBtn.setAttribute("aria-pressed", String(visible));
@@ -3607,7 +3683,7 @@ function wireEvents() {
   setWaitingListVisible(wlVisible);
 
   dom.waitingListBtn?.addEventListener("click", () => {
-    const isVisible = !dom.waitingBody.hidden && dom.waitingBody.style.display !== "none";
+    const isVisible = !dom.waitingBody.classList.contains("is-hidden");
     setWaitingListVisible(!isVisible);
   });
 
@@ -3640,10 +3716,12 @@ function wireEvents() {
   dom.busesNeeded.addEventListener("input", () => {
     updateBusRowVisibility();
     syncBusPanelState();
+    maybeApplyPendingDefaults();
   });
   dom.busesNeeded.addEventListener("change", () => {
     updateBusRowVisibility();
     syncBusPanelState();
+    maybeApplyPendingDefaults();
   });
 
   $("tripDate").addEventListener("change", () => {
@@ -3658,6 +3736,7 @@ function wireEvents() {
       arrival.value = dep;
     }
     arrival.dispatchEvent(new Event("change", { bubbles: true }));
+    maybeApplyPendingDefaults();
   });
 
   dom.hiddenIframe.addEventListener("load", () => {
@@ -3814,6 +3893,16 @@ function wireEvents() {
           driver1: String(row.d1Sel.value || "").trim(),
           driver2: String(row.d2Sel.value || "").trim(),
         });
+      }
+    }
+
+    // Proactive Conflict Check
+    const conflict = checkPotentialConflicts(optimisticTrip, optimisticAssignments);
+    if (conflict) {
+      const msg = `Schedule Overlap Detected!\n\nBus ${conflict.busId} is already assigned to "${conflict.otherTrip}" on ${conflict.dateRange}.\n\nDo you want to save anyway?`;
+      if (!confirm(msg)) {
+        dom.saveBtn.disabled = false;
+        return;
       }
     }
 
@@ -3975,7 +4064,7 @@ function wireSettingsMenu() {
 .week-table-container.is-loading-bars .trip-bar { opacity: 0.18; pointer-events: none; }
 `;
     document.head.appendChild(style);
-  } catch {}
+  } catch { }
 
   setLeftPanelMode("off");
   enforceDesktopEditing();
