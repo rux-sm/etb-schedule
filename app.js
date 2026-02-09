@@ -3945,6 +3945,14 @@ function wireSettingsMenu() {
     state.weekCache.clear();
     loadDriversAndBuses(true).then(() => refreshWeekData());
   });
+
+  // 6. Auto-close whenever ANY dropdown item is clicked inside this menu
+  dom.settingsMenu.addEventListener("click", (e) => {
+    if (e.target.closest(".dropdown-item")) {
+      dom.settingsMenu.hidden = true;
+      dom.settingsBtn.setAttribute("aria-expanded", "false");
+    }
+  });
 }
 
 // ======================================================
