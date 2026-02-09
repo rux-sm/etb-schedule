@@ -17,7 +17,7 @@
   color-scheme: dark;
 
   /* --- TYPOGRAPHY --- */
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto, Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
   /* --- BASE HUES --- */
@@ -45,7 +45,6 @@
 
   /* --- ACCENT COLOR --- */
   --accent: var(--blue);
-  --color-accent: var(--accent);
 
   /* TEXT */
 
@@ -114,14 +113,14 @@
 
   --color-button-bg: var(--surface-3);
   /* Linked to surface-3 for consistency */
-  --color-button-border: transparent;
+  --color-button-border: #3a3a3a;
   /* default button border, can be subtle or more defined based on design preference */
   --color-button-text: #e5e5e5;
   /* default button text color, should have good contrast against button-bg */
 
   --color-button-hover-text: #e5e5e5;
   /* hover overlay for buttons, can be a subtle lightening effect */
-  --color-button-hover-border: transparent;
+  --color-button-hover-border: #4a4a4a;
   /* hover border color for buttons, slightly lighter than default border */
   --color-button-hover-bg: #333333;
   /* hover background for buttons, can be a subtle darkening effect */
@@ -295,10 +294,10 @@
 
   /* --- Button Tokens (Light Mode) --- */
   --color-button-bg: #ffffff;
-  --color-button-border: transparent;
+  --color-button-border: #d4d4d4;
   --color-button-text: #1a1a1a;
   --color-button-hover-bg: #f5f5f5;
-  --color-button-hover-border: transparent;
+  --color-button-hover-border: #a3a3a3;
   --color-button-hover-text: #000000;
 
   /* --- Shadows --- */
@@ -423,12 +422,7 @@ samp {
    Full replacement
    ========================= */
 
-button,
-.btn,
-.icon-chip,
-.theme-toggle,
-.seg__btn,
-input[type="date"].weekpicker {
+:where(button, .btn, .icon-chip, .theme-toggle, .seg__btn, input[type="date"].weekpicker) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -436,10 +430,10 @@ input[type="date"].weekpicker {
   height: var(--control-height);
   padding: 0 var(--control-padding-x);
 
-  border: 1px solid transparent;
+  border: 1px solid var(--border);
   border-radius: var(--control-radius);
 
-  font-size: var(--font-size-3);
+  font-size: var(--font-size-5);
   font-weight: var(--input-font-weight);
   line-height: 1;
   text-decoration: none;
@@ -458,57 +452,30 @@ input[type="date"].weekpicker {
 }
 
 /* Hover */
-button:hover,
-.btn:hover,
-.icon-chip:hover,
-.theme-toggle:hover,
-.seg__btn:hover,
-input[type="date"].weekpicker:hover {
+:where(button, .btn, .icon-chip, .theme-toggle, .seg__btn, input[type="date"].weekpicker):hover {
   background-color: var(--color-button-hover-bg);
   border-color: var(--color-button-hover-border);
 }
 
 /* Active (avoid transforms on native date input if it looks weird in your target browser) */
-button:active,
-.btn:active,
-.icon-chip:active,
-.theme-toggle:active,
-.seg__btn:active {
+:where(button, .btn, .icon-chip, .theme-toggle, .seg__btn):active {
   transform: translateY(1px);
-  border-color: transparent !important;
-  outline: none !important;
 }
 
-input[type="date"].weekpicker:active {
+:where(input[type="date"].weekpicker):active {
   transform: none;
 }
 
 /* Focus */
-button:focus-visible,
-.btn:focus-visible,
-.icon-chip:focus-visible,
-.theme-toggle:focus-visible,
-.seg__btn:focus-visible,
-input[type="date"].weekpicker:focus-visible {
+:where(button, .btn, .icon-chip, .theme-toggle, .seg__btn, input[type="date"].weekpicker):focus-visible {
   outline: none;
   border-color: var(--focus);
-  box-shadow: 0 0 0 3px var(--color-focus-ring);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 /* Disabled */
-/* Disabled */
-button:disabled,
-.btn:disabled,
-.icon-chip:disabled,
-.theme-toggle:disabled,
-.seg__btn:disabled,
-input[type="date"].weekpicker:disabled,
-button[aria-disabled="true"],
-.btn[aria-disabled="true"],
-.icon-chip[aria-disabled="true"],
-.theme-toggle[aria-disabled="true"],
-.seg__btn[aria-disabled="true"],
-input[type="date"].weekpicker[aria-disabled="true"] {
+:where(button, .btn, .icon-chip, .theme-toggle, .seg__btn, input[type="date"].weekpicker):disabled,
+:where(button, .btn, .icon-chip, .theme-toggle, .seg__btn, input[type="date"].weekpicker)[aria-disabled="true"] {
   opacity: 1;
   cursor: not-allowed;
   pointer-events: none;
@@ -534,24 +501,24 @@ input[type="date"].weekpicker[aria-disabled="true"] {
 .btn-danger {
   color: var(--red);
   background: var(--color-danger-soft);
-  border-color: transparent;
+  border-color: var(--color-danger-border);
 }
 
 #deleteBtn:hover,
 .btn-danger:hover {
   background: color-mix(in srgb, var(--red) 22%, transparent);
-  border-color: transparent;
+  border-color: var(--red);
 }
 
 #deleteBtn:active,
 .btn-danger:active {
   background: color-mix(in srgb, var(--red) 28%, transparent);
-  border-color: transparent;
+  border-color: var(--red);
 }
 
 #deleteBtn:focus-visible,
 .btn-danger:focus-visible {
-  border-color: transparent;
+  border-color: var(--red);
   box-shadow: 0 0 0 3px var(--color-danger-soft);
 }
 
@@ -576,7 +543,7 @@ input[type="date"].weekpicker[aria-disabled="true"] {
 /* Pressed */
 :where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn)[aria-pressed="true"] {
   background-color: var(--color-primary) !important;
-  border-color: transparent !important;
+  border-color: var(--color-primary-border) !important;
   color: var(--accent) !important;
 }
 
@@ -593,7 +560,7 @@ input[type="date"].weekpicker[aria-disabled="true"] {
 :where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn):focus-visible {
   outline: none;
   border-color: var(--focus);
-  box-shadow: 0 0 0 3px var(--color-focus-ring);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 /* --- Segmented Controls --- */
@@ -602,7 +569,7 @@ input[type="date"].weekpicker[aria-disabled="true"] {
   align-items: center;
   padding: 0 2px;
   border-radius: var(--control-radius);
-  border: 1px solid transparent;
+  border: 1px solid var(--color-border-1);
   background: var(--color-button-bg);
   height: var(--control-height);
 }
@@ -616,7 +583,7 @@ input[type="date"].weekpicker[aria-disabled="true"] {
 
 .seg__btn[aria-pressed="true"] {
   background: var(--color-primary);
-  border: 1px solid transparent;
+  border: 1px solid var(--color-primary-border);
   color: var(--color-on-primary);
 }
 
@@ -670,7 +637,7 @@ textarea {
   padding: 0 var(--input-padding-x);
   height: var(--input-height);
   border: solid 1px var(--color-input-border);
-  border-radius: 0;
+  border-radius: var(--input-radius);
   font-size: var(--input-font-size);
   font-weight: var(--input-font-weight);
   color: var(--text);
@@ -714,7 +681,7 @@ input:focus,
 select:focus,
 textarea:focus {
   border-color: var(--focus);
-  box-shadow: 0 0 0 3px var(--color-focus-ring);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 /* --- Date/Time Pickers --- */
@@ -2394,12 +2361,12 @@ select.status-confirmed {
 .notes-textarea {
   width: 100%;
   height: 1010px;
-  background: #fff6cc;
-  color: #2b2b2b;
-  border-radius: 0;
+  background: #fff8b8;
+  color: var(--black);
+  border-radius: var(--radius-md);
   padding: 1rem;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.5;
   resize: vertical;
   outline: none;
