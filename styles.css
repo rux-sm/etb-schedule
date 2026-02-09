@@ -1578,9 +1578,10 @@ td.day-today {
   user-select: none;
 }
 
-/* Day cell hover - accent border glow */
+/* Day cell hover - subtle minimalist focus */
 .week-table td.day-cell:not(:has(.trip-bar:hover)):hover {
-  box-shadow: inset 0 0 0 1px var(--accent);
+  background-color: var(--overlay-hover);
+  transition: background-color 0.1s ease;
 }
 
 .week-table td.conflict {
@@ -1699,111 +1700,123 @@ td.day-today {
   font-variant-numeric: tabular-nums;
   height: var(--tripbar-height);
   box-sizing: border-box;
+
   border: 1.5px solid var(--blue);
   border-radius: var(--control-radius);
   overflow: hidden;
+
   background: color-mix(in srgb, var(--blue) 33%, transparent);
   cursor: pointer;
-  pointer-events: auto; /* Restore clicks */
+  pointer-events: auto;
   container-type: inline-size;
 
-  /* Mobile: disable default callout on long-press so our custom menu works */
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
+
+  transition:
+    transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.18s ease,
+    filter 0.18s ease,
+    outline-color 0.18s ease;
 }
 
-/* Trip Bar Alternative Colors */
+/* Trip Bar Alternative Colors (define ONCE) */
 .trip-bar.unconfirmed {
   background: color-mix(in srgb, var(--red) 33%, transparent);
   border-color: var(--red);
 }
-
 .trip-bar.color-green {
   background: color-mix(in srgb, var(--green) 33%, transparent);
   border-color: var(--green);
 }
-
 .trip-bar.color-yellow {
   background: color-mix(in srgb, var(--yellow) 33%, transparent);
   border-color: var(--yellow);
 }
-
 .trip-bar.color-gray {
   background: color-mix(in srgb, var(--gray) 33%, transparent);
   border-color: var(--gray);
 }
-
 .trip-bar.color-violet {
   background: color-mix(in srgb, var(--purple) 33%, transparent);
   border-color: var(--purple);
 }
-
 .trip-bar.color-pink {
   background: color-mix(in srgb, var(--pink) 33%, transparent);
   border-color: var(--pink);
 }
-
 .trip-bar.color-orange {
   background: color-mix(in srgb, var(--orange) 33%, transparent);
   border-color: var(--orange);
 }
-
 .trip-bar.color-teal {
   background: color-mix(in srgb, var(--teal) 33%, transparent);
   border-color: var(--teal);
 }
-
 .trip-bar.color-cyan {
   background: color-mix(in srgb, var(--cyan) 33%, transparent);
   border-color: var(--cyan);
 }
-
 .trip-bar.color-indigo {
   background: color-mix(in srgb, var(--indigo) 33%, transparent);
   border-color: var(--indigo);
 }
-
 .trip-bar.color-brown {
   background: color-mix(in srgb, var(--brown) 33%, transparent);
   border-color: var(--brown);
 }
-
 .trip-bar.color-mint {
   background: color-mix(in srgb, var(--mint) 33%, transparent);
   border-color: var(--mint);
 }
-
 .trip-bar.color-black {
   background: color-mix(in srgb, var(--black) 33%, transparent);
   border-color: var(--black);
 }
-
 .trip-bar.color-white {
   background: color-mix(in srgb, var(--white) 33%, transparent);
   border-color: var(--white);
 }
 
-/* "Glassy Spotlight" Hover Effect */
+/* =========================
+   Hover Effect: Glow Ring + Bloom + Pop
+   (NO pseudo-elements used, so arrows work)
+   ========================= */
+
 .trip-bar:hover {
-  /* Lift the card up towards the user */
-  transform: translateY(-2px) scale(1.02);
-  /* Make it slightly brighter to simulate light hitting it */
+  transform: translateY(-3px) scale(1.01);
+  filter: brightness(1.05) saturate(1.06);
 
-  /* Strong, crisp shadow for depth + subtle white glow/border for glassiness */
+  /* First shadow line = crisp ring, rest = bloom */
   box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.5),
-    0 2px 6px rgba(0, 0, 0, 0.3);
+    0 0 0 1px rgba(255, 255, 255, 0.18),
+    0 0 26px rgba(255, 255, 255, 0.1),
+    0 16px 44px rgba(0, 0, 0, 0.58),
+    0 3px 12px rgba(0, 0, 0, 0.35);
 
-  /* Inner highlight */
-  transition:
-    transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
-    filter 0.2s ease,
-    z-index 0s linear 0s;
-  /* Z-index happens immediately on hover */
+  z-index: 500;
+
+  outline: 1px solid rgba(255, 255, 255, 0.1);
+  outline-offset: -1px;
+
+  animation: tripPop 180ms ease-out;
 }
 
+@keyframes tripPop {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    transform: translateY(-3px) scale(1.01);
+  }
+}
+
+.trip-bar:active {
+  transform: translateY(-1px) scale(0.995);
+}
+
+/* Trip bar contents */
 .trip-bar > * {
   display: flex;
   align-items: center;
@@ -1864,7 +1877,7 @@ td.day-today {
 
 .bar-drivers {
   display: flex;
-  align-items: center; /* add this */
+  align-items: center;
   justify-content: center;
   gap: 8px;
 }
@@ -1885,7 +1898,6 @@ td.day-today {
 }
 
 /* Trip Bar Status Badges */
-
 .trip-bar .mini-badge {
   width: 11px;
   height: 11px;
@@ -1902,20 +1914,19 @@ td.day-today {
 .trip-bar .mini-badge.is-pending {
   background: var(--red-status);
 }
-
 .trip-bar .mini-badge.is-ok {
   background: var(--green-status);
 }
-
 .trip-bar .mini-badge.is-blue {
   background: var(--blue-status);
 }
-
 .trip-bar .mini-badge.is-yellow {
   background: var(--yellow-status);
 }
 
-/* Arrows for multi-day trips */
+/* =========================
+   Arrows for multi-day trips (correct + animated)
+   ========================= */
 .trip-bar.cont-left {
   border-left: none;
   border-top-left-radius: 0;
@@ -1955,7 +1966,6 @@ td.day-today {
   100% {
     transform: translate(0, -50%);
   }
-
   50% {
     transform: translate(-3px, -50%);
   }
@@ -1966,7 +1976,6 @@ td.day-today {
   100% {
     transform: translate(0, -50%);
   }
-
   50% {
     transform: translate(3px, -50%);
   }
