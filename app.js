@@ -574,61 +574,74 @@ function sanitizeWeekResp(resp) {
  * - Request cancellation support
  */
 async function fetchAPI(fn, params = {}, timeoutMs = CONFIG.JSONP_TIMEOUT) {
-  const url = new URL(CONFIG.ENDPOINT);
-  url.searchParams.set("fn", fn);
+  return withRetry(
+    async (attempt) => {
+      const url = new URL(CONFIG.ENDPOINT);
+      url.searchParams.set("fn", fn);
 
-  // Add cache buster
-  url.searchParams.set("_", Date.now().toString());
+      // Add cache buster
+      url.searchParams.set("_", Date.now().toString());
 
-  // Add all parameters
-  Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null) {
-      url.searchParams.set(key, String(value));
-    }
-  });
+      // Add all parameters
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          url.searchParams.set(key, String(value));
+        }
+      });
 
-  // Create abort controller for timeout
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+      // Create abort controller for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-  try {
-    const response = await fetch(url.toString(), {
-      method: "GET",
-      mode: "cors",
-      cache: "no-cache",
-      credentials: "omit",
-      signal: controller.signal,
-    });
+      try {
+        const response = await fetch(url.toString(), {
+          method: "GET",
+          mode: "cors",
+          cache: "no-cache",
+          credentials: "omit",
+          signal: controller.signal,
+        });
 
-    clearTimeout(timeoutId);
+        clearTimeout(timeoutId);
 
-    if (!response.ok) {
-      const err = new Error(`HTTP ${response.status}: ${response.statusText}`);
-      err.status = response.status;
-      err.url = url.toString();
-      throw err;
-    }
+        if (!response.ok) {
+          const err = new Error(`HTTP ${response.status}: ${response.statusText}`);
+          err.status = response.status;
+          err.url = url.toString();
+          throw err;
+        }
 
-    return await response.json();
-  } catch (err) {
-    clearTimeout(timeoutId);
+        return await response.json();
+      } catch (err) {
+        clearTimeout(timeoutId);
 
-    // Better error messages
-    if (err.name === "AbortError") {
-      const timeoutErr = new Error(`Request timeout after ${timeoutMs}ms`);
-      timeoutErr.url = url.toString();
-      throw timeoutErr;
-    }
+        // Better error messages
+        if (err.name === "AbortError") {
+          const timeoutErr = new Error(`Request timeout after ${timeoutMs}ms`);
+          timeoutErr.url = url.toString();
+          throw timeoutErr;
+        }
 
-    if (err instanceof TypeError && err.message.includes("fetch")) {
-      const networkErr = new Error("Network error - check connection");
-      networkErr.url = url.toString();
-      networkErr.originalError = err;
-      throw networkErr;
-    }
+        if (err instanceof TypeError && err.message.includes("fetch")) {
+          const networkErr = new Error("Network error - check connection");
+          networkErr.url = url.toString();
+          networkErr.originalError = err;
+          throw networkErr;
+        }
 
-    throw err;
-  }
+        throw err;
+      }
+    },
+    {
+      tries: 3,
+      baseDelayMs: 500,
+      shouldRetry: (err) => {
+        // Don't retry client errors (4xx)
+        if (err.status && err.status >= 400 && err.status < 500) return false;
+        return true;
+      },
+    },
+  );
 }
 
 /**
@@ -2785,14 +2798,22 @@ async function openTripDetailsModal(tripKey) {
     if (hasCore) {
       toastProgress(55, "Rendering… 55%");
       renderTripDetailsModalFromData(t, assigns);
-      toastProgress(100, "Loaded ✓ 100%");
-      toastHide(250);
+      toastProgress(100, "Loaded ✓");
+      toastHide(800);
       return;
     }
 
+    const startTime = Date.now();
     toastProgress(30, "Fetching trip… 30%");
 
     const [tripResp, assignResp] = await Promise.all([api.getTrip(k), api.getBusAssignments(k)]);
+
+    // Force minimum delay for UX consistency
+    const elapsed = Date.now() - startTime;
+    if (elapsed < 600) {
+      toastProgress(50, "Processing…");
+      await new Promise((resolve) => setTimeout(resolve, 600 - elapsed));
+    }
 
     if (!tripResp?.ok) throw new Error(tripResp?.error || "Trip not found");
 
@@ -2802,8 +2823,8 @@ async function openTripDetailsModal(tripKey) {
     toastProgress(70, "Rendering… 70%");
     renderTripDetailsModalFromData(t, assigns);
 
-    toastProgress(100, "Loaded ✓ 100%");
-    toastHide(250);
+    toastProgress(100, "Loaded ✓");
+    toastHide(800);
   } catch (e) {
     console.error(e);
     toast("Could not load details", "danger", 2200);
@@ -2820,19 +2841,45 @@ function closeTripDetailsModal() {
 async function openTripForEdit(tripKey) {
   if (isMobileOnly()) return openTripDetailsModal(tripKey);
 
-  toastShow("Loading trip… 0%", "loading");
-  toastProgress(0);
+  // Loading Overlay Logic
+  const overlay = document.getElementById("loadingOverlay");
+  const bar = overlay?.querySelector(".loading-bar__inner");
+  if (overlay) overlay.hidden = false;
+  if (bar) bar.style.width = "0%";
+
   dom.saveBtn.disabled = true;
 
   // Ensure the left panel is open and showing the trip card
   setLeftPanelMode("trip");
 
+  // CLEAR PREVIOUS DATA
+  if (dom.tripForm) dom.tripForm.reset();
+  state.busRows.forEach((r) => {
+    r.busSel.value = "None";
+    r.d1Sel.value = "None";
+    r.d2Sel.value = "None";
+  });
+  // Reset badges/status
+  $("tripIdBadge").textContent = "";
+  $("tripIdBadge").classList.add("is-hidden");
+
+  // Force bus rows to update (hide extra rows)
+  updateBusRowVisibility();
+
   try {
-    toastProgress(15, "Fetching trip… 15%");
+    const startTime = Date.now();
+    if (bar) bar.style.width = "15%";
 
     const [tripResp, assignResp] = await Promise.all([api.getTrip(tripKey), api.getBusAssignments(tripKey)]);
 
-    toastProgress(70, "Populating form… 70%");
+    // Force a minimum delay so the user feels the "loading" state (prevents instant flash)
+    const elapsed = Date.now() - startTime;
+    if (elapsed < 600) {
+      if (bar) bar.style.width = "40%";
+      await new Promise((resolve) => setTimeout(resolve, 600 - elapsed));
+    }
+
+    if (bar) bar.style.width = "70%";
     if (!tripResp?.ok) throw new Error(tripResp?.error || "Trip not found");
 
     const t = tripResp.trip || {};
@@ -2885,12 +2932,16 @@ async function openTripForEdit(tripKey) {
     syncBusSelectEmptyState();
     refreshEmptyStateUI();
 
-    toastProgress(100, "Loaded ✓ 100%");
-    toastHide(400);
+    if (bar) bar.style.width = "100%";
 
-    toast("Trip loaded ✓", "success", 900);
+    // Slight delay to show 100% before hiding
+    setTimeout(() => {
+      if (overlay) overlay.hidden = true;
+    }, 500);
+
     $("destination")?.focus?.({ preventScroll: true });
   } catch (e) {
+    if (overlay) overlay.hidden = true;
     console.error(e);
     toast("Could not load trip", "danger", 2200);
     alert("Could not open trip for editing.");
@@ -2914,11 +2965,12 @@ function clearVerifyFallback() {
 async function verifyWriteResult() {
   if (!state.pendingWrite?.tripKey) return;
 
-  const { action, tripKey } = state.pendingWrite;
+  const { action, tripKey, originalTrips, originalTripByKey, originalAssignments } = state.pendingWrite;
 
   startProgressCreep({ from: 70, to: 95, label: "Verifying… " });
 
-  const delays = [500, 1000, 1500, 2000, 3000, 4000, 5000]; // Extended polling (~17s total)
+  // Optimized polling: faster start, exponential backoff
+  const delays = [200, 400, 800, 1500, 3000, 6000];
 
   let exists = false;
   let serverTrip = null;
@@ -2929,33 +2981,20 @@ async function verifyWriteResult() {
       for (let i = 0; i < delays.length; i++) {
         const resp = await api.getTrip(tripKey);
         exists = !!(resp?.ok && resp.trip);
-        if (!exists) break; // It's gone! Success.
+        if (!exists) break;
         await delay(delays[i]);
       }
 
       if (!exists) {
-        toastProgress(100, "Deleted ✓ 100%");
+        toastProgress(100, "Deleted ✓");
         toastHide(300);
-        toast("Trip deleted ✓", "success", 1400);
 
-        dom.tripForm.reset();
-        setModeNew();
-
-        setSelectToPlaceholder("busesNeeded");
-        setSelectToPlaceholder("itineraryStatus");
-        setSelectToPlaceholder("contactStatus");
-        setSelectToPlaceholder("paymentStatus");
-        setSelectToPlaceholder("driverStatus");
-
-        dom.busesNeeded.value = "";
-        updateBusRowVisibility();
-        refreshBusSelectOptions();
-
+        // Final sync
         state.weekCache.clear();
         await refreshWeekData({ silent: true });
       } else {
-        toast("Delete may have failed", "danger", 2400);
-        dom.action.value = dom.tripKey.value ? "update" : "create";
+        toast("Delete may have failed — restoring", "danger", 3000);
+        rollbackState();
       }
     } else {
       // CREATE/UPDATE: Wait for trip to appear
@@ -2963,53 +3002,42 @@ async function verifyWriteResult() {
         const resp = await api.getTrip(tripKey);
         exists = !!(resp?.ok && resp.trip);
         serverTrip = exists ? resp.trip : null;
-        if (exists) break; // Found it!
+        if (exists) break;
         await delay(delays[i]);
       }
 
       if (exists) {
-        const serverTripId = serverTrip?.tripId ? String(serverTrip.tripId) : "";
-
-        toastProgress(100, "Saved ✓ 100%");
+        toastProgress(100, "Saved ✓");
         toastHide(300);
-        toast("Saved ✓", "success", 1200);
 
-        // Update UI with server data
+        // Final sync
         state.weekCache.clear();
         await refreshWeekData({ silent: true });
-
-        // Cleanup
-        dom.tripForm.reset();
-        refreshEmptyStateUI();
-        setModeNew();
-
-        setSelectToPlaceholder("busesNeeded");
-        setSelectToPlaceholder("itineraryStatus");
-        setSelectToPlaceholder("contactStatus");
-        setSelectToPlaceholder("paymentStatus");
-        setSelectToPlaceholder("driverStatus");
-
-        dom.busesNeeded.value = "";
-        updateBusRowVisibility();
-        syncBusPanelState();
-        refreshBusSelectOptions();
-
-        ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus"].forEach((id) =>
-          updateStatusSelect($(id)),
-        );
       } else {
-        toast("Saved (syncing…) — refresh if needed", "warning", 2200);
+        toast("Save verification timed out — check schedule", "warning", 3000);
       }
     }
   } catch (e) {
     console.error(e);
-    toast("Could not verify save/delete", "danger", 2400);
+    toast("Connection error during verification", "danger", 2400);
+    if (action === "delete") rollbackState();
   } finally {
     stopProgressCreep();
     clearVerifyFallback();
     state.pendingWrite = null;
     dom.saveBtn.disabled = false;
     dom.action.value = dom.tripKey.value ? "update" : "create";
+  }
+
+  function rollbackState() {
+    if (originalTrips) {
+      state.trips = originalTrips;
+      state.tripByKey = originalTripByKey;
+      state.assignmentsByTripKey = originalAssignments;
+      scheduleAgendaReflow();
+      updateDriverWeekIfVisible();
+      clearCacheForCurrentView();
+    }
   }
 }
 
@@ -3221,6 +3249,55 @@ function showCellContextMenu(x, y, busId, dateStr) {
   }
 }
 
+function handleScheduleInteraction(e, isContext) {
+  // 1. Check for Trip Bar
+  const tripBar = e.target.closest(".trip-bar");
+
+  if (tripBar) {
+    if (isContext) e.preventDefault(); // Stop browser menu
+    e.stopPropagation();
+
+    const tripKey = tripBar.dataset.tripkey;
+    if (!tripKey) return;
+
+    showTripContextMenu(e.pageX, e.pageY, tripKey);
+    return;
+  }
+
+  // 2. Check for Day Cell (Context Menu)
+  const cell = e.target.closest("td.day-cell");
+  if (cell) {
+    if (isContext) e.preventDefault(); // Stop browser menu
+    e.stopPropagation(); // Prevent immediate close via document listener
+
+    // Get the bus ID from the row
+    const tr = cell.closest("tr");
+    if (!tr) return;
+
+    let busId = "";
+    const busCell = tr.querySelector(".bus-id-num");
+    if (busCell) {
+      busId = busCell.textContent.trim();
+    } else if (tr.classList.contains("waiting-list-row")) {
+      busId = "Waiting List";
+    }
+
+    // Get the date
+    const colIdx = cell.cellIndex;
+    if (colIdx < 1) return;
+    const dayIndex = colIdx - 1;
+    const weekDates = getWeekDates();
+    if (dayIndex < 0 || dayIndex >= weekDates.length) return;
+    const dateStr = weekDates[dayIndex];
+
+    if (busId && dateStr) {
+      showCellContextMenu(e.pageX, e.pageY, busId, dateStr);
+    } else {
+      console.warn("Missing busId or dateStr", { busId, dateStr });
+    }
+  }
+}
+
 function wireDelegatedBarEvents() {
   const containers = document.querySelectorAll(".week-table-container");
   if (!containers.length) return;
@@ -3292,48 +3369,14 @@ function wireDelegatedBarEvents() {
   });
 
   containers.forEach((container) => {
+    // 1. Context Menu (Right Click) - Desktop & Mobile Long Press
+    container.addEventListener("contextmenu", (e) => handleScheduleInteraction(e, true));
+
+    // 2. Click (Tap) - Mobile Only
     container.addEventListener("click", (e) => {
-      // 1. Check for Trip Bar (existing logic)
-      const bar = e.target.closest(".trip-bar");
-      if (bar) {
-        const tripKey = bar.dataset.tripkey;
-        if (!tripKey) return;
-        e.stopPropagation();
-        showTripContextMenu(e.pageX, e.pageY, tripKey);
-        return;
-      }
-
-      // 2. Check for Day Cell (Context Menu)
-      const cell = e.target.closest("td.day-cell");
-      if (cell) {
-        e.stopPropagation(); // Prevent immediate close via document listener
-
-        // Get the bus ID from the row
-        const tr = cell.closest("tr");
-        if (!tr) return;
-
-        let busId = "";
-        const busCell = tr.querySelector(".bus-id-num");
-        if (busCell) {
-          busId = busCell.textContent.trim();
-        } else if (tr.classList.contains("waiting-list-row")) {
-          busId = "Waiting List";
-        }
-
-        // Get the date
-        const colIdx = cell.cellIndex;
-        if (colIdx < 1) return;
-        const dayIndex = colIdx - 1;
-        const weekDates = getWeekDates();
-        if (dayIndex < 0 || dayIndex >= weekDates.length) return;
-        const dateStr = weekDates[dayIndex];
-
-        if (busId && dateStr) {
-          console.log("showCellContextMenu called with:", { x: e.pageX, y: e.pageY, busId, dateStr });
-          showCellContextMenu(e.pageX, e.pageY, busId, dateStr);
-        } else {
-          console.warn("Missing busId or dateStr", { busId, dateStr });
-        }
+      // Only handle Taps on touch devices
+      if (isMobileOnly()) {
+        handleScheduleInteraction(e, false);
       }
     });
 
@@ -3649,19 +3692,56 @@ function wireEvents() {
     dom.action.value = "delete";
     dom.saveBtn.disabled = true;
 
-    toastShow("Deleting trip… 0%", "loading");
-    toastProgress(0);
-    toastProgress(25, "Sending delete… 25%");
+    // OPTIMISTIC UPDATE: Remove locally immediately
+    const key = String(dom.tripKey.value);
+
+    // Backup for rollback
+    const originalTrips = [...state.trips];
+    const originalTripByKey = { ...state.tripByKey };
+    const originalAssignments = { ...state.assignmentsByTripKey };
+
+    // 1. Remove from state
+    state.trips = state.trips.filter((t) => String(t.tripKey) !== key);
+    delete state.tripByKey[key];
+    delete state.assignmentsByTripKey[key];
+
+    // 2. Invalidate cache for current view
+    clearCacheForCurrentView();
+
+    // 3. Re-render UI
+    scheduleAgendaReflow();
+    updateDriverWeekIfVisible();
+
+    // 4. Feedback & Modal Close (don't reset form yet so it can submit)
+    closeTripDetailsModal();
+    toast("Trip deleted ✓", "success", 1500);
+
+    // OPTIMISTIC UI: Clear form for next entry
+    setTimeout(() => {
+      resetTripFormUI();
+    }, 100);
 
     state.pendingWrite = {
       action: "delete",
-      tripKey: String(dom.tripKey.value),
+      tripKey: key,
+      originalTrips,
+      originalTripByKey,
+      originalAssignments,
     };
+
     startVerifyFallback();
+
+    // Explicitly set these for the native submission
+    dom.action.value = "delete";
+    dom.tripKey.value = key;
+
     dom.tripForm.submit();
   });
 
   dom.tripForm.addEventListener("submit", (e) => {
+    // If we're deleting, don't preventDefault (in case form.submit() triggers this)
+    if (dom.action.value === "delete") return;
+
     e.preventDefault();
     if (!navigator.onLine) {
       toast("No internet connection", "danger", 3000);
@@ -3682,19 +3762,112 @@ function wireEvents() {
     $("departureTime").value = normalizeTime($("departureTime").value);
     $("arrivalTime").value = normalizeTime($("arrivalTime").value);
 
-    toastShow("Saving… 0%", "loading");
-    toastProgress(0, "Preparing… 0%");
-    toastProgress(20, "Sending… 20%");
+    // OPTIMISTIC UPDATE: Save locally immediately
+    const action = dom.action.value;
+    const key = String(dom.tripKey.value || "");
+
+    // Backup for rollback
+    const originalTrips = [...state.trips];
+    const originalTripByKey = { ...state.tripByKey };
+    const originalAssignments = { ...state.assignmentsByTripKey };
+
+    // Construct trip from form
+    const optimisticTrip = {
+      tripKey: key,
+      destination: $("destination").value,
+      customer: $("customer").value,
+      contactName: $("contactName").value,
+      phone: $("phone").value,
+      departureDate: $("tripDate").value,
+      arrivalDate: $("arrivalDate").value,
+      departureTime: $("departureTime").value,
+      arrivalTime: $("arrivalTime").value,
+      itineraryStatus: $("itineraryStatus").value,
+      contactStatus: $("contactStatus").value,
+      paymentStatus: $("paymentStatus").value,
+      driverStatus: $("driverStatus").value,
+      tripColor: $("tripColor").value,
+      busesNeeded: $("busesNeeded").value,
+      itinerary: dom.itineraryField.value,
+      notes: $("notes").value,
+      comments: $("comments").value,
+    };
+
+    // Construct assignments from state.busRows for instant rendering
+    const numBuses = parseInt(dom.busesNeeded.value) || 0;
+    const optimisticAssignments = [];
+    for (let i = 0; i < numBuses; i++) {
+      const row = state.busRows[i];
+      if (row) {
+        optimisticAssignments.push({
+          busId: String(row.busSel.value || "").trim(),
+          driver1: String(row.d1Sel.value || "").trim(),
+          driver2: String(row.d2Sel.value || "").trim(),
+        });
+      }
+    }
+
+    // Update state
+    if (action === "create") {
+      state.trips.push(optimisticTrip);
+    } else {
+      const idx = state.trips.findIndex((t) => String(t.tripKey) === key);
+      if (idx >= 0) state.trips[idx] = optimisticTrip;
+      else state.trips.push(optimisticTrip);
+    }
+    state.tripByKey[key] = optimisticTrip;
+    state.assignmentsByTripKey[key] = optimisticAssignments;
+
+    // Rerender UI
+    scheduleAgendaReflow();
+    updateDriverWeekIfVisible();
+
+    // Invalidate cache
+    clearCacheForCurrentView();
+
+    toast("Saving…", "info", 1000);
 
     dom.saveBtn.disabled = true;
 
     state.pendingWrite = {
-      action: dom.action.value,
-      tripKey: String(dom.tripKey.value || ""),
+      action,
+      tripKey: key,
+      originalTrips,
+      originalTripByKey,
+      originalAssignments,
     };
     startVerifyFallback();
     dom.tripForm.submit();
+
+    // OPTIMISTIC UI: Clear form immediately for next entry
+    // (Small delay to ensure browser captures data for hidden_iframe submit)
+    setTimeout(() => {
+      resetTripFormUI();
+      toast("Saved ✓", "success", 1200);
+    }, 100);
   });
+
+  function resetTripFormUI() {
+    dom.tripForm.reset();
+    refreshEmptyStateUI();
+    setModeNew();
+
+    // Status dropdowns
+    ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus"].forEach((id) => updateStatusSelect($(id)));
+
+    // Bus panel
+    dom.busesNeeded.value = "";
+    updateBusRowVisibility();
+    syncBusPanelState();
+    refreshBusSelectOptions();
+  }
+
+  function clearCacheForCurrentView() {
+    const { start, end } = getWeekRange();
+    const cacheKey = "week_" + weekKey(start, end);
+    state.weekCache.delete(cacheKey);
+    CACHE.remove(cacheKey);
+  }
 
   dom.tripDetailsModal?.addEventListener("click", (e) => {
     if (e.target.dataset.closeDetails !== undefined) closeTripDetailsModal();

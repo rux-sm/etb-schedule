@@ -23,7 +23,7 @@
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
     />
 
-    <link rel="stylesheet" href="styles.css?v=25" />
+    <link rel="stylesheet" href="styles.css?v=37" />
   </head>
 
   <body>
@@ -202,9 +202,12 @@
                       class="notes-textarea"
                       placeholder="Enter week notes here..."
                     ></textarea>
-                    <div class="form-actions mt-2">
-                      <button type="button" class="btn" id="saveNotesBtn">Save Notes</button>
-                    </div>
+                  </div>
+                </div>
+
+                <div class="card-foot">
+                  <div class="form-actions">
+                    <button type="button" class="btn" id="saveNotesBtn">Save Notes</button>
                   </div>
                 </div>
               </div>
@@ -369,22 +372,24 @@
                     <div class="subsection col-12" id="busPanel">
                       <div id="busGrid"></div>
                     </div>
-
-                    <div class="form-actions col-12">
-                      <button type="submit" class="btn" id="saveBtn">Save</button>
-                      <button type="button" class="btn" id="newBtn">Clear</button>
-                      <button type="button" class="btn" id="deleteBtn" disabled>Delete</button>
-                      <button id="itineraryBtn" type="button" class="btn btn-compact">Itinerary</button>
-                    </div>
                   </form>
-
-                  <iframe
-                    id="hidden_iframe"
-                    name="hidden_iframe"
-                    class="is-hidden"
-                    title="Hidden submission iframe"
-                  ></iframe>
                 </div>
+
+                <div class="card-foot">
+                  <div class="form-actions">
+                    <button type="submit" class="btn" id="saveBtn" form="tripForm">Save</button>
+                    <button type="button" class="btn" id="newBtn">Clear</button>
+                    <button type="button" class="btn" id="deleteBtn" disabled>Delete</button>
+                    <button id="itineraryBtn" type="button" class="btn btn-compact">Itinerary</button>
+                  </div>
+                </div>
+
+                <iframe
+                  id="hidden_iframe"
+                  name="hidden_iframe"
+                  class="is-hidden"
+                  title="Hidden submission iframe"
+                ></iframe>
               </div>
             </div>
 
@@ -515,6 +520,17 @@
       </div>
     </div>
 
+    <!-- Loading Overlay (Trip Edit) -->
+    <div id="loadingOverlay" class="loading-overlay" hidden>
+      <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading Trip...</div>
+        <div class="loading-bar">
+          <div class="loading-bar__inner"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- Itinerary Modal -->
     <div id="itineraryModal" class="modal" hidden>
       <div class="modal-backdrop" data-close></div>
@@ -575,6 +591,6 @@
       </button>
     </div>
 
-    <script src="app.js?v=32" defer></script>
+    <script src="app.js?v=48" defer></script>
   </body>
 </html>
