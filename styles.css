@@ -21,18 +21,18 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
   /* --- BASE HUES --- */
---red:    rgb(255 40 70);
---orange: rgb(255 130 30);
---yellow: rgb(255 215 0);
---lime:   rgb(190 255 60);
---green:  rgb(40 235 110);
---mint:   rgb(0 230 200);
---teal:   rgb(0 220 235);
---cyan:   rgb(0 210 255);
---blue:   rgb(0 150 255);
---indigo: rgb(110 95 255);
---purple: rgb(200 70 255);
---pink:   rgb(255 15 180);
+  --red: rgb(255 40 70);
+  --orange: rgb(255 130 30);
+  --yellow: rgb(255 215 0);
+  --lime: rgb(190 255 60);
+  --green: rgb(40 235 110);
+  --mint: rgb(0 230 200);
+  --teal: rgb(0 220 235);
+  --cyan: rgb(0 210 255);
+  --blue: rgb(0 150 255);
+  --indigo: rgb(110 95 255);
+  --purple: rgb(200 70 255);
+  --pink: rgb(255 15 180);
   --brown: rgb(172 127 94);
   --black: rgb(0 0 0);
   --gray: rgb(142 142 142);
@@ -728,8 +728,9 @@ textarea::placeholder {
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: var(--focus);
-  box-shadow: 0 0 0 3px var(--color-focus-ring);
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  box-shadow: none;
 }
 
 /* --- Date/Time Pickers --- */
@@ -802,7 +803,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 }
 
 .card.compact {
-  padding: 12px;
+  padding: 0;
   padding-top: 0;
 }
 
@@ -835,6 +836,10 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   min-width: 0;
   font-size: 0.95rem;
   color: var(--text-2);
+  padding: 16px;
+  /* or 1rem, or whatever value fits your design */
+  box-sizing: border-box;
+  /* ensures padding doesn’t cause overflow */
 }
 
 .card-foot {
@@ -842,8 +847,8 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   align-items: center;
   justify-content: flex-start;
   gap: var(--space-2);
-  padding-top: var(--space-2);
-  margin-top: var(--space-2);
+  padding: 16px;
+  margin-top: 0;
   border-top: 1px solid var(--color-divider);
   flex-wrap: wrap;
 }
@@ -1695,8 +1700,8 @@ th.day-today .day-name {
 .row-bars {
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
+  left: var(--bus-col-w);
+  width: calc(100% - var(--bus-col-w));
   height: 100%;
   pointer-events: none;
   /* Let clicks pass through to cells/bars */
@@ -1709,6 +1714,27 @@ th.day-today .day-name {
   height: var(--schedule-row-height) !important;
   max-height: var(--schedule-row-height) !important;
   position: relative;
+}
+
+.week-table td.week-start-cell {
+  position: static !important;
+}
+
+.week-table tbody tr.notes-row {
+  height: 20px !important;
+  max-height: 20px !important;
+  min-height: 20px !important;
+  background-color: var(--color-bg);
+}
+
+.week-table tbody tr.notes-row td {
+  height: 20px !important;
+  border-top: 1px dashed var(--color-border-subtle);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.notes-row .bus-id-cell {
+  background-color: var(--color-surface-1);
 }
 
 .week-table td:first-child {
@@ -2656,42 +2682,124 @@ select.status-confirmed {
 /* ========================================================================== */
 
 @media print {
+  @page {
+    size: legal landscape;
+    margin: 0.25in;
+  }
 
+  /* Hide everything except the print root */
+  .app,
   .topbar,
   .theme-toggle,
-  button:not(.trip-bar),
-  .btn:not(.trip-bar) {
+  .context-menu,
+  .modal,
+  .loading-overlay,
+  #toast,
+  #toastBackdrop {
     display: none !important;
   }
 
+  #printRoot {
+    display: block !important;
+    visibility: visible !important;
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
   body {
-    font-size: 12pt;
+    background: white !important;
+    color: black !important;
+    font-size: 10pt;
+    margin: 0;
+    padding: 0;
   }
 
-  .card {
-    border: 1px solid #000;
-    margin-bottom: 1cm;
-    page-break-inside: avoid;
+  .print-page {
+    page-break-after: always;
+    padding: 0.1in;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 100vh;
   }
 
-  .trip-bar,
-  .card {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-    box-shadow: none !important;
-    transition: none !important;
+  .print-page:last-child {
+    page-break-after: auto;
   }
 
-  :root {
-    --tripbar-inset: 12px;
+  .print-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background: white;
   }
 
+  .print-title {
+    font-size: 16pt;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: left;
+    border-bottom: none;
+    padding-bottom: 5px;
+    color: #333;
+  }
+
+  .print-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    table-layout: fixed !important;
+    --bus-col-w: 60px !important;
+  }
+
+  .print-table .col-bus {
+    width: var(--bus-col-w) !important;
+  }
+
+  .print-table .col-day {
+    width: calc((100% - 60px) / 7) !important;
+  }
+
+  .print-table th,
+  .print-table td {
+    border: 1px solid #ccc !important;
+    padding: 4px !important;
+    font-size: 9pt !important;
+    position: relative;
+    height: 100px;
+    /* Fixed height for consistency in print */
+    vertical-align: top;
+  }
+
+  .print-table th {
+    background-color: #f8f9fa !important;
+    font-weight: bold !important;
+    text-align: center !important;
+    height: auto !important;
+  }
+
+  .print-table .col-bus {
+    width: 50px !important;
+  }
+
+  /* Ensure trip bars are visible */
   .trip-bar {
-    margin: 6px;
-    padding: 6px 10px;
-    border: 1px solid rgba(0, 0, 0, 0.25);
-    background: #fff;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    box-shadow: none !important;
+    position: absolute !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    font-size: 8pt !important;
+    padding: 2px 4px !important;
+    border-radius: 4px !important;
+    z-index: 10;
   }
+
+  /* Force background colors for trip bars based on attributes or classes */
+  /* If the app uses inline styles for colors, print-color-adjust: exact should handle it */
 }
 
 /* ========================================================================== */

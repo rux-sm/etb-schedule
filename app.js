@@ -1548,54 +1548,21 @@ function getColMetricsCached() {
 }
 
 function syncRowBarsWidth(col) {
-  if (!col || !dom.agendaBody) return;
-  const total = col.total ?? col.widths.reduce((a, b) => a + (b || 0), 0);
-
-  // Sync main table rows
-  dom.agendaBody.querySelectorAll(".row-bars").forEach((bars) => {
-    bars.style.width = `${total}px`;
-  });
-
-  // Sync waiting list rows
-  const wb = document.getElementById("waitingBody");
-  if (wb) {
-    wb.querySelectorAll(".row-bars").forEach((bars) => {
-      bars.style.width = `${total}px`;
-    });
-  }
+  // Now handled via CSS calc(100% - var(--bus-col-w))
 }
 
 function positionBarWithinOverlay(bar, bars, col, startIdx, endIdx) {
   const inset = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--tripbar-inset")) || 6;
 
-  const leftPx = (col.starts[startIdx] ?? 0) + inset;
+  // Use percentages for positioning to support print and different screen widths.
+  // We assume 7 day columns of equal width.
+  const totalCols = 7;
+  const span = endIdx - startIdx + 1;
+  const leftPct = (startIdx / totalCols) * 100;
+  const widthPct = (span / totalCols) * 100;
 
-  let spanW = 0;
-  for (let i = startIdx; i <= endIdx; i++) spanW += col.widths[i] ?? 0;
-
-  // Saturday (last cell) has no right border, so don't subtract 1px for it
-  const isTableEnd = endIdx === 6;
-  const visualRoom = isTableEnd ? spanW : spanW - 1;
-
-  const widthPx = Math.max(0, visualRoom - inset * 2);
-  const max = Math.max(0, col.total ?? col.widths.reduce((a, b) => a + (b || 0), 0));
-
-  if (leftPx >= max) {
-    bar.style.left = `${max}px`;
-    bar.style.width = `0px`;
-    return;
-  }
-
-  // Round LEFT and RIGHT edges independently, then derive width from difference.
-  // This ensures symmetrical centering regardless of sub-pixel values from zoom.
-  const clampedWidth = Math.max(0, Math.min(widthPx, max - leftPx));
-  const rightPx = leftPx + clampedWidth;
-
-  const roundedLeft = Math.round(leftPx);
-  const roundedRight = Math.round(rightPx);
-
-  bar.style.left = `${roundedLeft}px`;
-  bar.style.width = `${roundedRight - roundedLeft}px`;
+  bar.style.left = `calc(${leftPct}% + ${inset}px)`;
+  bar.style.width = `calc(${widthPct}% - ${inset * 2}px)`;
 }
 
 // ======================================================
@@ -3132,42 +3099,75 @@ function buildPrintScheduleTwoPages() {
 
   const weekTitle = document.getElementById("headerWeek")?.textContent || "Schedule";
 
-  function makeTableForRows(startIdx, endIdx) {
+  function makeTableForRows(startIdx, endIdx, titleSuffix) {
     const clone = weekTable.cloneNode(true);
-    clone.querySelector("#agendaBody")?.removeAttribute("id");
 
-    const body = clone.querySelector("tbody");
+    // Remove IDs to avoid duplicates
+    clone.querySelectorAll("[id]").forEach(el => el.removeAttribute("id"));
+
+    const body = clone.querySelector("tbody:not([hidden])");
     if (!body) return clone;
+
+    // Remove the other tbody (like waiting list if it's there but hidden)
+    clone.querySelectorAll("tbody[hidden]").forEach(el => el.remove());
 
     const rows = Array.from(body.querySelectorAll("tr"));
     rows.forEach((tr, idx) => {
-      if (idx < startIdx || idx >= endIdx) tr.remove();
+      // Keep only the rows in the range
+      if (idx < startIdx || idx >= endIdx) {
+        tr.remove();
+      } else {
+        // INJECT 2 BLANK NOTES ROWS AFTER EACH REMAINING ROW
+        for (let j = 0; j < 2; j++) {
+          const notesRow = document.createElement("tr");
+          notesRow.className = "notes-row";
+
+          // Empty bus ID cell
+          const tdEmpty = document.createElement("td");
+          tdEmpty.className = "bus-id-cell";
+          notesRow.appendChild(tdEmpty);
+
+          // 7 Day cells
+          for (let i = 0; i < 7; i++) {
+            const td = document.createElement("td");
+            td.className = "day-cell";
+            notesRow.appendChild(td);
+          }
+          // Insert after the current primary row (or the last notes-row)
+          tr.parentNode.insertBefore(notesRow, tr.nextSibling);
+        }
+      }
     });
 
+    // Create page wrapper
+    const page = document.createElement("div");
+    page.className = "print-page";
+
+    const card = document.createElement("div");
+    card.className = "print-card";
+
+    const title = document.createElement("div");
+    title.className = "print-title";
+    title.textContent = `${weekTitle} — ${titleSuffix}`;
+
+    card.appendChild(title);
     clone.classList.add("print-table");
-    return clone;
+    card.appendChild(clone);
+    page.appendChild(card);
+
+    return page;
   }
 
-  const page1Table = makeTableForRows(0, 5);
-  const page2Table = makeTableForRows(5, 10);
+  // Clear existing content
+  printRoot.innerHTML = "";
 
-  const safeTitle = escHtml(weekTitle);
-  printRoot.innerHTML = `
-<div class="print-page">
-  <div class="print-card">
-    <div class="print-title">${safeTitle} — Buses 1–5</div>
-  </div>
-</div>
-<div class="print-page">
-  <div class="print-card">
-    <div class="print-title">${safeTitle} — Buses 6–10</div>
-  </div>
-</div>
-`;
+  // Page 1: Buses 1-5 (Rows 0-4)
+  const page1 = makeTableForRows(0, 5, "Buses 1–5");
+  printRoot.appendChild(page1);
 
-  const pages = printRoot.querySelectorAll(".print-page .print-card");
-  pages[0].appendChild(page1Table);
-  pages[1].appendChild(page2Table);
+  // Page 2: Buses 6-10 (Rows 5-9)
+  const page2 = makeTableForRows(5, 10, "Buses 6–10");
+  printRoot.appendChild(page2);
 }
 
 function clearPrintRoot() {
