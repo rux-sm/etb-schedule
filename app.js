@@ -80,12 +80,12 @@ const CACHE = {
         expiry: Date.now() + ttlMs,
       };
       localStorage.setItem(key, JSON.stringify(payload));
-    } catch { }
+    } catch {}
   },
   remove(key) {
     try {
       localStorage.removeItem(key);
-    } catch { }
+    } catch {}
   },
   clearAll() {
     try {
@@ -97,7 +97,7 @@ const CACHE = {
           localStorage.removeItem(k);
         }
       });
-    } catch { }
+    } catch {}
   },
 };
 
@@ -272,7 +272,7 @@ function clamp(n, min, max) {
 function safeUUID() {
   try {
     return crypto.randomUUID();
-  } catch { }
+  } catch {}
   return `tk_${Date.now()}_${Math.floor(Math.random() * 1e9)}`;
 }
 
@@ -532,6 +532,8 @@ function sanitizeWeekResp(resp) {
         contactStatus: asStr(t?.contactStatus).trim(),
         paymentStatus: asStr(t?.paymentStatus).trim(),
         driverStatus: asStr(t?.driverStatus).trim(),
+        invoiceStatus: asStr(t?.invoiceStatus).trim(),
+        invoiceNumber: asStr(t?.invoiceNumber).trim(),
         notes: asStr(t?.notes),
         comments: asStr(t?.comments),
         itinerary: asStr(t?.itinerary),
@@ -927,10 +929,22 @@ function updateStatusSelect(el) {
   }
 
   if (id === "paymentStatus") {
-    if (v === "pending") el.classList.add("status-pending");
-    else if (v === "signed contract" || v === "po received" || v === "deposit received")
-      el.classList.add("status-blue");
-    else el.classList.add("status-ok");
+    if (v === "pending quote")
+      el.classList.add("status-pending"); // Red
+    else if (v === "quoted")
+      el.classList.add("status-assigned"); // Yellow (reusing assigned)
+    else el.classList.add("status-ok"); // Contract Signed, PO Received, Not Required (Green)
+    return;
+  }
+
+  if (id === "invoiceStatus") {
+    if (v === "pending invoice")
+      el.classList.add("status-pending"); // Red
+    else if (v === "invoiced")
+      el.classList.add("status-assigned"); // Yellow
+    else if (v === "deposit received")
+      el.classList.add("status-blue"); // Blue
+    else if (v === "paid in full") el.classList.add("status-ok"); // Green
     return;
   }
 
@@ -958,18 +972,38 @@ function maybeApplyPendingDefaults() {
   const dep = $("tripDate")?.value;
   if (!dep || !hasSelectedBusForTrip()) return;
 
-  const ids = ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus"];
+  const ids = ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus", "invoiceStatus"];
   let changed = false;
 
   ids.forEach((id) => {
     const el = $(id);
     if (!el || el.value) return;
-    el.value = "Pending";
+
+    if (id === "paymentStatus") el.value = "Pending Quote";
+    else if (id === "invoiceStatus") el.value = "Pending Invoice";
+    else el.value = "Pending";
+
     el.dispatchEvent(new Event("change", { bubbles: true }));
     changed = true;
   });
 
   if (changed) ids.forEach((id) => updateStatusSelect($(id)));
+}
+
+function updateInvoiceNumberVisibility() {
+  const el = $("invoiceStatus");
+  const numGroup = $("invoiceNumberGroup");
+  const numInput = $("invoiceNumber");
+  if (!el || !numGroup) return;
+
+  const v = String(el.value || "")
+    .trim()
+    .toLowerCase();
+  // Show if Invoiced, Deposit Received, or Paid in Full
+  const show = v === "invoiced" || v === "deposit received" || v === "paid in full";
+
+  numGroup.classList.toggle("is-hidden", !show);
+  if (!show && numInput) numInput.value = ""; // Optional: clear if hidden? Or keep it? Let's keep it to avoid data loss if accidental toggle. Use your judgment. User said "unlocks text field", implying it might be disabled or hidden. "is-hidden" is safer for UI.
 }
 
 function refreshEmptyStateUI() {
@@ -986,7 +1020,11 @@ function refreshEmptyStateUI() {
     "itineraryStatus",
     "contactStatus",
     "paymentStatus",
+    "contactStatus",
+    "paymentStatus",
     "driverStatus",
+    "invoiceStatus",
+    "invoiceNumber",
     "tripColor",
     "itinerary",
     "notes",
@@ -1035,6 +1073,14 @@ function syncEmptyStateForForm() {
       el.addEventListener("blur", () => syncOne(el));
     });
 
+    const invSel = $("invoiceStatus");
+    if (invSel) {
+      invSel.addEventListener("change", () => {
+        updateInvoiceNumberVisibility();
+        updateStatusSelect(invSel);
+      });
+    }
+
     form.addEventListener("reset", () => setTimeout(() => fields.forEach(syncOne), 0));
   }
 }
@@ -1063,7 +1109,7 @@ function applyWeekStart(isMonday) {
 
   try {
     localStorage.setItem("weekStartMonday", state.weekStartsOnMonday ? "1" : "0");
-  } catch { }
+  } catch {}
 
   syncWeekStartUI();
 
@@ -1280,7 +1326,7 @@ function prefetchAdjacentWeeks() {
 
     // ✅ FIX: Calculate Monday for the adjacent week
     const { notesKey } = getWeekRange(targetDate); // We will update getWeekRange to support a date arg
-    fetchWeekDataCached(start, end, notesKey).catch(() => { });
+    fetchWeekDataCached(start, end, notesKey).catch(() => {});
   }
 }
 
@@ -1872,21 +1918,29 @@ function _renderAgendaInner() {
         const statusRow = document.createElement("div");
         statusRow.className = "bar-status-row";
 
-        function makeMini(letter) {
+        function makeMini(content, isIcon = false) {
           const b = document.createElement("span");
           b.className = "mini-badge";
           const g = document.createElement("span");
-          g.className = "badge-glyph";
-          g.textContent = letter;
+          if (isIcon) {
+            g.className = "badge-glyph material-symbols-outlined badge-icon";
+            // g.style.fontSize = "12px"; // Moved to CSS (.trip-bar .badge-icon)
+          } else {
+            g.className = "badge-glyph";
+          }
+          g.textContent = content;
           b.appendChild(g);
           return b;
         }
 
-        const bI = makeMini("I");
-        const bC = makeMini("C");
-        const b$ = makeMini("$");
-        const bD = makeMini("D");
-        statusRow.append(bI, bC, b$, bD);
+        const bI = makeMini("description", true); // Icon for Itinerary Status
+        const bC = makeMini("phone_enabled", true);
+        const b$ = makeMini("request_quote", true);
+        const bD = makeMini("person", true);
+        const bInv = makeMini("receipt_long", true); // 5th glyph for Invoice Status
+
+        // Reordered: Payment ($) first
+        statusRow.append(b$, bI, bC, bD, bInv);
 
         const preDriversRow = document.createElement("div");
         preDriversRow.className = "bar-sub bar-pre-drivers";
@@ -1905,6 +1959,7 @@ function _renderAgendaInner() {
         bar._bC = bC;
         bar._b$ = b$;
         bar._bD = bD;
+        bar._bInv = bInv; // Store reference
         bar._preDrivers = preDriversRow;
         bar._drivers = driversRow;
 
@@ -1933,9 +1988,18 @@ function _renderAgendaInner() {
         const s = String(statusValue || "")
           .trim()
           .toLowerCase();
-        const pending = s === "pending";
-        const blue = s === "signed contract" || s === "po received" || s === "deposit received" || s === "confirmed";
-        const yellow = s === "assigned";
+
+        // 1) Red: Pending, Pending Quote, Pending Invoice
+        const pending = s === "pending" || s === "pending quote" || s === "pending invoice";
+
+        // 2) Yellow: Assigned, Quoted, Invoiced
+        const yellow = s === "assigned" || s === "quoted" || s === "invoiced";
+
+        // 3) Blue: Deposit Received, Blue
+        const blue = s === "deposit received" || s === "confirmed" || s === "blue";
+
+        // 4) Green: PO Received, Not Required, Paid in Full, OK
+        // (Handled by !pending && !yellow && !blue && !!s in the toggle)
 
         badgeEl.classList.toggle("is-pending", pending);
         badgeEl.classList.toggle("is-blue", blue);
@@ -1947,12 +2011,15 @@ function _renderAgendaInner() {
       if (bar._bC) setBadge(bar._bC, t.contactStatus);
       if (bar._b$) setBadge(bar._b$, t.paymentStatus);
       if (bar._bD) setBadge(bar._bD, t.driverStatus);
+      if (bar._bInv) setBadge(bar._bInv, t.invoiceStatus);
 
       bar.classList.toggle("cont-left", continuesLeft);
       bar.classList.toggle("cont-right", continuesRight);
 
       const pay = String(t.paymentStatus || "").toLowerCase();
-      bar.classList.toggle("unconfirmed", pay === "pending");
+      // Red unconfirmed if "Pending Quote" or "Quoted" (or legacy "pending")
+      const isUnconfirmed = pay === "pending quote" || pay === "quoted" || pay === "pending";
+      bar.classList.toggle("unconfirmed", isUnconfirmed);
 
       const ds = String(t.driverStatus || "")
         .trim()
@@ -2708,13 +2775,17 @@ function clearTripInfoCardForNextTrip() {
   setSelectToPlaceholder("contactStatus");
   setSelectToPlaceholder("paymentStatus");
   setSelectToPlaceholder("driverStatus");
+  setSelectToPlaceholder("invoiceStatus");
 
   dom.busesNeeded.value = "";
   updateBusRowVisibility();
   syncBusPanelState();
   refreshBusSelectOptions();
 
-  ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus"].forEach((id) => updateStatusSelect($(id)));
+  ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus", "invoiceStatus"].forEach((id) =>
+    updateStatusSelect($(id)),
+  );
+  updateInvoiceNumberVisibility();
 }
 
 // ======================================================
@@ -2775,6 +2846,8 @@ function renderTripDetailsModalFromData(t, assigns) {
   html += row("CONTACT STATUS", t.contactStatus);
   html += row("PAYMENT STATUS", t.paymentStatus);
   html += row("DRIVER STATUS", t.driverStatus);
+  html += row("INVOICE STATUS", t.invoiceStatus);
+  if (t.invoiceNumber) html += row("INVOICE NUMBER", t.invoiceNumber);
 
   if (assigns && assigns.length) {
     html += `<div class="detail-divider"></div>`;
@@ -2940,9 +3013,14 @@ async function openTripForEdit(tripKey) {
     $("contactStatus").value = t.contactStatus || "";
     $("paymentStatus").value = t.paymentStatus || "";
     $("driverStatus").value = t.driverStatus || "";
+    $("invoiceStatus").value = t.invoiceStatus || "";
+    $("invoiceNumber").value = t.invoiceNumber || "";
     $("tripColor").value = t.tripColor || "";
 
-    ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus"].forEach((id) => updateStatusSelect($(id)));
+    ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus", "invoiceStatus"].forEach((id) =>
+      updateStatusSelect($(id)),
+    );
+    updateInvoiceNumberVisibility();
 
     dom.itineraryField.value = t.itinerary || "";
     $("notes").value = t.notes || "";
@@ -3103,13 +3181,13 @@ function buildPrintScheduleTwoPages() {
     const clone = weekTable.cloneNode(true);
 
     // Remove IDs to avoid duplicates
-    clone.querySelectorAll("[id]").forEach(el => el.removeAttribute("id"));
+    clone.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
 
     const body = clone.querySelector("tbody:not([hidden])");
     if (!body) return clone;
 
     // Remove the other tbody (like waiting list if it's there but hidden)
-    clone.querySelectorAll("tbody[hidden]").forEach(el => el.remove());
+    clone.querySelectorAll("tbody[hidden]").forEach((el) => el.remove());
 
     const rows = Array.from(body.querySelectorAll("tr"));
     rows.forEach((tr, idx) => {
@@ -3747,24 +3825,7 @@ function wireEvents() {
   });
 
   dom.newBtn.addEventListener("click", () => {
-    dom.tripForm.reset();
-    refreshEmptyStateUI();
-    setModeNew();
-
-    setSelectToPlaceholder("busesNeeded");
-    setSelectToPlaceholder("itineraryStatus");
-    setSelectToPlaceholder("contactStatus");
-    setSelectToPlaceholder("paymentStatus");
-    setSelectToPlaceholder("driverStatus");
-    setSelectToPlaceholder("tripColor");
-
-    dom.busesNeeded.value = "";
-    updateBusRowVisibility();
-    syncBusPanelState();
-    refreshBusSelectOptions();
-
-    ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus"].forEach((id) => updateStatusSelect($(id)));
-
+    clearTripInfoCardForNextTrip();
     toast("Ready", "info", 900);
   });
   // ✅ IMPORTANT: Always POST to the same Apps Script deployment as GET
@@ -3875,6 +3936,8 @@ function wireEvents() {
       contactStatus: $("contactStatus").value,
       paymentStatus: $("paymentStatus").value,
       driverStatus: $("driverStatus").value,
+      invoiceStatus: $("invoiceStatus").value,
+      invoiceNumber: $("invoiceNumber").value,
       tripColor: $("tripColor").value,
       busesNeeded: $("busesNeeded").value,
       itinerary: dom.itineraryField.value,
@@ -3952,7 +4015,10 @@ function wireEvents() {
     setModeNew();
 
     // Status dropdowns
-    ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus"].forEach((id) => updateStatusSelect($(id)));
+    ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus", "invoiceStatus"].forEach((id) =>
+      updateStatusSelect($(id)),
+    );
+    updateInvoiceNumberVisibility();
 
     // Bus panel
     dom.busesNeeded.value = "";
@@ -4064,7 +4130,7 @@ function wireSettingsMenu() {
 .week-table-container.is-loading-bars .trip-bar { opacity: 0.18; pointer-events: none; }
 `;
     document.head.appendChild(style);
-  } catch { }
+  } catch {}
 
   setLeftPanelMode("off");
   enforceDesktopEditing();

@@ -265,19 +265,12 @@
                       <label for="tripColor">Color</label>
                       <select id="tripColor" name="tripColor">
                         <option value="" selected>Auto</option>
-                        <option value="green">Green</option>
-                        <option value="yellow">Yellow</option>
-                        <option value="orange">Orange</option>
-                        <option value="mint">Mint</option>
-                        <option value="teal">Teal</option>
-                        <option value="cyan">Cyan</option>
-                        <option value="indigo">Indigo</option>
-                        <option value="violet">Violet</option>
-                        <option value="pink">Pink</option>
-                        <option value="brown">Brown</option>
-                        <option value="gray">Gray</option>
-                        <option value="black">Black</option>
-                        <option value="white">White</option>
+                        <option value="Yellow">Yellow</option>
+                        <option value="Orange">Orange</option>
+                        <option value="Pink">Pink</option>
+                        <option value="Purple">Purple</option>
+                        <option value="Teal">Teal</option>
+                        <option value="Green">Green</option>
                       </select>
                     </div>
 
@@ -324,7 +317,7 @@
                         </div>
 
                         <div class="form-group">
-                          <label for="contactStatus">Contact Info Status</label>
+                          <label for="contactStatus">Contact Status</label>
                           <select id="contactStatus" name="contactStatus" required>
                             <option value="" disabled selected>Choose…</option>
                             <option value="Pending">Pending</option>
@@ -334,14 +327,13 @@
                         </div>
 
                         <div class="form-group">
-                          <label for="paymentStatus">Payment Status</label>
+                          <label for="paymentStatus">Approval Status</label>
                           <select id="paymentStatus" name="paymentStatus" required>
                             <option value="" disabled selected>Choose…</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Signed Contract">Signed Contract</option>
+                            <option value="Pending Quote">Pending Quote</option>
+                            <option value="Quoted">Quoted</option>
+                            <option value="Contract Signed">Contract Signed</option>
                             <option value="PO Received">PO Received</option>
-                            <option value="Deposit Received">Deposit Received</option>
-                            <option value="Balance Paid">Balance Paid</option>
                             <option value="Not Required">Not Required</option>
                           </select>
                         </div>
@@ -355,6 +347,22 @@
                             <option value="Confirmed">Confirmed</option>
                             <option value="Driver Info Sent">Driver Info Sent</option>
                           </select>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="invoiceStatus">Invoice Status</label>
+                          <select id="invoiceStatus" name="invoiceStatus" required>
+                            <option value="" disabled selected>Choose…</option>
+                            <option value="Pending Invoice">Pending Invoice</option>
+                            <option value="Invoiced">Invoiced</option>
+                            <option value="Deposit Received">Deposit Received</option>
+                            <option value="Paid in Full">Paid in Full</option>
+                          </select>
+                        </div>
+
+                        <div class="form-group is-hidden" id="invoiceNumberGroup">
+                          <label for="invoiceNumber">Invoice Number</label>
+                          <input type="text" id="invoiceNumber" name="invoiceNumber" placeholder="#12345" />
                         </div>
                       </div>
                     </div>

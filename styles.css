@@ -21,21 +21,21 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
   /* --- BASE HUES --- */
-  --red: rgb(255 40 70);
-  --orange: rgb(255 130 30);
-  --yellow: rgb(255 215 0);
-  --lime: rgb(190 255 60);
-  --green: rgb(40 235 110);
-  --mint: rgb(0 230 200);
-  --teal: rgb(0 220 235);
-  --cyan: rgb(0 210 255);
-  --blue: rgb(0 150 255);
-  --indigo: rgb(110 95 255);
-  --purple: rgb(200 70 255);
-  --pink: rgb(255 15 180);
-  --brown: rgb(172 127 94);
+  /* COOL - Confirmed trips */
+  --blue: rgb(0 122 255);
+  --teal: rgb(48 209 218);
+  --green: rgb(52 199 89);
+  --purple: rgb(175 82 222);
+
+  /* WARM - Unconfirmed trips */
+  --red: rgb(255 59 48);
+  --orange: rgb(255 149 0);
+  --yellow: rgb(255 214 10);
+  --pink: rgb(255 45 155);
+
+  /* NEUTRALS */
+  --gray: rgb(142 142 147);
   --black: rgb(0 0 0);
-  --gray: rgb(142 142 142);
   --white: rgb(255 255 255);
 
   /* --- STATUS COLORS ---  */
@@ -1305,7 +1305,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   }
 
   /* Fix sticky positioning on mobile */
-  .scheduler-right>.card {
+  .scheduler-right > .card {
     overflow: visible;
     display: flex;
     flex-direction: column;
@@ -1419,11 +1419,11 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   padding-left: var(--space-3);
 }
 
-.scheduler-left>.card:not(.is-hidden)+.card:not(.is-hidden) {
+.scheduler-left > .card:not(.is-hidden) + .card:not(.is-hidden) {
   margin-top: var(--space-2);
 }
 
-.scheduler-right>.card {
+.scheduler-right > .card {
   max-height: 100%;
   display: flex;
   flex-direction: column;
@@ -1453,7 +1453,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     overflow: visible;
   }
 
-  .scheduler-right>.card {
+  .scheduler-right > .card {
     /* max-height: calc(10 * var(--schedule-row-height) + 24px); */
     max-height: 100%;
     display: flex;
@@ -1494,7 +1494,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   }
 
   /* Prevent card squashing */
-  .scheduler-left>.card {
+  .scheduler-left > .card {
     min-width: 100%;
     width: 100%;
   }
@@ -1534,7 +1534,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   }
 
   /* Make visible cards expand to fill available height */
-  .scheduler-left>.card:not(.is-hidden) {
+  .scheduler-left > .card:not(.is-hidden) {
     flex: 1;
     max-height: calc(var(--day-row-h) + (10 * var(--schedule-row-height)));
     display: flex;
@@ -1543,7 +1543,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   }
 
   /* Ensure card content can scroll */
-  .scheduler-left>.card:not(.is-hidden) .card-content {
+  .scheduler-left > .card:not(.is-hidden) .card-content {
     flex: 1;
     overflow-y: auto;
     min-height: 0;
@@ -1555,8 +1555,8 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   }
 
   /* Restore visible shadow specifically here or globally */
-  .scheduler-right>.card,
-  .scheduler-left>.card {
+  .scheduler-right > .card,
+  .scheduler-left > .card {
     box-shadow:
       0 4px 6px -1px rgba(0, 0, 0, 0.3),
       0 2px 4px -1px rgba(0, 0, 0, 0.16) !important;
@@ -1583,8 +1583,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   background:
     /* Shadow Cover TOP */
     linear-gradient(var(--surface-1) 30%, rgba(255, 255, 255, 0)),
-    /* Shadow TOP */
-    radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+    /* Shadow TOP */ radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
   background-repeat: no-repeat;
   background-color: var(--surface-1);
   background-size:
@@ -1806,11 +1805,11 @@ th.day-today .day-name {
 }
 
 /* Bus color on hover */
-.week-table tbody tr.has-bus-color>td:first-child {
+.week-table tbody tr.has-bus-color > td:first-child {
   transition: background-color 0.15s ease;
 }
 
-.week-table tbody tr.has-bus-color>td:first-child:hover {
+.week-table tbody tr.has-bus-color > td:first-child:hover {
   background-color: var(--bus-accent-color, var(--color-surface-1));
 }
 
@@ -1920,6 +1919,16 @@ th.day-today .day-name {
   border-color: var(--red);
 }
 
+.trip-bar.color-red {
+  background: color-mix(in srgb, var(--red) 33%, transparent);
+  border-color: var(--red);
+}
+
+.trip-bar.color-blue {
+  background: color-mix(in srgb, var(--blue) 33%, transparent);
+  border-color: var(--blue);
+}
+
 .trip-bar.color-green {
   background: color-mix(in srgb, var(--green) 33%, transparent);
   border-color: var(--green);
@@ -1936,6 +1945,11 @@ th.day-today .day-name {
 }
 
 .trip-bar.color-violet {
+  background: color-mix(in srgb, var(--purple) 33%, transparent);
+  border-color: var(--purple);
+}
+
+.trip-bar.color-purple {
   background: color-mix(in srgb, var(--purple) 33%, transparent);
   border-color: var(--purple);
 }
@@ -2009,7 +2023,7 @@ th.day-today .day-name {
 }
 
 /* Trip bar contents */
-.trip-bar>* {
+.trip-bar > * {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2024,7 +2038,7 @@ th.day-today .day-name {
 .trip-bar .bar-title {
   color: var(--text);
   font-size: var(--tripbar-font-size-major);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-regular);
   text-transform: uppercase;
   line-height: var(--tripbar-line-height-major);
 }
@@ -2041,7 +2055,7 @@ th.day-today .day-name {
   display: flex !important;
   justify-content: space-between !important;
   width: 100%;
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-regular);
   font-size: var(--tripbar-font-size-major);
   color: var(--text);
   min-width: auto !important;
@@ -2064,19 +2078,19 @@ th.day-today .day-name {
   font-weight: var(--font-weight-regular);
   line-height: var(--tripbar-line-height-minor);
   text-transform: uppercase;
-  letter-spacing: -0.05em;
+  letter-spacing: 0.02em;
 }
 
 .bar-drivers {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 4px;
 }
 
 .driver {
   font-size: var(--tripbar-font-size-major);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-regular);
   text-transform: uppercase;
   line-height: var(--tripbar-line-height-major);
   color: var(--text-driver);
@@ -2089,13 +2103,21 @@ th.day-today .day-name {
   gap: 4px;
 }
 
+/* Specific styling for the Material Icon in the badge */
+.trip-bar .badge-icon {
+  font-size: 11px !important; /* Adjust this value to change icon size */
+  line-height: 1;
+  font-weight: normal;
+  font-variation-settings: "FILL" 0;
+}
+
 /* Trip Bar Status Badges */
 .trip-bar .mini-badge {
   width: 11px;
   height: 11px;
-  font-size: 11px;
+  font-size: 9px;
   font-weight: var(--font-weight-regular);
-  border-radius: 2px;
+  border-radius: 1px;
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -2157,7 +2179,6 @@ th.day-today .day-name {
 }
 
 @keyframes arrow-left-bounce {
-
   0%,
   100% {
     transform: translate(0, -50%);
@@ -2169,7 +2190,6 @@ th.day-today .day-name {
 }
 
 @keyframes arrow-right-bounce {
-
   0%,
   100% {
     transform: translate(0, -50%);
@@ -2231,7 +2251,6 @@ th.day-today .day-name {
 }
 
 @media (max-width: 800px) {
-
   .col-2,
   .col-4,
   .col-6 {
@@ -2609,7 +2628,7 @@ select.status-confirmed {
     min-height: 0;
   }
 
-  .scheduler-right>.card {
+  .scheduler-right > .card {
     flex: 0 1 auto;
     height: auto;
     width: 100%;
