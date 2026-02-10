@@ -1699,8 +1699,8 @@ th.day-today .day-name {
 .row-bars {
   position: absolute;
   top: 0;
-  left: var(--bus-col-w);
-  width: calc(100% - var(--bus-col-w));
+  left: 0;
+  width: 0;
   height: 100%;
   pointer-events: none;
   /* Let clicks pass through to cells/bars */
@@ -1716,7 +1716,7 @@ th.day-today .day-name {
 }
 
 .week-table td.week-start-cell {
-  position: static !important;
+  position: relative;
 }
 
 .week-table tbody tr.notes-row {

@@ -80,12 +80,12 @@ const CACHE = {
         expiry: Date.now() + ttlMs,
       };
       localStorage.setItem(key, JSON.stringify(payload));
-    } catch {}
+    } catch { }
   },
   remove(key) {
     try {
       localStorage.removeItem(key);
-    } catch {}
+    } catch { }
   },
   clearAll() {
     try {
@@ -97,7 +97,7 @@ const CACHE = {
           localStorage.removeItem(k);
         }
       });
-    } catch {}
+    } catch { }
   },
 };
 
@@ -272,7 +272,7 @@ function clamp(n, min, max) {
 function safeUUID() {
   try {
     return crypto.randomUUID();
-  } catch {}
+  } catch { }
   return `tk_${Date.now()}_${Math.floor(Math.random() * 1e9)}`;
 }
 
@@ -1109,7 +1109,7 @@ function applyWeekStart(isMonday) {
 
   try {
     localStorage.setItem("weekStartMonday", state.weekStartsOnMonday ? "1" : "0");
-  } catch {}
+  } catch { }
 
   syncWeekStartUI();
 
@@ -1326,7 +1326,7 @@ function prefetchAdjacentWeeks() {
 
     // ✅ FIX: Calculate Monday for the adjacent week
     const { notesKey } = getWeekRange(targetDate); // We will update getWeekRange to support a date arg
-    fetchWeekDataCached(start, end, notesKey).catch(() => {});
+    fetchWeekDataCached(start, end, notesKey).catch(() => { });
   }
 }
 
@@ -1594,21 +1594,47 @@ function getColMetricsCached() {
 }
 
 function syncRowBarsWidth(col) {
-  // Now handled via CSS calc(100% - var(--bus-col-w))
+  if (!col || !dom.agendaBody) return;
+  const total = col.total ?? col.widths.reduce((a, b) => a + (b || 0), 0);
+
+  // Sync main table rows
+  dom.agendaBody.querySelectorAll(".row-bars").forEach((bars) => {
+    bars.style.width = `${total}px`;
+  });
+
+  // Sync waiting list rows
+  const wb = document.getElementById("waitingBody");
+  if (wb) {
+    wb.querySelectorAll(".row-bars").forEach((bars) => {
+      bars.style.width = `${total}px`;
+    });
+  }
 }
 
 function positionBarWithinOverlay(bar, bars, col, startIdx, endIdx) {
   const inset = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--tripbar-inset")) || 6;
 
-  // Use percentages for positioning to support print and different screen widths.
-  // We assume 7 day columns of equal width.
-  const totalCols = 7;
-  const span = endIdx - startIdx + 1;
-  const leftPct = (startIdx / totalCols) * 100;
-  const widthPct = (span / totalCols) * 100;
+  const leftPx = (col.starts[startIdx] ?? 0) + inset;
 
-  bar.style.left = `calc(${leftPct}% + ${inset}px)`;
-  bar.style.width = `calc(${widthPct}% - ${inset * 2}px)`;
+  let spanW = 0;
+  for (let i = startIdx; i <= endIdx; i++) spanW += col.widths[i] ?? 0;
+
+  let widthPx = Math.max(0, spanW - inset * 2);
+
+  // Guard rails to prevent overflow beyond the row overlay
+  const max = Math.max(0, col.total ?? col.widths.reduce((a, b) => a + (b || 0), 0));
+  const EPS = 1;
+
+  if (leftPx >= max) {
+    bar.style.left = `${max}px`;
+    bar.style.width = `0px`;
+    return;
+  }
+
+  widthPx = Math.max(0, Math.min(widthPx, max - leftPx - EPS));
+
+  bar.style.left = `${leftPx}px`;
+  bar.style.width = `${widthPx}px`;
 }
 
 // ======================================================
@@ -4130,7 +4156,7 @@ function wireSettingsMenu() {
 .week-table-container.is-loading-bars .trip-bar { opacity: 0.18; pointer-events: none; }
 `;
     document.head.appendChild(style);
-  } catch {}
+  } catch { }
 
   setLeftPanelMode("off");
   enforceDesktopEditing();
