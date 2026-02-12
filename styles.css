@@ -1,370 +1,384 @@
-﻿/* ========================================================================== */
-/*  DESIGN SYSTEM & TOKENS                                                    */
-/* ========================================================================== */
+﻿/* ==========================================================================
+   STYLESHEET — FULL REPLACEMENT (REORDERED + DEDUPED)
+   - Single :root token source (no duplicate tokens)
+   - Single Modal system (keeps pop-in animation)
+   - Single Utilities block
+   - Fixes: aria-pressed text color, focus ring token, input cursor
+   ========================================================================== */
 
-/* Font Variations */
+/* ==========================================================================
+   0) ICONS — Material Symbols
+   ========================================================================== */
 .material-symbols-outlined,
 .material-symbols-rounded,
 .material-symbols-sharp {
-  font-variation-settings:
-    "FILL" 1,
-    "wght" 400,
-    "GRAD" 0,
-    "opsz" 24;
+    font-variation-settings:
+        "FILL" 1,
+        "wght" 400,
+        "GRAD" 0,
+        "opsz" 24;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    display: inline-block;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
 }
 
+/* ==========================================================================
+   1) DESIGN SYSTEM TOKENS
+   ========================================================================== */
 :root {
-  color-scheme: dark;
+    color-scheme: dark;
 
-  /* --- TYPOGRAPHY --- */
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    /* Typography */
+    --font-sans:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, "Helvetica Neue", Arial,
+        sans-serif;
+    --font-mono:
+        ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+        monospace;
 
-  /* --- BASE HUES --- */
-  /* COOL - Confirmed trips */
-  --blue: rgb(0 122 255);
-  --teal: rgb(48 209 218);
-  --green: rgb(52 199 89);
-  --purple: rgb(175 82 222);
+    /* Base hues */
+    --blue: rgb(0 122 255);
+    --teal: rgb(48 209 218);
+    --green: rgb(52 199 89);
+    --purple: rgb(175 82 222);
 
-  /* WARM - Unconfirmed trips */
-  --red: rgb(255 59 48);
-  --orange: rgb(255 149 0);
-  --yellow: rgb(255 214 10);
-  --pink: rgb(255 45 155);
+    --red: rgb(255 59 48);
+    --orange: rgb(255 149 0);
+    --yellow: rgb(255 214 10);
+    --pink: rgb(255 45 155);
 
-  /* NEUTRALS */
-  --gray: rgb(142 142 147);
-  --black: rgb(0 0 0);
-  --white: rgb(255 255 255);
+    --gray: rgb(142 142 147);
+    --black: rgb(0 0 0);
+    --white: rgb(255 255 255);
 
-  /* --- STATUS COLORS ---  */
-  --red-status: rgb(255 97 101);
-  --yellow-status: rgb(254 223 67);
-  --blue-status: rgb(92 184 255);
-  --green-status: rgb(74 217 104);
+    /* Status colors */
+    --red-status: rgb(255 59 48);
+    --yellow-status: rgb(255 214 10);
+    --blue-status: rgb(0 122 255);
+    --green-status: rgb(52 199 89);
 
-  /* --- ACCENT COLOR --- */
-  --accent: var(--blue);
-  --color-accent: var(--accent);
+    /* Text */
+    --text: #ffffff;
+    --text-primary: #f4f4f4;
+    --text-muted: #bdbdbd;
+    --placeholder: #9b9b9b;
 
-  /* --- DISABLED STATES (using color-mix for better theme adaptability) --- */
-  --color-text-disabled: var(--text-muted);
-  --color-border-disabled: color-mix(in srgb, var(--border) 55%, transparent);
+    /* Accent */
+    --accent: var(--blue);
+    --color-accent: var(--accent);
 
-  /* TEXT */
+    /* Surfaces */
+    --app-bg: rgb(33, 33, 33);
+    /* topbar */
+    --surface-0: rgb(33 33 33 / 55%);
+    /* schedule */
+    --surface-1: rgb(10 10 10);
+    /* cards */
+    --surface-2: rgb(33, 33, 33);
+    /* inputs / controls */
+    --surface-3: rgb(48, 48, 48);
+    /* hover / active */
+    --surface-4: #919191;
 
-  --text: #ffffff;
-  --text-primary: #f4f4f4;
-  --text-muted: #bdbdbd;
-  --placeholder: #9b9b9b;
+    /* Borders */
+    --border: rgb(33, 33, 33);
+    --border-strong: #3a3a3a;
 
-  /* --- SEMANTIC TOKENS --- */
-  --text-driver: var(--yellow);
-  /* Default (Dark Mode) */
+    /* Interaction overlays (Dark) */
+    --overlay-hover: rgba(255, 255, 255, 0.04);
+    --overlay-active: rgba(255, 255, 255, 0.08);
 
-  /* --- BASE SURFACES --- */
+    /* Semantic helpers */
+    --color-primary: var(--accent);
+    --color-primary-hover: color-mix(in srgb, var(--accent) 88%, black);
+    --color-primary-active: color-mix(in srgb, var(--accent) 76%, black);
+    --color-primary-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+    --color-primary-border: color-mix(in srgb, var(--accent) 80%, transparent);
 
-  --app-bg: rgb(0, 0, 0);
-  /* APP BACKGROUND */
-  --surface-0: rgb(28 28 28 / 55%);
-  /* TOPBAR BACKGROUND */
-  --surface-1: rgb(28 28 28);
-  /* SCHEDULE BACKGROUND  */
-  --surface-2: #151515;
-  /* CARDS BACKGROUND*/
-  --surface-3: #3b3b3b;
-  /* INPUTS / CONTROLS (Darkened from #5e5e5e) */
-  --surface-4: #919191;
-  /* HOVER/ACTIVE */
+    --color-on-primary: #ffffff;
+    --color-on-accent: #ffffff;
 
-  /* BORDERS & DIVIDERS */
-  --border: rgb(53, 53, 53);
-  --border-strong: #3a3a3a;
+    --text-driver: var(--yellow);
 
-  /* FOCUS */
-  --focus: var(--accent);
-  --focus-ring: rgba(var(--accent), 0.35);
+    /* Status soft + border */
+    --color-success-soft: color-mix(in srgb, var(--green-status) 18%, transparent);
+    --color-success-border: color-mix(in srgb, var(--green-status) 60%, transparent);
 
-  /* --- SEMANTIC HELPERS (Re-added) --- */
-  /* Primary */
-  --color-primary: var(--accent);
-  --color-primary-hover: color-mix(in srgb, var(--accent) 88%, black);
-  --color-primary-active: color-mix(in srgb, var(--accent) 76%, black);
-  --color-primary-soft: color-mix(in srgb, var(--accent) 14%, transparent);
-  --color-primary-border: color-mix(in srgb, var(--accent) 80%, transparent);
-  --color-on-primary: #ffffff;
-  --color-on-accent: #ffffff;
+    --color-warning-soft: color-mix(in srgb, var(--yellow-status) 18%, transparent);
+    --color-warning-border: color-mix(in srgb, var(--yellow-status) 60%, transparent);
 
-  /* Status Soft/Border */
-  --color-success-soft: color-mix(in srgb, var(--green-status) 18%, transparent);
-  --color-success-border: color-mix(in srgb, var(--green-status) 60%, transparent);
-  --color-warning-soft: color-mix(in srgb, var(--yellow-status) 18%, transparent);
-  --color-warning-border: color-mix(in srgb, var(--yellow-status) 60%, transparent);
-  --color-danger-soft: color-mix(in srgb, var(--red-status) 18%, transparent);
-  --color-danger-border: color-mix(in srgb, var(--red-status) 60%, transparent);
-  --color-neutral-soft: color-mix(in srgb, var(--gray) 18%, transparent);
-  --color-neutral-border: color-mix(in srgb, var(--gray) 60%, transparent);
+    --color-danger-soft: color-mix(in srgb, var(--red-status) 18%, transparent);
+    --color-danger-border: color-mix(in srgb, var(--red-status) 60%, transparent);
 
-  /* Legacy Maps (to allow gradual migration or catch missed ones) */
-  --color-bg: var(--app-bg);
-  --color-surface-1: var(--surface-1);
-  --color-surface-2: var(--surface-2);
-  --color-surface-3: var(--surface-3);
-  --color-text-1: var(--text);
-  --color-text-2: var(--text-muted);
-  /* Approx */
-  --color-text-3: var(--text-muted);
-  --color-border-1: var(--border);
-  --color-border-2: var(--border);
-  --color-border-3: var(--border-strong);
-  --color-divider: var(--border);
+    --color-neutral-soft: color-mix(in srgb, var(--gray) 18%, transparent);
+    --color-neutral-border: color-mix(in srgb, var(--gray) 60%, transparent);
 
-  /*----------------------------------------------------------------------------------------------------------------------------------------------------------*/
+    /* Disabled */
+    --color-text-disabled: var(--text-muted);
+    --color-border-disabled: color-mix(in srgb, var(--border) 55%, transparent);
 
-  /* --- BUTTON TOKENS --- */
+    /* Focus */
+    --focus: var(--accent);
+    --focus-ring-color: color-mix(in srgb, var(--accent) 45%, transparent);
+    --focus-ring: 0 0 0 3px var(--focus-ring-color);
 
-  --color-button-bg: var(--surface-3);
-  /* Linked to surface-3 for consistency */
-  --color-button-border: transparent;
-  /* default button border, can be subtle or more defined based on design preference */
-  --color-button-text: #e5e5e5;
-  /* default button text color, should have good contrast against button-bg */
+    /* Legacy maps (compat) */
+    --color-bg: var(--app-bg);
+    --color-surface-1: var(--surface-1);
+    --color-surface-2: var(--surface-2);
+    --color-surface-3: var(--surface-3);
 
-  --color-button-hover-text: #e5e5e5;
-  /* hover overlay for buttons, can be a subtle lightening effect */
-  --color-button-hover-border: transparent;
-  /* hover border color for buttons, slightly lighter than default border */
-  --color-button-hover-bg: #333333;
-  /* hover background for buttons, can be a subtle darkening effect */
+    --color-text-1: var(--text);
+    --color-text-2: var(--text-muted);
+    --color-text-3: var(--text-muted);
 
-  /* --- FORM TOKENS --- */
+    --color-border-1: var(--border);
+    --color-border-2: var(--border);
+    --color-border-3: var(--border-strong);
+    --color-divider: var(--border);
 
-  --color-input-bg: var(--surface-3);
-  --color-input-border: rgba(255, 255, 255, 0.1);
-  /* Slightly more subtle */
-  --color-input-text: var(--color-text-1);
-  /* input text color, should have good contrast against input-bg */
+    /* Compatibility aliases (keep old references working) */
+    --text-1: var(--text);
+    --text-2: var(--text-muted);
+    --text-3: var(--text-muted);
+    --text-placeholder: var(--placeholder);
 
-  --color-input-hover-text: var(--color-text-1);
-  --color-input-hover-bg: #1f1f1f;
-  /* input hover background, can be a subtle darkening effect */
-  --color-input-hover-border: rgba(255, 255, 255, 0.18);
-  /* input hover border, slightly more visible than default */
+    --primary: var(--accent);
+    /* .notes-textarea:focus */
+    --color-danger: var(--red);
+    /* conflict tokens */
+    --color-border-subtle: color-mix(in srgb, var(--border) 60%, transparent);
+    --color-calendar-bg: var(--surface-2);
 
-  /* --- TYPE SCALE --- */
-  --font-size-1: 12px;
-  --font-size-2: 14px;
-  --font-size-3: 16px;
-  --font-size-4: 20px;
-  --font-size-5: 24px;
+    /* Buttons */
+    --color-button-bg: var(--surface-3);
+    --color-button-border: transparent;
+    --color-button-text: #e5e5e5;
 
-  /* Font Weights */
-  --font-weight-light: 300;
-  --font-weight-regular: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
+    --color-button-hover-bg: #333333;
+    --color-button-hover-border: transparent;
+    --color-button-hover-text: #e5e5e5;
 
-  /* Line Heights */
-  --line-height-base: 1.5;
-  --line-height-tight: 1.25;
-  --letter-spacing-base: 0.02em;
+    /* Form */
+    --color-input-bg: var(--surface-3);
+    --color-input-border: rgba(255, 255, 255, 0.1);
+    --color-input-text: var(--color-text-1);
 
-  /* --- Spacing Scale (4px base) --- */
-  --space-0: 0px;
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 24px;
-  --space-6: 32px;
-  --space-7: 40px;
-  --space-8: 48px;
+    --color-input-hover-bg: #1f1f1f;
+    --color-input-hover-border: rgba(255, 255, 255, 0.18);
+    --color-input-hover-text: var(--color-text-1);
 
-  /* --- Radii --- */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-full: 9999px;
+    /* Type scale */
+    --font-size-1: 12px;
+    --font-size-2: 14px;
+    --font-size-3: 16px;
+    --font-size-4: 20px;
+    --font-size-5: 24px;
 
-  /* --- Animation --- */
-  --dur-1: 160ms;
-  --dur-2: 240ms;
-  --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+    /* Weights */
+    --font-weight-light: 300;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
 
-  /* --- Shadows --- */
-  --shadow-1: 0 1px 0 rgba(255, 255, 255, 0.03), 0 8px 24px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-2: 0 1px 0 rgba(255, 255, 255, 0.04), 0 14px 40px rgba(0, 0, 0, 0.55), 0 4px 14px rgba(0, 0, 0, 0.35);
-  --elevation-1: var(--shadow-1);
-  --elevation-2: var(--shadow-2);
+    /* Leading + tracking */
+    --line-height-base: 1.5;
+    --line-height-tight: 1.25;
+    --letter-spacing-base: 0.02em;
 
-  /* --- Z-Index --- */
-  --z-base: 0;
-  --z-sticky: 100;
-  --z-dropdown: 1000;
-  --z-overlay: 1100;
-  --z-modal: 10100;
-  --z-toast: 10200;
+    /* Spacing (4px base) */
+    --space-0: 0px;
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --space-7: 40px;
+    --space-8: 48px;
 
-  /* Danger specific */
-  --color-danger-surface: #a50e0e;
-  --color-danger-overlay: rgba(255, 69, 58, 0.65);
+    /* Radii */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-full: 9999px;
 
-  /* Interaction */
-  --overlay-hover: rgba(255, 255, 255, 0.04);
-  --overlay-active: rgba(255, 255, 255, 0.08);
-  --color-focus-ring: color-mix(in srgb, var(--accent) 45%, transparent);
-  --focus-ring: 0 0 0 2px var(--color-focus-ring);
+    /* Motion */
+    --dur-1: 160ms;
+    --dur-2: 240ms;
+    --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
 
-  /* --- Component Variables --- */
-  /* Controls */
-  --control-height: 40px;
-  --control-padding-x: 10px;
-  --control-radius: var(--radius-sm);
-  --control-font-size: var(--font-size-2);
-  --control-font-weight: var(--font-weight-medium);
+    /* Shadows */
+    --shadow-1:
+        0 1px 0 rgba(255, 255, 255, 0.03), 0 8px 24px rgba(0, 0, 0, 0.45),
+        0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-2:
+        0 1px 0 rgba(255, 255, 255, 0.04), 0 14px 40px rgba(0, 0, 0, 0.55),
+        0 4px 14px rgba(0, 0, 0, 0.35);
 
-  /* Inputs */
-  --input-height: 28px;
-  --input-padding-x: 6px;
-  --input-radius: 8px;
-  --input-font-size: 14px;
-  --input-font-weight: var(--font-weight-regular);
-  --field-inset: inset 0 1px 0 rgba(255, 255, 255, 0.03);
-  --date-picker-filter: invert(1);
+    --elevation-1: var(--shadow-1);
+    --elevation-2: var(--shadow-2);
 
-  /* App Specific layout */
-  --layout-container-max: 1800px;
-  --layout-logo-height: 28px;
-  --layout-logo-max-width: 420px;
+    /* Z-index */
+    --z-base: 0;
+    --z-sticky: 100;
+    --z-dropdown: 1000;
+    --z-overlay: 1100;
+    --z-modal: 10100;
+    --z-toast: 10200;
 
-  /* Schedule Grid */
-  --schedule-row-height: 100px;
-  /* Increased to fit 94px bars + margin */
-  --schedule-col-width: 50px;
-  --bus-col-w: 40px;
-  --day-row-h: 40px;
-  --color-conflict-bg: color-mix(in srgb, var(--color-danger) 18%, transparent);
-  --color-conflict-accent: var(--color-danger);
+    /* Danger specific */
+    --color-danger-surface: #a50e0e;
+    --color-danger-overlay: rgba(255, 69, 58, 0.65);
 
-  /* Trip Bars */
-  --tripbar-height: 93px;
-  /* 7 rows * 11px + 6 gaps * 1px + 7px padding + 3px border */
-  --tripbar-gap: 0px;
-  --tripbar-lane-step: calc(var(--tripbar-height) + var(--tripbar-gap));
-  --waiting-list-height: 100px;
-  --tripbar-inset: 4px;
-  --tripbar-font-size-major: 11px;
-  --tripbar-font-size-minor: 9px;
-  --tripbar-line-height-major: 11px;
-  --tripbar-line-height-minor: 11px;
-  --tripbar-row-gap: 1px;
-  --tripbar-padding-vertical: 3.5px;
+    /* Controls */
+    --control-height: 36px;
+    --control-padding-x: 10px;
+    --control-radius: var(--radius-sm);
+    --control-font-size: var(--font-size-2);
+    --control-font-weight: var(--font-weight-medium);
+
+    /* Inputs */
+    --input-height: 28px;
+    --input-padding-x: 6px;
+    --input-radius: 8px;
+    --input-font-size: 14px;
+    --input-font-weight: var(--font-weight-regular);
+    --field-inset: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    --date-picker-filter: invert(1);
+
+    /* Layout */
+    --layout-container-max: 2400px;
+    --layout-logo-height: 28px;
+    --layout-logo-max-width: 420px;
+
+    /* Schedule grid */
+    --schedule-row-height: 100px;
+    --schedule-col-width: 52px;
+    --bus-col-w: 40px;
+    --day-row-h: 40px;
+
+    --color-conflict-bg: color-mix(in srgb, var(--color-danger) 18%, transparent);
+    --color-conflict-accent: var(--color-danger);
+
+    /* Trip bars */
+    /* geometry */
+    --tripbar-height: 95px;
+    --tripbar-gap: 100px;
+    --tripbar-lane-step: calc(var(--tripbar-height) + var(--tripbar-gap));
+    --waiting-list-height: 100px;
+
+    --tripbar-inset-left: 2px;
+    --tripbar-inset-right: 3px;
+
+    /* vertical rhythm */
+    --tripbar-padding-vertical: 2px;
+    /* was 6 */
+    --tripbar-row-gap: 1px;
+
+    /* type */
+    --tripbar-font-size-major: 12px;
+    --tripbar-font-size-minor: 10px;
+
+    /* keep unitless so grid rows stay stable */
+    --tripbar-line-height-major: 1;
+    --tripbar-line-height-minor: 1;
+
+    /* icon sizing */
+    --tripbar-icon-size: 10px;
+    --tripbar-mini-badge: 12px;
 }
 
-/* --- Light Theme --- */
+/* Light theme overrides */
 [data-theme="light"] {
-  color-scheme: light;
+    color-scheme: light;
 
-  /* --- Base Surfaces --- */
-  --app-bg: #bdbdbd;
-  --surface-0: #f5f5f5;
-  --surface-1: #ffffff;
-  --surface-2: #ffffff;
-  --surface-3: #f0f0f0;
-  --surface-4: #e5e5e5;
+    --app-bg: #bdbdbd;
+    --surface-0: #f5f5f5;
+    --surface-1: #ffffff;
+    --surface-2: #ffffff;
+    --surface-3: #f0f0f0;
+    --surface-4: #e5e5e5;
 
-  /* --- Text --- */
-  --text: #000000;
-  --text-muted: #737373;
-  --placeholder: #a3a3a3;
-  --color-text-inverse: #ffffff;
-  --white: #000000;
+    --text: #000000;
+    --text-muted: #737373;
+    --placeholder: #a3a3a3;
+    --color-text-inverse: #ffffff;
 
-  /* --- Semantic Overrides (Light Mode) --- */
-  --text-driver: #000000;
-  /* High Contrast Black for Light Mode */
+    /* If you rely on --white as “text” somewhere, this keeps behavior */
+    --white: #000000;
 
-  /* --- Borders --- */
-  --border: #e5e5e5;
-  --border-strong: #d4d4d4;
-  --color-divider: #e5e5e5;
+    --text-driver: #000000;
 
-  /* --- Interaction --- */
-  --overlay-hover: rgba(0, 0, 0, 0.05);
-  --overlay-active: rgba(0, 0, 0, 0.1);
+    --border: #e5e5e5;
+    --border-strong: #d4d4d4;
+    --color-divider: #e5e5e5;
 
-  /* --- Semantic Overrides (Light Mode) --- */
-  --color-success-soft: rgba(22, 163, 74, 0.15);
-  --color-success-border: rgba(22, 163, 74, 0.4);
+    --overlay-hover: rgba(0, 0, 0, 0.05);
+    --overlay-active: rgba(0, 0, 0, 0.1);
 
-  --color-warning-soft: rgba(202, 138, 4, 0.15);
-  --color-warning-border: rgba(202, 138, 4, 0.4);
+    --color-success-soft: rgba(22, 163, 74, 0.15);
+    --color-success-border: rgba(22, 163, 74, 0.4);
 
-  --color-danger-soft: rgba(220, 38, 38, 0.15);
-  --color-danger-border: rgba(220, 38, 38, 0.4);
+    --color-warning-soft: rgba(202, 138, 4, 0.15);
+    --color-warning-border: rgba(202, 138, 4, 0.4);
 
-  --color-neutral-soft: rgba(75, 85, 99, 0.1);
-  --color-neutral-border: rgba(75, 85, 99, 0.3);
+    --color-danger-soft: rgba(220, 38, 38, 0.15);
+    --color-danger-border: rgba(220, 38, 38, 0.4);
 
-  /* --- Button Tokens (Light Mode) --- */
-  --color-button-bg: #ffffff;
-  --color-button-border: transparent;
-  --color-button-text: #1a1a1a;
-  --color-button-hover-bg: #f5f5f5;
-  --color-button-hover-border: transparent;
-  --color-button-hover-text: #000000;
+    --color-neutral-soft: rgba(75, 85, 99, 0.1);
+    --color-neutral-border: rgba(75, 85, 99, 0.3);
 
-  /* --- Shadows --- */
-  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.05), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-2: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --color-button-bg: #ffffff;
+    --color-button-border: transparent;
+    --color-button-text: #1a1a1a;
+    --color-button-hover-bg: #f5f5f5;
+    --color-button-hover-border: transparent;
+    --color-button-hover-text: #000000;
+
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.05), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-2: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
-/*[data-theme="light"] .trip-bar {
-  background: color-mix(in srgb, var(--blue-medium) 66%, white);
-  color: #000;
-}
-
-[data-theme="light"] .trip-bar.unconfirmed {
-  background: color-mix(in srgb, var(--red-medium) 66%, white);
-  color: #000;
-}
-
-/* ========================================================================== */
-/*  BASE & RESET                                                              */
-/* ========================================================================== */
-
+/* ==========================================================================
+   2) BASE & RESET
+   ========================================================================== */
 html {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
 *,
 *::before,
 *::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 html,
 body {
-  height: 100%;
-  overscroll-behavior: none;
-  touch-action: manipulation;
+    height: 100%;
+    overscroll-behavior: none;
+    touch-action: manipulation;
 }
 
 body {
-  font-family: var(--font-sans);
-  line-height: var(--line-height-base);
-  letter-spacing: var(--letter-spacing-base);
-  color: var(--color-text-1);
-  background: var(--app-bg);
-  transition:
-    background-color 200ms ease,
-    color 200ms ease;
+    font-family: var(--font-sans);
+    line-height: var(--line-height-base);
+    letter-spacing: var(--letter-spacing-base);
+    color: var(--color-text-1);
+    background: var(--app-bg);
+    transition:
+        background-color 200ms ease,
+        color 200ms ease;
 }
 
 h1,
@@ -373,103 +387,101 @@ h3,
 h4,
 h5,
 h6 {
-  font-weight: var(--font-weight-regular);
+    font-weight: var(--font-weight-regular);
 }
 
 input,
 select,
 textarea,
 button {
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
 }
 
 code,
 pre,
 kbd,
 samp {
-  font-family: var(--font-mono);
+    font-family: var(--font-sans);
 }
 
-/* Keyboard Access */
+/* Focus */
 *:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
 }
 
 *:focus:not(:focus-visible) {
-  outline: none;
+    outline: none;
 }
 
-/* Accessibility Helpers */
+/* Accessibility */
 .skip-link {
-  position: absolute;
-  top: -999px;
-  left: 0;
-  z-index: 9999;
-  padding: var(--space-2) var(--space-3);
-  background: var(--color-accent);
-  color: var(--color-on-accent);
-  font-weight: var(--font-weight-semibold);
-  text-decoration: none;
-  border-radius: 0 0 var(--radius-sm) 0;
+    position: absolute;
+    top: -999px;
+    left: 0;
+    z-index: 9999;
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    font-weight: var(--font-weight-semibold);
+    text-decoration: none;
+    border-radius: 0 0 var(--radius-sm) 0;
 }
 
 .skip-link:focus {
-  top: 0;
+    top: 0;
 }
 
 .sr-only,
 .visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
-/* =========================
-   Controls (buttons/chips/toggles/weekpicker)
-   Full replacement
-   ========================= */
-
+/* ==========================================================================
+   3) CONTROLS (buttons/chips/toggles/weekpicker)
+   ========================================================================== */
 button,
 .btn,
 .icon-chip,
 .theme-toggle,
 .seg__btn,
 input[type="date"].weekpicker {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
-  height: var(--control-height);
-  padding: 0 var(--control-padding-x);
+    height: var(--control-height);
+    padding: 0 var(--control-padding-x);
 
-  border: 1px solid transparent;
-  border-radius: var(--control-radius);
+    border: 1px solid transparent;
+    border-radius: var(--control-radius);
 
-  font-size: var(--font-size-3);
-  font-weight: var(--input-font-weight);
-  line-height: 1;
-  text-decoration: none;
-  white-space: nowrap;
+    font-size: var(--font-size-3);
+    font-weight: var(--input-font-weight);
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
 
-  color: var(--color-button-text);
-  background-color: var(--color-button-bg);
+    color: var(--color-button-text);
+    background-color: var(--color-button-bg);
 
-  cursor: pointer;
+    cursor: pointer;
 
-  transition:
-    background-color 0.12s ease,
-    border-color 0.12s ease,
-    box-shadow 0.12s ease,
-    transform 0.04s ease;
+    transition:
+        background-color 0.12s ease,
+        border-color 0.12s ease,
+        box-shadow 0.12s ease,
+        transform 0.04s ease;
 }
 
 /* Hover */
@@ -479,23 +491,23 @@ button:hover,
 .theme-toggle:hover,
 .seg__btn:hover,
 input[type="date"].weekpicker:hover {
-  background-color: var(--color-button-hover-bg);
-  border-color: var(--color-button-hover-border);
+    background-color: var(--color-button-hover-bg);
+    border-color: var(--color-button-hover-border);
 }
 
-/* Active (avoid transforms on native date input if it looks weird in your target browser) */
+/* Active */
 button:active,
 .btn:active,
 .icon-chip:active,
 .theme-toggle:active,
 .seg__btn:active {
-  transform: translateY(1px);
-  border-color: transparent !important;
-  outline: none !important;
+    transform: translateY(1px);
+    border-color: transparent !important;
+    outline: none !important;
 }
 
 input[type="date"].weekpicker:active {
-  transform: none;
+    transform: none;
 }
 
 /* Focus */
@@ -505,12 +517,11 @@ button:focus-visible,
 .theme-toggle:focus-visible,
 .seg__btn:focus-visible,
 input[type="date"].weekpicker:focus-visible {
-  outline: none;
-  border-color: var(--focus);
-  box-shadow: 0 0 0 3px var(--color-focus-ring);
+    outline: none;
+    border-color: var(--focus);
+    box-shadow: var(--focus-ring);
 }
 
-/* Disabled */
 /* Disabled */
 button:disabled,
 .btn:disabled,
@@ -524,155 +535,156 @@ button[aria-disabled="true"],
 .theme-toggle[aria-disabled="true"],
 .seg__btn[aria-disabled="true"],
 input[type="date"].weekpicker[aria-disabled="true"] {
-  opacity: 1;
-  cursor: not-allowed;
-  pointer-events: none;
+    opacity: 1;
+    cursor: not-allowed;
+    pointer-events: none;
 
-  color: var(--color-text-disabled);
-  background-color: var(--overlay-hover);
-  border-color: transparent;
+    color: var(--color-text-disabled);
+    background-color: var(--overlay-hover);
+    border-color: transparent;
 
-  box-shadow: none;
-  transform: none;
+    box-shadow: none;
+    transform: none;
 }
 
 /* Optional: remove default button styles in Safari/Firefox */
 :where(button, .btn, .theme-toggle, .seg__btn) {
-  -webkit-appearance: none;
-  appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
-/* =========================
-   Destructive Button (Soft Tinted Fill)
-   ========================= */
+/* Destructive button */
 #deleteBtn,
 .btn-danger {
-  color: var(--red);
-  background: var(--color-danger-soft);
-  border-color: transparent;
+    color: var(--red);
+    background: var(--color-danger-soft);
+    border-color: transparent;
 }
 
 #deleteBtn:hover,
 .btn-danger:hover {
-  background: color-mix(in srgb, var(--red) 22%, transparent);
-  border-color: transparent;
+    background: color-mix(in srgb, var(--red) 22%, transparent);
+    border-color: transparent;
 }
 
 #deleteBtn:active,
 .btn-danger:active {
-  background: color-mix(in srgb, var(--red) 28%, transparent);
-  border-color: transparent;
+    background: color-mix(in srgb, var(--red) 28%, transparent);
+    border-color: transparent;
 }
 
 #deleteBtn:focus-visible,
 .btn-danger:focus-visible {
-  border-color: transparent;
-  box-shadow: 0 0 0 3px var(--color-danger-soft);
+    border-color: transparent;
+    box-shadow: 0 0 0 3px var(--color-danger-soft);
 }
 
-/* =========================
-   Toggle Buttons (aria-pressed)
-   ========================= */
-
-/* Keep the base border so hover/pressed borders work */
+/* Toggle Buttons (aria-pressed) */
 :where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn) {
-  border: 1px solid transparent;
-  /* instead of border: none */
-  background-color: var(--color-button-bg);
-  color: var(--color-button-text);
+    border: 1px solid transparent;
+    background-color: var(--color-button-bg);
+    color: var(--color-button-text);
 }
 
-/* Unpressed hover */
 :where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn):hover {
-  background-color: var(--color-button-hover-bg);
-  border-color: var(--color-button-hover-border);
+    background-color: var(--color-button-hover-bg);
+    border-color: var(--color-button-hover-border);
 }
 
-/* Pressed */
 :where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn)[aria-pressed="true"] {
-  background-color: var(--color-primary) !important;
-  border-color: transparent !important;
-  color: var(--accent) !important;
+    background-color: var(--color-primary) !important;
+    border-color: transparent !important;
+    color: var(--accent) !important;
 }
 
-/* Pressed hover/active */
 :where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn)[aria-pressed="true"]:hover {
-  background-color: var(--color-primary-hover);
+    background-color: var(--color-primary-hover);
 }
 
 :where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn)[aria-pressed="true"]:active {
-  background-color: var(--color-primary-active);
+    background-color: var(--color-primary-active);
 }
 
-/* Optional: focus ring on toggles (keeps consistent with your base rule) */
 :where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn):focus-visible {
-  outline: none;
-  border-color: var(--focus);
-  box-shadow: 0 0 0 3px var(--color-focus-ring);
+    outline: none;
+    border-color: var(--focus);
+    box-shadow: var(--focus-ring);
 }
 
-/* --- Segmented Controls --- */
+/* Segmented controls */
 .seg {
-  display: inline-flex;
-  align-items: center;
-  padding: 0 2px;
-  border-radius: var(--control-radius);
-  border: 1px solid transparent;
-  background: var(--color-button-bg);
-  height: var(--control-height);
+    display: inline-flex;
+    align-items: center;
+    padding: 0 2px;
+    border-radius: var(--control-radius);
+    border: 1px solid transparent;
+    background: var(--color-button-bg);
+    height: var(--control-height);
 }
 
 .seg__btn {
-  border: 0;
-  background: transparent;
-  height: calc(var(--control-height) - 4px);
-  padding: 0 var(--space-2);
+    border: 0;
+    background: transparent;
+    height: calc(var(--control-height) - 4px);
+    padding: 0 var(--space-2);
 }
 
 .seg__btn[aria-pressed="true"] {
-  background: var(--color-primary);
-  border: 1px solid transparent;
-  color: var(--color-on-primary);
+    background: var(--color-primary);
+    border: 1px solid transparent;
+    color: var(--color-on-primary);
 }
 
-/* ========================================================================== */
-/*  SECTION 2: ICON BUTTONS                                                   */
-/*  Square icon-only buttons                                                  */
-/* ========================================================================== */
+/* Icon button */
 .btn-icon {
-  background: var(--surface-0) !important;
-  border: none !important;
-  box-shadow: none !important;
-  padding: var(--control-padding-x) !important;
-  color: var(--color-text-1);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--control-radius);
-  width: var(--control-height);
-  height: var(--control-height);
+    background: var(--surface-0) !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: var(--control-padding-x) !important;
+    color: var(--color-text-1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--control-radius);
+    width: var(--control-height);
+    height: var(--control-height);
 }
 
 .btn-icon:hover {
-  box-shadow: none !important;
-  color: var(--color-text-0);
-  background: var(--surface-4) !important;
+    box-shadow: none !important;
+    background: var(--surface-4) !important;
+}
+
+/* NOTE: you referenced --color-text-0; it doesn't exist. Using text-1 keeps behavior. */
+.btn-icon:hover {
+    color: var(--color-text-1);
 }
 
 .btn-icon:active {
-  box-shadow: none !important;
-  background: var(--accent) !important;
+    box-shadow: none !important;
+    background: var(--accent) !important;
 }
 
 .btn-icon:disabled {
-  color: var(--color-text-disabled);
-  background: var(--color-surface-2) !important;
+    color: var(--color-text-disabled);
+    background: var(--color-surface-2) !important;
 }
 
-/* ========================================================================== */
-/*  SECTION 3: INPUT FIELDS                                                   */
-/*  Text inputs, selects, textareas, date/time pickers                        */
-/* ========================================================================== */
+.bus-icons {
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    z-index: 5;
+}
+
+/* ==========================================================================
+   4) INPUTS
+   ========================================================================== */
 input[type="text"],
 input[type="tel"],
 input[type="date"],
@@ -680,2408 +692,2310 @@ input[type="time"],
 input[type="number"],
 select,
 textarea {
-  display: block;
-  width: 100%;
-  padding: 0 var(--input-padding-x);
-  height: var(--input-height);
-  border: solid 1px var(--color-input-border);
-  border-radius: 0;
-  font-size: var(--input-font-size);
-  font-weight: var(--input-font-weight);
-  color: var(--text);
-  background-color: var(--color-input-bg);
-  cursor: pointer;
-  outline: none;
-  transition:
-    border-color 0.12s ease,
-    box-shadow 0.12s ease,
-    background 0.12s ease;
-}
-
-input:hover,
-select:hover,
-textarea:hover {
-  border-color: var(--border-strong);
+    display: block;
+    width: 100%;
+    padding: 0 var(--input-padding-x);
+    height: var(--input-height);
+    border: none;
+    border-radius: var(--input-radius);
+    font-size: var(--input-font-size);
+    font-weight: var(--input-font-weight);
+    color: var(--text);
+    background-color: var(--color-input-bg);
+    cursor: text;
+    outline: none;
+    transition:
+        border-color 0.12s ease,
+        box-shadow 0.12s ease,
+        background 0.12s ease;
 }
 
 input[type="date"],
 input[type="time"],
 input[type="number"],
 select {
-  appearance: none;
-  padding: 0 6px;
-  text-align: left;
+    cursor: pointer;
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+    border-color: var(--border-strong);
+}
+
+input[type="date"],
+input[type="time"],
+input[type="number"],
+select {
+    appearance: none;
+    padding: 0 6px;
+    text-align: left;
 }
 
 textarea {
-  min-height: 84px;
-  padding: 6px;
-  resize: vertical;
+    min-height: 84px;
+    padding: 6px;
+    resize: vertical;
 }
 
 input::placeholder,
 textarea::placeholder {
-  color: var(--text-placeholder);
-  opacity: 1;
+    color: var(--text-placeholder);
+    opacity: 1;
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-  outline: 2px solid var(--focus);
-  outline-offset: 2px;
-  box-shadow: none;
+    outline: none;
+    border-color: var(--focus);
+    box-shadow: var(--focus-ring);
 }
 
-/* --- Date/Time Pickers --- */
+/* Date/Time pickers */
 ::-webkit-calendar-picker-indicator {
-  filter: var(--date-picker-filter);
-  opacity: 0.85;
-  cursor: pointer;
+    filter: var(--date-picker-filter);
+    opacity: 0.85;
+    cursor: pointer;
 }
 
 ::-webkit-calendar-picker-indicator:hover {
-  opacity: 1;
+    opacity: 1;
 }
 
 .date-picker-wrapper {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  vertical-align: middle;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
 }
 
 .date-input-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100% !important;
-  height: 100% !important;
-  opacity: 0;
-  z-index: 10;
-  cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    opacity: 0;
+    z-index: 10;
+    cursor: pointer;
 }
 
-/* Special Week Picker Button Style */
+/* Week picker */
 input[type="date"].weekpicker {
-  width: 140px;
-  height: var(--control-height);
-  padding: 0;
-  border-radius: var(--control-radius);
-  background: var(--color-surface-3);
-  box-shadow: var(--field-inset);
-  color: var(--color-text-1);
-  text-align: left;
+    width: 140px;
+    height: var(--control-height);
+    padding: 0;
+    border-radius: var(--control-radius);
+    background: var(--color-surface-3);
+    box-shadow: var(--field-inset);
+    color: var(--color-text-1);
+    text-align: left;
 }
 
 input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
-  padding: 0;
-  width: 16px;
-  height: 16px;
-  margin-left: -20px;
-  margin-right: 0;
-}
-
-/* ========================================================================== */
-/*  UI COMPONENTS                                                             */
-/* ========================================================================== */
-
-/* --- Cards --- */
-.card {
-  overflow: auto;
-  border-radius: 0;
-  min-width: 0;
-  background: var(--surface-2);
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.12),
-    0 1px 2px rgba(0, 0, 0, 0.24);
-  border: none;
-  transition: box-shadow var(--dur-2) var(--ease-standard);
-  position: relative;
-  isolation: isolate;
-}
-
-.card.compact {
-  padding: 0;
-  padding-top: 0;
-}
-
-.card-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
-  margin-bottom: var(--space-2);
-  border-bottom: 1px solid var(--color-divider);
-  min-height: 40px;
-}
-
-.card-head-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.section-title {
-  font-family: var(--font-sans);
-  font-size: var(--font-size-3);
-  font-weight: var(--font-weight-medium);
-  letter-spacing: 0.02em;
-  color: var(--color-text-1);
-}
-
-.card-content {
-  /* --- card-labels --- */
-  min-width: 0;
-  font-size: 0.95rem;
-  color: var(--text-2);
-  padding: 16px;
-  /* or 1rem, or whatever value fits your design */
-  box-sizing: border-box;
-  /* ensures padding doesn’t cause overflow */
-}
-
-.card-foot {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: var(--space-2);
-  padding: 16px;
-  margin-top: 0;
-  border-top: 1px solid var(--color-divider);
-  flex-wrap: wrap;
-}
-
-/* --- Modals --- */
-.modal[hidden] {
-  display: none;
-}
-
-.modal {
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-modal);
-}
-
-.modal-overlay,
-.modal-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-}
-
-.modal-card {
-  position: relative;
-  width: min(720px, calc(100vw - 24px));
-  /* Center properly */
-  margin: 0 auto;
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--surface-3);
-  /* Themed background (white in light, dark in dark) */
-  border: 1px solid var(--color-border-2);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--elevation-2);
-  padding: var(--space-2);
-  /* Dynamic height: auto to fit content, but max 90% of screen */
-  height: auto;
-  max-height: 90vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
-  margin-bottom: var(--space-2);
-  flex-shrink: 0;
-}
-
-.modal-body {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-}
-
-.modal-body textarea {
-  flex: 1;
-  min-height: 240px;
-  resize: vertical;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--space-2);
-  margin-top: var(--space-2);
-}
-
-/* --- Toasts --- */
-.toast[hidden] {
-  display: none;
-}
-
-.toast {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 99999;
-  /* Ensure on top of everything */
-  padding: 6px 12px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border-2);
-  background: var(--color-surface-2);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  box-shadow: var(--elevation-2);
-  max-width: min(90vw, 420px);
-  font-size: 13px;
-  font-weight: 650;
-  color: var(--color-text-1);
-}
-
-.toast-progress {
-  display: none;
-  height: 8px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  overflow: hidden;
-}
-
-.toast[data-variant="loading"] .toast-progress {
-  display: block;
-}
-
-.toast-progress__inner {
-  height: 100%;
-  width: 0%;
-  border-radius: 999px;
-  background: var(--color-primary);
-  transition: width 180ms var(--ease-standard);
-}
-
-/* ========================================================================== */
-/*  MENUS (Settings dropdown + Context menus)                                 */
-/*  - Consistent glass look                                                   */
-/*  - Left-aligned content                                                    */
-/* ========================================================================== */
-
-.dropdown-wrapper {
-  position: relative;
-  display: inline-block;
-}
-
-/* Shared glass surface */
-.dropdown-menu,
-.context-menu {
-  position: absolute;
-  z-index: var(--z-dropdown, 9999);
-
-  min-width: 200px;
-  padding: var(--space-1, 6px);
-
-  /* Glassy background that works in light/dark */
-  background: color-mix(in srgb, var(--color-surface-1) 70%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-border-2) 80%, transparent);
-
-  border-radius: var(--radius-md, 10px);
-  box-shadow: var(--elevation-2, 0 12px 30px rgba(0, 0, 0, 0.35));
-
-  -webkit-backdrop-filter: blur(12px) saturate(140%);
-  backdrop-filter: blur(12px) saturate(140%);
-
-  overflow: hidden;
-  animation: menuPopIn 120ms ease-out;
-}
-
-/* Settings menu positioning */
-.dropdown-menu {
-  top: calc(100% + 4px);
-  right: 0;
-}
-
-/* Context menu positioning: JS sets left/top inline, so no default offsets */
-.context-menu {
-  top: 0;
-  left: 0;
-}
-
-/* Hide via [hidden] like you already do in HTML */
-.dropdown-menu[hidden],
-.context-menu[hidden] {
-  display: none;
-}
-
-/* Section label/header style (shared) */
-.dropdown-item-label,
-.context-header {
-  padding: 8px 12px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-
-  color: var(--color-text-3, var(--text-2));
-  opacity: 0.85;
-
-  text-align: left;
-  border-bottom: 1px solid color-mix(in srgb, var(--color-border-1) 70%, transparent);
-  margin-bottom: 4px;
-}
-
-/* Divider */
-.dropdown-divider {
-  border: 0;
-  height: 1px;
-  margin: 6px 6px;
-  background: color-mix(in srgb, var(--color-border-1) 70%, transparent);
-}
-
-/* Shared item button styling */
-.dropdown-item,
-.context-item {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  /* force left alignment */
-  gap: var(--space-2, 8px);
-
-  width: 100%;
-  padding: 10px 12px;
-
-  border: none;
-  border-radius: var(--radius-sm, 8px);
-  background: transparent;
-
-  font-size: var(--font-size-2, 13px);
-  font-weight: 600;
-  color: var(--color-text-1, var(--text));
-
-  text-align: left;
-  cursor: pointer;
-
-  transition:
-    background 120ms ease,
-    transform 120ms ease;
-}
-
-/* Icons (shared) */
-.dropdown-icon,
-.context-item .material-symbols-outlined {
-  font-size: 18px;
-  opacity: 0.85;
-  flex: 0 0 auto;
-}
-
-/* Hover/active states */
-.dropdown-item:hover,
-.context-item:hover {
-  background: color-mix(in srgb, var(--overlay-hover, rgba(255, 255, 255, 0.08)) 100%, transparent);
-}
-
-.dropdown-item:active,
-.context-item:active {
-  transform: translateY(1px);
-  background: color-mix(in srgb, var(--overlay-hover, rgba(255, 255, 255, 0.1)) 100%, transparent);
-}
-
-/* Small open animation */
-@keyframes menuPopIn {
-  from {
-    opacity: 0;
-    transform: translateY(-4px) scale(0.98);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* --- Badges --- */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2px 10px 0 10px;
-  /* Visual center nudge */
-  font-size: 16px;
-  font-weight: 400;
-  border-radius: 4px;
-  height: 24px;
-  line-height: normal;
-  letter-spacing: 0.02em;
-  vertical-align: middle;
-}
-
-.badge-primary {
-  background: color-mix(in srgb, var(--accent) 33%, transparent);
-  color: var(--color-text-1);
-  border: 1px solid var(--accent);
-  vertical-align: middle;
-  /* Ensure inline vertical alignment */
-}
-
-.badge-error {
-  background: color-mix(in srgb, var(--color-danger) 33%, transparent);
-  color: var(--color-danger);
-  border: 1px solid var(--color-danger);
-}
-
-.dropdown-icon {
-  display: inline-flex;
-  width: 20px;
-  flex-shrink: 0;
-  justify-content: center;
-  font-size: 16px;
-}
-
-.dropdown-icon.is-on {
-  color: var(--accent);
-}
-
-/* ========================================================================== */
-/*  APP LAYOUT & STRUCTURE                                                    */
-/* ========================================================================== */
-
-.app {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  height: 100vh;
-  width: 100%;
-  background: var(--color-bg);
-  overflow: hidden;
-}
-
-.main {
-  padding: var(--space-2);
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  overflow: visible;
-}
-
-.container {
-  max-width: var(--layout-container-max);
-  margin: 0 auto;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  overflow: visible;
-}
-
-/* Topbar */
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 10000;
-  background: var(--surface-0);
-  border-bottom: 1px solid var(--border);
-}
-
-.topbar-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
-  padding: 0 var(--space-4);
-  height: auto;
-  overflow: visible;
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  flex: 1;
-  min-width: 0;
-}
-
-.logo-wrap {
-  display: inline-flex;
-  align-items: center;
-  height: 100%;
-}
-
-.logo-img {
-  height: 24px;
-  width: auto;
-  object-fit: contain;
-  line-height: 1;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.brand-title-wrapper {
-  height: 44px;
-  display: flex;
-  align-items: center;
-  gap: 0;
-  cursor: pointer;
-  padding: 0 var(--control-padding-x);
-  border-radius: var(--control-radius);
-  transition: background-color var(--dur-1) ease;
-  position: relative;
-}
-
-.brand-title-wrapper:hover {
-  background-color: var(--color-surface-3);
-  color: var(--color-text-1);
-}
-
-.brand-title-wrapper .date-input-overlay {
-  left: 0 !important;
-  top: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-}
-
-.brand-title {
-  font-family: var(--font-sans);
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--color-text-1);
-  margin: 0;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-}
-
-/* Control Groups */
-.nav-controls {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.top-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  flex: 0 0 auto;
-}
-
-#todayBtnMobile {
-  display: none;
-}
-
-/* --- Scheduler Grid Layout --- */
-.scheduler-layout {
-  display: grid;
-  grid-template-columns: 400px 1fr;
-  gap: 0;
-  align-items: start;
-  overflow: visible;
-  padding: var(--space-2);
-}
-
-@media (max-width: 899px) {
-  .scheduler-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .scheduler-left {
-    display: none;
-    /* Hide sidebar on mobile by default or manage via JS toggle */
-  }
-
-  .scheduler-left.is-active {
-    display: block;
-  }
-
-  /* Fix sticky positioning on mobile */
-  .scheduler-right > .card {
-    overflow: visible;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .week-table-container {
-    overflow-x: auto;
-    overflow-y: auto;
-    flex: 1;
-  }
-
-  /* Mobile topbar optimizations */
-  /* Hide less-used toggles on mobile */
-  #notesBtn,
-  #waitingListBtn,
-  #themeToggle,
-  #todayBtn,
-  #tripInputBtn,
-  #driversBtn {
-    display: none;
-  }
-
-  /* Aggressive spacing reduction for one-row layout */
-  .topbar-inner {
-    gap: var(--space-1);
-    padding: 0 var(--space-2);
-    flex-wrap: nowrap;
-  }
-
-  #todayBtnMobile {
-    display: inline-flex;
-  }
-
-  .header-left,
-  .header-right {
-    gap: var(--space-1);
-    min-width: 0;
-    flex-shrink: 1;
-  }
-
-  /* Fix button clickability and layout */
-  .nav-controls {
-    gap: 2px;
-    position: relative;
-    z-index: 10;
-  }
-
-  .btn-icon {
-    min-width: 36px;
-    width: 36px;
-    height: 36px;
-    position: relative;
-    z-index: 10;
-  }
-
-  .brand-title-wrapper {
-    padding: 0 var(--space-1);
-    position: relative;
-    z-index: 5;
-    min-width: 0;
-    flex: 1;
-    justify-content: center;
-    height: 36px;
-    /* Match button height */
-  }
-
-  /* Ensure date picker overlay is contained */
-  .brand-title-wrapper .date-input-overlay {
-    width: 100% !important;
-    left: 0 !important;
-    top: 0 !important;
-    top: 0 !important;
-    height: 100% !important;
-  }
-
-  /* Portrait mode: hide logo completely to save space */
-  @media (orientation: portrait) {
-    .logo-wrap {
-      display: none !important;
-    }
-  }
-
-  /* Landscape mode: show logo if space permits */
-  @media (orientation: landscape) {
-    .logo-wrap {
-      display: inline-flex;
-    }
-  }
-}
-
-/* Portrait mode: hide logo completely */
-@media (max-width: 899px) and (orientation: portrait) {
-  .logo-wrap {
-    display: none;
-  }
-}
-
-/* Landscape mode: keep logo visible */
-@media (max-width: 899px) and (orientation: landscape) {
-  .logo-wrap {
-    display: inline-flex;
-  }
-}
-
-.scheduler-left,
-.scheduler-right {
-  min-width: 0;
-}
-
-.scheduler-left:not(.scheduler-collapsed) {
-  padding-left: var(--space-3);
-}
-
-.scheduler-left > .card:not(.is-hidden) + .card:not(.is-hidden) {
-  margin-top: var(--space-2);
-}
-
-.scheduler-right > .card {
-  max-height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.scheduler-layout.is-collapsed {
-  grid-template-columns: 1fr;
-}
-
-@media (min-width: 900px) {
-  #schedulerLayout {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    flex: 1;
-    overflow: visible;
-    min-height: 0;
-    gap: 0;
-  }
-
-  .scheduler-right {
-    flex: 1;
-    order: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: visible;
-  }
-
-  .scheduler-right > .card {
-    /* max-height: calc(10 * var(--schedule-row-height) + 24px); */
-    max-height: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  .scheduler-right .week-table-container {
-    flex: 0 1 auto;
-    overflow-y: auto;
-  }
-
-  .scheduler-left {
-    order: 2;
-    width: 400px;
-    flex-shrink: 0;
-    position: relative;
-    z-index: 2;
-    /* Sit on top of scheduler shadow */
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    /* Animation Props */
-    transition:
-      width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      opacity 0.2s ease,
-      margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
-    white-space: nowrap;
-  }
-
-  /* Collapsed state for sidebar */
-  .scheduler-left.scheduler-collapsed {
-    width: 0 !important;
-    opacity: 0;
-    margin: 0 !important;
-    pointer-events: none;
-  }
-
-  /* Prevent card squashing */
-  .scheduler-left > .card {
-    min-width: 100%;
-    width: 100%;
-  }
-
-  /* Animations */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(4px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .fade-in {
-    animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  }
-
-  /* Waiting List Row Animation */
-  .waiting-list-row {
-    animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  }
-
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-12px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Make visible cards expand to fill available height */
-  .scheduler-left > .card:not(.is-hidden) {
-    flex: 1;
-    max-height: calc(var(--day-row-h) + (10 * var(--schedule-row-height)));
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  /* Ensure card content can scroll */
-  .scheduler-left > .card:not(.is-hidden) .card-content {
-    flex: 1;
-    overflow-y: auto;
-    min-height: 0;
-  }
-
-  .scheduler-right {
-    position: relative;
-    z-index: 1;
-  }
-
-  /* Restore visible shadow specifically here or globally */
-  .scheduler-right > .card,
-  .scheduler-left > .card {
-    box-shadow:
-      0 4px 6px -1px rgba(0, 0, 0, 0.3),
-      0 2px 4px -1px rgba(0, 0, 0, 0.16) !important;
-  }
-
-  .scheduler-left.is-hidden {
-    display: none;
-  }
-
-  .scheduler-layout.is-collapsed .scheduler-right {
-    width: 100%;
-    flex: 1;
-  }
-}
-
-/* --- Week Table --- */
-.week-table-container {
-  width: 100%;
-  height: auto;
-  max-height: none;
-  /* adjust for topbar/padding */
-  overflow: auto;
-  /* Scroll Shadows */
-  background:
-    /* Shadow Cover TOP */
-    linear-gradient(var(--surface-1) 30%, rgba(255, 255, 255, 0)),
-    /* Shadow TOP */ radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
-  background-repeat: no-repeat;
-  background-color: var(--surface-1);
-  background-size:
-    100% 40px,
-    100% 14px;
-  background-attachment: local, scroll;
-  border-left: none;
-}
-
-.week-table {
-  width: max(100%, 1150px);
-  height: auto;
-  table-layout: fixed;
-  border-collapse: separate;
-  border-spacing: 0;
-  /* background: var(--color-surface-1); REMOVED so container shadow shows */
-}
-
-.week-table th,
-.week-table td {
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  text-align: center;
-  vertical-align: middle;
-}
-
-.week-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.week-table th:last-child,
-.week-table td:last-child {
-  border-right: none;
-}
-
-.week-table th {
-  background: var(--color-surface-1);
-  padding: 0;
-  height: var(--day-row-h);
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
-  z-index: 2000;
-  z-index: 2000;
-  /* margin-top: 6px; Removed to fix gap */
-}
-
-/* Enforce min-width on day columns to trigger scroll */
-.week-table th:not(:first-child),
-.week-table td:not(:first-child) {
-  min-width: 150px;
-}
-
-/* Sticky top-left corner (bus header) */
-.week-table th:first-child {
-  position: -webkit-sticky;
-  position: sticky;
-  left: 0;
-  z-index: 3000;
-  background: var(--color-surface-1);
-}
-
-/* Table Cells */
-.day-label {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  font-weight: 500;
-  gap: 8px;
-  text-transform: uppercase;
-}
-
-.day-name {
-  font-size: 16px;
-  color: color-mix(in srgb, var(--text) 80%, transparent);
-  font-weight: 400;
-  line-height: 1;
-}
-
-.day-date {
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--color-text-1);
-  letter-spacing: 0.02em;
-  line-height: 1;
-}
-
-th.day-today {
-  background: var(--accent);
-  border-bottom: 1px solid var(--border);
-}
-
-th.day-today .day-date {
-  color: var(--text);
-  font-weight: 500;
-}
-
-th.day-today .day-name {
-  color: color-mix(in srgb, var(--text) 80%, transparent);
-  font-weight: 400;
-}
-
-.week-table tbody tr {
-  height: var(--schedule-row-height) !important;
-  max-height: var(--schedule-row-height) !important;
-  min-height: var(--schedule-row-height) !important;
-  /* background-color: var(--color-surface-1); REMOVED so container shadow shows */
-  position: relative;
-  overflow: hidden;
-}
-
-.row-bars {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 100%;
-  pointer-events: none;
-  /* Let clicks pass through to cells/bars */
-  z-index: 5;
-}
-
-.week-table td {
-  vertical-align: top;
-  padding: 0;
-  height: var(--schedule-row-height) !important;
-  max-height: var(--schedule-row-height) !important;
-  position: relative;
-}
-
-.week-table td.week-start-cell {
-  position: relative;
-}
-
-.week-table tbody tr.notes-row {
-  height: 20px !important;
-  max-height: 20px !important;
-  min-height: 20px !important;
-  background-color: var(--color-bg);
-}
-
-.week-table tbody tr.notes-row td {
-  height: 20px !important;
-  border-top: 1px dashed var(--color-border-subtle);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.notes-row .bus-id-cell {
-  background-color: var(--color-surface-1);
-}
-
-.week-table td:first-child {
-  position: -webkit-sticky;
-  position: sticky;
-  left: 0;
-  z-index: 500;
-  background: var(--color-surface-1);
-  font-size: 22px;
-  font-weight: 500;
-  color: var(--color-text-1);
-
-  /* Match the <colgroup> width exactly */
-  min-width: var(--bus-col-w);
-  max-width: var(--bus-col-w);
-}
-
-.week-table th:first-child {
-  position: sticky;
-  left: 0;
-  z-index: 2010;
-  background: var(--color-surface-1);
-  margin-top: 0;
-  /* Forced fix for gap */
-}
-
-.week-table td.day-cell {
-  cursor: pointer;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-/* Day cell hover - subtle minimalist focus */
-.week-table td.day-cell:not(:has(.trip-bar:hover)):hover {
-  background-color: var(--overlay-hover);
-  transition: background-color 0.1s ease;
-}
-
-.week-table td.conflict {
-  background: var(--color-conflict-bg);
-}
-
-.week-table td.bus-conflict {
-  box-shadow: inset 3px 0 0 var(--color-conflict-accent);
-}
-
-/* Single source of truth: the bus column width */
-.week-table col.col-bus {
-  width: var(--bus-col-w);
-}
-
-/* Bus Icons (in first column) */
-.bus-id-wrap {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
-.bus-id-num {
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--color-text-1);
-  letter-spacing: 0.02em;
-}
-
-/* Bus color on hover */
-.week-table tbody tr.has-bus-color > td:first-child {
-  transition: background-color 0.15s ease;
-}
-
-.week-table tbody tr.has-bus-color > td:first-child:hover {
-  background-color: var(--bus-accent-color, var(--color-surface-1));
-}
-
-/* Container for icons */
-.bus-icons {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  z-index: 5;
-}
-
-.bus-icons {
-  bottom: 8px;
-}
-
-/* Universal Icon Styles (Reset absolute) */
-.bus-id-wrap .bus-lift,
-.bus-id-wrap .bus-sleeper {
-  position: static;
-  transform: none;
-  font-size: 16px !important;
-}
-
-.bus-id-wrap .bus-lift {
-  color: color-mix(in srgb, var(--blue) 33%, transparent);
-}
-
-.bus-id-wrap .bus-sleeper {
-  color: color-mix(in srgb, var(--gray) 33%, transparent);
-}
-
-.week-table td:first-child {
-  position: -webkit-sticky;
-  position: sticky;
-  left: 0;
-  background: var(--color-surface-1);
-  z-index: 500;
-  border-right: none;
-  /* Handled by ::after for sticky overlap */
-}
-
-.week-table th:first-child {
-  position: -webkit-sticky;
-  position: sticky;
-  left: 0;
-  background: var(--color-surface-1);
-  z-index: 3000 !important;
-  border-right: none;
-}
-
-.week-table td:first-child::after,
-.week-table th:first-child::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: -1px;
-  /* sit on the edge */
-  width: 1px;
-  height: 100%;
-  background: var(--color-border-1);
-  pointer-events: none;
-}
-
-/* --- Trip Bars --- */
-.trip-bar {
-  position: absolute;
-  z-index: 200;
-  display: grid;
-
-  grid-template-rows: repeat(7, 11px);
-  row-gap: var(--tripbar-row-gap);
-  padding: var(--tripbar-padding-vertical) 4px;
-
-  font-variant-numeric: tabular-nums;
-  height: var(--tripbar-height);
-  box-sizing: border-box;
-
-  border: 2px solid var(--blue);
-  border-radius: 6px;
-  overflow: hidden;
-
-  background: color-mix(in srgb, var(--blue) 33%, transparent);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  cursor: pointer;
-  pointer-events: auto;
-  container-type: inline-size;
-
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
-
-  /* Smooth animations */
-  transition:
-    transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 0.18s ease,
-    filter 0.18s ease;
-}
-
-/* Trip Bar Alternative Colors (define ONCE) */
-.trip-bar.unconfirmed {
-  background: color-mix(in srgb, var(--red) 33%, transparent);
-  border-color: var(--red);
-}
-
-.trip-bar.color-red {
-  background: color-mix(in srgb, var(--red) 33%, transparent);
-  border-color: var(--red);
-}
-
-.trip-bar.color-blue {
-  background: color-mix(in srgb, var(--blue) 33%, transparent);
-  border-color: var(--blue);
-}
-
-.trip-bar.color-green {
-  background: color-mix(in srgb, var(--green) 33%, transparent);
-  border-color: var(--green);
-}
-
-.trip-bar.color-yellow {
-  background: color-mix(in srgb, var(--yellow) 33%, transparent);
-  border-color: var(--yellow);
-}
-
-.trip-bar.color-gray {
-  background: color-mix(in srgb, var(--gray) 33%, transparent);
-  border-color: var(--gray);
-}
-
-.trip-bar.color-violet {
-  background: color-mix(in srgb, var(--purple) 33%, transparent);
-  border-color: var(--purple);
-}
-
-.trip-bar.color-purple {
-  background: color-mix(in srgb, var(--purple) 33%, transparent);
-  border-color: var(--purple);
-}
-
-.trip-bar.color-pink {
-  background: color-mix(in srgb, var(--pink) 33%, transparent);
-  border-color: var(--pink);
-}
-
-.trip-bar.color-orange {
-  background: color-mix(in srgb, var(--orange) 33%, transparent);
-  border-color: var(--orange);
-}
-
-.trip-bar.color-teal {
-  background: color-mix(in srgb, var(--teal) 33%, transparent);
-  border-color: var(--teal);
-}
-
-.trip-bar.color-cyan {
-  background: color-mix(in srgb, var(--cyan) 33%, transparent);
-  border-color: var(--cyan);
-}
-
-.trip-bar.color-indigo {
-  background: color-mix(in srgb, var(--indigo) 33%, transparent);
-  border-color: var(--indigo);
-}
-
-.trip-bar.color-brown {
-  background: color-mix(in srgb, var(--brown) 33%, transparent);
-  border-color: var(--brown);
-}
-
-.trip-bar.color-mint {
-  background: color-mix(in srgb, var(--mint) 33%, transparent);
-  border-color: var(--mint);
-}
-
-.trip-bar.color-black {
-  background: color-mix(in srgb, var(--black) 33%, transparent);
-  border-color: var(--black);
-}
-
-.trip-bar.color-white {
-  background: color-mix(in srgb, var(--white) 33%, transparent);
-  border-color: var(--white);
-}
-
-/* =========================
-   Hover Effect: Inset Glow + Lift (NO outside paint)
-   ========================= */
-.trip-bar:hover {
-  transform: translateY(-3px);
-  /* only vertical movement */
-  filter: brightness(1.05) saturate(1.06);
-
-  /* Inset glow stays INSIDE the bar => no horizontal growth/scrollbar risk */
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.16),
-    inset 0 10px 18px rgba(255, 255, 255, 0.06),
-    0 14px 38px rgba(0, 0, 0, 0.55),
-    0 3px 10px rgba(0, 0, 0, 0.35);
-
-  z-index: 500;
-}
-
-/* Press feedback */
-.trip-bar:active {
-  transform: translateY(-1px);
-}
-
-/* Trip bar contents */
-.trip-bar > * {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 0;
-  padding: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1;
-}
-
-.trip-bar .bar-title {
-  color: var(--text);
-  font-size: var(--tripbar-font-size-major);
-  font-weight: var(--font-weight-regular);
-  text-transform: uppercase;
-  line-height: var(--tripbar-line-height-major);
-}
-
-.trip-bar .bar-sub {
-  color: color-mix(in srgb, var(--white) 80%, transparent);
-  font-size: var(--tripbar-font-size-minor);
-  font-weight: var(--font-weight-regular);
-  text-transform: uppercase;
-  line-height: var(--tripbar-line-height-minor);
-}
-
-.trip-bar .bar-time-row {
-  display: flex !important;
-  justify-content: space-between !important;
-  width: 100%;
-  font-weight: var(--font-weight-regular);
-  font-size: var(--tripbar-font-size-major);
-  color: var(--text);
-  min-width: auto !important;
-  line-height: var(--tripbar-line-height-major);
-}
-
-.trip-bar .bar-time {
-  display: flex !important;
-  justify-content: flex-start !important;
-  align-items: center !important;
-}
-
-.trip-bar .bar-time.right {
-  justify-content: flex-end !important;
-}
-
-.trip-bar .bar-pre-drivers {
-  font-size: var(--tripbar-font-size-minor);
-  color: color-mix(in srgb, var(--text-driver) 80%, transparent);
-  font-weight: var(--font-weight-regular);
-  line-height: var(--tripbar-line-height-minor);
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-}
-
-.bar-drivers {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-}
-
-.driver {
-  font-size: var(--tripbar-font-size-major);
-  font-weight: var(--font-weight-regular);
-  text-transform: uppercase;
-  line-height: var(--tripbar-line-height-major);
-  color: var(--text-driver);
-}
-
-.trip-bar .bar-status-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-}
-
-/* Specific styling for the Material Icon in the badge */
-.trip-bar .badge-icon {
-  font-size: 11px !important; /* Adjust this value to change icon size */
-  line-height: 1;
-  font-weight: normal;
-  font-variation-settings: "FILL" 0;
-}
-
-/* Trip Bar Status Badges */
-.trip-bar .mini-badge {
-  width: 11px;
-  height: 11px;
-  font-size: 9px;
-  font-weight: var(--font-weight-regular);
-  border-radius: 1px;
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--black);
-}
-
-.trip-bar .mini-badge.is-pending {
-  background: var(--red-status);
-}
-
-.trip-bar .mini-badge.is-ok {
-  background: var(--green-status);
-}
-
-.trip-bar .mini-badge.is-blue {
-  background: var(--blue-status);
-}
-
-.trip-bar .mini-badge.is-yellow {
-  background: var(--yellow-status);
-}
-
-/* =========================
-   Arrows for multi-day trips (animated)
-   ========================= */
-.trip-bar.cont-left {
-  border-left: none;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.trip-bar.cont-left::before {
-  font-family: "Material Symbols Outlined";
-  content: "keyboard_double_arrow_left";
-  left: 4px;
-  top: 51%;
-  position: absolute;
-  transform: translateY(-50%);
-  font-size: 16px;
-  animation: arrow-left-bounce 0.75s infinite ease-in-out;
-}
-
-.trip-bar.cont-right {
-  border-right: none;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-.trip-bar.cont-right::after {
-  font-family: "Material Symbols Outlined";
-  content: "keyboard_double_arrow_right";
-  right: 4px;
-  top: 51%;
-  position: absolute;
-  transform: translateY(-50%);
-  font-size: 16px;
-  animation: arrow-right-bounce 0.75s infinite ease-in-out;
-}
-
-@keyframes arrow-left-bounce {
-  0%,
-  100% {
-    transform: translate(0, -50%);
-  }
-
-  50% {
-    transform: translate(-3px, -50%);
-  }
-}
-
-@keyframes arrow-right-bounce {
-  0%,
-  100% {
-    transform: translate(0, -50%);
-  }
-
-  50% {
-    transform: translate(3px, -50%);
-  }
-}
-
-/* --- Form Grid System --- */
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--space-2);
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  min-width: 0;
-}
-
-.col-2 {
-  grid-column: span 2;
-}
-
-.col-4 {
-  grid-column: span 4;
-}
-
-.col-6 {
-  grid-column: span 6;
-}
-
-.col-12 {
-  grid-column: span 12;
-}
-
-.subsection {
-  grid-column: span 12;
-  margin-top: var(--space-2);
-  padding-top: var(--space-2);
-  border-top: 1px solid var(--color-divider);
-}
-
-.subsection-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--space-2);
-}
-
-.form-actions {
-  display: flex;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-@media (max-width: 800px) {
-  .col-2,
-  .col-4,
-  .col-6 {
-    grid-column: span 12;
-  }
-
-  .subsection-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .form-actions {
-    justify-content: flex-start;
-  }
-}
-
-/* --- Driver / Status Panels --- */
-
-.driver-week-wrap {
-  width: 100%;
-  overflow: auto;
-  background: var(--color-surface-3);
-}
-
-.driver-week-table {
-  width: 100%;
-  border-collapse: collapse;
-  /* Better for gridlines than separate */
-  table-layout: fixed;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-.driver-week-table th {
-  color: var(--color-text-1);
-  font-weight: 600;
-}
-
-.driver-week-table th,
-.driver-week-table td {
-  padding: 6px 8px;
-  font-size: var(--font-size-1);
-  text-align: center;
-  white-space: nowrap;
-  cursor: pointer;
-  border-right: 1px solid var(--color-surface-2);
-  border-bottom: 1px solid var(--color-surface-2);
-}
-
-.driver-week-table th:last-child,
-.driver-week-table td:last-child {
-  border-right: none;
-}
-
-.driver-week-table tr:last-child td {
-  border-bottom: none;
-}
-
-.driver-week-table th:first-child,
-.driver-week-table td:first-child {
-  width: 90px;
-  text-align: left;
-  padding-left: 6px;
-  color: var(--text);
-  font-weight: 400;
-}
-
-.driver-week-table th:first-child {
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-}
-
-.driver-cell-unavailable {
-  background: var(--red-status) !important;
-  color: #fff !important;
-}
-
-.driver-cell-on {
-  background: var(--color-primary);
-  color: #fff;
-  font-weight: 700;
-}
-
-.status-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-2);
-}
-
-select.status-pending {
-  background: color-mix(in srgb, var(--red) 60%, transparent);
-  border-color: var(--red);
-}
-
-select.status-ok {
-  background: color-mix(in srgb, var(--green) 60%, transparent);
-  border-color: var(--green);
-}
-
-select.status-assigned {
-  background: color-mix(in srgb, var(--yellow) 60%, transparent);
-  border-color: var(--yellow);
-}
-
-select.status-blue {
-  background: color-mix(in srgb, var(--blue) 60%, transparent);
-  border-color: var(--blue);
-}
-
-select.status-confirmed {
-  background: color-mix(in srgb, var(--blue) 60%, transparent);
-  border-color: var(--blue);
-}
-
-#busGrid.bus-assign {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-2);
-}
-
-/* --- Waiting List --- */
-.waiting-list-row td {
-  background-color: var(--color-calendar-bg) !important;
-  height: var(--waiting-list-height);
-  vertical-align: top;
-  border-top: 1px solid var(--color-border-1);
-  /* Separator */
-}
-
-.waiting-list-row .bus-id-cell {
-  background-color: var(--color-surface-1) !important;
-  color: var(--color-text-3);
-  font-size: 11px;
-}
-
-/* ========================================================================== */
-/*  UTILITIES                                                                 */
-/* ========================================================================== */
-
-.hidden,
-.is-hidden {
-  display: none !important;
-}
-
-@media (max-width: 899px) {
-  #ctxEditBtn {
-    display: none !important;
-  }
-}
-
-.block {
-  display: block;
-}
-
-.flex {
-  display: flex;
-}
-
-.grid {
-  display: grid;
-}
-
-.mt-0 {
-  margin-top: 0;
-}
-
-.mt-1 {
-  margin-top: 4px;
-}
-
-.mt-2 {
-  margin-top: 8px;
-}
-
-.mt-3 {
-  margin-top: 12px;
-}
-
-.mt-4 {
-  margin-top: 16px;
-}
-
-.p-0 {
-  padding: 0;
-}
-
-.p-2 {
-  padding: 8px;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.text-right {
-  text-align: right;
-}
-
-.text-muted {
-  color: var(--color-text-3);
-}
-
-.text-sm {
-  font-size: 13px;
-}
-
-.font-bold {
-  font-weight: 700;
-}
-
-.w-full {
-  width: 100%;
-}
-
-.h-full {
-  height: 100%;
-}
-
-.relative {
-  position: relative;
-}
-
-.absolute {
-  position: absolute;
-}
-
-.material-symbols-outlined,
-.material-symbols-rounded,
-.material-symbols-sharp {
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px;
-  line-height: 1;
-  display: inline-block;
-  white-space: nowrap;
-  direction: ltr;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* --- Notes Card --- */
-
-#notesWeekTitle.text-muted {
-  color: var(--color-text-3);
-}
-
-.notes-textarea {
-  width: 100%;
-  height: 1010px;
-  background: #fff6cc;
-  color: #2b2b2b;
-  border-radius: 0;
-  padding: 1rem;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.5;
-  resize: vertical;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-.notes-textarea:focus {
-  border-color: var(--primary);
-}
-
-/* ========================================================================== */
-/*  MEDIA QUERIES (MOBILE)                                                    */
-/* ========================================================================== */
-
-@media (max-width: 899px) {
-  :root {
-    --control-height: 44px;
-    --control-padding-x: 8px;
-    --control-font-size: 14px;
-  }
-
-  .app {
-    height: 100vh;
-    overflow: hidden;
-  }
-
-  .main {
-    padding: 4px;
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .container {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  /* Topbar Grid Layout */
-  /* Topbar Flex Layout (Single Row) */
-  .topbar-inner {
-    display: flex !important;
-    align-items: center;
-    justify-content: space-between;
-    gap: 4px;
-    padding: 0 8px;
-    height: 44px;
-    /* Force height match */
-    flex-wrap: nowrap;
-  }
-
-  .logo-wrap {
-    display: none !important;
-  }
-
-  .header-left {
-    display: flex !important;
-    /* Ensure it's a flex container */
-    align-items: center;
-    gap: 2px;
-    flex: 1;
-    /* Allow it to take available space */
-    min-width: 0;
-  }
-
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    margin-left: auto;
-    /* Push to right */
-    flex-shrink: 0;
-  }
-
-  .nav-controls {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    margin: 0 !important;
-    flex-shrink: 0;
-  }
-
-  .brand-title-wrapper {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    min-width: 0;
-    padding: 0 4px;
-  }
-
-  .brand-title {
-    font-size: 14px;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    white-space: nowrap;
-    height: 100%;
-  }
-
-  #schedulerLayout {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-    gap: 8px;
-  }
-
-  .scheduler-left {
-    flex: 0 0 auto;
-    max-height: 45vh;
-    overflow-y: auto;
-    width: 100%;
-  }
-
-  .scheduler-right {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    order: 2;
-    width: 100%;
-    min-height: 0;
-  }
-
-  .scheduler-right > .card {
-    flex: 0 1 auto;
-    height: auto;
-    width: 100%;
-    max-height: 100%;
-    overflow: hidden;
-  }
-
-  .scheduler-right .week-table-container {
-    flex: 0 1 auto;
-    display: block;
-    overflow: auto;
-  }
-
-  /* Hide non-essential buttons */
-  #printBtn,
-  #tripInputBtn,
-  #driversBtn,
-  #todayBtn,
-  #refreshBtn,
-  .week-start {
-    display: none !important;
-  }
-
-  /* Mobile Dropdown */
-  .dropdown-menu {
-    right: -10px;
-    min-width: 180px;
-  }
-
-  .weekpicker.date-input-overlay {
-    width: 400px !important;
-    left: 0 !important;
-    top: 0 !important;
-    height: 100% !important;
-  }
-}
-
-/* ========================================================================== */
-/*  NOTES CARD LAYOUT                                                        */
-/* ========================================================================== */
-
-/* Notes card specific layout */
-#notesCard .card-content {
-  display: flex;
-  flex-direction: column;
-}
-
-.notes-wrap {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-}
-
-.notes-textarea {
-  flex: 1;
-  min-height: 200px;
-  max-height: 100%;
-  resize: none;
-  overflow-y: auto;
-}
-
-#notesCard .form-actions {
-  justify-content: flex-end;
-  margin-top: var(--space-2);
-}
-
-/* ========================================================================== */
-/*  PRINT STYLES                                                              */
-/* ========================================================================== */
-
-@media print {
-  @page {
-    size: legal landscape;
-    margin: 0.25in;
-  }
-
-  /* Hide everything except the print root */
-  .app,
-  .topbar,
-  .theme-toggle,
-  .context-menu,
-  .modal,
-  .loading-overlay,
-  #toast,
-  #toastBackdrop {
-    display: none !important;
-  }
-
-  #printRoot {
-    display: block !important;
-    visibility: visible !important;
-    position: static !important;
-    width: 100% !important;
-    height: auto !important;
-    overflow: visible !important;
-    background: white !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-
-  body {
-    background: white !important;
-    color: black !important;
-    font-size: 10pt;
-    margin: 0;
     padding: 0;
-  }
+    width: 16px;
+    height: 16px;
+    margin-left: -20px;
+    margin-right: 0;
+}
 
-  .print-page {
-    page-break-after: always;
-    padding: 0.1in;
-    box-sizing: border-box;
-    width: 100%;
-    min-height: 100vh;
-  }
+/* ==========================================================================
+   5) TRIP FEATURE TOGGLES (checkbox switch)
+   ========================================================================== */
+.toggle-card {
+    height: auto;
+    overflow: visible;
+    transition: none;
+}
 
-  .print-page:last-child {
-    page-break-after: auto;
-  }
+.toggle-card.expanded {
+    height: auto;
+    overflow: visible;
+    align-items: center;
+    gap: var(--space-2);
+    background: var(--surface-3);
+    border-radius: var(--radius-md);
+    padding: var(--space-2);
+    box-shadow: none;
+    cursor: pointer;
+    transition: background 0.18s;
+}
 
-  .print-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 10px;
-    background: white;
-  }
+.toggle-switch:hover {
+    background: var(--surface-4);
+}
 
-  .print-title {
-    font-size: 16pt;
-    font-weight: bold;
-    margin-bottom: 15px;
-    text-align: left;
-    border-bottom: none;
-    padding-bottom: 5px;
-    color: #333;
-  }
-
-  .print-table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    table-layout: fixed !important;
-    --bus-col-w: 60px !important;
-  }
-
-  .print-table .col-bus {
-    width: var(--bus-col-w) !important;
-  }
-
-  .print-table .col-day {
-    width: calc((100% - 60px) / 7) !important;
-  }
-
-  .print-table th,
-  .print-table td {
-    border: 1px solid #ccc !important;
-    padding: 4px !important;
-    font-size: 9pt !important;
+.toggle-switch input[type="checkbox"] {
+    appearance: none;
+    width: 32px;
+    height: 18px;
+    background: var(--surface-2);
+    border-radius: 999px;
+    border: 1px solid var(--border);
     position: relative;
-    height: 100px;
-    /* Fixed height for consistency in print */
-    vertical-align: top;
-  }
-
-  .print-table th {
-    background-color: #f8f9fa !important;
-    font-weight: bold !important;
-    text-align: center !important;
-    height: auto !important;
-  }
-
-  .print-table .col-bus {
-    width: 50px !important;
-  }
-
-  /* Ensure trip bars are visible */
-  .trip-bar {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    box-shadow: none !important;
-    position: absolute !important;
-    border: 1px solid rgba(0, 0, 0, 0.1) !important;
-    font-size: 8pt !important;
-    padding: 2px 4px !important;
-    border-radius: 4px !important;
-    z-index: 10;
-  }
-
-  /* Force background colors for trip bars based on attributes or classes */
-  /* If the app uses inline styles for colors, print-color-adjust: exact should handle it */
+    outline: none;
+    transition:
+        background 0.18s,
+        border-color 0.18s;
+    margin-right: var(--space-2);
 }
 
-/* ========================================================================== */
-/*  TRIP DETAILS MODAL                                                       */
-/* ========================================================================== */
-.detail-row {
-  display: flex;
-  margin-bottom: 4px;
-  line-height: 1.4;
+.toggle-switch input[type="checkbox"]:checked {
+    background: var(--accent);
+    border-color: var(--accent);
 }
 
-.detail-row strong {
-  min-width: 140px;
-  color: var(--text-2);
-  font-weight: 600;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+.toggle-switch input[type="checkbox"]::after {
+    content: "";
+    display: block;
+    width: 16px;
+    height: 16px;
+    background: var(--color-surface-1);
+    border-radius: 50%;
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    transition: left 0.18s;
 }
 
-.detail-row span {
-  flex: 1;
-  color: var(--text-1);
+.toggle-switch input[type="checkbox"]:checked::after {
+    left: 15px;
+    background: var(--color-primary);
 }
 
-.detail-section-title {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 6px;
-  margin-top: 4px;
+.switch-icon {
+    font-size: 22px;
+    color: var(--accent);
+    min-width: 22px;
+    text-align: center;
 }
 
-.detail-divider {
-  height: 1px;
-  background: var(--color-border-1);
-  margin: 12px 0;
+.switch-label {
+    font-size: var(--font-size-2);
+    color: var(--color-text-1);
+    font-weight: 500;
 }
 
-.detail-text {
-  color: var(--text-1);
-  line-height: 1.5;
-  font-size: 13px;
-  background: var(--surface-1);
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid var(--color-border-1);
-}
-
-.detail-text.pre-wrap {
-  white-space: pre-wrap;
-  font-family: var(--font-mono);
-  font-size: 12px;
-}
-
-.detail-assignment {
-  margin-left: 8px;
-  margin-bottom: 4px;
-  color: var(--text-1);
-}
-
-/* --- Loading Overlay --- */
-.loading-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  background: rgba(0, 0, 0, 0.4);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: fadeIn 0.2s ease-out;
-}
-
-.loading-overlay[hidden] {
-  display: none;
-}
-
-.loading-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  width: 240px;
-}
-
-.loading-text {
-  font-weight: 500;
-  color: var(--text-primary);
-  font-size: 14px;
-}
-
-.loading-bar {
-  width: 100%;
-  height: 4px;
-  background: var(--surface-3);
-  border-radius: 99px;
-  overflow: hidden;
-}
-
-.loading-bar__inner {
-  height: 100%;
-  width: 0%;
-  background: var(--color-primary);
-  transition: width 0.3s ease;
-}
-
-/* ========================================================================== */
-/*  MODALS                                                                    */
-/* ========================================================================== */
-
+/* ==========================================================================
+   6) MODALS (single source of truth)
+   ========================================================================== */
 .modal {
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-modal);
-  display: block;
-  /* Reset flex/grid */
-  width: 100%;
-  height: 100%;
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal);
 }
 
 .modal[hidden] {
-  display: none;
+    display: none;
 }
 
 /* Backdrop */
 .modal::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
-  z-index: 1;
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
 }
 
-.modal-backdrop {
-  display: none;
-}
-
+/* Card */
 .modal-card {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  /* Robust centering */
-  z-index: 2;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(600px, calc(100vw - 24px));
+    max-height: 80vh;
 
-  display: flex;
-  flex-direction: column;
-  width: 90%;
-  /* Responsive width */
-  max-width: 600px;
-  max-height: 80vh;
+    display: flex;
+    flex-direction: column;
 
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-2);
-  overflow: hidden;
-  animation: modalPopIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-2);
+    overflow: hidden;
+
+    animation: modalPopIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes modalPopIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -48%) scale(0.96);
-  }
+    from {
+        opacity: 0;
+        transform: translate(-50%, -48%) scale(0.96);
+    }
 
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
 }
 
 .modal-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--border);
-  background: var(--surface-1);
-}
-
-.modal-head .section-title {
-  font-size: var(--font-size-3);
-  font-weight: var(--font-weight-semibold);
-  color: var(--text);
-  margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-2);
 }
 
 .modal-body {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  padding: var(--space-4);
-  overflow-y: auto;
-  min-height: 0;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: var(--space-4);
 }
 
-.modal-body-scroll {
-  overflow-y: auto;
+.modal-actions,
+.modal-foot {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    border-top: 1px solid var(--border);
+    background: var(--surface-1);
 }
 
-/* Textarea inside modal - allow resize */
+/* Textarea inside modal */
 .modal-body textarea {
-  flex: 1 1 auto;
-  min-height: 200px;
-  max-height: none;
-  resize: vertical;
-  width: 100%;
-  padding: var(--space-3);
-  font-family: var(--font-mono);
-  font-size: var(--font-size-1);
-  line-height: 1.5;
-  color: var(--text);
-  background: var(--surface-3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+    width: 100%;
+    min-height: 200px;
+    resize: vertical;
+
+    padding: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-1);
+    line-height: 1.5;
+
+    color: var(--text);
+    background: var(--surface-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
 }
 
 .modal-body textarea:focus {
-  border-color: var(--focus);
-  box-shadow: 0 0 0 3px var(--focus-ring);
-  outline: none;
+    outline: none;
+    border-color: var(--focus);
+    box-shadow: var(--focus-ring);
 }
 
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--space-2);
-  margin-top: var(--space-3);
-}
-
-.modal-foot {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-4);
-  border-top: 1px solid var(--border);
-  background: var(--surface-1);
-}
-
-/* ========================================================================== */
-/*  UTILITIES                                                                 */
-/* ========================================================================== */
-
+/* ==========================================================================
+   7) UTILITIES (single source of truth)
+   ========================================================================== */
+.hidden,
 .is-hidden {
-  display: none !important;
+    display: none !important;
 }
 
 .is-visible {
-  display: block !important;
+    display: block !important;
 }
 
 .is-flex-visible {
-  display: flex !important;
+    display: flex !important;
 }
 
 .is-invisible {
-  visibility: hidden !important;
+    visibility: hidden !important;
+}
+
+.block {
+    display: block;
+}
+
+.flex {
+    display: flex;
+}
+
+.grid {
+    display: grid;
+}
+
+.mt-0 {
+    margin-top: 0;
+}
+
+.mt-1 {
+    margin-top: 4px;
+}
+
+.mt-2 {
+    margin-top: 8px;
+}
+
+.mt-3 {
+    margin-top: 12px;
+}
+
+.mt-4 {
+    margin-top: 16px;
+}
+
+.p-0 {
+    padding: 0;
+}
+
+.p-2 {
+    padding: 8px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-muted {
+    color: var(--color-text-3);
+}
+
+.w-full {
+    width: 100%;
+}
+
+.h-full {
+    height: 100%;
+}
+
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+/* ==========================================================================
+   8) UI COMPONENTS — Cards / Toasts / Menus / Badges
+   ========================================================================== */
+/* Cards */
+.card {
+    overflow: auto;
+    border-radius: 0;
+    min-width: 0;
+    background: var(--surface-2);
+    border: none;
+    transition: box-shadow var(--dur-2) var(--ease-standard);
+    position: relative;
+    isolation: isolate;
+}
+
+.driver-assignment-card {
+    height: 700px;
+    box-shadow: none !important;
+}
+
+.scheduler-right>.card {
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.3),
+        0 2px 4px -1px rgba(0, 0, 0, 0.16) !important;
+}
+
+.card.compact {
+    padding: 0;
+    padding-top: 0;
+}
+
+.card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    gap: var(--space-2);
+    border-bottom: 1px solid var(--color-divider);
+    min-height: 40px;
+}
+
+.card-head-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.section-title {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: var(--font-weight-regular);
+    letter-spacing: 0.02em;
+    color: var(--color-text-1);
+}
+
+.card-content {
+    min-width: 0;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-2);
+    padding: 12px;
+    box-sizing: border-box;
+}
+
+.card-foot {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--space-2);
+    padding: 12px;
+    margin-top: 0;
+    border-top: 1px solid var(--color-divider);
+    flex-wrap: wrap;
+}
+
+/* Toasts */
+.toast[hidden] {
+    display: none;
+}
+
+.toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 99999;
+    padding: 6px 12px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-2);
+    background: var(--color-surface-2);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--elevation-2);
+    max-width: min(90vw, 420px);
+    font-size: 13px;
+    font-weight: 650;
+    color: var(--color-text-1);
+}
+
+.toast-progress {
+    display: none;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+}
+
+.toast[data-variant="loading"] .toast-progress {
+    display: block;
+}
+
+.toast-progress__inner {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: var(--color-primary);
+    transition: width 180ms var(--ease-standard);
+}
+
+/* Menus */
+.dropdown-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu,
+.context-menu {
+    position: absolute;
+    z-index: var(--z-dropdown, 9999);
+    min-width: 200px;
+    padding: var(--space-1, 6px);
+
+    background: color-mix(in srgb, var(--color-surface-1) 70%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-border-2) 80%, transparent);
+
+    border-radius: var(--radius-md, 10px);
+    box-shadow: var(--elevation-2, 0 12px 30px rgba(0, 0, 0, 0.35));
+
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    backdrop-filter: blur(12px) saturate(140%);
+
+    overflow: hidden;
+    animation: menuPopIn 120ms ease-out;
+}
+
+.dropdown-menu {
+    top: calc(100% + 4px);
+    right: 0;
+}
+
+.context-menu {
+    top: 0;
+    left: 0;
+}
+
+.dropdown-menu[hidden],
+.context-menu[hidden] {
+    display: none;
+}
+
+.dropdown-item-label,
+.context-header {
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+
+    color: var(--color-text-3, var(--text-2));
+    opacity: 0.85;
+
+    text-align: left;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-border-1) 70%, transparent);
+    margin-bottom: 4px;
+}
+
+.dropdown-divider {
+    border: 0;
+    height: 1px;
+    margin: 6px 6px;
+    background: color-mix(in srgb, var(--color-border-1) 70%, transparent);
+}
+
+.dropdown-item,
+.context-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--space-2, 8px);
+
+    width: 100%;
+    padding: 10px 12px;
+
+    border: none;
+    border-radius: var(--radius-sm, 8px);
+    background: transparent;
+
+    font-size: var(--font-size-2, 13px);
+    font-weight: 600;
+    color: var(--color-text-1, var(--text));
+
+    text-align: left;
+    cursor: pointer;
+
+    transition:
+        background 120ms ease,
+        transform 120ms ease;
+}
+
+.dropdown-icon,
+.context-item .material-symbols-outlined {
+    font-size: 18px;
+    opacity: 0.85;
+    flex: 0 0 auto;
+}
+
+.dropdown-item:hover,
+.context-item:hover {
+    background: color-mix(in srgb,
+            var(--overlay-hover, rgba(255, 255, 255, 0.08)) 100%,
+            transparent);
+}
+
+.dropdown-item:active,
+.context-item:active {
+    transform: translateY(1px);
+    background: color-mix(in srgb,
+            var(--overlay-active, rgba(255, 255, 255, 0.1)) 100%,
+            transparent);
+}
+
+@keyframes menuPopIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Badges */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 10px 0 10px;
+    font-size: 16px;
+    font-weight: 400;
+    border-radius: 4px;
+    height: 24px;
+    line-height: normal;
+    letter-spacing: 0.02em;
+    vertical-align: middle;
+}
+
+.badge-primary {
+    background: color-mix(in srgb, var(--accent) 33%, transparent);
+    color: var(--color-text-1);
+    border: 1px solid var(--accent);
+    vertical-align: middle;
+}
+
+.badge-error {
+    background: color-mix(in srgb, var(--color-danger) 33%, transparent);
+    color: var(--color-danger);
+    border: 1px solid var(--color-danger);
+}
+
+.dropdown-icon {
+    display: inline-flex;
+    width: 20px;
+    flex-shrink: 0;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.dropdown-icon.is-on {
+    color: var(--accent);
+}
+
+/* ==========================================================================
+   9) APP LAYOUT
+   ========================================================================== */
+.app {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
+    width: 100%;
+    background: var(--color-bg);
+    overflow: hidden;
+}
+
+.main {
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: visible;
+}
+
+.container {
+    max-width: var(--layout-container-max);
+    margin: 0 auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: visible;
+}
+
+/* Topbar */
+.topbar {
+    /* OLD: position: sticky; top: 0; */
+
+    /* NEW: Add margin to float it */
+    position: sticky;
+    top: var(--space-2);
+    /* 8px from top */
+    margin: 0 var(--space-4);
+    /* Match the .main padding */
+
+    /* Add rounded corners since it's now floating */
+    border-radius: var(--radius-md);
+
+    /* Ensure z-index keeps it above scrolling content */
+    z-index: 1000;
+}
+
+.topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: 0 var(--space-4);
+    height: auto;
+    overflow: visible;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex: 1;
+    min-width: 0;
+}
+
+.logo-wrap {
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
+}
+
+.logo-img {
+    height: 24px;
+    width: auto;
+    object-fit: contain;
+    line-height: 1;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.brand-title-wrapper {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    cursor: pointer;
+    padding: 0 var(--control-padding-x);
+    border-radius: var(--control-radius);
+    transition: background-color var(--dur-1) ease;
+    position: relative;
+}
+
+.brand-title-wrapper:hover {
+    background-color: var(--color-surface-3);
+    color: var(--color-text-1);
+}
+
+.brand-title-wrapper .date-input-overlay {
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.brand-title {
+    font-family: var(--font-sans);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-text-1);
+    margin: 0;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+/* Control groups */
+.nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.top-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex: 0 0 auto;
+}
+
+#todayBtnMobile {
+    display: none;
+}
+
+/* Scheduler layout */
+.scheduler-layout {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 0;
+    align-items: start;
+    overflow: visible;
+    padding: var(--space-2);
+}
+
+.scheduler-left,
+.scheduler-right {
+    min-width: 0;
+}
+
+.scheduler-left:not(.scheduler-collapsed) {
+    padding-left: var(--space-3);
+}
+
+.scheduler-left>.card:not(.is-hidden)+.card:not(.is-hidden) {
+    margin-top: var(--space-2);
+}
+
+.scheduler-right>.card {
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.scheduler-layout.is-collapsed {
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+    #schedulerLayout {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        flex: 1;
+        overflow: visible;
+        min-height: 0;
+        gap: 0;
+    }
+
+    .scheduler-right {
+        flex: 1;
+        order: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: visible;
+    }
+
+    .scheduler-right>.card {
+        max-height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .scheduler-right .week-table-container {
+        flex: 0 1 auto;
+        overflow-y: auto;
+    }
+
+    .scheduler-left {
+        order: 2;
+        width: 400px;
+        flex-shrink: 0;
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+
+        transition:
+            width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+            opacity 0.2s ease,
+            margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .scheduler-left.scheduler-collapsed {
+        width: 0 !important;
+        opacity: 0;
+        margin: 0 !important;
+        pointer-events: none;
+    }
+
+    .scheduler-left>.card {
+        min-width: 100%;
+        width: 100%;
+        height: 700px;
+        box-shadow: none !important;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(4px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .fade-in {
+        animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .waiting-list-row {
+        animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .scheduler-left>.card:not(.is-hidden) {
+        flex: auto;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .scheduler-left>.card:not(.is-hidden) .card-content {
+        flex: auto;
+        overflow-y: auto;
+        min-height: 0;
+    }
+
+    .scheduler-right {
+        position: relative;
+        z-index: 1;
+    }
+
+    .scheduler-right>.card {
+        box-shadow:
+            0 4px 6px -1px rgba(0, 0, 0, 0.3),
+            0 2px 4px -1px rgba(0, 0, 0, 0.16) !important;
+    }
+
+    .scheduler-left>.card {
+        box-shadow: none !important;
+    }
+
+    .scheduler-left.is-hidden {
+        display: none;
+    }
+
+    .scheduler-layout.is-collapsed .scheduler-right {
+        width: 100%;
+        flex: 1;
+    }
+}
+
+/* Mobile layout */
+@media (max-width: 899px) {
+    :root {
+        --control-height: 44px;
+        --control-padding-x: 8px;
+        --control-font-size: 14px;
+    }
+
+    .app {
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .main {
+        padding: 4px;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .scheduler-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .scheduler-left {
+        display: none;
+    }
+
+    .scheduler-left.is-active {
+        display: block;
+    }
+
+    .scheduler-right>.card {
+        overflow: visible;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .week-table-container {
+        overflow-x: auto;
+        overflow-y: auto;
+        flex: 1;
+    }
+
+    #notesBtn,
+    #waitingListBtn,
+    #themeToggle,
+    #todayBtn,
+    #tripInputBtn,
+    #driversBtn {
+        display: none;
+    }
+
+    .topbar-inner {
+        gap: var(--space-1);
+        padding: 0 var(--space-2);
+        flex-wrap: nowrap;
+        height: 44px;
+    }
+
+    #todayBtnMobile {
+        display: inline-flex;
+    }
+
+    .header-left,
+    .header-right {
+        gap: var(--space-1);
+        min-width: 0;
+        flex-shrink: 1;
+    }
+
+    .nav-controls {
+        gap: 2px;
+        position: relative;
+        z-index: 10;
+    }
+
+    .btn-icon {
+        min-width: 36px;
+        width: 36px;
+        height: 36px;
+        position: relative;
+        z-index: 10;
+    }
+
+    .brand-title-wrapper {
+        padding: 0 var(--space-1);
+        position: relative;
+        z-index: 5;
+        min-width: 0;
+        flex: 1;
+        justify-content: center;
+        height: 36px;
+    }
+
+    .brand-title-wrapper .date-input-overlay {
+        width: 100% !important;
+        left: 0 !important;
+        top: 0 !important;
+        height: 100% !important;
+    }
+
+    @media (orientation: portrait) {
+        .logo-wrap {
+            display: none !important;
+        }
+    }
+
+    @media (orientation: landscape) {
+        .logo-wrap {
+            display: inline-flex;
+        }
+    }
+
+    /* Additional mobile tweaks you had */
+    .logo-wrap {
+        display: none !important;
+    }
+
+    .header-left {
+        display: flex !important;
+        align-items: center;
+        gap: 2px;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-left: auto;
+        flex-shrink: 0;
+    }
+
+    .nav-controls {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        margin: 0 !important;
+        flex-shrink: 0;
+    }
+
+    .brand-title-wrapper {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        min-width: 0;
+        padding: 0 4px;
+    }
+
+    .brand-title {
+        font-size: 14px;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        height: 100%;
+    }
+
+    #schedulerLayout {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+        gap: 8px;
+    }
+
+    .scheduler-left {
+        flex: 0 0 auto;
+        max-height: 45vh;
+        overflow-y: auto;
+        width: 100%;
+    }
+
+    .scheduler-right {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        order: 2;
+        width: 100%;
+        min-height: 0;
+    }
+
+    .scheduler-right>.card {
+        flex: 0 1 auto;
+        height: auto;
+        width: 100%;
+        max-height: 100%;
+        overflow: hidden;
+    }
+
+    .scheduler-right .week-table-container {
+        flex: 0 1 auto;
+        display: block;
+        overflow: auto;
+    }
+
+    #printBtn,
+    #tripInputBtn,
+    #driversBtn,
+    #todayBtn,
+    #refreshBtn,
+    .week-start {
+        display: none !important;
+    }
+
+    .dropdown-menu {
+        right: -10px;
+        min-width: 180px;
+    }
+
+    .weekpicker.date-input-overlay {
+        width: 400px !important;
+        left: 0 !important;
+        top: 0 !important;
+        height: 100% !important;
+    }
+}
+
+/* Portrait/landscape logo helpers */
+@media (max-width: 899px) and (orientation: portrait) {
+    .logo-wrap {
+        display: none;
+    }
+}
+
+@media (max-width: 899px) and (orientation: landscape) {
+    .logo-wrap {
+        display: inline-flex;
+    }
+}
+
+/* ==========================================================================
+   10) WEEK TABLE
+   ========================================================================== */
+.week-table-container {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    overflow: auto;
+
+    background:
+        linear-gradient(var(--surface-1) 30%, rgba(255, 255, 255, 0)),
+        radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+    background-repeat: no-repeat;
+    background-color: var(--surface-1);
+    background-size:
+        100% 40px,
+        100% 14px;
+    background-attachment: local, scroll;
+
+    border-left: none;
+}
+
+.week-table {
+    width: max(100%, 1150px);
+    height: auto;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.week-table th,
+.week-table td {
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+    vertical-align: middle;
+}
+
+.week-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.week-table th:last-child,
+.week-table td:last-child {
+    border-right: none;
+}
+
+.week-table th {
+    background: var(--color-surface-1);
+    padding: 0;
+    height: var(--day-row-h);
+    position: sticky;
+    top: 0;
+    z-index: 2000;
+}
+
+/* Day columns */
+.week-table th:not(:first-child),
+.week-table td:not(:first-child) {
+    min-width: 160px;
+}
+
+/* Sticky top-left corner */
+.week-table th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 3000;
+    background: var(--color-surface-1);
+}
+
+/* Header cells */
+.day-label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    gap: 8px;
+    text-transform: uppercase;
+}
+
+.day-name {
+    font-size: 16px;
+    color: color-mix(in srgb, var(--text) 80%, transparent);
+    font-weight: 400;
+    line-height: 1;
+}
+
+.day-date {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-text-1);
+    letter-spacing: 0.02em;
+    line-height: 1;
+}
+
+th.day-today {
+    background: color-mix(in srgb, var(--blue) 100%, transparent);
+    border: var(--border);
+    overflow: hidden;
+}
+
+th.day-today .day-date {
+    color: var(--text);
+    font-weight: 500;
+}
+
+th.day-today .day-name {
+    color: color-mix(in srgb, var(--text) 80%, transparent);
+    font-weight: 400;
+}
+
+.week-table tbody tr {
+    height: var(--schedule-row-height) !important;
+    max-height: var(--schedule-row-height) !important;
+    min-height: var(--schedule-row-height) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.row-bars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.week-table td {
+    vertical-align: top;
+    padding: 0;
+    height: var(--schedule-row-height) !important;
+    max-height: var(--schedule-row-height) !important;
+    position: relative;
+}
+
+.week-table td.week-start-cell {
+    position: relative;
+}
+
+/* Notes row */
+.week-table tbody tr.notes-row {
+    height: 20px !important;
+    max-height: 20px !important;
+    min-height: 20px !important;
+    background-color: var(--color-bg);
+}
+
+.week-table tbody tr.notes-row td {
+    height: 20px !important;
+    border-top: 1px dashed var(--color-border-subtle);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.notes-row .bus-id-cell {
+    background-color: var(--color-surface-1);
+}
+
+/* Sticky first column */
+.week-table td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 500;
+    background: var(--color-surface-1);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--color-text-1);
+
+    min-width: var(--bus-col-w);
+    max-width: var(--bus-col-w);
+
+    border-right: none;
+}
+
+.week-table th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 3000 !important;
+    background: var(--color-surface-1);
+    border-right: none;
+}
+
+.week-table td:first-child::after,
+.week-table th:first-child::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -1px;
+    width: 1px;
+    height: 100%;
+    background: var(--color-border-1);
+    pointer-events: none;
+}
+
+.week-table td.day-cell {
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.week-table td.day-cell:not(:has(.trip-bar:hover)):hover {
+    background-color: var(--overlay-hover);
+    transition: background-color 0.1s ease;
+}
+
+.week-table td.conflict {
+    background: var(--color-conflict-bg);
+}
+
+.week-table td.bus-conflict {
+    box-shadow: inset 3px 0 0 var(--color-conflict-accent);
+}
+
+/* Bus column width */
+.week-table col.col-bus {
+    width: var(--bus-col-w);
+}
+
+/* Bus icons */
+.bus-id-wrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.bus-id-num {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-text-1);
+    letter-spacing: 0.02em;
+}
+
+.week-table tbody tr.has-bus-color>td:first-child {
+    transition: background-color 0.15s ease;
+}
+
+.week-table tbody tr.has-bus-color>td:first-child:hover {
+    background-color: var(--bus-accent-color, var(--color-surface-1));
+}
+
+.bus-id-wrap .bus-lift,
+.bus-id-wrap .bus-sleeper {
+    position: static;
+    transform: none;
+    font-size: 16px !important;
+}
+
+.bus-id-wrap .bus-lift {
+    color: color-mix(in srgb, var(--blue) 33%, transparent);
+}
+
+.bus-id-wrap .bus-sleeper {
+    color: color-mix(in srgb, var(--gray) 33%, transparent);
+}
+
+/* ======================================================================
+   11) TRIP BARS — Option A (ALWAYS 7 fixed rows) — FULL REPLACEMENT
+   Tuned for 95px height: more even vertical balance + clearer icons
+   ====================================================================== */
+
+.trip-bar {
+    position: absolute;
+    z-index: 200;
+    display: grid;
+
+    /* 7 fixed slots for 95px.
+       Give time row + drivers a touch more breathing room. */
+    grid-template-rows: 1.05fr 1fr 1fr 1.25fr 1fr 1fr 1.1fr;
+
+    row-gap: var(--tripbar-row-gap);
+    padding: var(--tripbar-padding-vertical) 8px;
+    /* a bit wider helps “center” visually */
+
+    font-variant-numeric: tabular-nums;
+    height: var(--tripbar-height);
+    box-sizing: border-box;
+
+    border: 2px solid var(--blue);
+    border-radius: 8px;
+    overflow: hidden;
+
+    background: color-mix(in srgb, var(--blue) 33%, transparent);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+
+    cursor: pointer;
+    pointer-events: auto;
+    container-type: inline-size;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+
+    transition:
+        transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+        box-shadow 0.18s ease,
+        filter 0.18s ease;
+}
+
+/* Alternative colors */
+.trip-bar.unconfirmed {
+    background: color-mix(in srgb, var(--red) 33%, transparent);
+    border-color: var(--red);
+}
+
+.trip-bar.color-red {
+    background: color-mix(in srgb, var(--red) 33%, transparent);
+    border-color: var(--red);
+}
+
+.trip-bar.color-blue {
+    background: color-mix(in srgb, var(--blue) 33%, transparent);
+    border-color: var(--blue);
+}
+
+.trip-bar.color-green {
+    background: color-mix(in srgb, var(--green) 33%, transparent);
+    border-color: var(--green);
+}
+
+.trip-bar.color-yellow {
+    background: color-mix(in srgb, var(--yellow) 33%, transparent);
+    border-color: var(--yellow);
+}
+
+.trip-bar.color-gray {
+    background: color-mix(in srgb, var(--gray) 33%, transparent);
+    border-color: var(--gray);
+}
+
+.trip-bar.color-violet,
+.trip-bar.color-purple {
+    background: color-mix(in srgb, var(--purple) 33%, transparent);
+    border-color: var(--purple);
+}
+
+.trip-bar.color-pink {
+    background: color-mix(in srgb, var(--pink) 33%, transparent);
+    border-color: var(--pink);
+}
+
+.trip-bar.color-orange {
+    background: color-mix(in srgb, var(--orange) 33%, transparent);
+    border-color: var(--orange);
+}
+
+.trip-bar.color-teal {
+    background: color-mix(in srgb, var(--teal) 33%, transparent);
+    border-color: var(--teal);
+}
+
+/* Optional palette extras (only if defined) */
+.trip-bar.color-cyan {
+    background: color-mix(in srgb, var(--cyan) 33%, transparent);
+    border-color: var(--cyan);
+}
+
+.trip-bar.color-indigo {
+    background: color-mix(in srgb, var(--indigo) 33%, transparent);
+    border-color: var(--indigo);
+}
+
+.trip-bar.color-brown {
+    background: color-mix(in srgb, var(--brown) 33%, transparent);
+    border-color: var(--brown);
+}
+
+.trip-bar.color-mint {
+    background: color-mix(in srgb, var(--mint) 33%, transparent);
+    border-color: var(--mint);
+}
+
+.trip-bar.color-black {
+    background: color-mix(in srgb, var(--black) 33%, transparent);
+    border-color: var(--black);
+}
+
+.trip-bar.color-white {
+    background: color-mix(in srgb, var(--white) 33%, transparent);
+    border-color: var(--white);
+}
+
+/* Hover */
+.trip-bar:hover {
+    transform: translateY(-3px);
+    filter: brightness(1.05) saturate(1.06);
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+        inset 0 10px 18px rgba(255, 255, 255, 0.06),
+        0 14px 38px rgba(0, 0, 0, 0.55),
+        0 3px 10px rgba(0, 0, 0, 0.35);
+    z-index: 500;
+}
+
+.trip-bar:active {
+    transform: translateY(-1px);
+}
+
+/* ----------------------------------------------------------------------
+   Contents — REQUIRED for Option A:
+   Use 7 slot divs: .bar-row.r1 ... .bar-row.r7
+   Empty rows stay invisible but KEEP SPACE.
+   ---------------------------------------------------------------------- */
+
+.trip-bar .bar-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 0;
+    padding-inline: 2px;
+
+    /* This is the key: no translateY hack; let flex + padding do centering */
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Preserve row height even when empty */
+.trip-bar .bar-row:empty {
+    visibility: hidden;
+}
+
+/* Slot placement (7 rows) */
+.trip-bar .r1 {
+    grid-row: 1;
+}
+
+.trip-bar .r2 {
+    grid-row: 2;
+}
+
+.trip-bar .r3 {
+    grid-row: 3;
+}
+
+.trip-bar .r4 {
+    grid-row: 4;
+}
+
+.trip-bar .r5 {
+    grid-row: 5;
+}
+
+.trip-bar .r6 {
+    grid-row: 6;
+}
+
+.trip-bar .r7 {
+    grid-row: 7;
+}
+
+/* Typography */
+.trip-bar .bar-title {
+    color: var(--text);
+    font-size: var(--tripbar-font-size-major);
+    font-weight: var(--font-weight-regular);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    /* makes title feel centered & “even” */
+}
+
+.trip-bar .bar-sub {
+    font-size: var(--tripbar-font-size-minor);
+    color: color-mix(in srgb, var(--white) 70%, transparent);
+    font-weight: var(--font-weight-regular);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+/* Time row: make it read cleaner */
+.trip-bar .bar-time-row {
+    width: 100%;
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between !important;
+
+    font-size: var(--tripbar-font-size-major);
+    color: var(--text);
+
+    padding-inline: 2px;
+}
+
+.trip-bar .bar-time {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.trip-bar .bar-time.right {
+    justify-content: flex-end !important;
+}
+
+/* Status row */
+.trip-bar .bar-status-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    /* tiny bump from 6px */
+}
+
+/* Mini badges (slightly larger reads better at 95px) */
+.trip-bar .mini-badge {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--black);
+}
+
+/* Glyph inside badge */
+.trip-bar .badge-icon {
+    font-size: 12px !important;
+    /* up from 12 */
+    line-height: 1;
+    font-weight: normal;
+    font-variation-settings: "FILL" 0;
+    display: block;
+}
+
+/* Badge colors */
+.trip-bar .mini-badge.is-pending {
+    background: var(--red-status);
+}
+
+.trip-bar .mini-badge.is-ok {
+    background: var(--green-status);
+}
+
+.trip-bar .mini-badge.is-blue {
+    background: var(--blue-status);
+}
+
+.trip-bar .mini-badge.is-yellow {
+    background: var(--yellow-status);
+}
+
+/* Notes / pre drivers */
+.trip-bar .bar-pre-drivers {
+    font-size: var(--tripbar-font-size-minor);
+    color: color-mix(in srgb, var(--text-driver) 70%, transparent);
+    font-weight: var(--font-weight-regular);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+/* Drivers */
+.trip-bar .bar-drivers {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    /* a bit more separation */
+}
+
+.trip-bar .driver {
+    font-size: var(--tripbar-font-size-major);
+    font-weight: var(--font-weight-regular);
+    text-transform: uppercase;
+    color: var(--text-driver);
+    letter-spacing: 0.02em;
+}
+
+/* Multi-day arrows */
+.trip-bar.cont-left {
+    border-left: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.trip-bar.cont-left::before {
+    font-family: "Material Symbols Outlined";
+    content: "keyboard_double_arrow_left";
+    left: 4px;
+    top: 50%;
+    position: absolute;
+    transform: translateY(-50%);
+    font-size: 16px;
+    animation: arrow-left-bounce 0.75s infinite ease-in-out;
+}
+
+.trip-bar.cont-right {
+    border-right: none;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.trip-bar.cont-right::after {
+    font-family: "Material Symbols Outlined";
+    content: "keyboard_double_arrow_right";
+    right: 4px;
+    top: 50%;
+    position: absolute;
+    transform: translateY(-50%);
+    font-size: 16px;
+    animation: arrow-right-bounce 0.75s infinite ease-in-out;
+}
+
+@keyframes arrow-left-bounce {
+
+    0%,
+    100% {
+        transform: translate(0, -50%);
+    }
+
+    50% {
+        transform: translate(-3px, -50%);
+    }
+}
+
+@keyframes arrow-right-bounce {
+
+    0%,
+    100% {
+        transform: translate(0, -50%);
+    }
+
+    50% {
+        transform: translate(3px, -50%);
+    }
+}
+
+/* ==========================================================================
+   12) FORMS — grid + helpers
+   ========================================================================== */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--space-2);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+}
+
+.col-2 {
+    grid-column: span 2;
+}
+
+.col-4 {
+    grid-column: span 4;
+}
+
+.col-6 {
+    grid-column: span 6;
+}
+
+.col-12 {
+    grid-column: span 12;
+}
+
+.subsection {
+    grid-column: span 12;
+    margin-top: var(--space-2);
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--color-divider);
+}
+
+.subsection-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-2);
+}
+
+.form-actions {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+@media (max-width: 800px) {
+
+    .col-2,
+    .col-4,
+    .col-6 {
+        grid-column: span 12;
+    }
+
+    .subsection-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        justify-content: flex-start;
+    }
+}
+
+/* ==========================================================================
+   13) DRIVER / STATUS PANELS
+   ========================================================================== */
+.driver-week-wrap {
+    width: 100%;
+    overflow: auto;
+    background: var(--color-surface-3);
+}
+
+.driver-week-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.driver-week-table th {
+    color: var(--color-text-1);
+    font-weight: 600;
+}
+
+.driver-week-table th,
+.driver-week-table td {
+    padding: 6px 8px;
+    font-size: var(--font-size-1);
+    text-align: center;
+    white-space: nowrap;
+    cursor: pointer;
+    border-right: 1px solid var(--color-surface-2);
+    border-bottom: 1px solid var(--color-surface-2);
+}
+
+.driver-week-table th:last-child,
+.driver-week-table td:last-child {
+    border-right: none;
+}
+
+.driver-week-table tr:last-child td {
+    border-bottom: none;
+}
+
+.driver-week-table th:first-child,
+.driver-week-table td:first-child {
+    width: 90px;
+    text-align: left;
+    padding-left: 6px;
+    color: var(--text);
+    font-weight: 400;
+}
+
+.driver-week-table th:first-child {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.driver-cell-unavailable {
+    background: var(--red-status) !important;
+    color: #fff !important;
+}
+
+.driver-cell-on {
+    background: var(--color-primary);
+    color: #fff;
+    font-weight: 700;
+}
+
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+}
+
+select.status-pending {
+    background: color-mix(in srgb, var(--red) 60%, transparent);
+    border-color: var(--red);
+}
+
+select.status-ok {
+    background: color-mix(in srgb, var(--green) 60%, transparent);
+    border-color: var(--green);
+}
+
+select.status-assigned {
+    background: color-mix(in srgb, var(--yellow) 60%, transparent);
+    border-color: var(--yellow);
+}
+
+select.status-blue,
+select.status-confirmed {
+    background: color-mix(in srgb, var(--blue) 60%, transparent);
+    border-color: var(--blue);
+}
+
+#busGrid.bus-assign {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-2);
+}
+
+/* Waiting list */
+.waiting-list-row td {
+    background-color: var(--color-calendar-bg) !important;
+    height: var(--waiting-list-height);
+    vertical-align: top;
+    border-top: 1px solid var(--color-border-1);
+}
+
+.waiting-list-row .bus-id-cell {
+    background-color: var(--color-calendar-bg) !important;
+    color: var(--color-text-3);
+    font-size: 11px;
+}
+
+/* ==========================================================================
+   14) NOTES
+   ========================================================================== */
+#notesWeekTitle.text-muted {
+    color: var(--color-text-3);
+}
+
+.notes-textarea {
+    width: 100%;
+    height: 100%;
+    background: #fff6cc;
+    color: #2b2b2b;
+    border-radius: 0;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.notes-textarea:focus {
+    border-color: var(--primary);
+}
+
+/* Notes card layout */
+#notesCard .card-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.notes-wrap {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+.notes-textarea {
+    flex: 1;
+    min-height: 200px;
+    max-height: 100%;
+    resize: none;
+    overflow-y: auto;
+}
+
+#notesCard .form-actions {
+    justify-content: flex-end;
+    margin-top: var(--space-2);
+}
+
+/* ==========================================================================
+   15) TRIP DETAILS MODAL CONTENT
+   ========================================================================== */
+.detail-row {
+    display: flex;
+    margin-bottom: 4px;
+    line-height: 1.4;
+}
+
+.detail-row strong {
+    min-width: 140px;
+    color: var(--text-2);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.detail-row span {
+    flex: 1;
+    color: var(--text-1);
+}
+
+.detail-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+    margin-top: 4px;
+}
+
+.detail-divider {
+    height: 1px;
+    background: var(--color-border-1);
+    margin: 12px 0;
+}
+
+.detail-text {
+    color: var(--text-1);
+    line-height: 1.5;
+    font-size: 13px;
+    background: var(--surface-2);
+    padding: 8px;
+    border-radius: 6px;
+    letter-spacing: 0.02em;
+    border: none;
+}
+
+.detail-text.pre-wrap {
+    white-space: pre-wrap;
+    font-size: 12px;
+    background: var(--surface-1);
+}
+
+.detail-assignment {
+    margin-left: 8px;
+    margin-bottom: 4px;
+    color: var(--text-1);
+}
+
+/* ==========================================================================
+   16) LOADING OVERLAY
+   ========================================================================== */
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(0, 0, 0, 0.4);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.loading-overlay[hidden] {
+    display: none;
+}
+
+.loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 240px;
+}
+
+.loading-text {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.loading-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--surface-3);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.loading-bar__inner {
+    height: 100%;
+    width: 0%;
+    background: var(--color-primary);
+    transition: width 0.3s ease;
+}
+
+/* ==========================================================================
+   17) PRINT
+   ========================================================================== */
+@media print {
+    @page {
+        size: legal landscape;
+        margin: 0.25in;
+    }
+
+    .app,
+    .topbar,
+    .theme-toggle,
+    .context-menu,
+    .modal,
+    .loading-overlay,
+    #toast,
+    #toastBackdrop {
+        display: none !important;
+    }
+
+    #printRoot {
+        display: block !important;
+        visibility: visible !important;
+        position: static !important;
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+        background: white !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    body {
+        background: white !important;
+        color: black !important;
+        font-size: 10pt;
+        margin: 0;
+        padding: 0;
+    }
+
+    .print-page {
+        page-break-after: always;
+        padding: 0.1in;
+        box-sizing: border-box;
+        width: 100%;
+        min-height: 100vh;
+    }
+
+    .print-page:last-child {
+        page-break-after: auto;
+    }
+
+    .print-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 10px;
+        background: white;
+    }
+
+    .print-title {
+        font-size: 16pt;
+        font-weight: bold;
+        margin-bottom: 15px;
+        text-align: left;
+        border-bottom: none;
+        padding-bottom: 5px;
+        color: #333;
+    }
+
+    .print-table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        table-layout: fixed !important;
+        --bus-col-w: 60px !important;
+    }
+
+    .print-table .col-bus {
+        width: var(--bus-col-w) !important;
+    }
+
+    .print-table .col-day {
+        width: calc((100% - 60px) / 7) !important;
+    }
+
+    .print-table th,
+    .print-table td {
+        border: 1px solid #ccc !important;
+        padding: 4px !important;
+        font-size: 9pt !important;
+        position: relative;
+        height: 100px;
+        vertical-align: top;
+    }
+
+    .print-table th {
+        background-color: #f8f9fa !important;
+        font-weight: bold !important;
+        text-align: center !important;
+        height: auto !important;
+    }
+
+    .print-table .col-bus {
+        width: 50px !important;
+    }
+
+    .trip-bar {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        box-shadow: none !important;
+        position: absolute !important;
+        border: 1px solid rgba(0, 0, 0, 0.1) !important;
+        font-size: 8pt !important;
+        padding: 2px 4px !important;
+        border-radius: 4px !important;
+        z-index: 10;
+    }
 }

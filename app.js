@@ -80,12 +80,12 @@ const CACHE = {
         expiry: Date.now() + ttlMs,
       };
       localStorage.setItem(key, JSON.stringify(payload));
-    } catch { }
+    } catch {}
   },
   remove(key) {
     try {
       localStorage.removeItem(key);
-    } catch { }
+    } catch {}
   },
   clearAll() {
     try {
@@ -97,7 +97,7 @@ const CACHE = {
           localStorage.removeItem(k);
         }
       });
-    } catch { }
+    } catch {}
   },
 };
 
@@ -272,7 +272,7 @@ function clamp(n, min, max) {
 function safeUUID() {
   try {
     return crypto.randomUUID();
-  } catch { }
+  } catch {}
   return `tk_${Date.now()}_${Math.floor(Math.random() * 1e9)}`;
 }
 
@@ -478,9 +478,9 @@ function isMobileOnly() {
 
 function stackOffset(rowH, barH, step, laneCount) {
   const stackH = barH + (laneCount - 1) * step;
-  // Subtract 1px for the bottom border to center in the *visible* whitespace
-  return Math.max(0, (rowH - 1 - stackH) / 2);
+  return Math.max(0, Math.round((rowH - 1 - stackH) / 2));
 }
+
 
 function waitForAgendaPaint(timeoutMs = 2000) {
   return new Promise((resolve) => {
@@ -1109,7 +1109,7 @@ function applyWeekStart(isMonday) {
 
   try {
     localStorage.setItem("weekStartMonday", state.weekStartsOnMonday ? "1" : "0");
-  } catch { }
+  } catch {}
 
   syncWeekStartUI();
 
@@ -1326,7 +1326,7 @@ function prefetchAdjacentWeeks() {
 
     // ✅ FIX: Calculate Monday for the adjacent week
     const { notesKey } = getWeekRange(targetDate); // We will update getWeekRange to support a date arg
-    fetchWeekDataCached(start, end, notesKey).catch(() => { });
+    fetchWeekDataCached(start, end, notesKey).catch(() => {});
   }
 }
 
@@ -1612,14 +1612,24 @@ function syncRowBarsWidth(col) {
 }
 
 function positionBarWithinOverlay(bar, bars, col, startIdx, endIdx) {
-  const inset = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--tripbar-inset")) || 6;
+  const root = getComputedStyle(document.documentElement);
 
-  const leftPx = (col.starts[startIdx] ?? 0) + inset;
+  const insetAll =
+    parseFloat(root.getPropertyValue("--tripbar-inset")) || 6;
+
+  const insetL =
+    parseFloat(root.getPropertyValue("--tripbar-inset-left")) || insetAll;
+
+  const insetR =
+    parseFloat(root.getPropertyValue("--tripbar-inset-right")) || insetAll;
+
+  const leftPx = (col.starts[startIdx] ?? 0) + insetL;
 
   let spanW = 0;
   for (let i = startIdx; i <= endIdx; i++) spanW += col.widths[i] ?? 0;
 
-  let widthPx = Math.max(0, spanW - inset * 2);
+  // subtract left + right (not *2)
+  let widthPx = Math.max(0, spanW - insetL - insetR);
 
   // Guard rails to prevent overflow beyond the row overlay
   const max = Math.max(0, col.total ?? col.widths.reduce((a, b) => a + (b || 0), 0));
@@ -1636,6 +1646,7 @@ function positionBarWithinOverlay(bar, bars, col, startIdx, endIdx) {
   bar.style.left = `${leftPx}px`;
   bar.style.width = `${widthPx}px`;
 }
+
 
 // ======================================================
 // 19) CONFLICT UI
@@ -1919,82 +1930,114 @@ function _renderAgendaInner() {
       const key = barKey(t.tripKey, busId, d1, d2);
       let bar = state.barElByKey.get(key);
 
-      if (!bar) {
-        bar = document.createElement("div");
-        bar.className = "trip-bar";
-        bar.setAttribute("draggable", "false");
+  if (!bar) {
+  bar = document.createElement("div");
+  bar.className = "trip-bar";
+  bar.setAttribute("draggable", "false");
 
-        const line1 = document.createElement("div");
-        line1.className = "bar-title";
+  // Helper: fixed slot row
+  function makeRow(slotClass) {
+    const el = document.createElement("div");
+    el.className = `bar-row ${slotClass}`;
+    return el;
+  }
 
-        const line2 = document.createElement("div");
-        line2.className = "bar-sub";
+  // 7 fixed rows
+  const r1 = makeRow("r1");
+  const r2 = makeRow("r2");
+  const r3 = makeRow("r3");
+  const r4 = makeRow("r4");
+  const r5 = makeRow("r5");
+  const r6 = makeRow("r6");
+  const r7 = makeRow("r7");
 
-        const line3 = document.createElement("div");
-        line3.className = "bar-sub bar-contact";
+  // Row 1: Title
+  const line1 = document.createElement("div");
+  line1.className = "bar-title";
+  r1.appendChild(line1);
 
-        const timeRow = document.createElement("div");
-        timeRow.className = "bar-time-row";
-        const left = document.createElement("span");
-        left.className = "bar-time left";
-        const right = document.createElement("span");
-        right.className = "bar-time right";
-        timeRow.append(left, right);
+  // Row 2: Customer (sub)
+  const line2 = document.createElement("div");
+  line2.className = "bar-sub";
+  r2.appendChild(line2);
 
-        const statusRow = document.createElement("div");
-        statusRow.className = "bar-status-row";
+  // Row 3: Contact name (sub)
+  const line3 = document.createElement("div");
+  line3.className = "bar-sub bar-contact";
+  r3.appendChild(line3);
 
-        function makeMini(content, isIcon = false) {
-          const b = document.createElement("span");
-          b.className = "mini-badge";
-          const g = document.createElement("span");
-          if (isIcon) {
-            g.className = "badge-glyph material-symbols-outlined badge-icon";
-            // g.style.fontSize = "12px"; // Moved to CSS (.trip-bar .badge-icon)
-          } else {
-            g.className = "badge-glyph";
-          }
-          g.textContent = content;
-          b.appendChild(g);
-          return b;
-        }
+  // Row 4: Time row (left/right)
+  const timeRow = document.createElement("div");
+  timeRow.className = "bar-time-row";
+  const left = document.createElement("span");
+  left.className = "bar-time left";
+  const right = document.createElement("span");
+  right.className = "bar-time right";
+  timeRow.append(left, right);
+  r4.appendChild(timeRow);
 
-        const bI = makeMini("description", true); // Icon for Itinerary Status
-        const bC = makeMini("phone_enabled", true);
-        const b$ = makeMini("request_quote", true);
-        const bD = makeMini("person", true);
-        const bInv = makeMini("receipt_long", true); // 5th glyph for Invoice Status
+  // Row 5: Status icons
+  const statusRow = document.createElement("div");
+  statusRow.className = "bar-status-row";
 
-        // Reordered: Payment ($) first
-        statusRow.append(b$, bI, bC, bD, bInv);
+  function makeMini(content, isIcon = false) {
+    const b = document.createElement("span");
+    b.className = "mini-badge";
+    const g = document.createElement("span");
+    if (isIcon) {
+      g.className = "badge-glyph material-symbols-outlined badge-icon";
+    } else {
+      g.className = "badge-glyph";
+    }
+    g.textContent = content;
+    b.appendChild(g);
+    return b;
+  }
 
-        const preDriversRow = document.createElement("div");
-        preDriversRow.className = "bar-sub bar-pre-drivers";
+  const bI = makeMini("description", true);      // Itinerary
+  const bC = makeMini("phone_enabled", true);    // Contact
+  const b$ = makeMini("request_quote", true);    // Payment
+  const bD = makeMini("person", true);           // Driver
+  const bInv = makeMini("receipt_long", true);   // Invoice
 
-        const driversRow = document.createElement("div");
-        driversRow.className = "bar-sub bar-drivers";
+  // Order you already wanted: Payment first
+  statusRow.append(b$, bI, bC, bD, bInv);
+  r5.appendChild(statusRow);
 
-        bar.append(line1, line2, line3, timeRow, statusRow, preDriversRow, driversRow);
+  // Row 6: Notes / pre-drivers
+  const preDriversRow = document.createElement("div");
+  preDriversRow.className = "bar-pre-drivers";
+  r6.appendChild(preDriversRow);
 
-        bar._line1 = line1;
-        bar._line2 = line2;
-        bar._line3 = line3;
-        bar._left = left;
-        bar._right = right;
-        bar._bI = bI;
-        bar._bC = bC;
-        bar._b$ = b$;
-        bar._bD = bD;
-        bar._bInv = bInv; // Store reference
-        bar._preDrivers = preDriversRow;
-        bar._drivers = driversRow;
+  // Row 7: Drivers
+  const driversRow = document.createElement("div");
+  driversRow.className = "bar-drivers";
+  r7.appendChild(driversRow);
 
-        bar.dataset.tripkey = String(t.tripKey || "");
-        bar.setAttribute("role", "button");
-        bar.setAttribute("tabindex", "0");
+  // Append all 7 fixed rows to bar (critical)
+  bar.append(r1, r2, r3, r4, r5, r6, r7);
 
-        state.barElByKey.set(key, bar);
-      }
+  // Keep your existing references working
+  bar._line1 = line1;
+  bar._line2 = line2;
+  bar._line3 = line3;
+  bar._left = left;
+  bar._right = right;
+  bar._bI = bI;
+  bar._bC = bC;
+  bar._b$ = b$;
+  bar._bD = bD;
+  bar._bInv = bInv;
+  bar._preDrivers = preDriversRow;
+  bar._drivers = driversRow;
+
+  bar.dataset.tripkey = String(t.tripKey || "");
+  bar.setAttribute("role", "button");
+  bar.setAttribute("tabindex", "0");
+
+  state.barElByKey.set(key, bar);
+}
+
 
       bar._renderPass = pass;
       bar.dataset.busid = busId;
@@ -2148,13 +2191,16 @@ function _renderAgendaInner() {
 
   for (const [busId, list] of barsByBus) {
     const laneCount = (lanesByBus[busId] || []).length || 1;
-    const top0 = stackOffset(rowH, barH, step, laneCount);
+   const top0 = stackOffset(rowH, barH, step, laneCount);
 
-    for (const bar of list) {
-      const lane = Number(bar.dataset.lane);
-      if (!Number.isFinite(lane)) continue;
-      bar.style.top = `${top0 + lane * step}px`;
-    }
+for (const bar of list) {
+  const lane = Number(bar.dataset.lane);
+  if (!Number.isFinite(lane)) continue;
+
+  const topPx = top0 + lane * step;
+  bar.style.top = `${Math.round(topPx)}px`;   // <— snap
+}
+
   }
 
   for (const [ri, frag] of fragByRow) {
@@ -4156,7 +4202,7 @@ function wireSettingsMenu() {
 .week-table-container.is-loading-bars .trip-bar { opacity: 0.18; pointer-events: none; }
 `;
     document.head.appendChild(style);
-  } catch { }
+  } catch {}
 
   setLeftPanelMode("off");
   enforceDesktopEditing();
