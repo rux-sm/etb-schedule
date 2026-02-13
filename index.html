@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -28,7 +28,7 @@
             <header class="topbar">
                 <div class="container">
                     <div class="topbar-inner">
-                        <div class="header-left">
+                        <div class="topbar-start">
                             <!-- 1. Logo -->
                             <div class="logo-wrap">
                                 <img
@@ -61,16 +61,6 @@
                                 </button>
 
                                 <button
-                                    id="nextWeekBtn"
-                                    class="btn-icon"
-                                    type="button"
-                                    aria-label="Next Week"
-                                    title="Next Week"
-                                >
-                                    <span class="material-symbols-outlined">arrow_forward</span>
-                                </button>
-
-                                <button
                                     id="todayBtn"
                                     class="btn-icon"
                                     type="button"
@@ -79,11 +69,21 @@
                                 >
                                     <span class="material-symbols-outlined">calendar_today</span>
                                 </button>
+
+                                <button
+                                    id="nextWeekBtn"
+                                    class="btn-icon"
+                                    type="button"
+                                    aria-label="Next Week"
+                                    title="Next Week"
+                                >
+                                    <span class="material-symbols-outlined">arrow_forward</span>
+                                </button>
                             </div>
 
                             <!-- 3. Date Range Title (Clickable) -->
-                            <div id="dateWrapper" class="date-picker-wrapper brand-title-wrapper">
-                                <h1 class="brand-title">
+                            <div id="dateWrapper" class="date-picker-wrapper week-picker-trigger">
+                                <h1 class="week-heading">
                                     <span
                                         class="week-date"
                                         id="headerWeek"
@@ -100,8 +100,8 @@
                             </div>
                         </div>
 
-                        <!-- RIGHT GROUP: Settings & Tools -->
-                        <div class="header-right">
+                        <!-- END GROUP: Settings & Tools -->
+                        <div class="topbar-end">
                             <!-- Hidden buttons that JS might look for (can be cleaned up later, keeping for safety) -->
                             <!-- Tools -->
                             <button
@@ -147,7 +147,7 @@
                             <!-- Settings Dropdown -->
                             <button
                                 id="todayBtnMobile"
-                                class="btn-icon mobile-only-btn"
+                                class="btn-icon"
                                 type="button"
                                 aria-label="Today"
                                 title="Today"
@@ -213,12 +213,25 @@
 
             <main class="main">
                 <div class="container">
-                    <div class="scheduler-layout" id="schedulerLayout">
-                        <!-- LEFT -->
-                        <div class="scheduler-left scheduler-collapsed" id="tripScheduler">
+                    <div class="layout-panels" id="layoutPanels">
+                        <!-- START PANEL -->
+                        <div class="panel-start panel-collapsed" id="panelStart">
+                            <!-- Placeholder for new left panel cards -->
+                            <div class="card compact is-hidden" id="leftPanelCard1">
+                                <div class="card-header">
+                                    <h2 class="section-title">Left Panel Card 1</h2>
+                                </div>
+                                <div class="card-content">
+                                    <p>Add your content here</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- END PANEL (Trip Editor, Drivers, Notes) -->
+                        <div class="panel-end panel-collapsed" id="panelEnd">
                             <!-- Driver Week Card (hidden by default) -->
                             <div class="card compact is-hidden" id="driverWeekCard">
-                                <div class="card-head">
+                                <div class="card-header">
                                     <h2 class="section-title">Driver Assignments</h2>
                                 </div>
 
@@ -236,11 +249,8 @@
 
                             <!-- Notes Card (hidden by default) -->
                             <div class="card compact is-hidden" id="notesCard">
-                                <div class="card-head">
-                                    <h2 class="section-title">
-                                        Weekly Notes
-                                        <span id="notesWeekTitle" class="text-muted"></span>
-                                    </h2>
+                                <div class="card-header">
+                                    <h2 class="section-title">Weekly Notes</h2>
                                 </div>
 
                                 <div class="card-content">
@@ -253,7 +263,7 @@
                                     </div>
                                 </div>
 
-                                <div class="card-foot">
+                                <div class="card-footer">
                                     <div class="form-actions">
                                         <button type="button" class="btn" id="saveNotesBtn">
                                             Save Notes
@@ -264,9 +274,9 @@
 
                             <!-- Trip Info Card -->
                             <div class="card compact is-hidden" id="tripInfoCard">
-                                <div class="card-head">
+                                <div class="card-header">
                                     <h2 class="section-title">Trip Editor</h2>
-                                    <div class="card-head-actions">
+                                    <div class="card-header-actions">
                                         <span
                                             id="tripIdBadge"
                                             class="badge badge-primary trip-id-badge is-hidden"
@@ -424,17 +434,24 @@
                                         <div class="subsection col-12">
                                             <div class="status-grid">
                                                 <div class="form-group">
-                                                    <label for="itineraryStatus"
-                                                        >Itinerary Status</label
-                                                    >
+                                                    <label for="itineraryStatus">
+                                                        Itinerary Status
+                                                        <button
+                                                            id="itineraryBtn"
+                                                            type="button"
+                                                            class="label-link"
+                                                            title="Edit Itinerary"
+                                                            aria-label="Edit Itinerary"
+                                                        >
+                                                            (view)
+                                                        </button>
+                                                    </label>
                                                     <select
                                                         id="itineraryStatus"
                                                         name="itineraryStatus"
                                                         required
                                                     >
-                                                        <option value="" disabled selected>
-                                                            Choose…
-                                                        </option>
+                                                        <option value="" disabled selected></option>
                                                         <option value="Pending">Pending</option>
                                                         <option value="Received">Received</option>
                                                         <option value="Not Required">
@@ -452,9 +469,7 @@
                                                         name="contactStatus"
                                                         required
                                                     >
-                                                        <option value="" disabled selected>
-                                                            Choose…
-                                                        </option>
+                                                        <option value="" disabled selected></option>
                                                         <option value="Pending">Pending</option>
                                                         <option value="Received">Received</option>
                                                         <option value="Not Required">
@@ -472,9 +487,7 @@
                                                         name="paymentStatus"
                                                         required
                                                     >
-                                                        <option value="" disabled selected>
-                                                            Choose…
-                                                        </option>
+                                                        <option value="" disabled selected></option>
                                                         <option value="Pending Quote">
                                                             Pending Quote
                                                         </option>
@@ -498,15 +511,10 @@
                                                         name="driverStatus"
                                                         required
                                                     >
-                                                        <option value="" disabled selected>
-                                                            Choose…
-                                                        </option>
+                                                        <option value="" disabled selected></option>
                                                         <option value="Pending">Pending</option>
                                                         <option value="Assigned">Assigned</option>
                                                         <option value="Confirmed">Confirmed</option>
-                                                        <option value="Driver Info Sent">
-                                                            Driver Info Sent
-                                                        </option>
                                                     </select>
                                                 </div>
 
@@ -519,9 +527,7 @@
                                                         name="invoiceStatus"
                                                         required
                                                     >
-                                                        <option value="" disabled selected>
-                                                            Choose…
-                                                        </option>
+                                                        <option value="" disabled selected></option>
                                                         <option value="Pending Invoice">
                                                             Pending Invoice
                                                         </option>
@@ -546,7 +552,7 @@
                                                         type="text"
                                                         id="invoiceNumber"
                                                         name="invoiceNumber"
-                                                        placeholder="#12345"
+                                                        placeholder="#"
                                                     />
                                                 </div>
                                             </div>
@@ -558,6 +564,87 @@
                                             class="is-hidden"
                                             aria-label="Itinerary Content"
                                         ></textarea>
+                                        <div class="subsection col-12">
+                                            <div class="field-label">Requirements</div>
+
+                                            <div
+                                                class="toggle-pill-grid"
+                                                role="group"
+                                                aria-label="Requirements"
+                                            >
+                                                <div class="toggle-pill-pair">
+                                                    <input
+                                                        type="checkbox"
+                                                        id="req56Pass"
+                                                        name="req56Pass"
+                                                        class="toggle-pill-input"
+                                                    />
+                                                    <label class="toggle-pill" for="req56Pass"
+                                                        >56 Pax</label
+                                                    >
+                                                </div>
+
+                                                <div class="toggle-pill-pair">
+                                                    <input
+                                                        type="checkbox"
+                                                        id="reqSleeper"
+                                                        name="reqSleeper"
+                                                        class="toggle-pill-input"
+                                                    />
+                                                    <label class="toggle-pill" for="reqSleeper"
+                                                        >Sleeper</label
+                                                    >
+                                                </div>
+
+                                                <div class="toggle-pill-pair">
+                                                    <input
+                                                        type="checkbox"
+                                                        id="reqLift"
+                                                        name="reqLift"
+                                                        class="toggle-pill-input"
+                                                    />
+                                                    <label class="toggle-pill" for="reqLift"
+                                                        >Lift</label
+                                                    >
+                                                </div>
+
+                                                <div class="toggle-pill-pair">
+                                                    <input
+                                                        type="checkbox"
+                                                        id="reqRelief"
+                                                        name="reqRelief"
+                                                        class="toggle-pill-input"
+                                                    />
+                                                    <label class="toggle-pill" for="reqRelief"
+                                                        >Relief Driver</label
+                                                    >
+                                                </div>
+
+                                                <div class="toggle-pill-pair">
+                                                    <input
+                                                        type="checkbox"
+                                                        id="reqCoDriver"
+                                                        name="reqCoDriver"
+                                                        class="toggle-pill-input"
+                                                    />
+                                                    <label class="toggle-pill" for="reqCoDriver"
+                                                        >2nd Driver</label
+                                                    >
+                                                </div>
+
+                                                <div class="toggle-pill-pair">
+                                                    <input
+                                                        type="checkbox"
+                                                        id="reqHotel"
+                                                        name="reqHotel"
+                                                        class="toggle-pill-input"
+                                                    />
+                                                    <label class="toggle-pill" for="reqHotel"
+                                                        >Hotel</label
+                                                    >
+                                                </div>
+                                            </div>
+                                        </div>
 
                                         <div class="subsection col-12" id="busPanel">
                                             <div id="busGrid"></div>
@@ -565,7 +652,7 @@
                                     </form>
                                 </div>
 
-                                <div class="card-foot">
+                                <div class="card-footer">
                                     <div class="form-actions">
                                         <button
                                             type="submit"
@@ -576,15 +663,8 @@
                                             Save
                                         </button>
                                         <button type="button" class="btn" id="newBtn">Clear</button>
-                                        <button type="button" class="btn" id="deleteBtn" disabled>
+                                        <button type="button" class="btn btn-danger" id="deleteBtn" disabled>
                                             Delete
-                                        </button>
-                                        <button
-                                            id="itineraryBtn"
-                                            type="button"
-                                            class="btn btn-compact"
-                                        >
-                                            Itinerary
                                         </button>
                                     </div>
                                 </div>
@@ -598,17 +678,17 @@
                             </div>
                         </div>
 
-                        <!-- RIGHT -->
-                        <div class="scheduler-right">
+                        <!-- MAIN PANEL (Schedule) -->
+                        <div class="panel-main">
                             <div class="card">
                                 <!-- Conflicts badge (overlay) -->
-                                <div class="right-badge-wrap">
+                                <div class="schedule-badge-wrap">
                                     <span id="overflowBadge" class="badge badge-error is-hidden">
                                         Conflicts detected
                                     </span>
                                 </div>
 
-                                <div class="week-table-container in-card">
+                                <div class="week-table-container">
                                     <table class="week-table">
                                         <colgroup>
                                             <col class="col-bus" />
@@ -627,50 +707,50 @@
 
                                                 <th id="sun">
                                                     <span class="day-label">
-                                                        <span class="day-name">Sun</span>
                                                         <span class="day-date"></span>
+                                                        <span class="day-name">Sun</span>
                                                     </span>
                                                 </th>
 
                                                 <th id="mon">
                                                     <span class="day-label">
-                                                        <span class="day-name">Mon</span>
                                                         <span class="day-date"></span>
+                                                        <span class="day-name">Mon</span>
                                                     </span>
                                                 </th>
 
                                                 <th id="tue">
                                                     <span class="day-label">
-                                                        <span class="day-name">Tue</span>
                                                         <span class="day-date"></span>
+                                                        <span class="day-name">Tue</span>
                                                     </span>
                                                 </th>
 
                                                 <th id="wed">
                                                     <span class="day-label">
-                                                        <span class="day-name">Wed</span>
                                                         <span class="day-date"></span>
+                                                        <span class="day-name">Wed</span>
                                                     </span>
                                                 </th>
 
                                                 <th id="thu">
                                                     <span class="day-label">
-                                                        <span class="day-name">Thu</span>
                                                         <span class="day-date"></span>
+                                                        <span class="day-name">Thu</span>
                                                     </span>
                                                 </th>
 
                                                 <th id="fri">
                                                     <span class="day-label">
-                                                        <span class="day-name">Fri</span>
                                                         <span class="day-date"></span>
+                                                        <span class="day-name">Fri</span>
                                                     </span>
                                                 </th>
 
                                                 <th id="sat">
                                                     <span class="day-label">
-                                                        <span class="day-name">Sat</span>
                                                         <span class="day-date"></span>
+                                                        <span class="day-name">Sat</span>
                                                     </span>
                                                 </th>
                                             </tr>

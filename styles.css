@@ -1,9 +1,6 @@
-﻿/* ==========================================================================
-   STYLESHEET — FULL REPLACEMENT (REORDERED + DEDUPED)
-   - Single :root token source (no duplicate tokens)
-   - Single Modal system (keeps pop-in animation)
-   - Single Utilities block
-   - Fixes: aria-pressed text color, focus ring token, input cursor
+/* ==========================================================================
+   DESIGN SYSTEM STYLESHEET
+   Canonical token names · no aliases · design-system ready
    ========================================================================== */
 
 /* ==========================================================================
@@ -14,7 +11,7 @@
 .material-symbols-sharp {
     font-variation-settings:
         "FILL" 1,
-        "wght" 400,
+        "wght" 300,
         "GRAD" 0,
         "opsz" 24;
     font-weight: normal;
@@ -33,7 +30,7 @@
 :root {
     color-scheme: dark;
 
-    /* Typography */
+    /* ── Typography ─────────────────────────────────────────────── */
     --font-sans:
         -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, "Helvetica Neue", Arial,
         sans-serif;
@@ -41,158 +38,119 @@
         ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
         monospace;
 
-    /* Base hues */
-    --blue: rgb(0 122 255);
-    --teal: rgb(48 209 218);
-    --green: rgb(52 199 89);
-    --purple: rgb(175 82 222);
-
-    --red: rgb(255 59 48);
-    --orange: rgb(255 149 0);
-    --yellow: rgb(255 214 10);
-    --pink: rgb(255 45 155);
-
-    --gray: rgb(142 142 147);
-    --black: rgb(0 0 0);
-    --white: rgb(255 255 255);
-
-    /* Status colors */
-    --red-status: rgb(255 59 48);
-    --yellow-status: rgb(255 214 10);
-    --blue-status: rgb(0 122 255);
-    --green-status: rgb(52 199 89);
-
-    /* Text */
-    --text: #ffffff;
-    --text-primary: #f4f4f4;
-    --text-muted: #bdbdbd;
-    --placeholder: #9b9b9b;
-
-    /* Accent */
-    --accent: var(--blue);
-    --color-accent: var(--accent);
-
-    /* Surfaces */
-    --app-bg: rgb(33, 33, 33);
-    /* topbar */
-    --surface-0: rgb(33 33 33 / 55%);
-    /* schedule */
-    --surface-1: rgb(10 10 10);
-    /* cards */
-    --surface-2: rgb(33, 33, 33);
-    /* inputs / controls */
-    --surface-3: rgb(48, 48, 48);
-    /* hover / active */
-    --surface-4: #919191;
-
-    /* Borders */
-    --border: rgb(33, 33, 33);
-    --border-strong: #3a3a3a;
-
-    /* Interaction overlays (Dark) */
-    --overlay-hover: rgba(255, 255, 255, 0.04);
-    --overlay-active: rgba(255, 255, 255, 0.08);
-
-    /* Semantic helpers */
-    --color-primary: var(--accent);
-    --color-primary-hover: color-mix(in srgb, var(--accent) 88%, black);
-    --color-primary-active: color-mix(in srgb, var(--accent) 76%, black);
-    --color-primary-soft: color-mix(in srgb, var(--accent) 14%, transparent);
-    --color-primary-border: color-mix(in srgb, var(--accent) 80%, transparent);
-
-    --color-on-primary: #ffffff;
-    --color-on-accent: #ffffff;
-
-    --text-driver: var(--yellow);
-
-    /* Status soft + border */
-    --color-success-soft: color-mix(in srgb, var(--green-status) 18%, transparent);
-    --color-success-border: color-mix(in srgb, var(--green-status) 60%, transparent);
-
-    --color-warning-soft: color-mix(in srgb, var(--yellow-status) 18%, transparent);
-    --color-warning-border: color-mix(in srgb, var(--yellow-status) 60%, transparent);
-
-    --color-danger-soft: color-mix(in srgb, var(--red-status) 18%, transparent);
-    --color-danger-border: color-mix(in srgb, var(--red-status) 60%, transparent);
-
-    --color-neutral-soft: color-mix(in srgb, var(--gray) 18%, transparent);
-    --color-neutral-border: color-mix(in srgb, var(--gray) 60%, transparent);
-
-    /* Disabled */
-    --color-text-disabled: var(--text-muted);
-    --color-border-disabled: color-mix(in srgb, var(--border) 55%, transparent);
-
-    /* Focus */
-    --focus: var(--accent);
-    --focus-ring-color: color-mix(in srgb, var(--accent) 45%, transparent);
-    --focus-ring: 0 0 0 3px var(--focus-ring-color);
-
-    /* Legacy maps (compat) */
-    --color-bg: var(--app-bg);
-    --color-surface-1: var(--surface-1);
-    --color-surface-2: var(--surface-2);
-    --color-surface-3: var(--surface-3);
-
-    --color-text-1: var(--text);
-    --color-text-2: var(--text-muted);
-    --color-text-3: var(--text-muted);
-
-    --color-border-1: var(--border);
-    --color-border-2: var(--border);
-    --color-border-3: var(--border-strong);
-    --color-divider: var(--border);
-
-    /* Compatibility aliases (keep old references working) */
-    --text-1: var(--text);
-    --text-2: var(--text-muted);
-    --text-3: var(--text-muted);
-    --text-placeholder: var(--placeholder);
-
-    --primary: var(--accent);
-    /* .notes-textarea:focus */
-    --color-danger: var(--red);
-    /* conflict tokens */
-    --color-border-subtle: color-mix(in srgb, var(--border) 60%, transparent);
-    --color-calendar-bg: var(--surface-2);
-
-    /* Buttons */
-    --color-button-bg: var(--surface-3);
-    --color-button-border: transparent;
-    --color-button-text: #e5e5e5;
-
-    --color-button-hover-bg: #333333;
-    --color-button-hover-border: transparent;
-    --color-button-hover-text: #e5e5e5;
-
-    /* Form */
-    --color-input-bg: var(--surface-3);
-    --color-input-border: rgba(255, 255, 255, 0.1);
-    --color-input-text: var(--color-text-1);
-
-    --color-input-hover-bg: #1f1f1f;
-    --color-input-hover-border: rgba(255, 255, 255, 0.18);
-    --color-input-hover-text: var(--color-text-1);
-
-    /* Type scale */
     --font-size-1: 12px;
     --font-size-2: 14px;
     --font-size-3: 16px;
     --font-size-4: 20px;
     --font-size-5: 24px;
 
-    /* Weights */
     --font-weight-light: 300;
     --font-weight-regular: 400;
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
 
-    /* Leading + tracking */
     --line-height-base: 1.5;
     --line-height-tight: 1.25;
     --letter-spacing-base: 0.02em;
 
-    /* Spacing (4px base) */
+    /* ── Palette ────────────────────────────────────────────────── */
+    --blue: rgb(0 122 255);
+    --teal: rgb(48 209 218);
+    --green: rgb(52 199 89);
+    --purple: rgb(175 82 222);
+    --red: rgb(255 59 48);
+    --orange: rgb(255 149 0);
+    --yellow: rgb(255 214 10);
+    --pink: rgb(255 45 155);
+    --gray: rgb(142 142 147);
+    --black: rgb(0 0 0);
+    --white: rgb(255 255 255);
+
+    /* ── Semantic colors ────────────────────────────────────────── */
+    --accent: var(--blue);
+
+    --color-primary: var(--accent);
+    --color-primary-hover: color-mix(in srgb, var(--accent) 88%, black);
+    --color-primary-active: color-mix(in srgb, var(--accent) 76%, black);
+    --color-primary-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+    --color-primary-border: color-mix(in srgb, var(--accent) 80%, transparent);
+    --color-on-primary: #ffffff;
+
+    --color-danger: var(--red);
+    --color-danger-soft: color-mix(in srgb, var(--red) 18%, transparent);
+    --color-danger-border: color-mix(in srgb, var(--red) 60%, transparent);
+    --color-danger-surface: #a50e0e;
+    --color-danger-overlay: rgba(255, 69, 58, 0.65);
+
+    --color-success-soft: color-mix(in srgb, var(--green) 18%, transparent);
+    --color-success-border: color-mix(in srgb, var(--green) 60%, transparent);
+
+    --color-warning-soft: color-mix(in srgb, var(--yellow) 18%, transparent);
+    --color-warning-border: color-mix(in srgb, var(--yellow) 60%, transparent);
+
+    --color-neutral-soft: color-mix(in srgb, var(--gray) 18%, transparent);
+    --color-neutral-border: color-mix(in srgb, var(--gray) 60%, transparent);
+
+    --color-conflict-bg: color-mix(in srgb, var(--color-danger) 18%, transparent);
+    --color-conflict-accent: var(--color-danger);
+
+    /* ── Text ───────────────────────────────────────────────────── */
+    --text: #ffffff;
+    --text-primary: #f4f4f4;
+    --text-muted: #bdbdbd;
+    --text-driver: var(--yellow);
+    --placeholder: #9b9b9b;
+    --color-text-disabled: var(--text-muted);
+
+    /* ── Surfaces ───────────────────────────────────────────────── */
+    --app-bg: rgb(33 34 35);
+    --schedule-bg: rgb(0 0 0);
+    --surface-0: rgb(23 24 25);  /* topbar */
+    --surface-1: rgb(0 0 0);    /* table header, sticky cells */
+    --surface-2: rgb(33 34 35); /* cards */
+    --surface-3: rgb(63 64 65); /* inputs / controls */
+    --surface-4: rgb(78 78 78); /* hover / active */
+
+    /* ── Borders ────────────────────────────────────────────────── */
+    --border: rgb(50 50 50);
+    --border-strong: #3a3a3a;
+    --color-border-subtle: color-mix(in srgb, var(--border) 60%, transparent);
+    --color-border-disabled: color-mix(in srgb, var(--border) 55%, transparent);
+
+    /* ── Overlays ───────────────────────────────────────────────── */
+    --overlay-hover: rgba(255, 255, 255, 0.04);
+    --overlay-active: rgba(255, 255, 255, 0.08);
+
+    /* ── Focus ──────────────────────────────────────────────────── */
+    --focus: var(--accent);
+    --focus-ring-color: color-mix(in srgb, var(--accent) 45%, transparent);
+    --focus-ring: 0 0 0 3px var(--focus-ring-color);
+
+    /* ── Buttons ────────────────────────────────────────────────── */
+    --color-button-bg: var(--surface-3);
+    --color-button-text: #e5e5e5;
+    --color-button-hover-bg: #333333;
+
+    /* ── Inputs ─────────────────────────────────────────────────── */
+    --color-input-bg: var(--surface-3);
+    --color-input-border: rgba(255, 255, 255, 0.1);
+
+    --input-height: 28px;
+    --input-padding-x: 6px;
+    --input-font-size: 14px;
+    --input-font-weight: var(--font-weight-regular);
+    --field-inset: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    --date-picker-filter: invert(1);
+
+    /* ── Controls (buttons / chips) ─────────────────────────────── */
+    --control-height: 36px;
+    --control-padding-x: 10px;
+    --control-radius: var(--radius-sm);
+    --control-font-size: var(--font-size-2);
+    --control-font-weight: var(--font-weight-medium);
+
+    /* ── Spacing (4px base) ─────────────────────────────────────── */
     --space-0: 0px;
     --space-1: 4px;
     --space-2: 8px;
@@ -203,18 +161,18 @@
     --space-7: 40px;
     --space-8: 48px;
 
-    /* Radii */
+    /* ── Radii ──────────────────────────────────────────────────── */
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 16px;
     --radius-full: 9999px;
 
-    /* Motion */
+    /* ── Motion ─────────────────────────────────────────────────── */
     --dur-1: 160ms;
     --dur-2: 240ms;
     --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
 
-    /* Shadows */
+    /* ── Shadows ────────────────────────────────────────────────── */
     --shadow-1:
         0 1px 0 rgba(255, 255, 255, 0.03), 0 8px 24px rgba(0, 0, 0, 0.45),
         0 2px 8px rgba(0, 0, 0, 0.3);
@@ -222,10 +180,7 @@
         0 1px 0 rgba(255, 255, 255, 0.04), 0 14px 40px rgba(0, 0, 0, 0.55),
         0 4px 14px rgba(0, 0, 0, 0.35);
 
-    --elevation-1: var(--shadow-1);
-    --elevation-2: var(--shadow-2);
-
-    /* Z-index */
+    /* ── Z-index ────────────────────────────────────────────────── */
     --z-base: 0;
     --z-sticky: 100;
     --z-dropdown: 1000;
@@ -233,64 +188,28 @@
     --z-modal: 10100;
     --z-toast: 10200;
 
-    /* Danger specific */
-    --color-danger-surface: #a50e0e;
-    --color-danger-overlay: rgba(255, 69, 58, 0.65);
-
-    /* Controls */
-    --control-height: 36px;
-    --control-padding-x: 10px;
-    --control-radius: var(--radius-sm);
-    --control-font-size: var(--font-size-2);
-    --control-font-weight: var(--font-weight-medium);
-
-    /* Inputs */
-    --input-height: 28px;
-    --input-padding-x: 6px;
-    --input-radius: 8px;
-    --input-font-size: 14px;
-    --input-font-weight: var(--font-weight-regular);
-    --field-inset: inset 0 1px 0 rgba(255, 255, 255, 0.03);
-    --date-picker-filter: invert(1);
-
-    /* Layout */
-    --layout-container-max: 2400px;
+    /* ── Layout ─────────────────────────────────────────────────── */
+    --layout-container-max: 100%;
     --layout-logo-height: 28px;
-    --layout-logo-max-width: 420px;
 
-    /* Schedule grid */
+    /* ── Schedule grid ──────────────────────────────────────────── */
     --schedule-row-height: 100px;
-    --schedule-col-width: 52px;
     --bus-col-w: 40px;
     --day-row-h: 40px;
 
-    --color-conflict-bg: color-mix(in srgb, var(--color-danger) 18%, transparent);
-    --color-conflict-accent: var(--color-danger);
-
-    /* Trip bars */
-    /* geometry */
+    /* ── Trip bars ──────────────────────────────────────────────── */
     --tripbar-height: 95px;
     --tripbar-gap: 100px;
     --tripbar-lane-step: calc(var(--tripbar-height) + var(--tripbar-gap));
     --waiting-list-height: 100px;
-
     --tripbar-inset-left: 2px;
     --tripbar-inset-right: 3px;
-
-    /* vertical rhythm */
     --tripbar-padding-vertical: 2px;
-    /* was 6 */
     --tripbar-row-gap: 1px;
-
-    /* type */
     --tripbar-font-size-major: 12px;
     --tripbar-font-size-minor: 10px;
-
-    /* keep unitless so grid rows stay stable */
     --tripbar-line-height-major: 1;
     --tripbar-line-height-minor: 1;
-
-    /* icon sizing */
     --tripbar-icon-size: 10px;
     --tripbar-mini-badge: 12px;
 }
@@ -301,7 +220,8 @@
 
     --app-bg: #bdbdbd;
     --surface-0: #f5f5f5;
-    --surface-1: #ffffff;
+    --surface-1: #fafafa;
+    --schedule-bg: #ffffff;
     --surface-2: #ffffff;
     --surface-3: #f0f0f0;
     --surface-4: #e5e5e5;
@@ -309,38 +229,28 @@
     --text: #000000;
     --text-muted: #737373;
     --placeholder: #a3a3a3;
-    --color-text-inverse: #ffffff;
-
-    /* If you rely on --white as “text” somewhere, this keeps behavior */
     --white: #000000;
 
     --text-driver: #000000;
 
     --border: #e5e5e5;
     --border-strong: #d4d4d4;
-    --color-divider: #e5e5e5;
 
     --overlay-hover: rgba(0, 0, 0, 0.05);
     --overlay-active: rgba(0, 0, 0, 0.1);
 
     --color-success-soft: rgba(22, 163, 74, 0.15);
     --color-success-border: rgba(22, 163, 74, 0.4);
-
     --color-warning-soft: rgba(202, 138, 4, 0.15);
     --color-warning-border: rgba(202, 138, 4, 0.4);
-
     --color-danger-soft: rgba(220, 38, 38, 0.15);
     --color-danger-border: rgba(220, 38, 38, 0.4);
-
     --color-neutral-soft: rgba(75, 85, 99, 0.1);
     --color-neutral-border: rgba(75, 85, 99, 0.3);
 
     --color-button-bg: #ffffff;
-    --color-button-border: transparent;
     --color-button-text: #1a1a1a;
     --color-button-hover-bg: #f5f5f5;
-    --color-button-hover-border: transparent;
-    --color-button-hover-text: #000000;
 
     --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.05), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     --shadow-2: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 10px 15px -3px rgba(0, 0, 0, 0.1);
@@ -374,7 +284,7 @@ body {
     font-family: var(--font-sans);
     line-height: var(--line-height-base);
     letter-spacing: var(--letter-spacing-base);
-    color: var(--color-text-1);
+    color: var(--text);
     background: var(--app-bg);
     transition:
         background-color 200ms ease,
@@ -408,7 +318,7 @@ samp {
 
 /* Focus */
 *:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--accent);
     outline-offset: 2px;
 }
 
@@ -423,8 +333,8 @@ samp {
     left: 0;
     z-index: 9999;
     padding: var(--space-2) var(--space-3);
-    background: var(--color-accent);
-    color: var(--color-on-accent);
+    background: var(--accent);
+    color: var(--color-on-primary);
     font-weight: var(--font-weight-semibold);
     text-decoration: none;
     border-radius: 0 0 var(--radius-sm) 0;
@@ -492,7 +402,7 @@ button:hover,
 .seg__btn:hover,
 input[type="date"].weekpicker:hover {
     background-color: var(--color-button-hover-bg);
-    border-color: var(--color-button-hover-border);
+    border-color: transparent;
 }
 
 /* Active */
@@ -554,26 +464,22 @@ input[type="date"].weekpicker[aria-disabled="true"] {
 }
 
 /* Destructive button */
-#deleteBtn,
 .btn-danger {
     color: var(--red);
     background: var(--color-danger-soft);
     border-color: transparent;
 }
 
-#deleteBtn:hover,
 .btn-danger:hover {
     background: color-mix(in srgb, var(--red) 22%, transparent);
     border-color: transparent;
 }
 
-#deleteBtn:active,
 .btn-danger:active {
     background: color-mix(in srgb, var(--red) 28%, transparent);
     border-color: transparent;
 }
 
-#deleteBtn:focus-visible,
 .btn-danger:focus-visible {
     border-color: transparent;
     box-shadow: 0 0 0 3px var(--color-danger-soft);
@@ -588,7 +494,7 @@ input[type="date"].weekpicker[aria-disabled="true"] {
 
 :where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn):hover {
     background-color: var(--color-button-hover-bg);
-    border-color: var(--color-button-hover-border);
+    border-color: transparent;
 }
 
 :where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn)[aria-pressed="true"] {
@@ -641,7 +547,7 @@ input[type="date"].weekpicker[aria-disabled="true"] {
     border: none !important;
     box-shadow: none !important;
     padding: var(--control-padding-x) !important;
-    color: var(--color-text-1);
+    color: var(--text);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -653,11 +559,7 @@ input[type="date"].weekpicker[aria-disabled="true"] {
 .btn-icon:hover {
     box-shadow: none !important;
     background: var(--surface-4) !important;
-}
-
-/* NOTE: you referenced --color-text-0; it doesn't exist. Using text-1 keeps behavior. */
-.btn-icon:hover {
-    color: var(--color-text-1);
+    color: var(--text);
 }
 
 .btn-icon:active {
@@ -667,7 +569,34 @@ input[type="date"].weekpicker[aria-disabled="true"] {
 
 .btn-icon:disabled {
     color: var(--color-text-disabled);
-    background: var(--color-surface-2) !important;
+    background: var(--surface-2) !important;
+}
+
+/* Inline label link - subtle text link within labels */
+label .label-link {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: 6px;
+    color: var(--text-muted);
+    font-size: inherit;
+    font-weight: normal;
+    text-decoration: none;
+    cursor: pointer;
+    vertical-align: baseline;
+    line-height: 1.4;
+    display: inline;
+    height: auto;
+}
+
+label .label-link:hover {
+    color: var(--accent);
+    text-decoration: underline;
+}
+
+label .label-link:active {
+    color: var(--accent);
+    opacity: 0.8;
 }
 
 .bus-icons {
@@ -682,6 +611,21 @@ input[type="date"].weekpicker[aria-disabled="true"] {
     z-index: 5;
 }
 
+.toggle-pill-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-3);
+}
+
+.toggle-pill-pair {
+    position: relative;
+    min-width: 0;
+}
+
+.toggle-pill:active {
+    transform: none; /* overrides global button:active translateY(1px) */
+}
+
 /* ==========================================================================
    4) INPUTS
    ========================================================================== */
@@ -694,10 +638,10 @@ select,
 textarea {
     display: block;
     width: 100%;
-    padding: 0 var(--input-padding-x);
+    padding: 4px var(--input-padding-x);
     height: var(--input-height);
     border: none;
-    border-radius: var(--input-radius);
+    border-radius: var(--radius-sm);
     font-size: var(--input-font-size);
     font-weight: var(--input-font-weight);
     color: var(--text);
@@ -729,7 +673,7 @@ input[type="number"],
 select {
     appearance: none;
     padding: 0 6px;
-    text-align: left;
+    text-align: center;
 }
 
 textarea {
@@ -740,7 +684,7 @@ textarea {
 
 input::placeholder,
 textarea::placeholder {
-    color: var(--text-placeholder);
+    color: var(--placeholder);
     opacity: 1;
 }
 
@@ -748,6 +692,7 @@ input:focus,
 select:focus,
 textarea:focus {
     outline: none;
+    position: relative;
     border-color: var(--focus);
     box-shadow: var(--focus-ring);
 }
@@ -788,9 +733,9 @@ input[type="date"].weekpicker {
     height: var(--control-height);
     padding: 0;
     border-radius: var(--control-radius);
-    background: var(--color-surface-3);
+    background: var(--surface-3);
     box-shadow: var(--field-inset);
-    color: var(--color-text-1);
+    color: var(--text);
     text-align: left;
 }
 
@@ -805,79 +750,6 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 /* ==========================================================================
    5) TRIP FEATURE TOGGLES (checkbox switch)
    ========================================================================== */
-.toggle-card {
-    height: auto;
-    overflow: visible;
-    transition: none;
-}
-
-.toggle-card.expanded {
-    height: auto;
-    overflow: visible;
-    align-items: center;
-    gap: var(--space-2);
-    background: var(--surface-3);
-    border-radius: var(--radius-md);
-    padding: var(--space-2);
-    box-shadow: none;
-    cursor: pointer;
-    transition: background 0.18s;
-}
-
-.toggle-switch:hover {
-    background: var(--surface-4);
-}
-
-.toggle-switch input[type="checkbox"] {
-    appearance: none;
-    width: 32px;
-    height: 18px;
-    background: var(--surface-2);
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    position: relative;
-    outline: none;
-    transition:
-        background 0.18s,
-        border-color 0.18s;
-    margin-right: var(--space-2);
-}
-
-.toggle-switch input[type="checkbox"]:checked {
-    background: var(--accent);
-    border-color: var(--accent);
-}
-
-.toggle-switch input[type="checkbox"]::after {
-    content: "";
-    display: block;
-    width: 16px;
-    height: 16px;
-    background: var(--color-surface-1);
-    border-radius: 50%;
-    position: absolute;
-    top: 1px;
-    left: 1px;
-    transition: left 0.18s;
-}
-
-.toggle-switch input[type="checkbox"]:checked::after {
-    left: 15px;
-    background: var(--color-primary);
-}
-
-.switch-icon {
-    font-size: 22px;
-    color: var(--accent);
-    min-width: 22px;
-    text-align: center;
-}
-
-.switch-label {
-    font-size: var(--font-size-2);
-    color: var(--color-text-1);
-    font-weight: 500;
-}
 
 /* ==========================================================================
    6) MODALS (single source of truth)
@@ -959,7 +831,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     gap: var(--space-2);
     padding: var(--space-3) var(--space-4);
     border-top: 1px solid var(--border);
-    background: var(--surface-1);
+    background: var(--surface-2);
 }
 
 /* Textarea inside modal */
@@ -969,7 +841,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     resize: vertical;
 
     padding: var(--space-3);
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-size: var(--font-size-1);
     line-height: 1.5;
 
@@ -1054,7 +926,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 }
 
 .text-muted {
-    color: var(--color-text-3);
+    color: var(--text-muted);
 }
 
 .w-full {
@@ -1082,18 +954,13 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     border-radius: 0;
     min-width: 0;
     background: var(--surface-2);
-    border: none;
+    border-left: none;
     transition: box-shadow var(--dur-2) var(--ease-standard);
     position: relative;
     isolation: isolate;
 }
 
-.driver-assignment-card {
-    height: 700px;
-    box-shadow: none !important;
-}
-
-.scheduler-right>.card {
+.panel-main > .card {
     box-shadow:
         0 4px 6px -1px rgba(0, 0, 0, 0.3),
         0 2px 4px -1px rgba(0, 0, 0, 0.16) !important;
@@ -1101,20 +968,18 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 
 .card.compact {
     padding: 0;
-    padding-top: 0;
 }
 
-.card-head {
+.card-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 12px;
     gap: var(--space-2);
-    border-bottom: 1px solid var(--color-divider);
+    border-bottom: 1px solid var(--border);
     min-height: 40px;
 }
 
-.card-head-actions {
+.card-header-actions {
     display: flex;
     align-items: center;
     gap: var(--space-2);
@@ -1122,29 +987,29 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 
 .section-title {
     font-family: var(--font-sans);
-    font-size: 14px;
+    font-size: 16px;
     font-weight: var(--font-weight-regular);
     letter-spacing: 0.02em;
-    color: var(--color-text-1);
+    color: var(--text);
 }
 
 .card-content {
     min-width: 0;
     font-size: 12px;
     font-weight: 400;
-    color: var(--text-2);
-    padding: 12px;
+    color: var(--text-muted);
+    padding: 0;
     box-sizing: border-box;
 }
 
-.card-foot {
+.card-footer {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     gap: var(--space-2);
     padding: 12px;
     margin-top: 0;
-    border-top: 1px solid var(--color-divider);
+    border-top: 1px solid var(--border);
     flex-wrap: wrap;
 }
 
@@ -1161,15 +1026,15 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     z-index: 99999;
     padding: 6px 12px;
     border-radius: var(--radius-md);
-    border: 1px solid var(--color-border-2);
-    background: var(--color-surface-2);
+    border: 1px solid var(--border);
+    background: var(--surface-2);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    box-shadow: var(--elevation-2);
+    box-shadow: var(--shadow-2);
     max-width: min(90vw, 420px);
     font-size: 13px;
     font-weight: 650;
-    color: var(--color-text-1);
+    color: var(--text);
 }
 
 .toast-progress {
@@ -1202,15 +1067,15 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .dropdown-menu,
 .context-menu {
     position: absolute;
-    z-index: var(--z-dropdown, 9999);
+    z-index: var(--z-dropdown);
     min-width: 200px;
-    padding: var(--space-1, 6px);
+    padding: var(--space-1);
 
-    background: color-mix(in srgb, var(--color-surface-1) 70%, transparent);
-    border: 1px solid color-mix(in srgb, var(--color-border-2) 80%, transparent);
+    background: color-mix(in srgb, var(--surface-1) 70%, transparent);
+    border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
 
-    border-radius: var(--radius-md, 10px);
-    box-shadow: var(--elevation-2, 0 12px 30px rgba(0, 0, 0, 0.35));
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-2);
 
     -webkit-backdrop-filter: blur(12px) saturate(140%);
     backdrop-filter: blur(12px) saturate(140%);
@@ -1234,7 +1099,6 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     display: none;
 }
 
-.dropdown-item-label,
 .context-header {
     padding: 8px 12px;
     font-size: 11px;
@@ -1242,11 +1106,11 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     letter-spacing: 0.06em;
     text-transform: uppercase;
 
-    color: var(--color-text-3, var(--text-2));
+    color: var(--text-muted);
     opacity: 0.85;
 
     text-align: left;
-    border-bottom: 1px solid color-mix(in srgb, var(--color-border-1) 70%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
     margin-bottom: 4px;
 }
 
@@ -1254,7 +1118,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     border: 0;
     height: 1px;
     margin: 6px 6px;
-    background: color-mix(in srgb, var(--color-border-1) 70%, transparent);
+    background: color-mix(in srgb, var(--border) 70%, transparent);
 }
 
 .dropdown-item,
@@ -1262,18 +1126,18 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    gap: var(--space-2, 8px);
+    gap: var(--space-2);
 
     width: 100%;
     padding: 10px 12px;
 
     border: none;
-    border-radius: var(--radius-sm, 8px);
+    border-radius: var(--radius-sm);
     background: transparent;
 
-    font-size: var(--font-size-2, 13px);
+    font-size: var(--font-size-2);
     font-weight: 600;
-    color: var(--color-text-1, var(--text));
+    color: var(--text);
 
     text-align: left;
     cursor: pointer;
@@ -1285,24 +1149,27 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 
 .dropdown-icon,
 .context-item .material-symbols-outlined {
+    display: inline-flex;
+    width: 20px;
+    flex: 0 0 auto;
+    justify-content: center;
     font-size: 18px;
     opacity: 0.85;
-    flex: 0 0 auto;
+}
+
+.dropdown-icon.is-active {
+    color: var(--accent);
 }
 
 .dropdown-item:hover,
 .context-item:hover {
-    background: color-mix(in srgb,
-            var(--overlay-hover, rgba(255, 255, 255, 0.08)) 100%,
-            transparent);
+    background: var(--overlay-hover);
 }
 
 .dropdown-item:active,
 .context-item:active {
     transform: translateY(1px);
-    background: color-mix(in srgb,
-            var(--overlay-active, rgba(255, 255, 255, 0.1)) 100%,
-            transparent);
+    background: var(--overlay-active);
 }
 
 @keyframes menuPopIn {
@@ -1334,7 +1201,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 
 .badge-primary {
     background: color-mix(in srgb, var(--accent) 33%, transparent);
-    color: var(--color-text-1);
+    color: var(--text);
     border: 1px solid var(--accent);
     vertical-align: middle;
 }
@@ -1345,18 +1212,6 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     border: 1px solid var(--color-danger);
 }
 
-.dropdown-icon {
-    display: inline-flex;
-    width: 20px;
-    flex-shrink: 0;
-    justify-content: center;
-    font-size: 16px;
-}
-
-.dropdown-icon.is-on {
-    color: var(--accent);
-}
-
 /* ==========================================================================
    9) APP LAYOUT
    ========================================================================== */
@@ -1365,16 +1220,17 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     grid-template-rows: auto 1fr;
     height: 100vh;
     width: 100%;
-    background: var(--color-bg);
+    background: var(--app-bg);
     overflow: hidden;
 }
 
 .main {
-    padding: var(--space-4);
+    padding: 0 0;
     display: flex;
     flex-direction: column;
     min-height: 0;
-    overflow: visible;
+    overflow: hidden; /* Prevent main from scrolling */
+    flex: 1; /* Take available space */
 }
 
 .container {
@@ -1384,24 +1240,14 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     display: flex;
     flex-direction: column;
     min-height: 0;
-    overflow: visible;
+    overflow: visible; /* Allow dropdowns to display outside container */
 }
 
 /* Topbar */
 .topbar {
-    /* OLD: position: sticky; top: 0; */
-
-    /* NEW: Add margin to float it */
     position: sticky;
-    top: var(--space-2);
-    /* 8px from top */
-    margin: 0 var(--space-4);
-    /* Match the .main padding */
-
-    /* Add rounded corners since it's now floating */
-    border-radius: var(--radius-md);
-
-    /* Ensure z-index keeps it above scrolling content */
+    background: var(--surface-0);
+    border-bottom: 1px solid var(--border);
     z-index: 1000;
 }
 
@@ -1415,7 +1261,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     overflow: visible;
 }
 
-.header-left {
+.topbar-start {
     display: flex;
     align-items: center;
     gap: var(--space-2);
@@ -1436,13 +1282,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     line-height: 1;
 }
 
-.brand {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-}
-
-.brand-title-wrapper {
+.week-picker-trigger {
     height: 44px;
     display: flex;
     align-items: center;
@@ -1454,23 +1294,23 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     position: relative;
 }
 
-.brand-title-wrapper:hover {
-    background-color: var(--color-surface-3);
-    color: var(--color-text-1);
+.week-picker-trigger:hover {
+    background-color: var(--surface-3);
+    color: var(--text);
 }
 
-.brand-title-wrapper .date-input-overlay {
+.week-picker-trigger .date-input-overlay {
     left: 0 !important;
     top: 0 !important;
     width: 100% !important;
     height: 100% !important;
 }
 
-.brand-title {
+.week-heading {
     font-family: var(--font-sans);
     font-size: 20px;
     font-weight: 600;
-    color: var(--color-text-1);
+    color: var(--text);
     margin: 0;
     line-height: 1;
     display: flex;
@@ -1485,53 +1325,76 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     gap: 4px;
 }
 
-.top-actions {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    flex: 0 0 auto;
-}
-
 #todayBtnMobile {
     display: none;
 }
 
-/* Scheduler layout */
-.scheduler-layout {
+/* Panel layout */
+.layout-panels {
     display: grid;
-    grid-template-columns: 400px 1fr;
+    grid-template-columns: 400px 1fr 400px;
     gap: 0;
     align-items: start;
     overflow: visible;
-    padding: var(--space-2);
+    flex: 1; /* Take available space in flex container */
+    min-height: 0; /* Critical for flex children to respect parent constraints */
 }
 
-.scheduler-left,
-.scheduler-right {
+.panel-end,
+.panel-start,
+.panel-main {
     min-width: 0;
 }
 
-.scheduler-left:not(.scheduler-collapsed) {
-    padding-left: var(--space-3);
+/* Margin below center schedule card only */
+.panel-main {
+    padding-bottom: 36px;
 }
 
-.scheduler-left>.card:not(.is-hidden)+.card:not(.is-hidden) {
-    margin-top: var(--space-2);
+.panel-end:not(.panel-collapsed),
+.panel-start:not(.panel-collapsed) {
+    padding: 12px 12px 24px;
+    background: var(--surface-2);
 }
 
-.scheduler-right>.card {
-    max-height: 100%;
+.panel-end:not(.panel-collapsed) {
+    border-left: 1px solid var(--border);
+}
+
+.panel-start:not(.panel-collapsed) {
+    border-right: 1px solid var(--border);
+}
+
+.panel-main > .card {
+    height: auto; /* Match table height, don't stretch */
+    max-height: 100%; /* But don't exceed viewport */
+    padding: 12px;
+    border-radius: 12px;
+    background: var(--schedule-bg);
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    margin: 12px 12px 12px 12px; /* top right bottom left */
+    overflow: visible; /* Let table container handle scrolling */
 }
 
-.scheduler-layout.is-collapsed {
+.layout-panels.is-collapsed {
     grid-template-columns: 1fr;
 }
 
+.layout-panels.is-start-collapsed {
+    grid-template-columns: 0 1fr 400px;
+}
+
+.layout-panels.is-end-collapsed {
+    grid-template-columns: 400px 1fr 0;
+}
+
+.layout-panels.is-sides-collapsed {
+    grid-template-columns: 0 1fr 0;
+}
+
 @media (min-width: 900px) {
-    #schedulerLayout {
+    #layoutPanels {
         display: flex;
         flex-direction: row;
         align-items: stretch;
@@ -1541,36 +1404,46 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
         gap: 0;
     }
 
-    .scheduler-right {
+    .panel-main {
         flex: 1;
         order: 1;
         display: flex;
         flex-direction: column;
         overflow: visible;
+        align-items: stretch; /* Stretch card to full width */
     }
 
-    .scheduler-right>.card {
-        max-height: 100%;
+    .panel-main > .card {
+        height: auto; /* Match table height, don't stretch */
+        max-height: 100%; /* But don't exceed viewport */
         display: flex;
         flex-direction: column;
-        overflow: hidden;
+        overflow: visible; /* Let table container handle scrolling */
     }
 
-    .scheduler-right .week-table-container {
-        flex: 0 1 auto;
+    .panel-main .week-table-container {
+        flex: 1;
+        min-height: 0;
         overflow-y: auto;
+        overflow-x: auto; /* fallback */
     }
 
-    .scheduler-left {
-        order: 2;
-        width: 400px;
+    /* Overlay scrollbars don't take layout space, avoids "stuck" padding when scrollbar appears/disappears */
+    @supports (overflow-x: overlay) {
+        .panel-main .week-table-container {
+            overflow-x: overlay;
+        }
+    }
+
+    .panel-start,
+    .panel-end {
+        width: 450px;
         flex-shrink: 0;
         position: relative;
         z-index: 2;
         display: flex;
         flex-direction: column;
         gap: var(--space-2);
-
         transition:
             width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
             opacity 0.2s ease,
@@ -1579,14 +1452,24 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
         white-space: nowrap;
     }
 
-    .scheduler-left.scheduler-collapsed {
+    .panel-start {
+        order: 0;
+    }
+
+    .panel-end {
+        order: 2;
+    }
+
+    .panel-start.panel-collapsed,
+    .panel-end.panel-collapsed {
         width: 0 !important;
         opacity: 0;
         margin: 0 !important;
         pointer-events: none;
     }
 
-    .scheduler-left>.card {
+    .panel-start > .card,
+    .panel-end > .card {
         min-width: 100%;
         width: 100%;
         height: 700px;
@@ -1625,42 +1508,68 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
         }
     }
 
-    .scheduler-left>.card:not(.is-hidden) {
+    .panel-start > .card:not(.is-hidden),
+    .panel-end > .card:not(.is-hidden) {
         flex: auto;
         display: flex;
         flex-direction: column;
         overflow: hidden;
     }
 
-    .scheduler-left>.card:not(.is-hidden) .card-content {
+    .panel-start > .card:not(.is-hidden) .card-content,
+    .panel-end > .card:not(.is-hidden) .card-content {
         flex: auto;
         overflow-y: auto;
         min-height: 0;
     }
 
-    .scheduler-right {
+    .panel-main {
         position: relative;
         z-index: 1;
     }
 
-    .scheduler-right>.card {
+    .panel-main > .card {
         box-shadow:
             0 4px 6px -1px rgba(0, 0, 0, 0.3),
             0 2px 4px -1px rgba(0, 0, 0, 0.16) !important;
     }
 
-    .scheduler-left>.card {
+    .panel-end > .card {
         box-shadow: none !important;
     }
 
-    .scheduler-left.is-hidden {
+    .panel-end.is-hidden {
         display: none;
     }
 
-    .scheduler-layout.is-collapsed .scheduler-right {
+    .layout-panels.is-collapsed .panel-main {
         width: 100%;
         flex: 1;
     }
+}
+
+/* Week range title pieces */
+.week-date .wk-month,
+.week-date .wk-dates,
+.week-date .wk-year,
+.week-date .wk-year::before {
+    font-size: 20px;
+    font-weight: 400;
+    color: color-mix(in srgb, var(--white) 66%, transparent);
+}
+
+.week-date .wk-month {
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.02em;
+}
+
+.week-date .wk-dates {
+    margin-left: 4px;
+}
+
+.week-date .wk-year::before {
+    content: ", ";
 }
 
 /* Mobile layout */
@@ -1687,39 +1596,24 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
         max-width: 100%;
     }
 
-    .scheduler-layout {
-        grid-template-columns: 1fr;
-    }
-
-    .scheduler-left {
-        display: none;
-    }
-
-    .scheduler-left.is-active {
-        display: block;
-    }
-
-    .scheduler-right>.card {
-        overflow: visible;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .week-table-container {
-        overflow-x: auto;
-        overflow-y: auto;
-        flex: 1;
-    }
-
+    /* Hide desktop-only toolbar buttons */
     #notesBtn,
     #waitingListBtn,
     #themeToggle,
     #todayBtn,
     #tripInputBtn,
-    #driversBtn {
-        display: none;
+    #driversBtn,
+    #printBtn,
+    #refreshBtn,
+    .week-start {
+        display: none !important;
     }
 
+    #todayBtnMobile {
+        display: inline-flex;
+    }
+
+    /* Topbar */
     .topbar-inner {
         gap: var(--space-1);
         padding: 0 var(--space-2);
@@ -1727,66 +1621,11 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
         height: 44px;
     }
 
-    #todayBtnMobile {
-        display: inline-flex;
-    }
-
-    .header-left,
-    .header-right {
-        gap: var(--space-1);
-        min-width: 0;
-        flex-shrink: 1;
-    }
-
-    .nav-controls {
-        gap: 2px;
-        position: relative;
-        z-index: 10;
-    }
-
-    .btn-icon {
-        min-width: 36px;
-        width: 36px;
-        height: 36px;
-        position: relative;
-        z-index: 10;
-    }
-
-    .brand-title-wrapper {
-        padding: 0 var(--space-1);
-        position: relative;
-        z-index: 5;
-        min-width: 0;
-        flex: 1;
-        justify-content: center;
-        height: 36px;
-    }
-
-    .brand-title-wrapper .date-input-overlay {
-        width: 100% !important;
-        left: 0 !important;
-        top: 0 !important;
-        height: 100% !important;
-    }
-
-    @media (orientation: portrait) {
-        .logo-wrap {
-            display: none !important;
-        }
-    }
-
-    @media (orientation: landscape) {
-        .logo-wrap {
-            display: inline-flex;
-        }
-    }
-
-    /* Additional mobile tweaks you had */
     .logo-wrap {
         display: none !important;
     }
 
-    .header-left {
+    .topbar-start {
         display: flex !important;
         align-items: center;
         gap: 2px;
@@ -1794,7 +1633,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
         min-width: 0;
     }
 
-    .header-right {
+    .topbar-end {
         display: flex;
         align-items: center;
         gap: 4px;
@@ -1808,17 +1647,37 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
         gap: 2px;
         margin: 0 !important;
         flex-shrink: 0;
+        position: relative;
+        z-index: 10;
     }
 
-    .brand-title-wrapper {
+    .btn-icon {
+        min-width: 36px;
+        width: 36px;
+        height: 36px;
+        position: relative;
+        z-index: 10;
+    }
+
+    .week-picker-trigger {
         flex: 1;
         display: flex;
         justify-content: center;
         min-width: 0;
         padding: 0 4px;
+        position: relative;
+        z-index: 5;
+        height: 36px;
     }
 
-    .brand-title {
+    .week-picker-trigger .date-input-overlay {
+        width: 100% !important;
+        left: 0 !important;
+        top: 0 !important;
+        height: 100% !important;
+    }
+
+    .week-heading {
         font-size: 14px;
         line-height: 1;
         display: flex;
@@ -1828,7 +1687,12 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
         height: 100%;
     }
 
-    #schedulerLayout {
+    /* Scheduler layout — single column on mobile */
+    .layout-panels {
+        grid-template-columns: 1fr;
+    }
+
+    #layoutPanels {
         display: flex;
         flex-direction: column;
         height: 100%;
@@ -1836,14 +1700,19 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
         gap: 8px;
     }
 
-    .scheduler-left {
+    .panel-end {
+        display: none;
         flex: 0 0 auto;
         max-height: 45vh;
         overflow-y: auto;
         width: 100%;
     }
 
-    .scheduler-right {
+    .panel-end.is-active {
+        display: block;
+    }
+
+    .panel-main {
         flex: 1;
         display: flex;
         flex-direction: column;
@@ -1852,27 +1721,21 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
         min-height: 0;
     }
 
-    .scheduler-right>.card {
+    .panel-main > .card {
         flex: 0 1 auto;
         height: auto;
         width: 100%;
         max-height: 100%;
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
     }
 
-    .scheduler-right .week-table-container {
+    .panel-main .week-table-container,
+    .week-table-container {
         flex: 0 1 auto;
         display: block;
         overflow: auto;
-    }
-
-    #printBtn,
-    #tripInputBtn,
-    #driversBtn,
-    #todayBtn,
-    #refreshBtn,
-    .week-start {
-        display: none !important;
     }
 
     .dropdown-menu {
@@ -1888,39 +1751,36 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     }
 }
 
-/* Portrait/landscape logo helpers */
-@media (max-width: 899px) and (orientation: portrait) {
-    .logo-wrap {
-        display: none;
-    }
-}
-
-@media (max-width: 899px) and (orientation: landscape) {
-    .logo-wrap {
-        display: inline-flex;
-    }
-}
-
 /* ==========================================================================
    10) WEEK TABLE
    ========================================================================== */
 .week-table-container {
     width: 100%;
-    height: auto;
-    max-height: none;
-    overflow: auto;
-
-    background:
-        linear-gradient(var(--surface-1) 30%, rgba(255, 255, 255, 0)),
-        radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
-    background-repeat: no-repeat;
-    background-color: var(--surface-1);
-    background-size:
-        100% 40px,
-        100% 14px;
-    background-attachment: local, scroll;
-
+    height: auto; /* Match table height */
+    overflow: auto; /* Scroll internally when content exceeds */
+    background: var(--schedule-bg);
     border-left: none;
+}
+
+/* When inside panel-main card, use flexbox to fill available space */
+.panel-main > .card .week-table-container {
+    flex: 1;
+    min-height: 0;
+}
+
+/* Conflict summary panel: overlay in bottom corner of schedule card */
+#conflictPanel {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    width: 280px;
+    max-height: 260px;
+    z-index: 20;
+}
+
+#conflictPanel .card-content {
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 .week-table {
@@ -1935,26 +1795,20 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .week-table td {
     border-right: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
+    border-left: none;
+    border-top: none;
     text-align: center;
     vertical-align: middle;
 }
 
-.week-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-.week-table th:last-child,
-.week-table td:last-child {
-    border-right: none;
-}
-
 .week-table th {
-    background: var(--color-surface-1);
+    background: var(--surface-1);
     padding: 0;
     height: var(--day-row-h);
     position: sticky;
     top: 0;
     z-index: 2000;
+    border-top: 1px solid var(--border); /* Top border for header row */
 }
 
 /* Day columns */
@@ -1968,7 +1822,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     position: sticky;
     left: 0;
     z-index: 3000;
-    background: var(--color-surface-1);
+    background: var(--surface-1);
 }
 
 /* Header cells */
@@ -1979,33 +1833,40 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     justify-content: center;
     font-weight: 500;
     gap: 8px;
-    text-transform: uppercase;
 }
 
 .day-name {
     font-size: 16px;
-    color: color-mix(in srgb, var(--text) 80%, transparent);
+    color: color-mix(in srgb, var(--white) 66%, transparent);
     font-weight: 400;
     line-height: 1;
 }
 
 .day-date {
     font-size: 16px;
-    font-weight: 500;
-    color: var(--color-text-1);
+    font-weight: 600;
+    color: var(--text);
     letter-spacing: 0.02em;
     line-height: 1;
 }
 
 th.day-today {
-    background: color-mix(in srgb, var(--blue) 100%, transparent);
-    border: var(--border);
-    overflow: hidden;
+    /* Only accent the date number (no full-cell highlight) */
+    background: var(--surface-1);
+    overflow: visible;
 }
 
 th.day-today .day-date {
-    color: var(--text);
-    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 9999px;
+    background: var(--accent);
+    border: 2px solid var(--accent);
+    color: var(--schedule-bg);
+    font-weight: 600;
 }
 
 th.day-today .day-name {
@@ -2029,6 +1890,7 @@ th.day-today .day-name {
     height: 100%;
     pointer-events: none;
     z-index: 5;
+    overflow: hidden; /* Ensure bars never overflow into adjacent rows */
 }
 
 .week-table td {
@@ -2048,17 +1910,17 @@ th.day-today .day-name {
     height: 20px !important;
     max-height: 20px !important;
     min-height: 20px !important;
-    background-color: var(--color-bg);
+    background-color: var(--app-bg);
 }
 
 .week-table tbody tr.notes-row td {
     height: 20px !important;
     border-top: 1px dashed var(--color-border-subtle);
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--border);
 }
 
 .notes-row .bus-id-cell {
-    background-color: var(--color-surface-1);
+    background-color: var(--surface-1);
 }
 
 /* Sticky first column */
@@ -2066,14 +1928,15 @@ th.day-today .day-name {
     position: sticky;
     left: 0;
     z-index: 500;
-    background: var(--color-surface-1);
+    background: var(--surface-1);
     font-size: 22px;
     font-weight: 500;
-    color: var(--color-text-1);
+    color: var(--text);
 
     min-width: var(--bus-col-w);
     max-width: var(--bus-col-w);
 
+    border-left: 1px solid var(--border); /* Left border for first column */
     border-right: none;
 }
 
@@ -2081,7 +1944,8 @@ th.day-today .day-name {
     position: sticky;
     left: 0;
     z-index: 3000 !important;
-    background: var(--color-surface-1);
+    background: var(--surface-1);
+    border-left: 1px solid var(--border); /* Left border for header first cell */
     border-right: none;
 }
 
@@ -2093,13 +1957,14 @@ th.day-today .day-name {
     right: -1px;
     width: 1px;
     height: 100%;
-    background: var(--color-border-1);
+    background: var(--border);
     pointer-events: none;
 }
 
 .week-table td.day-cell {
     cursor: pointer;
     -webkit-touch-callout: none;
+    -webkit-user-select: none;
     -webkit-user-select: none;
     user-select: none;
 }
@@ -2136,16 +2001,16 @@ th.day-today .day-name {
 .bus-id-num {
     font-size: 16px;
     font-weight: 500;
-    color: var(--color-text-1);
+    color: var(--text);
     letter-spacing: 0.02em;
 }
 
-.week-table tbody tr.has-bus-color>td:first-child {
+.week-table tbody tr.has-bus-color > td:first-child {
     transition: background-color 0.15s ease;
 }
 
-.week-table tbody tr.has-bus-color>td:first-child:hover {
-    background-color: var(--bus-accent-color, var(--color-surface-1));
+.week-table tbody tr.has-bus-color > td:first-child:hover {
+    background-color: var(--bus-accent-color, var(--surface-1));
 }
 
 .bus-id-wrap .bus-lift,
@@ -2156,11 +2021,11 @@ th.day-today .day-name {
 }
 
 .bus-id-wrap .bus-lift {
-    color: color-mix(in srgb, var(--blue) 33%, transparent);
+    color: color-mix(in srgb, var(--blue) 66%, transparent);
 }
 
 .bus-id-wrap .bus-sleeper {
-    color: color-mix(in srgb, var(--gray) 33%, transparent);
+    color: color-mix(in srgb, var(--gray) 66%, transparent);
 }
 
 /* ======================================================================
@@ -2207,88 +2072,64 @@ th.day-today .day-name {
         filter 0.18s ease;
 }
 
-/* Alternative colors */
-.trip-bar.unconfirmed {
-    background: color-mix(in srgb, var(--red) 33%, transparent);
-    border-color: var(--red);
+/* Visual marker when a bar participates in a conflict */
+.trip-bar.danger::after {
+    content: "!";
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    background: var(--color-danger-soft);
+    color: var(--color-danger);
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.trip-bar.color-red {
-    background: color-mix(in srgb, var(--red) 33%, transparent);
-    border-color: var(--red);
-}
-
-.trip-bar.color-blue {
-    background: color-mix(in srgb, var(--blue) 33%, transparent);
-    border-color: var(--blue);
-}
-
-.trip-bar.color-green {
-    background: color-mix(in srgb, var(--green) 33%, transparent);
-    border-color: var(--green);
-}
-
-.trip-bar.color-yellow {
-    background: color-mix(in srgb, var(--yellow) 33%, transparent);
-    border-color: var(--yellow);
-}
-
-.trip-bar.color-gray {
-    background: color-mix(in srgb, var(--gray) 33%, transparent);
-    border-color: var(--gray);
-}
-
+/* Alternative colors — shared rule + per-color variable */
+.trip-bar.unconfirmed,
+.trip-bar.color-red,
+.trip-bar.color-blue,
+.trip-bar.color-green,
+.trip-bar.color-yellow,
+.trip-bar.color-gray,
 .trip-bar.color-violet,
-.trip-bar.color-purple {
-    background: color-mix(in srgb, var(--purple) 33%, transparent);
-    border-color: var(--purple);
-}
-
-.trip-bar.color-pink {
-    background: color-mix(in srgb, var(--pink) 33%, transparent);
-    border-color: var(--pink);
-}
-
-.trip-bar.color-orange {
-    background: color-mix(in srgb, var(--orange) 33%, transparent);
-    border-color: var(--orange);
-}
-
-.trip-bar.color-teal {
-    background: color-mix(in srgb, var(--teal) 33%, transparent);
-    border-color: var(--teal);
-}
-
-/* Optional palette extras (only if defined) */
-.trip-bar.color-cyan {
-    background: color-mix(in srgb, var(--cyan) 33%, transparent);
-    border-color: var(--cyan);
-}
-
-.trip-bar.color-indigo {
-    background: color-mix(in srgb, var(--indigo) 33%, transparent);
-    border-color: var(--indigo);
-}
-
-.trip-bar.color-brown {
-    background: color-mix(in srgb, var(--brown) 33%, transparent);
-    border-color: var(--brown);
-}
-
-.trip-bar.color-mint {
-    background: color-mix(in srgb, var(--mint) 33%, transparent);
-    border-color: var(--mint);
-}
-
-.trip-bar.color-black {
-    background: color-mix(in srgb, var(--black) 33%, transparent);
-    border-color: var(--black);
-}
-
+.trip-bar.color-purple,
+.trip-bar.color-pink,
+.trip-bar.color-orange,
+.trip-bar.color-teal,
+.trip-bar.color-cyan,
+.trip-bar.color-indigo,
+.trip-bar.color-brown,
+.trip-bar.color-mint,
+.trip-bar.color-black,
 .trip-bar.color-white {
-    background: color-mix(in srgb, var(--white) 33%, transparent);
-    border-color: var(--white);
+    background: color-mix(in srgb, var(--tripbar-color) 33%, transparent);
+    border-color: var(--tripbar-color);
 }
+
+.trip-bar.unconfirmed,
+.trip-bar.color-red { --tripbar-color: var(--red); }
+.trip-bar.color-blue { --tripbar-color: var(--blue); }
+.trip-bar.color-green { --tripbar-color: var(--green); }
+.trip-bar.color-yellow { --tripbar-color: var(--yellow); }
+.trip-bar.color-gray { --tripbar-color: var(--gray); }
+.trip-bar.color-violet,
+.trip-bar.color-purple { --tripbar-color: var(--purple); }
+.trip-bar.color-pink { --tripbar-color: var(--pink); }
+.trip-bar.color-orange { --tripbar-color: var(--orange); }
+.trip-bar.color-teal { --tripbar-color: var(--teal); }
+/* Optional palette (only if vars defined in :root) */
+.trip-bar.color-cyan { --tripbar-color: var(--cyan); }
+.trip-bar.color-indigo { --tripbar-color: var(--indigo); }
+.trip-bar.color-brown { --tripbar-color: var(--brown); }
+.trip-bar.color-mint { --tripbar-color: var(--mint); }
+.trip-bar.color-black { --tripbar-color: var(--black); }
+.trip-bar.color-white { --tripbar-color: var(--white); }
 
 /* Hover */
 .trip-bar:hover {
@@ -2406,7 +2247,7 @@ th.day-today .day-name {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 7px;
+    gap: 4px;
     /* tiny bump from 6px */
 }
 
@@ -2435,19 +2276,34 @@ th.day-today .day-name {
 
 /* Badge colors */
 .trip-bar .mini-badge.is-pending {
-    background: var(--red-status);
+    background: var(--red);
 }
 
 .trip-bar .mini-badge.is-ok {
-    background: var(--green-status);
+    background: var(--green);
 }
 
 .trip-bar .mini-badge.is-blue {
-    background: var(--blue-status);
+    background: var(--blue);
 }
 
 .trip-bar .mini-badge.is-yellow {
-    background: var(--yellow-status);
+    background: var(--yellow);
+}
+
+/* Invoice badge becomes a tiny pill when it has a number */
+.trip-bar .mini-badge.has-text {
+    width: auto;
+    padding-right: 2px;
+    gap: 0px;
+}
+
+.trip-bar .mini-badge .mini-badge-text {
+    font-size: 9px;
+    line-height: 1;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
 }
 
 /* Notes / pre drivers */
@@ -2512,7 +2368,6 @@ th.day-today .day-name {
 }
 
 @keyframes arrow-left-bounce {
-
     0%,
     100% {
         transform: translate(0, -50%);
@@ -2524,7 +2379,6 @@ th.day-today .day-name {
 }
 
 @keyframes arrow-right-bounce {
-
     0%,
     100% {
         transform: translate(0, -50%);
@@ -2541,7 +2395,9 @@ th.day-today .day-name {
 .form-grid {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: var(--space-2);
+    gap: var(--space-3);
+    align-items: start;
+    padding-top: var(--space-2);
 }
 
 .form-group {
@@ -2549,6 +2405,22 @@ th.day-today .day-name {
     flex-direction: column;
     gap: var(--space-1);
     min-width: 0;
+    align-items: stretch;
+}
+
+/* Ensure consistent alignment for all form groups */
+.form-group > label {
+    display: block;
+    width: 100%;
+    line-height: 1.4;
+    min-height: 1.4em;
+}
+
+.form-group > input,
+.form-group > select,
+.form-group > textarea {
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .col-2 {
@@ -2567,11 +2439,20 @@ th.day-today .day-name {
     grid-column: span 12;
 }
 
+/* Field label for section headers */
+.field-label {
+    font-size: var(--font-size-1);
+    font-weight: var(--font-weight-medium);
+    color: var(--text);
+    margin-bottom: var(--space-2);
+    display: block;
+}
+
 .subsection {
     grid-column: span 12;
-    margin-top: var(--space-2);
-    padding-top: var(--space-2);
-    border-top: 1px solid var(--color-divider);
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--border);
 }
 
 .subsection-grid {
@@ -2588,7 +2469,6 @@ th.day-today .day-name {
 }
 
 @media (max-width: 800px) {
-
     .col-2,
     .col-4,
     .col-6 {
@@ -2604,13 +2484,56 @@ th.day-today .day-name {
     }
 }
 
+/* Visually hidden checkbox — extends .sr-only pattern + clip-path */
+.toggle-pill-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/* make label look like your button */
+.toggle-pill {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--input-height);
+    width: 100%;
+    font-weight: 600;
+    padding: 10px 12px;
+    border-radius: 9999px;
+    border: none;
+    background: var(--surface-3);
+    color: var(--text);
+    cursor: pointer;
+    user-select: none;
+}
+
+/* checked state */
+.toggle-pill-input:checked + .toggle-pill {
+    background: var(--accent);
+    border-color: none;
+}
+
+/* keyboard focus ring when tabbing */
+.toggle-pill-input:focus-visible + .toggle-pill {
+    box-shadow: var(--focus-ring);
+    border-color: var(--focus);
+}
+
 /* ==========================================================================
    13) DRIVER / STATUS PANELS
    ========================================================================== */
 .driver-week-wrap {
     width: 100%;
     overflow: auto;
-    background: var(--color-surface-3);
+    background: var(--surface-3);
 }
 
 .driver-week-table {
@@ -2622,7 +2545,7 @@ th.day-today .day-name {
 }
 
 .driver-week-table th {
-    color: var(--color-text-1);
+    color: var(--text);
     font-weight: 600;
 }
 
@@ -2633,8 +2556,8 @@ th.day-today .day-name {
     text-align: center;
     white-space: nowrap;
     cursor: pointer;
-    border-right: 1px solid var(--color-surface-2);
-    border-bottom: 1px solid var(--color-surface-2);
+    border-right: 1px solid var(--surface-2);
+    border-bottom: 1px solid var(--surface-2);
 }
 
 .driver-week-table th:last-child,
@@ -2662,7 +2585,7 @@ th.day-today .day-name {
 }
 
 .driver-cell-unavailable {
-    background: var(--red-status) !important;
+    background: var(--red) !important;
     color: #fff !important;
 }
 
@@ -2675,7 +2598,8 @@ th.day-today .day-name {
 .status-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-2);
+    gap: var(--space-3);
+    align-items: start;
 }
 
 select.status-pending {
@@ -2702,20 +2626,20 @@ select.status-confirmed {
 #busGrid.bus-assign {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-2);
+    gap: var(--space-3);
 }
 
 /* Waiting list */
 .waiting-list-row td {
-    background-color: var(--color-calendar-bg) !important;
+    background-color: var(--surface-0) !important;
     height: var(--waiting-list-height);
     vertical-align: top;
-    border-top: 1px solid var(--color-border-1);
+    border-top: 1px solid var(--border);
 }
 
 .waiting-list-row .bus-id-cell {
-    background-color: var(--color-calendar-bg) !important;
-    color: var(--color-text-3);
+    background-color: var(--surface-0) !important;
+    color: var(--text-muted);
     font-size: 11px;
 }
 
@@ -2723,12 +2647,15 @@ select.status-confirmed {
    14) NOTES
    ========================================================================== */
 #notesWeekTitle.text-muted {
-    color: var(--color-text-3);
+    color: var(--text-muted);
 }
 
 .notes-textarea {
     width: 100%;
     height: 100%;
+    flex: 1;
+    min-height: 200px;
+    max-height: 100%;
     background: #fff6cc;
     color: #2b2b2b;
     border-radius: 0;
@@ -2736,13 +2663,14 @@ select.status-confirmed {
     font-size: 14px;
     font-weight: 400;
     line-height: 1.5;
-    resize: vertical;
+    resize: none;
+    overflow-y: auto;
     outline: none;
     transition: border-color 0.2s;
 }
 
 .notes-textarea:focus {
-    border-color: var(--primary);
+    border-color: var(--accent);
 }
 
 /* Notes card layout */
@@ -2756,14 +2684,6 @@ select.status-confirmed {
     flex-direction: column;
     flex: 1;
     min-height: 0;
-}
-
-.notes-textarea {
-    flex: 1;
-    min-height: 200px;
-    max-height: 100%;
-    resize: none;
-    overflow-y: auto;
 }
 
 #notesCard .form-actions {
@@ -2782,7 +2702,7 @@ select.status-confirmed {
 
 .detail-row strong {
     min-width: 140px;
-    color: var(--text-2);
+    color: var(--text-muted);
     font-weight: 600;
     font-size: 11px;
     text-transform: uppercase;
@@ -2791,7 +2711,7 @@ select.status-confirmed {
 
 .detail-row span {
     flex: 1;
-    color: var(--text-1);
+    color: var(--text);
 }
 
 .detail-section-title {
@@ -2806,12 +2726,12 @@ select.status-confirmed {
 
 .detail-divider {
     height: 1px;
-    background: var(--color-border-1);
+    background: var(--border);
     margin: 12px 0;
 }
 
 .detail-text {
-    color: var(--text-1);
+    color: var(--text);
     line-height: 1.5;
     font-size: 13px;
     background: var(--surface-2);
@@ -2824,13 +2744,14 @@ select.status-confirmed {
 .detail-text.pre-wrap {
     white-space: pre-wrap;
     font-size: 12px;
-    background: var(--surface-1);
+    color: var(--black);
+    background: var(--white);
 }
 
 .detail-assignment {
     margin-left: 8px;
     margin-bottom: 4px;
-    color: var(--text-1);
+    color: var(--text);
 }
 
 /* ==========================================================================
