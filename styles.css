@@ -191,6 +191,8 @@
     /* ── Layout ─────────────────────────────────────────────────── */
     --layout-container-max: 100%;
     --layout-logo-height: 28px;
+    --panel-width: 420px;
+    --card-padding: 12px;
 
     /* ── Schedule grid ──────────────────────────────────────────── */
     --schedule-row-height: 100px;
@@ -406,7 +408,7 @@ input[type="date"].weekpicker:hover {
 }
 
 /* Active */
-button:active,
+button:active:not(.toggle-pill),
 .btn:active,
 .icon-chip:active,
 .theme-toggle:active,
@@ -614,16 +616,7 @@ label .label-link:active {
 .toggle-pill-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-3);
-}
-
-.toggle-pill-pair {
-    position: relative;
-    min-width: 0;
-}
-
-.toggle-pill:active {
-    transform: none; /* overrides global button:active translateY(1px) */
+    gap: var(--space-2);
 }
 
 /* ==========================================================================
@@ -950,7 +943,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
    ========================================================================== */
 /* Cards */
 .card {
-    overflow: auto;
+    overflow: hidden;
     border-radius: 0;
     min-width: 0;
     background: var(--surface-2);
@@ -975,6 +968,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     align-items: center;
     justify-content: space-between;
     gap: var(--space-2);
+    padding: 0 var(--card-padding);
     border-bottom: 1px solid var(--border);
     min-height: 40px;
 }
@@ -998,7 +992,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     font-size: 12px;
     font-weight: 400;
     color: var(--text-muted);
-    padding: 0;
+    padding: var(--card-padding);
     box-sizing: border-box;
 }
 
@@ -1007,7 +1001,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     align-items: center;
     justify-content: flex-start;
     gap: var(--space-2);
-    padding: 12px;
+    padding: var(--card-padding);
     margin-top: 0;
     border-top: 1px solid var(--border);
     flex-wrap: wrap;
@@ -1332,7 +1326,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 /* Panel layout */
 .layout-panels {
     display: grid;
-    grid-template-columns: 400px 1fr 400px;
+    grid-template-columns: var(--panel-width) 1fr var(--panel-width);
     gap: 0;
     align-items: start;
     overflow: visible;
@@ -1353,7 +1347,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 
 .panel-end:not(.panel-collapsed),
 .panel-start:not(.panel-collapsed) {
-    padding: 12px 12px 24px;
+    padding: var(--card-padding) var(--card-padding) calc(var(--card-padding) * 2);
     background: var(--surface-2);
 }
 
@@ -1368,12 +1362,12 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .panel-main > .card {
     height: auto; /* Match table height, don't stretch */
     max-height: 100%; /* But don't exceed viewport */
-    padding: 12px;
+    padding: var(--card-padding);
     border-radius: 12px;
     background: var(--schedule-bg);
     display: flex;
     flex-direction: column;
-    margin: 12px 12px 12px 12px; /* top right bottom left */
+    margin: var(--card-padding);
     overflow: visible; /* Let table container handle scrolling */
 }
 
@@ -1382,11 +1376,11 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 }
 
 .layout-panels.is-start-collapsed {
-    grid-template-columns: 0 1fr 400px;
+    grid-template-columns: 0 1fr var(--panel-width);
 }
 
 .layout-panels.is-end-collapsed {
-    grid-template-columns: 400px 1fr 0;
+    grid-template-columns: var(--panel-width) 1fr 0;
 }
 
 .layout-panels.is-sides-collapsed {
@@ -1437,7 +1431,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 
     .panel-start,
     .panel-end {
-        width: 450px;
+        width: var(--panel-width);
         flex-shrink: 0;
         position: relative;
         z-index: 2;
@@ -2397,7 +2391,6 @@ th.day-today .day-name {
     grid-template-columns: repeat(12, minmax(0, 1fr));
     gap: var(--space-3);
     align-items: start;
-    padding-top: var(--space-2);
 }
 
 .form-group {
@@ -2485,53 +2478,35 @@ th.day-today .day-name {
 }
 
 /* Visually hidden checkbox — extends .sr-only pattern + clip-path */
-.toggle-pill-input {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    border: 0;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    clip-path: inset(50%);
-    white-space: nowrap;
-}
-
-/* make label look like your button */
+/* Toggle pill — simple aria-pressed button */
 .toggle-pill {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: var(--input-height);
-    width: 100%;
+    font-size: var(--font-size-1);
     font-weight: 600;
-    padding: 10px 12px;
+    padding: 6px 14px;
+    line-height: 1;
     border-radius: 9999px;
-    border: none;
+    border: 2px solid transparent;
     background: var(--surface-3);
     color: var(--text);
     cursor: pointer;
     user-select: none;
+    transition: background var(--dur-1) ease, border-color var(--dur-1) ease;
 }
 
-/* checked state */
-.toggle-pill-input:checked + .toggle-pill {
+.toggle-pill[aria-pressed="true"] {
     background: var(--accent);
-    border-color: none;
-}
-
-/* keyboard focus ring when tabbing */
-.toggle-pill-input:focus-visible + .toggle-pill {
-    box-shadow: var(--focus-ring);
-    border-color: var(--focus);
+    color: var(--color-on-primary);
 }
 
 /* ==========================================================================
    13) DRIVER / STATUS PANELS
    ========================================================================== */
 .driver-week-wrap {
-    width: 100%;
+    width: calc(100% + 2 * var(--card-padding));
+    margin-inline: calc(-1 * var(--card-padding));
     overflow: auto;
     background: var(--surface-3);
 }

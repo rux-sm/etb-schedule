@@ -439,23 +439,19 @@ function truthyRequirement(v) {
     return s === "true" || s === "yes" || s === "y" || s === "1" || s === "on";
 }
 
-function syncAllRequirementToggleButtons(root = document) {
-    root.querySelectorAll(".toggle-pill").forEach((btn) => {
-        const id = btn.dataset.target;
-        const input = document.getElementById(id);
-        if (!input) return;
-        btn.setAttribute("aria-pressed", input.checked ? "true" : "false");
+function setRequirementTogglesFromTrip(t = {}) {
+    const ids = ["req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqCoDriver", "reqHotel"];
+    ids.forEach((id) => {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        btn.setAttribute("aria-pressed", truthyRequirement(t[id]) ? "true" : "false");
     });
 }
 
-function setRequirementCheckboxesFromTrip(t = {}) {
-    const ids = ["req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqCoDriver", "reqHotel"];
-    ids.forEach((id) => {
-        const input = document.getElementById(id);
-        if (!input) return;
-        input.checked = truthyRequirement(t[id]);
+function resetRequirementToggles() {
+    document.querySelectorAll(".toggle-pill").forEach((btn) => {
+        btn.setAttribute("aria-pressed", "false");
     });
-    syncAllRequirementToggleButtons();
 }
 
 // ======================================================
@@ -3028,7 +3024,7 @@ function setModeEdit(tripKey, tripId) {
 
 function clearTripInfoCardForNextTrip() {
     dom.tripForm.reset();
-    syncAllRequirementToggleButtons();
+    resetRequirementToggles();
     refreshEmptyStateUI();
     setModeNew();
 
@@ -3291,7 +3287,7 @@ async function openTripForEdit(tripKey) {
         $("invoiceStatus").value = t.invoiceStatus || "";
         $("invoiceNumber").value = t.invoiceNumber || "";
         $("tripColor").value = t.tripColor || "";
-        setRequirementCheckboxesFromTrip(t);
+        setRequirementTogglesFromTrip(t);
 
         [
             "itineraryStatus",
@@ -4305,12 +4301,12 @@ function wireEvents() {
             itinerary: dom.itineraryField.value,
             notes: $("notes").value,
             comments: $("comments").value,
-            req56Pass: !!$("req56Pass")?.checked,
-            reqSleeper: !!$("reqSleeper")?.checked,
-            reqLift: !!$("reqLift")?.checked,
-            reqRelief: !!$("reqRelief")?.checked,
-            reqCoDriver: !!$("reqCoDriver")?.checked,
-            reqHotel: !!$("reqHotel")?.checked,
+            req56Pass: $("req56Pass")?.getAttribute("aria-pressed") === "true",
+            reqSleeper: $("reqSleeper")?.getAttribute("aria-pressed") === "true",
+            reqLift: $("reqLift")?.getAttribute("aria-pressed") === "true",
+            reqRelief: $("reqRelief")?.getAttribute("aria-pressed") === "true",
+            reqCoDriver: $("reqCoDriver")?.getAttribute("aria-pressed") === "true",
+            reqHotel: $("reqHotel")?.getAttribute("aria-pressed") === "true",
         };
 
         // Proactive Conflict Check
@@ -4365,7 +4361,7 @@ function wireEvents() {
 
     function resetTripFormUI() {
         dom.tripForm.reset();
-        syncAllRequirementToggleButtons();
+        resetRequirementToggles();
         refreshEmptyStateUI();
         setModeNew();
 
@@ -4416,13 +4412,11 @@ function wireEvents() {
         updateWeekDates();
     });
 
-    syncAllRequirementToggleButtons();
+    // Toggle pills — click toggles aria-pressed
     document.querySelectorAll(".toggle-pill").forEach((btn) => {
         btn.addEventListener("click", () => {
-            const input = document.getElementById(btn.dataset.target);
-            if (!input) return;
-            input.checked = !input.checked;
-            syncAllRequirementToggleButtons();
+            const pressed = btn.getAttribute("aria-pressed") === "true";
+            btn.setAttribute("aria-pressed", pressed ? "false" : "true");
         });
     });
 }
