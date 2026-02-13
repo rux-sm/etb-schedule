@@ -1418,15 +1418,12 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     .panel-main .week-table-container {
         flex: 1;
         min-height: 0;
-        overflow-y: auto;
-        overflow-x: auto; /* fallback */
+        overflow: auto;
     }
 
-    /* Overlay scrollbars don't take layout space, avoids "stuck" padding when scrollbar appears/disappears */
-    @supports (overflow-x: overlay) {
-        .panel-main .week-table-container {
-            overflow-x: overlay;
-        }
+    /* Suppress horizontal scrollbar flash during panel transition */
+    .layout-panels.is-resizing .panel-main .week-table-container {
+        overflow-x: hidden;
     }
 
     .panel-start,

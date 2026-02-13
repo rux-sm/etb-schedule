@@ -2538,6 +2538,16 @@ function getCardPanel(cardType) {
     return state.cardPanelAssignments[cardType] || null;
 }
 
+/** Suppress horizontal scrollbar during layout changes (panel open/close, window resize) */
+let _resizeTimer = 0;
+function suppressScrollbarDuringResize() {
+    const layout = document.getElementById("layoutPanels");
+    if (!layout) return;
+    layout.classList.add("is-resizing");
+    clearTimeout(_resizeTimer);
+    _resizeTimer = setTimeout(() => layout.classList.remove("is-resizing"), 800);
+}
+
 function getFirstAvailablePanel() {
     const panelStart = document.getElementById("panelStart");
     const panelEndEl = dom.panelEnd;
@@ -2553,6 +2563,8 @@ function getFirstAvailablePanel() {
 function showCardInPanel(cardType, panel) {
     const config = CARD_CONFIG[cardType];
     if (!config || !config.card) return;
+
+    suppressScrollbarDuringResize();
 
     const panelStart = document.getElementById("panelStart");
     const panelEndEl = dom.panelEnd;
@@ -2602,6 +2614,8 @@ function showCardInPanel(cardType, panel) {
 function hideCard(cardType) {
     const config = CARD_CONFIG[cardType];
     if (!config || !config.card) return;
+
+    suppressScrollbarDuringResize();
 
     const panel = state.cardPanelAssignments[cardType];
     config.card.classList.add("is-hidden");
@@ -4537,6 +4551,7 @@ function wireSettingsMenu() {
     window.addEventListener(
         "resize",
         () => {
+            suppressScrollbarDuringResize();
             enforceDesktopEditing();
             state.lastColMetrics = null;
             state.barMetrics = null;
