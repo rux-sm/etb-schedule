@@ -2051,7 +2051,15 @@ function _renderAgendaInner() {
 
                 bInv.classList.add("is-hidden"); // start hidden
 
-                statusRow.append(b$, bI, bC, bD, bInv);
+                const barReqIcons = document.createElement("div");
+                barReqIcons.className = "bar-req-icons";
+
+                const statusBadgesWrap = document.createElement("div");
+                statusBadgesWrap.className = "bar-status-badges";
+                statusBadgesWrap.append(b$, bI, bC, bD, bInv);
+
+                statusBadgesWrap.append(b$, bI, bC, bD, bInv, barReqIcons);
+                statusRow.append(statusBadgesWrap);
 
                 r5.appendChild(statusRow);
 
@@ -2070,6 +2078,7 @@ function _renderAgendaInner() {
 
                 // Keep your existing references working
                 bar._multiBadge = multiBadge;
+                bar._reqIcons = barReqIcons;
                 bar._line1 = line1;
                 bar._line2 = line2;
                 bar._line3 = line3;
@@ -2146,6 +2155,27 @@ function _renderAgendaInner() {
 
                 // only make it "pill style" when we actually have a number to show
                 bar._bInv.classList.toggle("has-text", showInv && !!num);
+            }
+
+            // Requirement icons (left of status badges) from trip req flags
+            const reqSpec = [
+                { key: "req56Pass", icon: "tatami_seat" },
+                { key: "reqSleeper", icon: "airline_seat_flat" },
+                { key: "reqLift", icon: "accessible" },
+                { key: "reqRelief", icon: "person_alert" },
+                { key: "reqCoDriver", icon: "person_add" },
+                { key: "reqHotel", icon: "villa" },
+            ];
+            if (bar._reqIcons) {
+                bar._reqIcons.innerHTML = "";
+                reqSpec.forEach(({ key, icon }) => {
+                    if (!truthyRequirement(t[key])) return;
+                    const span = document.createElement("span");
+                    span.className = "bar-req-icon material-symbols-outlined";
+                    span.textContent = icon;
+                    span.setAttribute("aria-hidden", "true");
+                    bar._reqIcons.appendChild(span);
+                });
             }
 
             bar.classList.toggle("cont-left", continuesLeft);
@@ -4419,6 +4449,15 @@ function wireEvents() {
         toast("Saving…", "info", 1000);
 
         dom.saveBtn.disabled = true;
+
+        // Sync requirement toggles to hidden inputs so backend receives them
+        ["req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqCoDriver", "reqHotel"].forEach((id) => {
+            const btn = $(id);
+            const hidden = $(id + "Value");
+            if (btn && hidden) {
+                hidden.value = btn.getAttribute("aria-pressed") === "true" ? "true" : "false";
+            }
+        });
 
         state.pendingWrite = {
             action,

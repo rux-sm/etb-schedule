@@ -225,16 +225,21 @@
     --tripbar-lane-step: calc(var(--tripbar-height) + var(--tripbar-gap));
     --waiting-list-height: 100px;
     --tripbar-inset: 0px; /* Default spacing - 0px fills the column width */
-    --tripbar-inset-left: 2px; /* Left side spacing */
-    --tripbar-inset-right: 3px; /* Right side spacing */
+    --tripbar-inset-left: 2px;
+    --tripbar-inset-right: 2px; /* Normalized: same as left */
     --tripbar-inset-inline-start: 0px; /* Logical property (for RTL support) */
     --tripbar-inset-inline-end: 0px; /* Logical property (for RTL support) */
     --tripbar-padding-vertical: 0px;
     --tripbar-row-gap: 0px;
-    /* Clean math: 100px total - 2px border = 98px available ÷ 7 rows = 14px per row */
-    --tripbar-row-height: 14px;
+    --tripbar-gap-inline: 4px; /* Normalized gap for icons, badges */
+    --tripbar-gap-drivers: 6px; /* Slightly more separation for dominant driver names */
+    /* Clean math: 100px total - 2px border = 98px available */
+    --tripbar-row-height: 14px; /* default for r1-r4, r7 */
+    --tripbar-row-status: 16px; /* r5: status badges — slightly more room */
+    --tripbar-row-notes: 12px;  /* r6: notes — slightly smaller to free space */
     --tripbar-font-size-major: 0.75rem;  /* 12px */
     --tripbar-font-size-minor: 0.6875rem; /* 11px - improved legibility */
+    --tripbar-font-size-notes: 0.625rem;
     --tripbar-line-height-major: 1.2; /* 12px × 1.2 = 14.4px line height */
     --tripbar-line-height-minor: 1.2; /* 11px × 1.2 = 13.2px line height */
     --tripbar-icon-size: 0.6875rem; /* 11px */
@@ -2158,7 +2163,14 @@ th.day-today .day-name {
 
     /* Clean math: 100px total - 2px border = 98px available
        98px ÷ 7 rows = 14px per row exactly */
-    grid-template-rows: repeat(7, var(--tripbar-row-height));
+    grid-template-rows:
+        var(--tripbar-row-height)   /* r1: destination */
+        var(--tripbar-row-height)   /* r2: customer */
+        var(--tripbar-row-height)   /* r3: contact */
+        var(--tripbar-row-height)   /* r4: times */
+        var(--tripbar-row-status)   /* r5: status badges */
+        var(--tripbar-row-notes)    /* r6: notes */
+        var(--tripbar-row-height);  /* r7: drivers */
 
     row-gap: var(--tripbar-row-gap);
     padding: var(--tripbar-padding-vertical) 2px; /* Reduced from 8px to minimize internal gaps */
@@ -2378,7 +2390,7 @@ th.day-today .day-name {
     grid-row: 7;
 }
 
-/* Typography */
+/* Typography — Destination dominant */
 .trip-bar .bar-title {
     color: var(--text);
     font-size: var(--tripbar-font-size-major);
@@ -2398,15 +2410,16 @@ th.day-today .day-name {
     letter-spacing: 0.02em;
 }
 
-/* Time row: make it read cleaner */
+/* Time row — minor font to make room; destination/driver stay dominant */
 .trip-bar .bar-time-row {
     width: 100%;
     display: flex !important;
     align-items: center;
     justify-content: space-between !important;
 
-    font-size: var(--tripbar-font-size-major);
-    color: var(--text);
+    font-size: var(--tripbar-font-size-minor);
+    line-height: var(--tripbar-line-height-minor);
+    color: color-mix(in srgb, var(--text) 85%, transparent);
 
     padding-inline: 2px;
 }
@@ -2424,16 +2437,51 @@ th.day-today .day-name {
 .trip-bar .bar-status-row {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    gap: var(--tripbar-gap-inline, 4px);
+    width: 100%;
+}
+
+.trip-bar .bar-req-icons {
+    display: flex;
+    align-items: center;
+    gap: var(--tripbar-gap-inline, 4px);
+    flex-shrink: 0;
+    margin-inline-start: 8px; /* separation from status badges */
+}
+
+/* Req icons — same badge/icon size as mini-badge for consistency */
+.trip-bar .bar-req-icon {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 1px;
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
-    gap: 4px;
-    /* tiny bump from 6px */
+
+    font-size: 1rem !important;
+    line-height: 1;
+    font-weight: normal;
+    font-variation-settings: "FILL" 0;
+
+    color: color-mix(in srgb, var(--text) 95%, transparent);
+    background: color-mix(in srgb, var(--white) 18%, transparent);
+}
+
+.trip-bar .bar-status-badges {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--tripbar-gap-inline, 4px);
+    flex: 1;
+    min-width: 0;
 }
 
 /* Mini badges */
 .trip-bar .mini-badge {
-    width: 12px;
-    height: 12px;
-    border-radius: 2px;
+    width: 1rem;        
+    height: 1rem;
+    border-radius: 1px;
 
     display: inline-flex;
     align-items: center;
@@ -2444,7 +2492,7 @@ th.day-today .day-name {
 
 /* Glyph inside badge */
 .trip-bar .badge-icon {
-    font-size: 0.75rem !important; /* 12px */
+    font-size: 1rem !important; /* 12px */
     /* up from 12 */
     line-height: 1;
     font-weight: normal;
@@ -2477,33 +2525,35 @@ th.day-today .day-name {
 }
 
 .trip-bar .mini-badge .mini-badge-text {
-    font-size: 0.5625rem; /* 9px */
+    font-size: var(--tripbar-font-size-minor);
     line-height: 1;
     font-weight: 600;
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
 }
 
-/* Notes / pre drivers */
+/* Notes / pre drivers — compact line-height for 12px row */
 .trip-bar .bar-pre-drivers {
-    font-size: var(--tripbar-font-size-minor);
+    font-size: var(--tripbar-font-size-notes);
+    line-height: 1;
     color: color-mix(in srgb, var(--text-driver) 70%, transparent);
     font-weight: var(--font-weight-regular);
     text-transform: uppercase;
     letter-spacing: 0.02em;
 }
 
-/* Drivers */
+/* Drivers — dominant; slightly more spacing for readability */
 .trip-bar .bar-drivers {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    /* a bit more separation */
+    gap: var(--tripbar-gap-drivers, 6px);
 }
 
+/* Driver — dominant, same scale as destination */
 .trip-bar .driver {
     font-size: var(--tripbar-font-size-major);
+    line-height: var(--tripbar-line-height-major);
     font-weight: var(--font-weight-regular);
     text-transform: uppercase;
     color: var(--text-driver);
