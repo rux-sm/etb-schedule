@@ -662,11 +662,21 @@ textarea:hover {
 
 input[type="date"],
 input[type="time"],
-input[type="number"],
-select {
+input[type="number"] {
     appearance: none;
     padding: 0 6px;
     text-align: center;
+}
+
+select {
+    appearance: none;
+    padding: 0 24px 0 8px;
+    line-height: var(--input-height);
+    text-align: left;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 10px 6px;
 }
 
 textarea {
@@ -688,6 +698,56 @@ textarea:focus {
     position: relative;
     border-color: var(--focus);
     box-shadow: var(--focus-ring);
+}
+
+/* ---------- Customisable <select> picker (Chrome/Edge 135+) ---------- */
+@supports (appearance: base-select) {
+    select {
+        appearance: base-select;
+        background-image: none;
+    }
+
+    /* Dropdown panel — matches .dropdown-menu frosted glass */
+    select::picker(select) {
+        appearance: base-select;
+        background: color-mix(in srgb, var(--surface-1) 70%, transparent);
+        border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-2);
+        padding: var(--space-1);
+        -webkit-backdrop-filter: blur(12px) saturate(140%);
+        backdrop-filter: blur(12px) saturate(140%);
+        overflow: hidden;
+        animation: menuPopIn 120ms ease-out;
+    }
+
+    /* Option items — match .dropdown-item */
+    select option {
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        border: none;
+        border-radius: var(--radius-sm);
+        background: transparent;
+        font-size: var(--font-size-2);
+        font-weight: var(--font-weight-semibold);
+        color: var(--text);
+        cursor: pointer;
+        transition: background 120ms ease;
+    }
+
+    select option:hover {
+        background: var(--overlay-hover);
+    }
+
+    select option:checked {
+        background: var(--overlay-active);
+    }
+
+    /* Remove default check indicator */
+    select option::checkmark {
+        display: none;
+    }
 }
 
 /* Date/Time pickers */
@@ -976,7 +1036,36 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .card-header-actions {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--space-1);
+}
+
+.btn-close-card {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity var(--dur-1) ease, background var(--dur-1) ease;
+}
+
+.btn-close-card:hover {
+    opacity: 1;
+    background: var(--surface-3);
+}
+
+.btn-close-card:active {
+    transform: none;
+}
+
+.btn-close-card .material-symbols-outlined {
+    font-size: 18px;
 }
 
 .section-title {
@@ -999,12 +1088,18 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .card-footer {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: flex-end;
     gap: var(--space-2);
     padding: var(--card-padding);
     margin-top: 0;
     border-top: 1px solid var(--border);
     flex-wrap: wrap;
+    min-height: 40px;
+}
+
+.card-footer:empty {
+    min-height: 8px;
+    padding: 4px;
 }
 
 /* Toasts */
@@ -2402,6 +2497,9 @@ th.day-today .day-name {
 .form-group > label {
     display: block;
     width: 100%;
+    font-size: var(--font-size-1);
+    font-weight: var(--font-weight-medium);
+    color: var(--text);
     line-height: 1.4;
     min-height: 1.4em;
 }
@@ -2425,6 +2523,10 @@ th.day-today .day-name {
     grid-column: span 6;
 }
 
+.col-8 {
+    grid-column: span 8;
+}
+
 .col-12 {
     grid-column: span 12;
 }
@@ -2434,7 +2536,7 @@ th.day-today .day-name {
     font-size: var(--font-size-1);
     font-weight: var(--font-weight-medium);
     color: var(--text);
-    margin-bottom: var(--space-2);
+    margin-bottom: var(--space-1);
     display: block;
 }
 
@@ -2461,7 +2563,8 @@ th.day-today .day-name {
 @media (max-width: 800px) {
     .col-2,
     .col-4,
-    .col-6 {
+    .col-6,
+    .col-8 {
         grid-column: span 12;
     }
 
@@ -2576,29 +2679,39 @@ th.day-today .day-name {
 
 select.status-pending {
     background: color-mix(in srgb, var(--red) 60%, transparent);
-    border-color: var(--red);
+    border: 1px solid var(--red);
 }
 
 select.status-ok {
     background: color-mix(in srgb, var(--green) 60%, transparent);
-    border-color: var(--green);
+    border: 1px solid var(--green);
 }
 
 select.status-assigned {
     background: color-mix(in srgb, var(--yellow) 60%, transparent);
-    border-color: var(--yellow);
+    border: 1px solid var(--yellow);
 }
 
 select.status-blue,
 select.status-confirmed {
     background: color-mix(in srgb, var(--blue) 60%, transparent);
-    border-color: var(--blue);
+    border: 1px solid var(--blue);
 }
 
 #busGrid.bus-assign {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-3);
+    column-gap: var(--space-3);
+    row-gap: var(--space-2);
+}
+
+.bus-assign__head {
+    font-size: var(--font-size-1);
+    font-weight: var(--font-weight-medium);
+    color: var(--text);
+    line-height: 1.4;
+    padding-bottom: 0;
+    margin-bottom: calc(var(--space-1) - var(--space-2));
 }
 
 /* Waiting list */
@@ -2658,10 +2771,6 @@ select.status-confirmed {
     min-height: 0;
 }
 
-#notesCard .form-actions {
-    justify-content: flex-end;
-    margin-top: var(--space-2);
-}
 
 /* ==========================================================================
    15) TRIP DETAILS MODAL CONTENT

@@ -233,6 +233,11 @@
                             <div class="card compact is-hidden" id="driverWeekCard">
                                 <div class="card-header">
                                     <h2 class="section-title">Driver Assignments</h2>
+                                    <div class="card-header-actions">
+                                        <button type="button" class="btn-close-card" data-card="drivers" aria-label="Close" title="Close">
+                                            <span class="material-symbols-outlined">close</span>
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div class="card-content">
@@ -245,12 +250,19 @@
                                         </table>
                                     </div>
                                 </div>
+
+                                <div class="card-footer"></div>
                             </div>
 
                             <!-- Notes Card (hidden by default) -->
                             <div class="card compact is-hidden" id="notesCard">
                                 <div class="card-header">
                                     <h2 class="section-title">Weekly Notes</h2>
+                                    <div class="card-header-actions">
+                                        <button type="button" class="btn-close-card" data-card="notes" aria-label="Close" title="Close">
+                                            <span class="material-symbols-outlined">close</span>
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div class="card-content">
@@ -281,6 +293,9 @@
                                             id="tripIdBadge"
                                             class="badge badge-primary trip-id-badge is-hidden"
                                         ></span>
+                                        <button type="button" class="btn-close-card" data-card="trip" aria-label="Close" title="Close">
+                                            <span class="material-symbols-outlined">close</span>
+                                        </button>
                                     </div>
                                 </div>
 
@@ -345,7 +360,7 @@
                                             />
                                         </div>
 
-                                        <div class="form-group col-2">
+                                        <div class="form-group col-4">
                                             <label for="busesNeeded">Buses</label>
                                             <select id="busesNeeded" name="busesNeeded" required>
                                                 <option value="" disabled selected>-</option>
@@ -359,19 +374,6 @@
                                                 <option value="8">8</option>
                                                 <option value="9">9</option>
                                                 <option value="10">10</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group col-2">
-                                            <label for="tripColor">Color</label>
-                                            <select id="tripColor" name="tripColor">
-                                                <option value="" selected>Auto</option>
-                                                <option value="Yellow">Yellow</option>
-                                                <option value="Orange">Orange</option>
-                                                <option value="Pink">Pink</option>
-                                                <option value="Purple">Purple</option>
-                                                <option value="Teal">Teal</option>
-                                                <option value="Green">Green</option>
                                             </select>
                                         </div>
 
@@ -412,7 +414,7 @@
                                             />
                                         </div>
 
-                                        <div class="form-group col-12">
+                                        <div class="form-group col-8">
                                             <label for="notes">Notes</label>
                                             <input
                                                 type="text"
@@ -420,6 +422,19 @@
                                                 name="notes"
                                                 placeholder=""
                                             />
+                                        </div>
+
+                                        <div class="form-group col-4">
+                                            <label for="tripColor">Color</label>
+                                            <select id="tripColor" name="tripColor">
+                                                <option value="" selected>Auto</option>
+                                                <option value="Yellow">Yellow</option>
+                                                <option value="Orange">Orange</option>
+                                                <option value="Pink">Pink</option>
+                                                <option value="Purple">Purple</option>
+                                                <option value="Teal">Teal</option>
+                                                <option value="Green">Green</option>
+                                            </select>
                                         </div>
 
                                         <div class="form-group col-12">

@@ -3920,6 +3920,23 @@ function wireEvents() {
         toggleCard("drivers");
     });
 
+    // Close-card buttons (×) inside card headers
+    document.addEventListener("click", (e) => {
+        const closeBtn = e.target.closest(".btn-close-card");
+        if (!closeBtn) return;
+        const cardType = closeBtn.dataset.card;
+        if (!cardType) return;
+
+        // Reuse notes dirty-check logic
+        if (cardType === "notes" && state.notesDirty) {
+            if (!confirm("You have unsaved notes changes. Discard them?")) return;
+            dom.scheduleNotes.value = state.savedNotesValue;
+            state.notesDirty = false;
+        }
+
+        hideCard(cardType);
+    });
+
     dom.driverWeekBody.addEventListener("mousedown", (e) => {
         const td = e.target.closest("td");
         if (!td || !td.dataset.driver || !td.dataset.date) return;
