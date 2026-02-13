@@ -1942,7 +1942,8 @@ function _renderAgendaInner() {
         const continuesLeft = depY < weekStart;
         const continuesRight = arrY > weekEnd;
 
-        for (const a of assigns) {
+        for (let assignIdx = 0; assignIdx < assigns.length; assignIdx++) {
+            const a = assigns[assignIdx];
             const busId = String(a.busId || "").trim();
 
             let bars = null;
@@ -1991,7 +1992,11 @@ function _renderAgendaInner() {
                 const r6 = makeRow("r6");
                 const r7 = makeRow("r7");
 
-                // Row 1: Title
+                // Row 1: Multi-bus badge (top-left) + Title
+                const multiBadge = document.createElement("span");
+                multiBadge.className = "trip-bar-multi-badge";
+                multiBadge.setAttribute("aria-hidden", "true");
+                r1.appendChild(multiBadge);
                 const line1 = document.createElement("div");
                 line1.className = "bar-title";
                 r1.appendChild(line1);
@@ -2064,6 +2069,7 @@ function _renderAgendaInner() {
                 bar.append(r1, r2, r3, r4, r5, r6, r7);
 
                 // Keep your existing references working
+                bar._multiBadge = multiBadge;
                 bar._line1 = line1;
                 bar._line2 = line2;
                 bar._line3 = line3;
@@ -2184,6 +2190,19 @@ function _renderAgendaInner() {
             }
             bar.classList.toggle("danger", touchesConflict);
 
+            // Multi-bus indicator: e.g. 1/3, 2/3, 3/3 (only when trip has multiple buses)
+            const total = assigns.length;
+            bar.classList.toggle("has-multi-bus", total > 1);
+            if (bar._multiBadge) {
+                if (total > 1) {
+                    bar._multiBadge.textContent = `${assignIdx + 1}/${total}`;
+                    bar._multiBadge.classList.remove("is-hidden");
+                } else {
+                    bar._multiBadge.textContent = "";
+                    bar._multiBadge.classList.add("is-hidden");
+                }
+            }
+
             const dest = t.destination || "Trip";
             const cust = t.customer || "";
             bar._line1.textContent = dest;
@@ -2259,8 +2278,21 @@ function _renderAgendaInner() {
         const laneCount = (lanesByBus[busId] || []).length || 1;
         const top0 = stackOffset(rowH, barH, step, laneCount);
 
-        // Calculate max allowed top to prevent overflow into next row
-        const maxTop = Math.max(0, rowH - barH - 1); // -1 for safety margin
+        // Waiting list row grows to fit stacked trips; others use single row height
+        const isWaitingList = busId === "WAITING_LIST";
+        const effectiveRowH = isWaitingList ? Math.max(1, laneCount) * rowH : rowH;
+        const maxTop = Math.max(0, effectiveRowH - barH - 1); // -1 for safety margin
+
+        if (isWaitingList) {
+            const wlTr = waitingBody?.rows?.[0];
+            if (wlTr) {
+                const h = `${effectiveRowH}px`;
+                wlTr.style.setProperty("--waiting-list-dynamic-height", h);
+                for (let c = 0; c < wlTr.cells.length; c++) {
+                    wlTr.cells[c].style.setProperty("--waiting-list-dynamic-height", h);
+                }
+            }
+        }
 
         for (const bar of list) {
             const lane = Number(bar.dataset.lane);
@@ -2275,6 +2307,17 @@ function _renderAgendaInner() {
 
     for (const [ri, frag] of fragByRow) {
         barsByRowIdx.get(ri)?.appendChild(frag);
+    }
+
+    // When no trips on waiting list, keep row at single height
+    const wlLanes = (lanesByBus["WAITING_LIST"] || []).length;
+    if (wlLanes === 0 && waitingBody?.rows?.[0]) {
+        const h = `${rowH}px`;
+        const wlTr = waitingBody.rows[0];
+        wlTr.style.setProperty("--waiting-list-dynamic-height", h);
+        for (let c = 0; c < wlTr.cells.length; c++) {
+            wlTr.cells[c].style.setProperty("--waiting-list-dynamic-height", h);
+        }
     }
 
     pruneOldBars(pass);

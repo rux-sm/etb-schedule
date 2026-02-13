@@ -2326,6 +2326,32 @@ th.day-today .day-name {
 /* Slot placement (7 rows) */
 .trip-bar .r1 {
     grid-row: 1;
+    position: relative; /* for multi-bus badge */
+}
+
+/* Multi-bus indicator badge (e.g. 1/3, 2/3) — top-left of trip bar */
+.trip-bar-multi-badge {
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: var(--tripbar-font-size-minor);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    color: color-mix(in srgb, var(--text) 85%, transparent);
+    padding: 1px 1px;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--white) 12%, transparent);
+    flex-shrink: 0;
+    z-index: 1;
+}
+.trip-bar-multi-badge.is-hidden {
+    display: none;
+}
+
+/* When multi-bus badge is shown, add left padding so title doesn't overlap */
+.trip-bar.has-multi-bus .r1 {
+    padding-inline-start: 22px;
 }
 
 .trip-bar .r2 {
@@ -2818,10 +2844,16 @@ select.status-confirmed {
     margin-bottom: calc(var(--space-1) - var(--space-2));
 }
 
-/* Waiting list */
+/* Waiting list — height can grow via --waiting-list-dynamic-height (set from JS) */
+#waitingBody tr.waiting-list-row,
+#waitingBody tr.waiting-list-row td {
+    height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
+    min-height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
+    max-height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
+}
+
 .waiting-list-row td {
     background-color: var(--surface-0) !important;
-    height: var(--waiting-list-height);
     vertical-align: top;
     border-top: 1px solid var(--border);
 }
