@@ -1647,17 +1647,22 @@ function positionBarWithinOverlay(bar, bars, col, startIdx, endIdx) {
 
     const insetR = parseFloat(root.getPropertyValue("--tripbar-inset-right")) || insetAll;
 
-    const leftPx = (col.starts[startIdx] ?? 0) + insetL;
+    // When insets are 0, start slightly to the left and extend to the right
+    // to cover cell borders and fill edge-to-edge
+    const cellBorderWidth = 1; // 1px border-inline-end on cells
+    const extendLeft = (insetL === 0) ? cellBorderWidth : 0;
+    const leftPx = Math.max(0, (col.starts[startIdx] ?? 0) + insetL - extendLeft);
 
     let spanW = 0;
     for (let i = startIdx; i <= endIdx; i++) spanW += col.widths[i] ?? 0;
 
-    // subtract left + right (not *2)
-    let widthPx = Math.max(0, spanW - insetL - insetR);
+    // Extend width to cover borders on both sides when insets are 0
+    const extendRight = (insetR === 0) ? cellBorderWidth : 0;
+    let widthPx = Math.max(0, spanW - insetL - insetR + extendLeft + extendRight);
 
     // Guard rails to prevent overflow beyond the row overlay
     const max = Math.max(0, col.total ?? col.widths.reduce((a, b) => a + (b || 0), 0));
-    const EPS = 1;
+    const EPS = 0; // No safety margin - bars fill the column width
 
     if (leftPx >= max) {
         bar.style.left = `${max}px`;
