@@ -43,40 +43,11 @@
                 <div class="logo-placeholder is-hidden" aria-label="Logo placeholder">LOGO</div>
               </div>
 
-              <!-- 2. Navigation (< > Today) -->
-              <div class="nav-controls">
-                <button
-                  id="prevWeekBtn"
-                  class="btn-icon"
-                  type="button"
-                  aria-label="Previous Week"
-                  title="Previous Week"
-                >
-                  <span class="material-symbols-outlined">arrow_back</span>
-                </button>
-
-                <button id="todayBtn" class="btn-icon" type="button" aria-label="Today" title="Today">
-                  <span class="material-symbols-outlined">calendar_today</span>
-                </button>
-
-                <button id="nextWeekBtn" class="btn-icon" type="button" aria-label="Next Week" title="Next Week">
-                  <span class="material-symbols-outlined">arrow_forward</span>
-                </button>
+              <!-- 2. Header / title text (right of logo) -->
+              <div class="topbar-title" id="topbarTitle" aria-label="Application title">
+                Trip Schedule
               </div>
 
-              <!-- 3. Date Range Title (Clickable) -->
-              <div id="dateWrapper" class="date-picker-wrapper week-picker-trigger">
-                <h1 class="week-heading">
-                  <span class="week-date" id="headerWeek" aria-label="Active week"></span>
-                </h1>
-
-                <input
-                  type="date"
-                  id="weekPicker"
-                  class="weekpicker date-input-overlay"
-                  aria-label="Select Date for Week"
-                />
-              </div>
             </div>
 
             <!-- END GROUP: Settings & Tools -->
@@ -471,6 +442,40 @@
                 <!-- Conflicts badge (overlay) -->
                 <div class="schedule-badge-wrap">
                   <span id="overflowBadge" class="badge badge-error is-hidden"> Conflicts detected </span>
+                </div>
+
+                <!-- Agenda header: week date + prev/next navigation -->
+                <div class="agenda-header">
+                  <div class="agenda-header-inner">
+                    <div id="dateWrapper" class="date-picker-wrapper week-picker-trigger">
+                      <h2 class="week-heading">
+                        <span class="week-date" id="headerWeek" aria-label="Active week"></span>
+                      </h2>
+                      <input
+                        type="date"
+                        id="weekPicker"
+                        class="weekpicker date-input-overlay"
+                        aria-label="Select Date for Week"
+                      />
+                    </div>
+                    <div class="nav-controls">
+                      <button
+                        id="prevWeekBtn"
+                        class="btn-icon"
+                        type="button"
+                        aria-label="Previous Week"
+                        title="Previous Week"
+                      >
+                        <span class="material-symbols-outlined">arrow_back</span>
+                      </button>
+                      <button id="todayBtn" class="btn-icon" type="button" aria-label="Today" title="Today">
+                        <span class="material-symbols-outlined">calendar_today</span>
+                      </button>
+                      <button id="nextWeekBtn" class="btn-icon" type="button" aria-label="Next Week" title="Next Week">
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="week-table-container">

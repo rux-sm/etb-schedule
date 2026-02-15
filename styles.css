@@ -136,6 +136,8 @@
     --shadow-2:
         0 1px 0 rgba(255, 255, 255, 0.04), 0 14px 40px rgba(0, 0, 0, 0.55),
         0 4px 14px rgba(0, 0, 0, 0.35);
+    /* Neutral shadow for topbar & main schedule card (no color tint) */
+    --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.2);
 
     /* ── Z-index ────────────────────────────────────────────────── */
     --z-base: 0;
@@ -193,21 +195,17 @@
     --color-text-disabled: var(--text-muted);
 
     /* ── Surface Colors ─────────────────────────────────────────── */
-    --app-bg: rgb(17 17 17);
-    --schedule-bg: rgb(30 30 30);
-    --surface-0: rgb(17 17 17);
-    /* topbar */
-    --surface-1: rgb(30 30 30);
-    /* table header, sticky cells */
-    --surface-2: rgb(17 17 17);
-    /* cards */
-    --surface-3: rgb(50 50 50);
-    /* inputs / controls */
-    --surface-4: rgb(78 78 78);
-    /* hover / active */
+    --app-bg: rgb(20 20 20); /* app background */
+    --surface-0: rgb(30 30 30); /* topbar */
+    --surface-1: rgb(40 40 40); /* table header, sticky cells */ 
+    --surface-2: rgb(40 40 40); /* cards */
+    --surface-3: rgb(56 56 56); /* inputs / controls */
+    --surface-4: rgb(68 68 68); /* hover / active */
+    --schedule-bg: rgb(40 40 40); /* schedule background */
+   
 
     /* ── Border Colors ──────────────────────────────────────────── */
-    --border: rgb(55 55 55);
+    --border: rgb(70 70 70);
     --border-strong: #3a3a3a;
     --color-border-subtle: color-mix(in srgb, var(--border) 60%, transparent);
     --color-border-disabled: color-mix(in srgb, var(--border) 55%, transparent);
@@ -363,46 +361,80 @@
     --tripbar-multi-bus-indent: 22px;
 }
 
-/* Light theme overrides */
+/* Light theme overrides (recommended — aligned with your dark-mode ladder) */
 [data-theme="light"] {
     color-scheme: light;
 
-    --app-bg: #bdbdbd;
-    --surface-0: #f5f5f5;
-    --surface-1: #fafafa;
-    --schedule-bg: #ffffff;
-    --surface-2: #ffffff;
-    --surface-3: #f0f0f0;
-    --surface-4: #e5e5e5;
+    /* ── Surfaces (background → topbar → header → card → input → hover) ───── */
+    --app-bg: rgb(245 245 245);        /* #f5f5f5 */
+    --surface-0: rgb(255 255 255);     /* topbar */
+    --surface-1: rgb(255 255 255);     /* table header / sticky cells */
+    --schedule-bg: rgb(255 255 255);   /* main schedule surface */
+    --surface-2: rgb(255 255 255);     /* cards */
+    --surface-3: rgb(244 244 245);     /* inputs / controls on cards */
+    --surface-4: rgb(236 236 238);     /* hover / active fill */
 
-    --text: #000000;
-    --text-muted: #737373;
-    --placeholder: #a3a3a3;
-    --white: #000000;
+    /* ── Text hierarchy (parallel to dark mode) ──────────────────────────── */
+    --text: rgba(0, 0, 0, 0.88);
+    --text-secondary: rgba(0, 0, 0, 0.68);
+    --text-muted: rgba(0, 0, 0, 0.56);
+    --placeholder: rgba(0, 0, 0, 0.42);
+    --color-text-disabled: rgba(0, 0, 0, 0.32);
 
-    --text-driver: #000000;
+    /* Keep primitive meaning intact */
+    --white: rgb(255 255 255);
 
-    --border: #e5e5e5;
-    --border-strong: #d4d4d4;
+    /* Driver text (keep neutral like your original; switch to accent if desired) */
+    --text-driver: rgba(0, 0, 0, 0.88);
 
-    --overlay-hover: rgba(0, 0, 0, 0.05);
-    --overlay-active: rgba(0, 0, 0, 0.1);
+    /* ── Borders (subtle + strong) ───────────────────────────────────────── */
+    --border: rgba(0, 0, 0, 0.12);
+    --color-border-subtle: rgba(0, 0, 0, 0.08);
+    --border-strong: rgba(0, 0, 0, 0.18);
+    --color-border-disabled: rgba(0, 0, 0, 0.06);
 
-    --color-success-soft: rgba(22, 163, 74, 0.15);
-    --color-success-border: rgba(22, 163, 74, 0.4);
-    --color-warning-soft: rgba(202, 138, 4, 0.15);
-    --color-warning-border: rgba(202, 138, 4, 0.4);
-    --color-danger-soft: rgba(220, 38, 38, 0.15);
-    --color-danger-border: rgba(220, 38, 38, 0.4);
-    --color-neutral-soft: rgba(75, 85, 99, 0.1);
-    --color-neutral-border: rgba(75, 85, 99, 0.3);
+    /* ── Overlays ───────────────────────────────────────────────────────── */
+    --overlay-hover: rgba(0, 0, 0, 0.04);
+    --overlay-active: rgba(0, 0, 0, 0.08);
 
-    --color-button-bg: #ffffff;
-    --color-button-text: #1a1a1a;
-    --color-button-hover-bg: #f5f5f5;
+    /* ── Buttons ────────────────────────────────────────────────────────── */
+    --color-button-bg: var(--surface-2);
+    --color-button-text: rgba(0, 0, 0, 0.84);
+    --color-button-hover-bg: var(--surface-4);
 
-    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.05), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    --shadow-2: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    /* ── Inputs ─────────────────────────────────────────────────────────── */
+    --color-input-bg: var(--surface-3);
+    --color-input-border: rgba(0, 0, 0, 0.14);
+    --color-input-border-hover: rgba(0, 0, 0, 0.20);
+    --color-input-border-focus: color-mix(in srgb, var(--accent) 55%, black);
+
+    /* ── Status colors (soft + border, same pattern as dark) ─────────────── */
+    --color-success-soft: color-mix(in srgb, var(--green) 18%, transparent);
+    --color-success-border: color-mix(in srgb, var(--green) 55%, transparent);
+
+    --color-warning-soft: color-mix(in srgb, var(--yellow) 22%, transparent);
+    --color-warning-border: color-mix(in srgb, var(--yellow) 55%, transparent);
+
+    --color-danger-soft: color-mix(in srgb, var(--red) 16%, transparent);
+    --color-danger-border: color-mix(in srgb, var(--red) 55%, transparent);
+
+    --color-neutral-soft: color-mix(in srgb, var(--gray) 14%, transparent);
+    --color-neutral-border: color-mix(in srgb, var(--gray) 45%, transparent);
+
+    /* ── Shadows (lighter than dark; same intent) ────────────────────────── */
+    --shadow-1:
+        0 1px 0 rgba(0, 0, 0, 0.02),
+        0 8px 24px rgba(0, 0, 0, 0.10),
+        0 2px 8px rgba(0, 0, 0, 0.06);
+
+    --shadow-2:
+        0 1px 0 rgba(0, 0, 0, 0.03),
+        0 14px 40px rgba(0, 0, 0, 0.14),
+        0 4px 14px rgba(0, 0, 0, 0.08);
+
+    --shadow-elevated:
+        0 4px 12px rgba(0, 0, 0, 0.12),
+        0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 /* ==========================================================================
@@ -1181,13 +1213,9 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 }
 */
 
-/* OPTION 3: With subtle blue accent glow (uncomment to use)*/
+/* Main schedule card — same neutral shadow as topbar */
 .panel-main > .card {
-    box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.04),
-        0 14px 40px rgba(0, 0, 0, 0.55),
-        0 4px 14px rgba(0, 0, 0, 0.35),
-        0 0 0 1px rgba(0, 122, 255, 0.08) !important;
+    box-shadow: var(--shadow-elevated) !important;
 }
 
 .card.compact {
@@ -1524,6 +1552,8 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     position: sticky;
     background: var(--surface-0);
     z-index: 1000;
+    /* border-bottom: 1px solid var(--border); */
+    box-shadow: var(--shadow-elevated);
 }
 
 .topbar-inner {
@@ -1555,6 +1585,17 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     width: auto;
     object-fit: contain;
     line-height: 1;
+}
+
+.topbar-title {
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .week-picker-trigger {
@@ -1626,29 +1667,32 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 
 /* Margin below center schedule card only */
 .panel-main {
-    padding-bottom: 12px;
+    padding-bottom: 24px;
 }
 
 .panel-start:not(.panel-collapsed),
 .panel-end:not(.panel-collapsed) {
     background: var(--surface-2);
+    box-shadow: var(--shadow-elevated);
 }
 
 .panel-start:not(.panel-collapsed) {
-    padding: var(--card-padding) var(--card-padding) var(--card-padding)
-        calc(var(--card-padding) * 2);
+    padding: var(--card-padding);
+   
 }
 
 .panel-end:not(.panel-collapsed) {
-    padding: var(--card-padding) calc(var(--card-padding) * 2) var(--card-padding)
-        var(--card-padding);
+    padding: var(--card-padding);
+   
 }
 .panel-end:not(.panel-collapsed) {
     border-inline-start: none;
+    /* border-left: 1px solid var(--border); */
 }
 
 .panel-start:not(.panel-collapsed) {
     border-inline-end: none;
+    /* border-right: 1px solid var(--border); */
 }
 
 .panel-main > .card {
@@ -1661,9 +1705,9 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     background: var(--schedule-bg);
     display: flex;
     flex-direction: column;
-    margin: 0 var(--card-padding);
+    margin: var(--card-padding);
     overflow: visible;
-    border: 1px solid var(--border);
+    /* border: 1px solid var(--border); */
     /* Let table container handle scrolling */
 }
 
@@ -1764,7 +1808,6 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
         min-width: 100%;
         width: 100%;
         height: 700px;
-        box-shadow: none !important;
     }
 
     @keyframes fadeIn {
@@ -1820,14 +1863,9 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     }
 
     .panel-main > .card {
-        box-shadow:
-            0 4px 6px -1px rgba(0, 0, 0, 0.3),
-            0 2px 4px -1px rgba(0, 0, 0, 0.16) !important;
+        box-shadow: var(--shadow-elevated) !important;
     }
 
-    .panel-end > .card {
-        box-shadow: none !important;
-    }
 
     .panel-end.is-hidden {
         display: none;
@@ -1847,12 +1885,12 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     font-size: 1.25rem;
     /* 20px */
     font-weight: 400;
-    color: color-mix(in srgb, var(--white) 66%, transparent);
+    color: color-mix(in srgb, var(--text) 66%, transparent);
 }
 
 .week-date .wk-month {
     font-weight: 700;
-    color: var(--white);
+    color: var(--text);
     letter-spacing: 0.02em;
 }
 
@@ -2046,6 +2084,39 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 }
 
 /* ==========================================================================
+   Agenda header (date + prev/next week above week table)
+   ========================================================================== */
+.agenda-header {
+    background: var(--surface-1);
+    border-bottom: 1px solid var(--border);
+    padding: var(--space-2) var(--space-4);
+    flex-shrink: 0;
+}
+
+.agenda-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.agenda-header .nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.agenda-header .week-heading {
+    font-family: var(--font-sans);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+    line-height: 1;
+}
+
+/* ==========================================================================
    10) WEEK TABLE
    ========================================================================== */
 .week-table-container {
@@ -2133,7 +2204,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .day-name {
     font-size: 1rem;
     /* 16px */
-    color: color-mix(in srgb, var(--white) 66%, transparent);
+    color: color-mix(in srgb, var(--text) 66%, transparent);
     font-weight: 400;
     line-height: 1;
 }
@@ -2391,6 +2462,9 @@ th.day-today .day-name {
     background: color-mix(in srgb, var(--tripbar-color) var(--tripbar-bg-mix), transparent);
     border: var(--tripbar-border) solid var(--tripbar-color);
     border-radius: var(--tripbar-radius);
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.35),
+        0 1px 3px rgba(0, 0, 0, 0.2);
     -webkit-backdrop-filter: blur(var(--tripbar-blur));
     backdrop-filter: blur(var(--tripbar-blur));
 
