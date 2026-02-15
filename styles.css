@@ -28,6 +28,34 @@
 }
 
 /* ==========================================================================
+   0b) SCROLLBARS — Overlay style (hide gutter/track)
+   ========================================================================== */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--surface-4);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--accent);
+  border: 1px solid transparent;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ==========================================================================
    1) DESIGN SYSTEM TOKENS
    ========================================================================== */
 :root {
@@ -1221,7 +1249,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   /* 12px */
   font-weight: 400;
   color: var(--text-muted);
-  padding: var(--card-padding);
+  padding: none;
   box-sizing: border-box;
 }
 
@@ -1617,7 +1645,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   background: var(--schedule-bg);
   display: flex;
   flex-direction: column;
-  margin: var(--card-padding);
+  margin: 0 var(--card-padding);
   overflow: visible;
   border: 1px solid var(--border);
   /* Let table container handle scrolling */
@@ -2118,7 +2146,7 @@ th.day-today .day-date {
   border-radius: 9999px;
   background: var(--accent);
   border: 2px solid var(--accent);
-  color: var(--schedule-bg);
+  color: var(--text);
   font-weight: 600;
 }
 
@@ -2628,7 +2656,7 @@ th.day-today .day-name {
 
   /* 2. Positioning & Box Model */
   position: absolute;
-  left: 0px;
+  left: 2px;
   top: 50%;
   z-index: 1;
   padding: var(--tripbar-multi-badge-padding);
@@ -2697,7 +2725,7 @@ th.day-today .day-name {
   width: 100%;
 
   /* 2. Positioning & Box Model */
-  padding-inline: var(--tripbar-padding-x);
+  padding-inline: 6px;
   /* margin: 0; */
 
   /* 3. Typography: inherited by child .bar-time elements */
@@ -3131,6 +3159,7 @@ th.day-today .day-name {
   background: var(--surface-3);
   color: var(--text);
   cursor: pointer;
+  -webkit-user-select: none;
   user-select: none;
   transition:
     background var(--dur-1) ease,
