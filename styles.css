@@ -106,6 +106,12 @@
   --black: rgb(0 0 0);
   --white: rgb(255 255 255);
 
+  /* Status color mapping: same values for status selects and trip-bar mini-badges */
+  --color-status-pending: var(--red);
+  --color-status-ok: var(--green);
+  --color-status-assigned: var(--yellow);
+  --color-status-blue: var(--blue);
+
   /* ── Spacing (4px base) ─────────────────────────────────────── */
   --space-0: 0px;
   --space-1: 4px;
@@ -117,11 +123,11 @@
   --space-7: 40px;
   --space-8: 48px;
 
-  /* ── Radii ──────────────────────────────────────────────────── */
+  /* ── Radii (unified 8px scale for buttons, inputs, trip bar) ───── */
   --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-full: 9999px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px; /* icon-only circular controls */
 
   /* ── Motion ─────────────────────────────────────────────────── */
   --dur-1: 160ms;
@@ -236,7 +242,8 @@
   /* 14px */
   --input-font-weight: var(--font-weight-regular);
   --field-inset: inset 0 1px 0 rgba(255, 255, 255, 0.03);
-  --date-picker-filter: invert(1);
+  /* Dark mode: no invert so browser’s color-scheme light icon stays visible */
+  --date-picker-filter: none;
 
   /* ── Control Dimensions ─────────────────────────────────────── */
   --control-height: 36px;
@@ -265,7 +272,7 @@
   /* ── Trip Bar Layout & Geometry ────────────────────────────── */
   --tripbar-height: 98px;
   --tripbar-border: 2px;
-  --tripbar-radius: 8px;
+  --tripbar-radius: var(--radius-sm);
   --tripbar-gap: 100px; /* Vertical space between lanes */
   --tripbar-lane-step: calc(var(--tripbar-height) + var(--tripbar-gap));
   --waiting-list-height: 100px;
@@ -286,58 +293,59 @@
 
   /* ── Per-Row Typography ─────────────────────────────────────── */
 
-  /* R1: Destination */
+  /* R1: Destination — line-height matches row height to prevent vertical drift */
   --tripbar-r1-font-size: 0.75rem; /* 12px */
   --tripbar-r1-row-height: 14px;
   --tripbar-r1-font-weight: 300;
-  --tripbar-r1-line-height: 1;
+  --tripbar-r1-line-height: 14px;
   --tripbar-r1-letter-spacing: 0.02em;
 
   /* R2: Customer */
   --tripbar-r2-font-size: 0.625rem; /* 10px */
   --tripbar-r2-row-height: 12px;
   --tripbar-r2-font-weight: 300;
-  --tripbar-r2-line-height: 1;
+  --tripbar-r2-line-height: 12px;
   --tripbar-r2-letter-spacing: 0.02em;
 
   /* R3: Contact */
   --tripbar-r3-font-size: 0.625rem; /* 10px */
   --tripbar-r3-row-height: 12px;
   --tripbar-r3-font-weight: 300;
-  --tripbar-r3-line-height: 1;
+  --tripbar-r3-line-height: 12px;
   --tripbar-r3-letter-spacing: 0.02em;
 
   /* R4: Times */
   --tripbar-r4-font-size: 0.75rem; /* 12px */
   --tripbar-r4-row-height: 14px;
   --tripbar-r4-font-weight: 300;
-  --tripbar-r4-line-height: 1;
+  --tripbar-r4-line-height: 14px;
   --tripbar-r4-letter-spacing: 0.02em;
 
   /* R5: Status / Icons (icon-based, font-size via --tripbar-icon-size) */
   --tripbar-r5-font-size: 0.75rem; /* 12px */
   --tripbar-r5-row-height: 16px;
   --tripbar-r5-font-weight: 300;
-  --tripbar-r5-line-height: 1;
+  --tripbar-r5-line-height: 16px;
   --tripbar-r5-letter-spacing: 0.02em;
 
   /* R6: Notes */
   --tripbar-r6-font-size: 0.625rem; /* 10px */
   --tripbar-r6-row-height: 12px;
   --tripbar-r6-font-weight: 300;
-  --tripbar-r6-line-height: 1;
+  --tripbar-r6-line-height: 12px;
   --tripbar-r6-letter-spacing: 0.02em;
 
   /* R7: Drivers */
   --tripbar-r7-font-size: 0.75rem; /* 12px */
   --tripbar-r7-row-height: 14px;
   --tripbar-r7-font-weight: 300;
-  --tripbar-r7-line-height: 1;
+  --tripbar-r7-line-height: 14px;
   --tripbar-r7-letter-spacing: 0.02em;
 
-  /* ── Components (Icons & Badges) ────────────────────────────── */
+  /* ── Components (Icons & Badges) — fixed 16px gutter for column alignment ── */
   --tripbar-icon-size: 0.875rem; /* 14px */
-  --tripbar-mini-badge: 0.875rem; /* 14px */
+  --tripbar-icon-gutter: 16px;
+  --tripbar-mini-badge: 14px;
   --tripbar-badge-radius: 4px;
 
   /* ── Visual Effects & Opacity ──────────────────────────────── */
@@ -410,6 +418,9 @@
   --color-input-border-hover: rgba(0, 0, 0, 0.2);
   --color-input-border-focus: color-mix(in srgb, var(--accent) 55%, black);
 
+  /* Light mode: no invert — native icon is already dark and correct */
+  --date-picker-filter: none;
+
   /* ── Status colors (soft + border, same pattern as dark) ─────────────── */
   --color-success-soft: color-mix(in srgb, var(--green) 18%, transparent);
   --color-success-border: color-mix(in srgb, var(--green) 55%, transparent);
@@ -434,6 +445,12 @@
 
   --shadow-elevated:
     0 4px 12px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Light theme: driver names use dark text (no shadow) */
+[data-theme="light"] .trip-bar .driver {
+  color: var(--text-driver);
+  text-shadow: none;
 }
 
 /* ==========================================================================
@@ -533,6 +550,12 @@ textarea:focus-visible {
 :where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn):focus-visible {
   outline: none;
   border-color: var(--focus);
+  box-shadow: var(--focus-ring);
+}
+
+/* Trip bar: keyboard focus for accessibility (tabindex="0") */
+.trip-bar:focus-visible {
+  outline: none;
   box-shadow: var(--focus-ring);
 }
 
@@ -821,8 +844,8 @@ label .label-link:active {
 
 .toggle-pill-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--space-1); /* Match form-group and bus-assign label-to-input spacing */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2); /* Match form-group and bus-assign label-to-input spacing */
 }
 
 .toggle-pill-grid-label {
@@ -830,6 +853,10 @@ label .label-link:active {
   font-size: var(--font-size-1);
   font-weight: var(--font-weight-regular);
   color: var(--text-muted);
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+  /* Tighter gap from label to first row than between pill rows */
+  margin-bottom: calc(var(--space-1) - var(--space-2));
 }
 
 /* ==========================================================================
@@ -1080,11 +1107,20 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   background: var(--surface-2);
 }
 
+.modal-head.card-header {
+  min-height: 40px;
+}
+
 .modal-body {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
   padding: var(--space-4);
+  background: var(--surface-2);
+}
+
+.modal-card-details .modal-body {
+  padding: var(--card-padding);
 }
 
 .modal-actions,
@@ -1234,7 +1270,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 }
 */
 
-/* Main schedule card — same neutral shadow as topbar */
+/* Main schedule card — same elevation as control layer */
 .panel-main > .card {
   box-shadow: var(--shadow-elevated) !important;
 }
@@ -1568,7 +1604,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   /* Allow dropdowns to display outside container */
 }
 
-/* Topbar */
+/* Control layer: topbar uses --shadow-elevated above data layer */
 .topbar {
   position: sticky;
   background: var(--surface-0);
@@ -1691,27 +1727,12 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   padding-bottom: 24px;
 }
 
+/* Sidebar symmetry: identical padding and background for both panels */
 .panel-start:not(.panel-collapsed),
 .panel-end:not(.panel-collapsed) {
   background: var(--surface-2);
+  padding: var(--card-padding);
   box-shadow: var(--shadow-elevated);
-}
-
-.panel-start:not(.panel-collapsed) {
-  padding: var(--card-padding);
-}
-
-.panel-end:not(.panel-collapsed) {
-  padding: var(--card-padding);
-}
-.panel-end:not(.panel-collapsed) {
-  border-inline-start: none;
-  /* border-left: 1px solid var(--border); */
-}
-
-.panel-start:not(.panel-collapsed) {
-  border-inline-end: none;
-  /* border-right: 1px solid var(--border); */
 }
 
 .panel-main > .card {
@@ -1922,12 +1943,12 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 
 /* Mobile layout */
 @media (max-width: 899px) {
-  :root {
-    --control-height: 44px;
-    --control-padding-x: 8px;
-    --control-font-size: 0.875rem;
-    /* 14px */
-  }
+    /* Fix 1: Ensure the main card doesn't overflow the right side */
+    .panel-main > .card {
+      margin: 8px 0 !important;
+      width: 100% !important;
+      border-radius: 12px; /* Smoother transition for mobile */
+    }
 
   .app {
     height: 100vh;
@@ -1962,12 +1983,8 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     display: inline-flex;
   }
 
-  /* Topbar */
   .topbar-inner {
-    gap: var(--space-1);
-    padding: 0 var(--space-2);
-    flex-wrap: nowrap;
-    height: 44px;
+    padding: 0 var(--space-4) !important; /* Increase from space-2 to space-4 */
   }
 
   .logo-wrap {
@@ -1980,6 +1997,11 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     gap: 2px;
     flex: 1;
     min-width: 0;
+  }
+
+  .status-grid {
+    grid-template-columns: 1fr; /* Stack them to prevent horizontal squishing */
+    gap: var(--space-4);
   }
 
   .topbar-end {
@@ -2008,15 +2030,10 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     z-index: 10;
   }
 
-  .week-picker-trigger {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    min-width: 0;
-    padding: 0 4px;
-    position: relative;
-    z-index: 5;
-    height: 36px;
+/* Fix 4: Sticky Header alignment */
+.week-picker-trigger {
+    padding: 0 var(--space-2);
+    justify-content: flex-start; /* Align left to match logo position */
   }
 
   .week-picker-trigger .date-input-overlay {
@@ -2901,7 +2918,7 @@ th.day-today .day-name {
   flex-shrink: 0;
 }
 
-/* Child: individual requirement icon */
+/* Child: individual requirement icon — fixed 16px for column alignment */
 .trip-bar .bar-req-icon {
   /* 1. Layout & Display */
   display: inline-flex;
@@ -2909,8 +2926,11 @@ th.day-today .day-name {
   justify-content: center;
 
   /* 2. Positioning & Box Model */
-  width: var(--tripbar-mini-badge);
-  height: var(--tripbar-mini-badge);
+  width: var(--tripbar-icon-gutter, 16px);
+  height: var(--tripbar-icon-gutter, 16px);
+  min-width: 16px;
+  min-height: 16px;
+  flex-shrink: 0;
 
   /* 3. Typography */
   font-size: var(--tripbar-icon-size);
@@ -2939,7 +2959,7 @@ th.day-today .day-name {
   min-width: 0;
 }
 
-/* Child: individual mini badge */
+/* Child: individual mini badge — fixed 16px for column alignment */
 .trip-bar .mini-badge {
   /* 1. Layout & Display */
   display: inline-flex;
@@ -2949,6 +2969,9 @@ th.day-today .day-name {
   /* 2. Positioning & Box Model */
   width: var(--tripbar-mini-badge);
   height: var(--tripbar-mini-badge);
+  min-width: 14px;
+  min-height: 14px;
+  flex-shrink: 0;
 
   /* 4. Visual / Color */
   color: var(--black);
@@ -2969,21 +2992,21 @@ th.day-today .day-name {
     "opsz" 20;
 }
 
-/* Badge color variants */
+/* Badge color variants — same as status selects (--color-status-*) */
 .trip-bar .mini-badge.is-pending {
-  background: var(--red);
+  background: var(--color-status-pending);
 }
 
 .trip-bar .mini-badge.is-ok {
-  background: var(--green);
+  background: var(--color-status-ok);
 }
 
 .trip-bar .mini-badge.is-blue {
-  background: var(--blue);
+  background: var(--color-status-blue);
 }
 
 .trip-bar .mini-badge.is-yellow {
-  background: var(--yellow);
+  background: var(--color-status-assigned);
 }
 
 /* Invoice badge becomes a tiny pill when it has a number */
@@ -3041,7 +3064,7 @@ th.day-today .day-name {
   gap: var(--tripbar-gap-drivers, 6px);
 }
 
-/* Child: individual driver name */
+/* Child: individual driver name — high contrast on all trip color variants */
 .trip-bar .driver {
   /* 3. Typography — dominant, same scale as destination */
   font-size: var(--tripbar-r7-font-size);
@@ -3051,9 +3074,11 @@ th.day-today .day-name {
   justify-content: center;
   text-transform: uppercase;
 
-  /* 4. Visual / Color */
-
-  color: var(--text-driver);
+  /* 4. Visual / Color — readable on pink, teal, blue, green, etc. */
+  color: #fff;
+  text-shadow:
+    0 0 1px rgba(0, 0, 0, 0.9),
+    0 1px 2px rgba(0, 0, 0, 0.6);
 
   /* 5. Text Overflow */
   min-width: 0;
@@ -3143,7 +3168,7 @@ th.day-today .day-name {
   container-name: form-grid;
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--space-3);
+  gap: var(--space-2);
   margin: 12px 6px;
   align-items: start;
 }
@@ -3276,7 +3301,7 @@ th.day-today .day-name {
   font-weight: 600;
   padding: 6px 14px;
   line-height: 1;
-  border-radius: 9999px;
+  border-radius: var(--radius-sm);
   border: 2px solid transparent;
   background: var(--surface-3);
   color: var(--text);
@@ -3374,7 +3399,7 @@ th.day-today .day-name {
   display: grid;
   width: auto;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-3);
+  gap: var(--space-2);
   align-items: start;
 }
 
@@ -3385,41 +3410,41 @@ select[class*="status-"] {
 }
 
 select.status-pending {
-  --status-color: var(--red);
+  --status-color: var(--color-status-pending);
   --status-bg: color-mix(in srgb, var(--status-color) 60%, transparent);
   --status-border: var(--status-color);
 }
 
 select.status-ok {
-  --status-color: var(--green);
+  --status-color: var(--color-status-ok);
   --status-bg: color-mix(in srgb, var(--status-color) 60%, transparent);
   --status-border: var(--status-color);
 }
 
 select.status-assigned {
-  --status-color: var(--yellow);
+  --status-color: var(--color-status-assigned);
   --status-bg: color-mix(in srgb, var(--status-color) 60%, transparent);
   --status-border: var(--status-color);
 }
 
 select.status-blue,
 select.status-confirmed {
-  --status-color: var(--blue);
+  --status-color: var(--color-status-blue);
   --status-bg: color-mix(in srgb, var(--status-color) 60%, transparent);
   --status-border: var(--status-color);
 }
 
 #busGrid.bus-assign {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  column-gap: var(--space-3);
-  row-gap: var(--space-1); /* Match form-group label-to-input spacing (4px) */
+  grid-template-columns: 80px 1fr 1fr;
+  column-gap: var(--space-2);
+  row-gap: var(--space-2); /* Match form-group label-to-input spacing (4px) */
 }
 
 .bus-assign__head {
   font-size: var(--font-size-1);
   font-weight: var(--font-weight-medium);
-  color: var(--text);
+  color: var(--text-secondary);
   line-height: 1.4;
   padding-bottom: 0;
   margin-bottom: calc(var(--space-1) - var(--space-2));
@@ -3502,68 +3527,149 @@ select.status-confirmed {
 /* ==========================================================================
    15) TRIP DETAILS MODAL CONTENT
    ========================================================================== */
-.detail-row {
-  display: flex;
-  margin-bottom: 4px;
-  line-height: 1.4;
-}
-
-.detail-row strong {
-  min-width: 140px;
-  color: var(--text-muted);
-  font-weight: 600;
-  font-size: 0.6875rem;
-  /* 11px */
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-.detail-row span {
-  flex: 1;
+.trip-details-content {
+  font-size: var(--font-size-2);
   color: var(--text);
 }
 
+.detail-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2) var(--space-4);
+  margin-bottom: var(--space-2);
+}
+
+/* Inline layout: label and value on same line to save vertical space */
+.detail-grid-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-2);
+  align-items: baseline;
+  min-width: 0;
+}
+
+.detail-grid-item--datetime .detail-value {
+  white-space: nowrap;
+}
+
+.detail-value {
+  font-size: var(--font-size-1);
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1;
+  min-width: 0;
+  word-break: break-word;
+}
+
+/* Label + value block (Notes, Comments, Assignments, Itinerary) — same label as rows above */
+.detail-labeled-block {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-2);
+  align-items: start;
+  min-width: 0;
+  margin-bottom: var(--space-2);
+}
+
+.detail-labeled-block .toggle-pill-grid-label {
+  flex-shrink: 0;
+}
+
+.detail-value-block {
+  font-size: var(--font-size-2);
+  color: var(--text);
+  line-height: 1.5;
+  min-width: 0;
+}
+
+.detail-value-block.detail-text {
+  border-radius: var(--radius-sm);
+  padding: var(--space-2);
+}
+
+.detail-value-block.detail-text.pre-wrap {
+  color: var(--text-secondary);
+  font-size: var(--font-size-1);
+}
+
+/* Section spacing only; typography from .toggle-pill-grid-label */
 .detail-section-title {
-  font-size: 0.6875rem;
-  /* 11px */
-  font-weight: 700;
-  color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 6px;
-  margin-top: 4px;
+  margin-bottom: var(--space-1);
+  margin-top: var(--space-2);
 }
 
 .detail-divider {
-  height: 1px;
-  background: var(--border);
-  margin: 12px 0;
+  border-top: 1px solid var(--border);
+  margin: var(--space-2) 0;
 }
 
 .detail-text {
   color: var(--text);
   line-height: 1.5;
-  font-size: 0.8125rem;
-  /* 13px */
-  background: var(--surface-2);
-  padding: 8px;
-  border-radius: 6px;
+  font-size: var(--font-size-2);
+  background: var(--surface-3);
   letter-spacing: 0.02em;
   border: none;
 }
 
 .detail-text.pre-wrap {
   white-space: pre-wrap;
-  font-size: 0.75rem;
-  /* 12px */
-  color: var(--black);
-  background: var(--white);
+  padding: var(--space-2);
+  font-size: var(--font-size-1);
+  color: var(--text-secondary);
+  background: var(--surface-3);
+  border-radius: var(--radius-sm);
+  height: 100%;
+}
+
+.detail-itinerary-scroll {
+  max-height: min(28rem, 45vh);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.detail-assignments-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-1) var(--space-3);
+}
+
+.detail-single-field-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-1);
 }
 
 .detail-assignment {
-  margin-inline-start: 8px;
-  margin-bottom: 4px;
   color: var(--text);
+  font-size: var(--font-size-1);
+  line-height: 1.4;
+}
+
+.detail-assignment.detail-plain-wrap {
+  white-space: pre-wrap;
+}
+
+/* Status value colors in trip details modal (semantic cues only) */
+.detail-value.status-pending { color: var(--color-status-pending); }
+.detail-value.status-ok { color: var(--color-status-ok); }
+.detail-value.status-assigned { color: var(--color-status-assigned); }
+.detail-value.status-blue { color: var(--color-status-blue); }
+
+/* Trip details modal: mobile portrait — gutter and single-column grid */
+@media (max-width: 600px) {
+  .modal-card.modal-card-details {
+    width: calc(100vw - 32px);
+    max-width: none;
+  }
+
+  .detail-meta-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-assignments-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ==========================================================================

@@ -2854,15 +2854,15 @@ function buildBusRowsOnce() {
   dom.busGrid.className = "bus-assign";
 
   const h1 = document.createElement("div");
-  h1.className = "label";
+  h1.className = "label bus-assign__head";
   h1.textContent = "Bus";
 
   const h2 = document.createElement("div");
-  h2.className = "label";
+  h2.className = "label bus-assign__head";
   h2.textContent = "Driver 1";
 
   const h3 = document.createElement("div");
-  h3.className = "label";
+  h3.className = "label bus-assign__head";
   h3.textContent = "Driver 2";
 
   dom.busGrid.append(h1, h2, h3);
@@ -3115,43 +3115,88 @@ function closeItineraryModal() {
 function renderTripDetailsModalFromData(t, assigns) {
   let html = "";
 
-  function row(label, val) {
+  function detailGridItem(label, val, itemClass) {
     if (!val) return "";
-    return `<div class="detail-row"><strong>${label}:</strong> <span>${escHtml(val)}</span></div>`;
+    const wrapClass = itemClass ? `detail-grid-item ${itemClass}` : "detail-grid-item";
+    return `<div class="${wrapClass}"><span class="toggle-pill-grid-label">${label}:</span> <span class="detail-value">${escHtml(val)}</span></div>`;
+  }
+  function formatShortDate(iso) {
+    if (!iso || iso.length < 10) return "";
+    const [y, m, d] = iso.slice(0, 10).split("-").map(Number);
+    return `${m}/${d}/${String(y).slice(-2)}`;
+  }
+
+  function getDetailStatusClass(fieldId, val) {
+    const v = String(val || "").trim().toLowerCase();
+    if (!v) return "";
+    if (fieldId === "driverStatus") {
+      if (v === "pending") return "status-pending";
+      if (v === "assigned") return "status-assigned";
+      return "status-ok";
+    }
+    if (fieldId === "paymentStatus") {
+      if (v === "pending quote") return "status-pending";
+      if (v === "quoted") return "status-assigned";
+      return "status-ok";
+    }
+    if (fieldId === "invoiceStatus") {
+      if (v === "pending invoice") return "status-pending";
+      if (v === "invoiced") return "status-assigned";
+      if (v === "deposit received") return "status-blue";
+      if (v === "paid in full") return "status-ok";
+      return "";
+    }
+    if (v === "pending") return "status-pending";
+    return "status-ok";
+  }
+
+  function rowStatus(label, val, fieldId) {
+    if (!val) return "";
+    const cls = getDetailStatusClass(fieldId, val);
+    const valueSpan = cls
+      ? `<span class="detail-value ${cls}">${escHtml(val)}</span>`
+      : `<span class="detail-value">${escHtml(val)}</span>`;
+    return `<div class="detail-grid-item"><span class="toggle-pill-grid-label">${label}:</span> ${valueSpan}</div>`;
   }
 
   function section(title) {
-    return `<div class="detail-section-title">${title}</div>`;
+    return `<div class="detail-section-title toggle-pill-grid-label">${title}</div>`;
   }
 
   const depDate = String(t.departureDate || "").slice(0, 10);
   const arrDate = String(t.arrivalDate || "").slice(0, 10);
   const depTime = formatTime12(t.departureTime);
   const arrTime = formatTime12(t.arrivalTime);
+  const departStr = (formatShortDate(depDate) || "—") + (depTime ? " " + depTime : "");
+  const arriveStr = (formatShortDate(arrDate) || "—") + (arrTime ? " " + arrTime : "");
 
-  html += row("DESTINATION", t.destination);
-  html += row("CUSTOMER", t.customer);
-  html += row("CONTACT", t.contactName);
-  html += row("PHONE", t.phone);
+  /* Single grid: Column 1 = Destination, Contact, Depart; Column 2 = Customer, Phone, Arrive; then Buses */
+  html += `<div class="detail-meta-grid">`;
+  html += detailGridItem("Destination", t.destination);
+  html += detailGridItem("Customer", t.customer);
+  html += detailGridItem("Contact", t.contactName);
+  html += detailGridItem("Phone", t.phone);
+  html += detailGridItem("Depart", departStr, "detail-grid-item--datetime");
+  html += detailGridItem("Arrive", arriveStr, "detail-grid-item--datetime");
+  html += detailGridItem("Buses Needed", t.busesNeeded);
+  html += `</div>`;
 
   html += `<div class="detail-divider"></div>`;
 
-  html += row("DEPART", `${depDate || "—"} ${depTime ? `@ ${depTime}` : ""}`);
-  html += row("ARRIVE", `${arrDate || "—"} ${arrTime ? `@ ${arrTime}` : ""}`);
-  html += row("BUSES NEEDED", t.busesNeeded);
-
-  html += `<div class="detail-divider"></div>`;
-
-  html += row("ITINERARY STATUS", t.itineraryStatus);
-  html += row("CONTACT STATUS", t.contactStatus);
-  html += row("PAYMENT STATUS", t.paymentStatus);
-  html += row("DRIVER STATUS", t.driverStatus);
-  html += row("INVOICE STATUS", t.invoiceStatus);
-  if (t.invoiceNumber) html += row("INVOICE NUMBER", t.invoiceNumber);
+  html += `<div class="detail-meta-grid detail-status-grid">`;
+  html += rowStatus("Itinerary Status", t.itineraryStatus, "itineraryStatus");
+  html += rowStatus("Contact Status", t.contactStatus, "contactStatus");
+  html += rowStatus("Approval Status", t.paymentStatus, "paymentStatus");
+  html += rowStatus("Driver Status", t.driverStatus, "driverStatus");
+  html += rowStatus("Invoice Status", t.invoiceStatus, "invoiceStatus");
+  if (t.invoiceNumber) html += detailGridItem("Invoice Number", t.invoiceNumber);
+  html += `</div>`;
 
   if (assigns && assigns.length) {
     html += `<div class="detail-divider"></div>`;
-    html += section("ASSIGNMENTS");
+    html += `<div class="detail-labeled-block">`;
+    html += `<span class="toggle-pill-grid-label">Assignments:</span>`;
+    html += `<div class="detail-value-block detail-assignments-grid">`;
     assigns.forEach((a) => {
       const n = a.busNumber ? `#${a.busNumber}` : "";
       const bus = a.busId ? `Bus ${a.busId}` : "Bus —";
@@ -3159,24 +3204,31 @@ function renderTripDetailsModalFromData(t, assigns) {
       const d2 = a.driver2 && a.driver2 !== "None" ? a.driver2 : "";
       html += `<div class="detail-assignment">• ${n} ${bus}: ${d1}${d2 ? " / " + d2 : ""}</div>`;
     });
+    html += `</div></div>`;
   }
 
   if (t.notes) {
     html += `<div class="detail-divider"></div>`;
-    html += section("NOTES");
-    html += `<div class="detail-text">${escHtml(t.notes)}</div>`;
+    html += `<div class="detail-labeled-block">`;
+    html += `<span class="toggle-pill-grid-label">Notes:</span>`;
+    html += `<div class="detail-value-block detail-single-field-grid">`;
+    html += `<div class="detail-assignment detail-plain-wrap">${escHtml(t.notes)}</div>`;
+    html += `</div></div>`;
   }
 
   if (t.comments) {
     html += `<div class="detail-divider"></div>`;
-    html += section("COMMENTS");
-    html += `<div class="detail-text">${escHtml(t.comments)}</div>`;
+    html += `<div class="detail-labeled-block">`;
+    html += `<span class="toggle-pill-grid-label">Comments:</span>`;
+    html += `<div class="detail-value-block detail-single-field-grid">`;
+    html += `<div class="detail-assignment detail-plain-wrap">${escHtml(t.comments)}</div>`;
+    html += `</div></div>`;
   }
 
   if (t.itinerary) {
     html += `<div class="detail-divider"></div>`;
-    html += section("ITINERARY");
-    html += `<div class="detail-text pre-wrap">${escHtml(t.itinerary)}</div>`;
+    html += section("Itinerary:");
+    html += `<div class="detail-text pre-wrap detail-itinerary-scroll">${escHtml(t.itinerary)}</div>`;
   }
 
   dom.tripDetailsBody.innerHTML = html;
@@ -4418,7 +4470,7 @@ function wireEvents() {
   }
 
   dom.tripDetailsModal?.addEventListener("click", (e) => {
-    if (e.target.dataset.closeDetails !== undefined) closeTripDetailsModal();
+    if (e.target.closest("[data-close-details]")) closeTripDetailsModal();
   });
 
   document.addEventListener("keydown", (e) => {
