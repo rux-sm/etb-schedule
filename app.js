@@ -2854,15 +2854,15 @@ function buildBusRowsOnce() {
   dom.busGrid.className = "bus-assign";
 
   const h1 = document.createElement("div");
-  h1.className = "label bus-assign__head";
+  h1.className = "field-label";
   h1.textContent = "Bus";
 
   const h2 = document.createElement("div");
-  h2.className = "label bus-assign__head";
+  h2.className = "field-label";
   h2.textContent = "Driver 1";
 
   const h3 = document.createElement("div");
-  h3.className = "label bus-assign__head";
+  h3.className = "field-label";
   h3.textContent = "Driver 2";
 
   dom.busGrid.append(h1, h2, h3);

@@ -93,6 +93,14 @@
   --line-height-tight: 1.25;
   --letter-spacing-base: 0.02em;
 
+  /* ── Heading scale (H1 page, H2 card, H3 small section) ─────── */
+  --heading-1-size: 1.25rem;   /* 20px */
+  --heading-1-weight: 600;
+  --heading-2-size: 1rem;      /* 16px */
+  --heading-2-weight: 600;
+  --heading-3-size: 0.6875rem; /* 11px */
+  --heading-3-weight: 700;
+
   /* ── Color Palette ─────────────────────────────────────────── */
   --blue: rgb(0 122 255);
   --teal: rgb(48 209 218);
@@ -262,12 +270,15 @@
   --layout-logo-height: 28px;
   --panel-width: 420px;
   --card-padding: 12px;
+  --card-footer-padding-y: 12px;
+  --card-footer-padding-x: 12px;
+  --card-footer-min-height: 44px;
 
   /* ── Schedule Grid ──────────────────────────────────────────── */
   --schedule-row-height: 101px;
   /* 100px trip bar + 4px clearance to prevent gridline clipping */
-  --bus-col-w: 40px;
-  --day-row-h: 40px;
+  --bus-col-w: 36px;
+  --day-row-h: 36px;
 
   /* ── Trip Bar Layout & Geometry ────────────────────────────── */
   --tripbar-height: 98px;
@@ -833,19 +844,19 @@ label .label-link:active {
 .bus-icons {
   position: absolute;
   left: 50%;
-  bottom: 8px;
+  bottom: 4px;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 1px;
   z-index: 5;
 }
 
 .toggle-pill-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-2); /* Match form-group and bus-assign label-to-input spacing */
+  gap: 8px;
 }
 
 .toggle-pill-grid-label {
@@ -1108,7 +1119,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 }
 
 .modal-head.card-header {
-  min-height: 40px;
+  min-height: 36px;
 }
 
 .modal-body {
@@ -1284,9 +1295,9 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
-  padding: none;
-  border-bottom: 1px solid var(--border);
-  min-height: 40px;
+  margin-top: 12px;
+  padding: 0 6px;
+  height: 36px;
 }
 
 .card-header-actions {
@@ -1328,12 +1339,11 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 }
 
 .section-title {
-  font-family: var(--font-sans);
-  font-size: 1rem;
-  /* 16px */
-  font-weight: var(--font-weight-regular);
-  letter-spacing: 0.02em;
-  color: var(--text);
+  font-family: var(--font-sans); /* Inter */
+  font-size: var(--heading-2-size); /* 16px */
+  font-weight: var(--heading-2-weight); /* 400 */
+  letter-spacing: 0.02em; /* 0.02em */
+  color: var(--text); /* #ffffff */
 }
 
 .card-content {
@@ -1351,16 +1361,17 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   align-items: center;
   justify-content: flex-end;
   gap: var(--space-2);
-  padding: var(--card-padding) 0px;
-  margin-top: 0;
-  border-top: 1px solid var(--border);
   flex-wrap: wrap;
-  min-height: 40px;
+  min-height: var(--card-footer-min-height);
+  padding: var(--card-footer-padding-y) var(--card-footer-padding-x);
+  margin-top: 0;
+  background: var(--surface-2);
 }
 
 .card-footer:empty {
-  min-height: 8px;
-  padding: 4px;
+  min-height: 0;
+  padding: var(--space-1);
+  border-top: none;
 }
 
 /* Toasts */
@@ -1547,10 +1558,10 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   align-items: center;
   justify-content: center;
   padding: 2px 10px 0 10px;
-  font-size: 1rem;
+  font-size: var(--input-font-size);
   /* 16px */
   font-weight: 400;
-  border-radius: 4px;
+  border-radius: var(--radius-full);
   height: 24px;
   line-height: normal;
   letter-spacing: 0.02em;
@@ -1559,7 +1570,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 
 .badge-primary {
   background: color-mix(in srgb, var(--accent) 33%, transparent);
-  color: var(--text);
+  color: var(--text-secondary);
   border: 1px solid var(--accent);
   vertical-align: middle;
 }
@@ -1604,35 +1615,36 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   /* Allow dropdowns to display outside container */
 }
 
-/* Control layer: topbar uses --shadow-elevated above data layer */
+/* --- Standardized Top Bar --- */
 .topbar {
   position: sticky;
   background: var(--surface-0);
+  height: 44px;
   z-index: 1000;
-  /* border-bottom: 1px solid var(--border); */
   box-shadow: var(--shadow-elevated);
+  display: flex;
+  align-items: center;
 }
 
 .topbar-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-4);
-  padding: 0 var(--space-4);
-  height: auto;
-  overflow: visible;
+  width: 100%;
+  padding: 0 16px;
+  height: 100%;
 }
 
 .topbar-start {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: 12px;
   flex: 1;
   min-width: 0;
 }
 
 .logo-wrap {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   height: 100%;
 }
@@ -1641,26 +1653,33 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   height: 24px;
   width: auto;
   object-fit: contain;
-  line-height: 1;
 }
 
-.topbar-title {
+/* Page-level title: shared style (topbar, agenda week) */
+.heading-1 {
   font-family: var(--font-sans);
-  font-size: 1.125rem;
-  font-weight: 600;
+  font-size: var(--heading-1-size);
+  font-weight: var(--heading-1-weight);
   color: var(--text);
   line-height: 1.2;
+  margin: 0;
+  letter-spacing: var(--letter-spacing-base);
+}
+
+/* Topbar title: .heading-1 + bar-specific layout */
+.topbar__title {
+  line-height: 1;
+  padding: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .week-picker-trigger {
-  height: 44px;
   display: flex;
   align-items: center;
   gap: 0;
   cursor: pointer;
+  height: var(--control-height);
   padding: 0 var(--control-padding-x);
   border-radius: var(--control-radius);
   transition: background-color var(--dur-1) ease;
@@ -1731,7 +1750,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .panel-start:not(.panel-collapsed),
 .panel-end:not(.panel-collapsed) {
   background: var(--surface-2);
-  padding: var(--card-padding);
+  padding: 0 var(--card-padding);
   box-shadow: var(--shadow-elevated);
 }
 
@@ -1741,7 +1760,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   max-height: 100%;
   /* But don't exceed viewport */
   padding: var(--card-padding);
-  border-radius: 32px;
+  border-radius: none;
   background: var(--schedule-bg);
   display: flex;
   flex-direction: column;
@@ -1943,12 +1962,12 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 
 /* Mobile layout */
 @media (max-width: 899px) {
-    /* Fix 1: Ensure the main card doesn't overflow the right side */
-    .panel-main > .card {
-      margin: 8px 0 !important;
-      width: 100% !important;
-      border-radius: 12px; /* Smoother transition for mobile */
-    }
+  /* Fix 1: Ensure the main card doesn't overflow the right side */
+  .panel-main > .card {
+    margin: 8px 0 !important;
+    width: 100% !important;
+    border-radius: 12px; /* Smoother transition for mobile */
+  }
 
   .app {
     height: 100vh;
@@ -2030,8 +2049,8 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     z-index: 10;
   }
 
-/* Fix 4: Sticky Header alignment */
-.week-picker-trigger {
+  /* Fix 4: Sticky Header alignment */
+  .week-picker-trigger {
     padding: 0 var(--space-2);
     justify-content: flex-start; /* Align left to match logo position */
   }
@@ -2123,8 +2142,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
    ========================================================================== */
 .agenda-header {
   background: var(--surface-1);
-  border-bottom: 1px solid var(--border);
-  padding: var(--space-2) var(--space-4);
+  border-bottom: none;
   flex-shrink: 0;
 }
 
@@ -2144,11 +2162,11 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 
 .agenda-header .week-heading {
   font-family: var(--font-sans);
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: var(--heading-2-size);
+  font-weight: var(--heading-2-weight);
   color: var(--text);
   margin: 0;
-  line-height: 1;
+  line-height: 1.2;
 }
 
 /* ==========================================================================
@@ -2418,7 +2436,7 @@ th.day-today .day-name {
   font-size: 1rem;
   /* 16px */
   font-weight: 500;
-  color: var(--text);
+  color: var(--text-secondary);
   letter-spacing: 0.02em;
 }
 
@@ -3163,33 +3181,36 @@ th.day-today .day-name {
 /* ==========================================================================
    12) FORMS — grid + helpers
    ========================================================================== */
+/* --- 1. The Global Form Container --- */
 .form-grid {
   container-type: inline-size;
   container-name: form-grid;
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--space-2);
-  margin: 12px 6px;
+  gap: 8px;
+  margin: 8px 6px;
   align-items: start;
 }
 
+/* --- 3. Unified Form Group --- */
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: 0;
   min-width: 0;
   align-items: stretch;
 }
 
-/* Ensure consistent alignment for all form groups */
+/* Ensure consistent alignment for all form groups — same spacing as .field-label */
 .form-group > label {
   display: block;
   width: 100%;
   font-size: var(--font-size-1);
   font-weight: var(--font-weight-regular);
-  color: var(--);
+  color: var(--text-muted);
   line-height: 1.4;
   min-height: 1.4em;
+  margin-bottom: 4px;
 }
 
 .form-group > input,
@@ -3223,20 +3244,32 @@ th.day-today .day-name {
   grid-column: span 12;
 }
 
-/* Field label for section headers */
+/* --- 2. Standardized Label Class (matches .form-group > label spacing and weight) --- */
 .field-label {
-  font-size: var(--font-size-1);
-  font-weight: var(--font-weight-medium);
-  color: var(--text-secondary);
-  margin-bottom: var(--space-1);
   display: block;
+  font-size: var(--font-size-1);
+  font-weight: var(--font-weight-regular);
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin-bottom: 4px;
 }
 
+/* --- 4. Standardized Subsections --- */
 .subsection {
   grid-column: span 12;
-  margin-top: 0;
-  padding-top: var(--space-3);
+  margin-top: 4px;
+  padding-top: 8px;
   border-top: 1px solid var(--border);
+}
+
+/* Requirements: no extra margin so label-to-content gap is 4px like form groups */
+.subsection > .toggle-pill-grid {
+  margin-top: 0;
+}
+
+/* Bus assignment: reduce gap between header row and first dropdown row to 4px (grid gap is 8px) */
+#busGrid.bus-assign .field-label {
+  margin-bottom: -4px;
 }
 
 .subsection-grid {
@@ -3244,6 +3277,8 @@ th.day-today .day-name {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-2);
 }
+
+/* --- 5. Specific grid gaps standardized to 8px (set in each grid below) --- */
 
 .form-actions {
   display: flex;
@@ -3316,7 +3351,6 @@ th.day-today .day-name {
 .toggle-pill-icon {
   font-size: 1rem;
   /* 18px - matches text height */
- 
 }
 
 .toggle-pill[aria-pressed="true"] {
@@ -3399,7 +3433,7 @@ th.day-today .day-name {
   display: grid;
   width: auto;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-2);
+  gap: 8px;
   align-items: start;
 }
 
@@ -3436,9 +3470,8 @@ select.status-confirmed {
 
 #busGrid.bus-assign {
   display: grid;
-  grid-template-columns: 80px 1fr 1fr;
-  column-gap: var(--space-2);
-  row-gap: var(--space-2); /* Match form-group label-to-input spacing (4px) */
+  grid-template-columns: 60px 1fr 1fr;
+  gap: 8px;
 }
 
 .bus-assign__head {
@@ -3651,10 +3684,18 @@ select.status-confirmed {
 }
 
 /* Status value colors in trip details modal (semantic cues only) */
-.detail-value.status-pending { color: var(--color-status-pending); }
-.detail-value.status-ok { color: var(--color-status-ok); }
-.detail-value.status-assigned { color: var(--color-status-assigned); }
-.detail-value.status-blue { color: var(--color-status-blue); }
+.detail-value.status-pending {
+  color: var(--color-status-pending);
+}
+.detail-value.status-ok {
+  color: var(--color-status-ok);
+}
+.detail-value.status-assigned {
+  color: var(--color-status-assigned);
+}
+.detail-value.status-blue {
+  color: var(--color-status-blue);
+}
 
 /* Trip details modal: mobile portrait — gutter and single-column grid */
 @media (max-width: 600px) {
