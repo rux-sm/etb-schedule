@@ -212,17 +212,17 @@
   --text-driver: var(--yellow); /* driver names */
 
   /* ── Surface Colors ─────────────────────────────────────────── */
-  --app-bg: rgb(19 19 21); /* app background */
+  --app-bg: rgb(13, 13, 15);      /* The main background */
   --surface-0: rgb(29 29 31); /* topbar */
-  --surface-1: rgb(9 9 11); /* table header, sticky cells */
-  --surface-2: rgb(39 39 41); /* cards */
+  --surface-1: rgb(22, 22, 24);   /* The table headers and sticky cells */
+  --surface-2: rgb(30, 30, 33);   /* The sidebar cards */
   --surface-3: rgb(74 74 76); /* inputs / controls */
   --surface-4: rgb(69 69 71); /* hover / active */
-  --schedule-bg: rgb(9 9 11); /* schedule background */
+  --schedule-bg: rgb(22, 22, 24);  /* schedule background */
   --agenda-header-bg: var(--surface-1); /* agenda header (week date + nav) */
 
   /* ── Border Colors ──────────────────────────────────────────── */
-  --border: rgb(49 49 51);
+  --border: rgba(255, 255, 255, 0.08);
   --border-strong: rgb(59 59 61);
   --color-border-subtle: color-mix(in srgb, var(--border) 60%, transparent);
   --color-border-disabled: color-mix(in srgb, var(--border) 55%, transparent);
@@ -261,7 +261,7 @@
   --week-picker-height: 32px;
   --control-padding-x: 10px;
   --control-radius: var(--radius-sm);
-  --control-radius-icon: var(--radius-icon);
+  --control-radius-icon: var(--radius-sm);
   --control-font-size: var(--font-size-2);
   --control-font-weight: var(--font-weight-medium);
 
@@ -273,7 +273,7 @@
   --layout-container-max: 100%;
   --layout-logo-height: 28px;
   --panel-width: 420px;
-  --card-padding: 12px;
+  --card-padding: 18px;
   --card-footer-padding-y: 12px;
   --card-footer-padding-x: 12px;
   --card-footer-min-height: 44px;
@@ -391,13 +391,13 @@
   color-scheme: light;
 
   /* ── Surfaces (background → topbar → header → card → input → hover) ───── */
-  --app-bg: rgb(245 245 245); /* #f5f5f5 */
-  --surface-0: rgb(255 255 255); /* topbar */
+  --app-bg: rgb(255 255 255); /* #f5f5f5 */
+  --surface-0: rgb(179 179 181); /* topbar */
   --surface-1: rgb(245 245 245); /* table header / sticky cells */
   --schedule-bg: rgb(245 245 245); /* main schedule surface */
   --agenda-header-bg: var(--surface-1); /* agenda header (week date + nav) */
-  --surface-2: rgb(255 255 255); /* cards */
-  --surface-3: rgb(244 244 245); /* inputs / controls on cards */
+  --surface-2: rgb(235 235 235); /* cards */
+  --surface-3: rgb(250 250 250); /* inputs / controls on cards */
   --surface-4: rgb(236 236 238); /* hover / active fill */
 
   /* ── Text hierarchy (parallel to dark mode) ──────────────────────────── */
@@ -798,7 +798,7 @@ input[type="date"].weekpicker[aria-disabled="true"] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0;
+  border-radius: var(--control-radius-icon) !important;
   width: var(--week-picker-height);
   height: var(--week-picker-height);
 }
@@ -1636,7 +1636,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .topbar-end {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   min-width: 0;
 }
 
@@ -1684,7 +1684,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   cursor: pointer;
   height: var(--week-picker-height);
   padding: 0 var(--control-padding-x);
-  border-radius: 0;
+  border-radius:var(--control-radius-icon);
   transition: background-color var(--dur-1) ease;
   position: relative;
 }
@@ -1701,24 +1701,11 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   height: 100% !important;
 }
 
-.week-heading {
-  font-family: var(--font-sans);
-  font-size: 1.25rem;
-  /* 20px */
-  font-weight: 600;
-  color: var(--text);
-  margin: 0;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-}
-
 /* Control groups */
 .nav-controls {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 #todayBtnMobile {
@@ -1942,31 +1929,6 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   }
 }
 
-/* Week range title pieces */
-.week-date .wk-month,
-.week-date .wk-dates,
-.week-date .wk-year,
-.week-date .wk-year::before {
-  font-size: 1.25rem;
-  /* 20px */
-  font-weight: 400;
-  color: color-mix(in srgb, var(--text) 66%, transparent);
-}
-
-.week-date .wk-month {
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: 0.02em;
-}
-
-.week-date .wk-dates {
-  margin-inline-start: 4px;
-}
-
-.week-date .wk-year::before {
-  content: ", ";
-}
-
 /* Mobile layout */
 @media (max-width: 899px) {
   /* Fix 1: Ensure the main card doesn't overflow the right side */
@@ -2069,15 +2031,9 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     height: 100% !important;
   }
 
-  .week-heading {
+  .agenda-header .week-heading {
     font-size: 0.875rem;
     /* 14px */
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    white-space: nowrap;
-    height: 100%;
   }
 
   /* Scheduler layout — single column on mobile */
@@ -2162,6 +2118,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
+  margin: 0 12px;
   flex-wrap: wrap;
   width: 100%;
 }
@@ -2178,12 +2135,42 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 }
 
 .agenda-header .week-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  white-space: nowrap;
   font-family: var(--font-sans);
-  font-size: var(--heading-2-size);
-  font-weight: var(--heading-2-weight);
-  color: var(--text);
+  font-size: var(--heading-1-size);
+  font-weight: var(--heading-1-weight);
+  color: var(--text-secondary);
   margin: 0;
   line-height: 1.2;
+}
+
+/* Week date pieces — month, dates, year formatted independently */
+.agenda-header .week-date .wk-month { /* month */
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+
+.agenda-header .week-date .wk-month-end { 
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+
+.agenda-header .week-date .wk-dates { /* dates */
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-inline-start: 2px;
+}
+
+.agenda-header .week-date .wk-year { /* year */
+  font-weight: 700;
+  color: var(--accent);
+  margin-inline-start: 4px;
 }
 
 /* ==========================================================================
@@ -2221,7 +2208,8 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 }
 
 .week-table {
-  width: max(100%, 1150px);
+  width: 100%;
+  min-width: 1150px;
   height: auto;
   table-layout: fixed;
   border-collapse: separate;
@@ -2308,7 +2296,7 @@ th.day-today .day-date {
   justify-content: center;
   width: 28px;
   height: 28px;
-  border-radius: 9999px;
+  border-radius: 8px;
   background: color-mix(in srgb, var(--accent) 33%, transparent);
   border: 2px solid var(--accent);
   color: var(--text);
@@ -3809,10 +3797,72 @@ select.status-confirmed {
 /* ==========================================================================
    17) PRINT
    ========================================================================== */
+/* Letter full: 100px body rows (98px bars + 2px); 32px header; table forced to 1400px for scale coupling */
+#printRoot.print-mode-letter-full {
+  --schedule-row-height: 100px;
+  --tripbar-inset: 0px;
+  --tripbar-inset-left: 0px;
+  --tripbar-inset-right: 0px;
+}
+#printRoot.print-mode-letter-full .print-table thead th {
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+}
+#printRoot.print-mode-letter-full .print-table tbody td {
+  height: 100px !important;
+  min-height: 100px !important;
+  max-height: 100px !important;
+}
 @media print {
   @page {
+    /* Legal landscape: 14in × 8.5in — tighter margins to fill width */
     size: legal landscape;
     margin: 0.25in;
+  }
+
+  /* Remove default padding/margin so content fits with Safari/Chrome print defaults */
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100%;
+    height: 100%;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 10pt;
+  }
+
+  /* Letter full: 100px body rows; 32px header; lock table width to JS math */
+  #printRoot.print-mode-letter-full {
+    --schedule-row-height: 100px !important;
+    --tripbar-inset: 0px;
+    --tripbar-inset-left: 0px;
+    --tripbar-inset-right: 0px;
+  }
+  #printRoot.print-mode-letter-full .print-table {
+    width: 1400px !important;
+    min-width: 1400px !important;
+    table-layout: fixed !important;
+  }
+  #printRoot.print-mode-letter-full .print-table thead th {
+    height: 28px !important;
+    padding: 0 !important;
+  }
+  #printRoot.print-mode-letter-full .print-table tbody td {
+    height: 100px !important;
+    min-height: 100px !important;
+    max-height: 100px !important;
+    padding: 0 !important;
+  }
+  #printRoot.print-mode-letter-full .day-date {
+    font-size: 10pt !important;
+  }
+  #printRoot.print-mode-letter-full .day-name {
+    font-size: 9pt !important;
   }
 
   .app,
@@ -3838,31 +3888,100 @@ select.status-confirmed {
     margin: 0 !important;
   }
 
-  body {
-    background: white !important;
-    color: black !important;
-    font-size: 10pt;
-    margin: 0;
-    padding: 0;
-  }
-
   .print-page {
     page-break-after: always;
     padding: 0.1in;
     box-sizing: border-box;
     width: 100%;
-    min-height: 100vh;
+    overflow: hidden;
   }
 
   .print-page:last-child {
     page-break-after: auto;
   }
 
+  /* Letter full: use full content area; scale in JS fits to 0.5in margins (Safari/Chrome default) */
+  #printRoot.print-mode-letter-full .print-page {
+    position: relative;
+    width: 100% !important;
+    height: 7.5in !important;
+    min-height: 7.5in !important;
+    max-height: 7.5in !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    page-break-after: auto;
+    box-sizing: border-box;
+  }
+
+  /* Force Letter Landscape content area (10in @ 96dpi = 960px) — prevents 2nd page overflow */
+  #printRoot.print-mode-letter-full .print-page {
+    width: 960px !important;
+    height: 720px !important;
+    overflow: hidden !important;
+    page-break-after: avoid !important;
+    padding: 2mm !important;
+    box-sizing: border-box !important;
+  }
+
   .print-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 10px;
     background: white;
+    width: 100%;
+    transform: scale(var(--print-scale, 1));
+    transform-origin: top left;
+  }
+
+  /* Letter full: scale 1400px agenda to fit; card centered horizontally on page */
+  #printRoot.print-mode-letter-full .print-card {
+    position: absolute !important;
+    top: 0 !important;
+    left: 50% !important;
+    width: 1400px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box;
+    transform: translateX(-50%) scale(var(--print-scale, 1)) !important;
+    transform-origin: top center !important;
+  }
+
+  /* Print header: schedule-style header (cloned agenda-header) */
+  .print-header {
+    background: white !important;
+    height: auto !important;
+    min-height: 24px !important;
+    margin-bottom: 6px !important;
+    padding: 0 !important;
+    justify-content: flex-start !important;
+  }
+  .print-header .agenda-header-inner {
+    margin: 0 !important;
+    min-height: 0 !important;
+  }
+
+  .print-header-logo {
+    flex-shrink: 0;
+    margin-inline-end: 10px;
+    display: flex !important;
+  }
+  .print-header-logo .logo-img {
+    height: 24px;
+    width: auto;
+    object-fit: contain;
+  }
+  .print-header .week-heading {
+    color: #333 !important;
+    font-size: 14pt !important;
+    line-height: 1.2 !important;
+  }
+  .print-header .week-date .wk-month,
+  .print-header .week-date .wk-month-end {
+    color: #111 !important;
+  }
+  .print-header .week-date .wk-dates {
+    color: #444 !important;
+  }
+  .print-header .week-date .wk-year {
+    color: #0066cc !important;
   }
 
   .print-title {
@@ -3877,27 +3996,109 @@ select.status-confirmed {
 
   .print-table {
     width: 100% !important;
+    min-width: 100% !important; /* card content: 1320 - 20 padding */
     border-collapse: collapse !important;
     table-layout: fixed !important;
-    --bus-col-w: 60px !important;
+    --bus-col-w: 50px !important;
+  }
+
+  /* Letter full: force 1400px so column metrics and scale are tightly coupled; 52px bus matches JS colMetrics */
+  #printRoot.print-mode-letter-full .print-table {
+    width: 1400px !important;
+    min-width: 1400px !important;
+    max-width: 1400px !important;
+    border-collapse: collapse !important;
+    table-layout: fixed !important;
+    box-sizing: border-box !important;
+  }
+  #printRoot.print-mode-letter-full .print-table th:last-child,
+  #printRoot.print-mode-letter-full .print-table td:last-child {
+    border-right: 1px solid #ccc !important;
+  }
+  #printRoot.print-mode-letter-full .print-table .col-bus {
+    width: 52px !important;
+  }
+  #printRoot.print-mode-letter-full .print-table .col-day,
+  #printRoot.print-mode-letter-full .print-table col.col-day {
+    width: calc((1400px - 52px) / 7) !important;
   }
 
   .print-table .col-bus {
-    width: var(--bus-col-w) !important;
+    width: 50px !important;
   }
 
-  .print-table .col-day {
-    width: calc((100% - 60px) / 7) !important;
+  .print-table .col-day,
+  .print-table col.col-day {
+    width: calc((100% - 50px) / 7) !important; /* 7 equal day columns */
+  }
+
+  .print-table tbody tr:not(.notes-row) {
+    page-break-inside: avoid;
   }
 
   .print-table th,
   .print-table td {
     border: 1px solid #ccc !important;
-    padding: 4px !important;
+    padding: 2px !important;
     font-size: 9pt !important;
     position: relative;
-    height: 100px;
+    height: 90px !important;
     vertical-align: top;
+  }
+
+  .print-table tbody tr.notes-row td,
+  .print-table tbody tr.notes-row {
+    height: 16px !important;
+    min-height: 16px !important;
+    max-height: 16px !important;
+  }
+
+  /* Letter full: same proportions as 1400px agenda (row height from theme), scale handles fit */
+  #printRoot.print-mode-letter-full .print-header {
+    min-height: auto !important;
+    margin-bottom: 6px !important;
+    padding: 0 !important;
+  }
+  #printRoot.print-mode-letter-full .print-header .week-heading {
+    font-size: 14pt !important;
+    line-height: 1.2 !important;
+  }
+  #printRoot.print-mode-letter-full .print-header-logo .logo-img {
+    height: 24px !important;
+  }
+  /* Letter: 28px header to give more room to data rows; 100px body rows for 98px trip bars */
+  #printRoot.print-mode-letter-full .print-table thead th {
+    height: 28px !important;
+    padding: 0 !important;
+    font-size: inherit !important;
+  }
+  #printRoot.print-mode-letter-full .print-table tbody td {
+    height: 100px !important;
+    min-height: 100px !important;
+    max-height: 100px !important;
+    padding: 0 !important;
+    font-size: inherit !important;
+  }
+  /* Trip bars: sharper corners for print */
+  #printRoot.print-mode-letter-full .print-table .trip-bar {
+    border-radius: 2px !important;
+    border: 1px solid rgba(0, 0, 0, 0.4) !important;
+  }
+  /* Letter print: hide driver names, customer name, status icons, and notes (invisible on paper, space collapsed) */
+  #printRoot.print-mode-letter-full .print-table .trip-bar .bar-drivers,
+  #printRoot.print-mode-letter-full .print-table .trip-bar .bar-contact,
+  #printRoot.print-mode-letter-full .print-table .trip-bar .bar-status-row,
+  #printRoot.print-mode-letter-full .print-table .trip-bar .bar-pre-drivers {
+    display: none !important;
+  }
+
+  .print-table td.week-start-cell {
+    padding: 0 !important;
+  }
+
+  .print-table .row-bars {
+    left: 0 !important;
+    inset-inline-start: 0 !important;
   }
 
   .print-table th {
@@ -3911,15 +4112,54 @@ select.status-confirmed {
     width: 50px !important;
   }
 
-  .trip-bar {
+  /* Trip bar: fill row height — same size as row */
+  .print-table .trip-bar {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     box-shadow: none !important;
     position: absolute !important;
-    border: 1px solid rgba(0, 0, 0, 0.1) !important;
-    font-size: 8pt !important;
-    padding: 2px 4px !important;
+    height: 100% !important;
+    top: 0 !important;
+    box-sizing: border-box !important;
+    border: 1px solid rgba(0, 0, 0, 0.2) !important;
+    padding: 3px 5px !important;
     border-radius: 4px !important;
     z-index: 10;
+    font-size: 9pt !important;
+  }
+
+  /* Ensure all bar rows and content stay visible for print */
+  .print-table .trip-bar .bar-row {
+    display: flex !important;
+  }
+  .print-table .trip-bar .bar-title,
+  .print-table .trip-bar .bar-sub,
+  .print-table .trip-bar .bar-pre-drivers {
+    visibility: visible !important;
+  }
+
+  .print-table .trip-bar .bar-title {
+    font-size: 9pt !important;
+  }
+
+  .print-table .trip-bar .bar-sub,
+  .print-table .trip-bar .bar-contact {
+    font-size: 8pt !important;
+  }
+
+  .print-table .trip-bar .bar-time {
+    font-size: 8pt !important;
+  }
+
+  .print-table .trip-bar .bar-drivers .driver,
+  .print-table .trip-bar .bar-pre-drivers {
+    font-size: 8pt !important;
+  }
+
+  /* Keep badge icons visible; Material Symbols may not print, ensure fallback */
+  .print-table .trip-bar .mini-badge,
+  .print-table .trip-bar .bar-req-icon {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 }

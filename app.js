@@ -179,6 +179,7 @@ const dom = {
   themeToggle: $("themeToggle"),
   themeText2: $("themeText2"),
   printBtn2: $("printBtn2"),
+  printBtn2Full: $("printBtn2Full"),
   weekStartToggle: $("weekStartToggle"),
   refreshBtn2: $("refreshBtn2"),
 
@@ -1178,26 +1179,30 @@ function updateWeekTitle() {
   const start = new Date(state.currentDate);
   const end = addDays(start, 6);
 
-  const sameMonth = start.getMonth() === end.getMonth();
-  const sameYear = start.getFullYear() === end.getFullYear();
+  const monthOpt = { month: "long" };
+  const startMonth = start.toLocaleDateString("en-US", monthOpt);
+  const startDay = start.getDate();
+  const endDay = end.getDate();
+  const yearLabel = start.getFullYear();
 
-  const isMobile = window.innerWidth < 900;
-
-  const monthFmt = (d) => d.toLocaleDateString("en-US", { month: isMobile ? "short" : "long" });
-
-  const yearFmt = (d) => (isMobile ? String(d.getFullYear()).slice(-2) : String(d.getFullYear()));
-
-  const monthLabel = sameMonth ? monthFmt(start) : `${monthFmt(start)} – ${monthFmt(end)}`;
-
-  const dateLabel = `${start.getDate()} – ${end.getDate()}`;
-
-  const yearLabel = sameYear ? yearFmt(start) : `${yearFmt(start)} – ${yearFmt(end)}`;
+  let html;
+  if (start.getMonth() === end.getMonth()) {
+    html =
+      `<span class="wk-month">${startMonth}</span> ` +
+      `<span class="wk-dates">${startDay} — ${endDay}</span> ` +
+      `<span class="wk-year">${yearLabel}</span>`;
+  } else {
+    const endMonth = end.toLocaleDateString("en-US", monthOpt);
+    html =
+      `<span class="wk-month">${startMonth}</span> ` +
+      `<span class="wk-dates">${startDay}</span> — ` +
+      `<span class="wk-month-end">${endMonth}</span> ` +
+      `<span class="wk-dates">${endDay}</span> ` +
+      `<span class="wk-year">${yearLabel}</span>`;
+  }
 
   if (dom.headerWeek) {
-    dom.headerWeek.innerHTML =
-      `<span class="wk-month">${monthLabel}</span> ` +
-      `<span class="wk-dates">${dateLabel}</span>` +
-      `<span class="wk-year">${yearLabel}</span>`;
+    dom.headerWeek.innerHTML = html;
   }
 }
 
@@ -1607,14 +1612,12 @@ function syncRowBarsWidth(col) {
   }
 }
 
-function positionBarWithinOverlay(bar, bars, col, startIdx, endIdx) {
-  const root = getComputedStyle(document.documentElement);
-
+function positionBarWithinOverlay(bar, bars, col, startIdx, endIdx, overrides) {
+  const el = bar.closest("#printRoot") || document.documentElement;
+  const root = getComputedStyle(el);
   const insetAll = parseFloat(root.getPropertyValue("--tripbar-inset")) || 6;
-
-  const insetL = parseFloat(root.getPropertyValue("--tripbar-inset-left")) || insetAll;
-
-  const insetR = parseFloat(root.getPropertyValue("--tripbar-inset-right")) || insetAll;
+  const insetL = overrides?.insetL !== undefined ? overrides.insetL : (parseFloat(root.getPropertyValue("--tripbar-inset-left")) || insetAll);
+  const insetR = overrides?.insetR !== undefined ? overrides.insetR : (parseFloat(root.getPropertyValue("--tripbar-inset-right")) || insetAll);
 
   // Simplified: exactly match the calculated start and width without extends
   const leftPx = Math.max(0, (col.starts[startIdx] ?? 0) + insetL);
@@ -1622,10 +1625,13 @@ function positionBarWithinOverlay(bar, bars, col, startIdx, endIdx) {
   let spanW = 0;
   for (let i = startIdx; i <= endIdx; i++) spanW += col.widths[i] ?? 0;
 
-  let widthPx = Math.max(0, spanW - insetL - insetR);
+  const numCols = endIdx - startIdx + 1;
+  const widthExtra = (overrides?.barWidthExtraPerCol ?? 0) * numCols;
+  let widthPx = Math.max(0, spanW - insetL - insetR + widthExtra);
 
-  // Guard rails to prevent overflow beyond the row overlay
-  const max = Math.max(0, col.total ?? col.widths.reduce((a, b) => a + (b || 0), 0));
+  // Guard rails to prevent overflow beyond the row overlay (use overlayWidth when set, e.g. letter print)
+  const totalCol = col.total ?? col.widths?.reduce((a, b) => a + (b || 0), 0) ?? 0;
+  const max = Math.max(0, col.overlayWidth ?? totalCol);
   const EPS = 0; // No safety margin - bars fill the column width
 
   if (leftPx >= max) {
@@ -3539,7 +3545,65 @@ function buildPrintScheduleTwoPages() {
 
   const weekTitle = document.getElementById("headerWeek")?.textContent || "Schedule";
 
-  function makeTableForRows(startIdx, endIdx, titleSuffix) {
+  /** Compute column metrics from a table (must be in DOM) */
+  function getColMetricsForTable(table) {
+    const body = table.querySelector("tbody:not([hidden])");
+    const firstRow = body?.rows?.[0];
+    if (!firstRow || firstRow.cells.length < 8) return null;
+    const baseCell = firstRow.cells[1];
+    const baseRect = baseCell.getBoundingClientRect();
+    const starts = [];
+    const widths = [];
+    let total = 0;
+    for (let i = 1; i <= 7; i++) {
+      const cell = firstRow.cells[i];
+      if (!cell) continue;
+      const r = cell.getBoundingClientRect();
+      const w = r.width;
+      starts.push(r.left - baseRect.left);
+      widths.push(w);
+      total += w;
+    }
+    return { starts, widths, total };
+  }
+
+  /** Reposition trip bars using fixed column metrics for consistent print alignment */
+  function repositionBarsForPrint(table, col) {
+    if (!col) return;
+    const body = table.querySelector("tbody:not([hidden])");
+    if (!body) return;
+    const total = Math.round(col.total);
+    body.querySelectorAll(".row-bars").forEach((bars) => {
+      bars.style.width = `${total}px`;
+      bars.querySelectorAll(".trip-bar").forEach((bar) => {
+        const sidx = Number(bar.dataset.sidx);
+        const eidx = Number(bar.dataset.eidx);
+        if (!Number.isFinite(sidx) || !Number.isFinite(eidx)) return;
+        positionBarWithinOverlay(bar, bars, col, sidx, eidx, { insetL: 0, insetR: 0 });
+        /* Snap to whole pixels for print */
+        const left = bar.style.left;
+        const w = bar.style.width;
+        if (left) bar.style.left = `${Math.round(parseFloat(left))}px`;
+        if (w) bar.style.width = `${Math.round(parseFloat(w))}px`;
+      });
+    });
+  }
+
+  /** Fit to page: Legal landscape — scale to fit both width and height (with buffer) */
+  function computePrintScale() {
+    const card = printRoot.querySelector(".print-card");
+    if (!card) return 1;
+    const contentW = card.scrollWidth || card.offsetWidth;
+    const contentH = card.scrollHeight || card.offsetHeight;
+    const legalPrintableW = 1296; /* 13.5in at 96dpi */
+    const legalPrintableH = 720;  /* 7.5in at 96dpi — leave buffer for page margins */
+    const scaleW = contentW > 0 ? legalPrintableW / contentW : 1;
+    const scaleH = contentH > 0 ? legalPrintableH / contentH : 1;
+    const scale = Math.min(1, scaleW, scaleH) * 0.97; /* 3% buffer for reliable fit */
+    return Math.max(0.6, Math.min(1, scale));
+  }
+
+  function makeTableForRows(startIdx, endIdx) {
     const clone = weekTable.cloneNode(true);
 
     // Remove IDs to avoid duplicates
@@ -3586,11 +3650,27 @@ function buildPrintScheduleTwoPages() {
     const card = document.createElement("div");
     card.className = "print-card";
 
-    const title = document.createElement("div");
-    title.className = "print-title";
-    title.textContent = `${weekTitle} — ${titleSuffix}`;
-
-    card.appendChild(title);
+    // Use the same header as the schedule (agenda-header)
+    const agendaHeader = document.querySelector(".agenda-header");
+    const headerClone = agendaHeader ? agendaHeader.cloneNode(true) : null;
+    if (headerClone) {
+      headerClone.classList.add("print-header");
+      headerClone.querySelectorAll(".nav-controls, .date-input-overlay, input.weekpicker").forEach((el) => el.remove());
+      // Prepend logo before date
+      const topbarLogo = document.querySelector(".logo-wrap");
+      const headerInner = headerClone.querySelector(".agenda-header-inner");
+      if (topbarLogo && headerInner) {
+        const logoClone = topbarLogo.cloneNode(true);
+        logoClone.classList.add("print-header-logo");
+        headerInner.insertBefore(logoClone, headerInner.firstChild);
+      }
+      card.appendChild(headerClone);
+    } else {
+      const title = document.createElement("div");
+      title.className = "print-title";
+      title.textContent = weekTitle;
+      card.appendChild(title);
+    }
     clone.classList.add("print-table");
     card.appendChild(clone);
     page.appendChild(card);
@@ -3602,20 +3682,202 @@ function buildPrintScheduleTwoPages() {
   printRoot.innerHTML = "";
 
   // Page 1: Buses 1-5 (Rows 0-4)
-  const page1 = makeTableForRows(0, 5, "Buses 1–5");
+  const page1 = makeTableForRows(0, 5);
   printRoot.appendChild(page1);
 
-  // Page 2: Buses 6-10 (Rows 5-9)
-  const page2 = makeTableForRows(5, 10, "Buses 6–10");
+  const page2 = makeTableForRows(5, 10);
   printRoot.appendChild(page2);
+
+  // Use scaled output dimensions; subtract for borders so bars match visible columns
+  const printCardWidth = 1320;
+  const busColWidth = 50;
+  const effectivePrintW = 1296; /* Legal printable; scale fits to this */
+  const borderAllowance = 22; /* ~1px per column boundary */
+  const dayColTotal = effectivePrintW - busColWidth - borderAllowance;
+  const dayColWidth = dayColTotal / 7;
+  const colMetrics = {
+    starts: Array.from({ length: 7 }, (_, i) => i * dayColWidth),
+    widths: Array(7).fill(dayColWidth),
+    total: dayColWidth * 7,
+  };
+  printRoot.classList.remove("is-hidden");
+  printRoot.style.cssText = `position:absolute;left:-9999px;visibility:hidden;width:${printCardWidth}px;`;
+  void printRoot.offsetHeight; /* force reflow */
+  printRoot.querySelectorAll(".print-table").forEach((t) => repositionBarsForPrint(t, colMetrics));
+  const scale = computePrintScale();
+  printRoot.style.setProperty("--print-scale", String(scale));
+  printRoot.classList.add("is-hidden");
+  printRoot.style.cssText = "";
 }
 
 function clearPrintRoot() {
   const printRoot = document.getElementById("printRoot");
-  if (printRoot) printRoot.innerHTML = "";
+  if (printRoot) {
+    printRoot.innerHTML = "";
+    printRoot.classList.remove("print-mode-letter-full");
+  }
+}
+
+function setPrintPageSize(size) {
+  let el = document.getElementById("dynamicPrintPageSize");
+  if (!el) {
+    el = document.createElement("style");
+    el.id = "dynamicPrintPageSize";
+    document.head.appendChild(el);
+  }
+  const css =
+    size === "letter"
+      ? `@media print { @page { size: letter landscape; margin: 0.5in; } }`
+      : `@media print { @page { size: legal landscape; margin: 0.25in; } }`;
+  el.textContent = css;
+  /* Letter: 0.5in matches Safari/Chrome default print margins; content area 10in × 7.5in */
 }
 
 window.addEventListener("afterprint", clearPrintRoot);
+
+/** Print full agenda, one page, Letter landscape — schedule table + date header */
+function buildPrintScheduleFullLetter() {
+  const printRoot = document.getElementById("printRoot");
+  if (!printRoot) return;
+
+  const weekTable = document.querySelector(".week-table");
+  if (!weekTable) return;
+
+  setPrintPageSize("letter");
+
+  const weekTitle = document.getElementById("headerWeek")?.textContent || "Schedule";
+
+  function repositionBarsForPrint(table, col, overrides) {
+    if (!col) return;
+    const body = table.querySelector("tbody:not([hidden])");
+    if (!body) return;
+    const total = Math.round(col.total);
+    const overlayW = col.overlayWidth != null ? Math.round(col.overlayWidth) : total;
+    const opts = overrides || {};
+    body.querySelectorAll(".row-bars").forEach((bars) => {
+      bars.style.width = `${overlayW}px`;
+      bars.querySelectorAll(".trip-bar").forEach((bar) => {
+        const sidx = Number(bar.dataset.sidx);
+        const eidx = Number(bar.dataset.eidx);
+        if (!Number.isFinite(sidx) || !Number.isFinite(eidx)) return;
+        positionBarWithinOverlay(bar, bars, col, sidx, eidx, opts);
+        const left = bar.style.left;
+        const w = bar.style.width;
+        if (left) bar.style.left = `${Math.round(parseFloat(left))}px`;
+        if (w) bar.style.width = `${Math.round(parseFloat(w))}px`;
+      });
+    });
+  }
+
+  /* Letter: lay out at 1400px (same as "perfect" agenda), then scale to fit one page */
+  const AGENDA_PRINT_WIDTH = 1400;
+  const clone = weekTable.cloneNode(true);
+  clone.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
+  clone.querySelectorAll("tbody[hidden]").forEach((el) => el.remove());
+  clone.classList.add("print-table");
+
+  /* Always exactly 10 bus rows for letter */
+  const body = clone.querySelector("tbody:not([hidden])");
+  const busLanes = CONFIG.BUS_LANES || [];
+  const targetRows = 10;
+  if (body) {
+    const busRows = Array.from(body.querySelectorAll("tr:not(.waiting-list-row)"));
+    const currentRows = busRows.length;
+    if (currentRows > targetRows) {
+      busRows.slice(targetRows).forEach((tr) => tr.remove());
+    } else if (currentRows < targetRows && busLanes.length >= targetRows) {
+      const firstRow = body.rows[0];
+      let added = currentRows;
+      while (added < targetRows && firstRow) {
+        const newRow = firstRow.cloneNode(true);
+        newRow.querySelectorAll(".trip-bar").forEach((bar) => bar.remove());
+        const bars = newRow.querySelector(".row-bars");
+        if (bars) bars.innerHTML = "";
+        const numEl = newRow.querySelector(".bus-id-num");
+        if (numEl) numEl.textContent = busLanes[added] || "—";
+        const icons = newRow.querySelector(".bus-icons");
+        if (icons) icons.innerHTML = "";
+        newRow.style.removeProperty("--bus-accent-color");
+        newRow.classList.remove("has-bus-color");
+        body.appendChild(newRow);
+        added++;
+      }
+    }
+  }
+
+  const page = document.createElement("div");
+  page.className = "print-page";
+  const card = document.createElement("div");
+  card.className = "print-card";
+
+  const agendaHeader = document.querySelector(".agenda-header");
+  const headerClone = agendaHeader ? agendaHeader.cloneNode(true) : null;
+  if (headerClone) {
+    headerClone.classList.add("print-header");
+    headerClone.querySelectorAll(".nav-controls, .date-input-overlay, input.weekpicker").forEach((el) => el.remove());
+    const topbarLogo = document.querySelector(".logo-wrap");
+    const headerInner = headerClone.querySelector(".agenda-header-inner");
+    if (topbarLogo && headerInner) {
+      const logoClone = topbarLogo.cloneNode(true);
+      logoClone.classList.add("print-header-logo");
+      headerInner.insertBefore(logoClone, headerInner.firstChild);
+    }
+    card.appendChild(headerClone);
+  } else {
+    const title = document.createElement("div");
+    title.className = "print-title";
+    title.textContent = weekTitle;
+    card.appendChild(title);
+  }
+  card.appendChild(clone);
+  page.appendChild(card);
+
+  printRoot.innerHTML = "";
+  printRoot.classList.add("print-mode-letter-full");
+  printRoot.appendChild(page);
+
+  printRoot.classList.remove("is-hidden");
+  printRoot.style.cssText = `position:absolute;left:-9999px;visibility:hidden;width:${AGENDA_PRINT_WIDTH}px;`;
+  void printRoot.offsetHeight;
+
+  /* Fixed column metrics for 1400px table: 52px bus column, rest divided into 7 equal day columns.
+   * Tightly coupled with the scaled layout so trip bars align with day cells. */
+  function getLetterColMetrics() {
+    const busColWidth = 52; /* Must match .col-bus width in CSS */
+    const totalTableWidth = 1400;
+    const availableWidth = totalTableWidth - busColWidth;
+    const dayWidth = availableWidth / 7;
+    return {
+      starts: Array.from({ length: 7 }, (_, i) => i * dayWidth),
+      widths: Array(7).fill(dayWidth),
+      total: availableWidth,
+      overlayWidth: availableWidth,
+    };
+  }
+  const colMetrics = getLetterColMetrics();
+
+  repositionBarsForPrint(clone, colMetrics, {
+    insetL: 0,
+    insetR: 0,
+    barWidthExtraPerCol: 0,
+  });
+
+  /* Ensure the card doesn't have extra internal padding that shrinks the content */
+  card.style.padding = "0";
+  card.style.margin = "0";
+
+  /* Letter landscape ~948×708; reduce height target to 660px so bottom row fits on sheet */
+  const letterPrintableW = 960;
+  const letterPrintableH = 660;
+  const contentW = 1400;
+  const contentH = card.scrollHeight || card.offsetHeight;
+
+  const scaleW = contentW > 0 ? letterPrintableW / contentW : 1;
+  const scaleH = contentH > 0 ? letterPrintableH / contentH : 1;
+  const finalScale = Math.min(scaleW, scaleH);
+  printRoot.style.setProperty("--print-scale", String(Math.max(0.4, finalScale)));
+  printRoot.classList.add("is-hidden");
+}
 
 // ======================================================
 // 33) DATA LOADING (DRIVERS/BUSES)
@@ -4535,13 +4797,26 @@ function wireSettingsMenu() {
     dom.settingsMenu.hidden = true;
   });
 
-  // 3. Print
+  // 3. Print (Legal, 2 pages)
   dom.printBtn2?.addEventListener("click", () => {
     dom.settingsMenu.hidden = true;
     setSidePanelMode("off");
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
+        setPrintPageSize("legal");
         buildPrintScheduleTwoPages();
+        window.print();
+      });
+    });
+  });
+
+  // 3b. Print Full (Letter, 1 page)
+  dom.printBtn2Full?.addEventListener("click", () => {
+    dom.settingsMenu.hidden = true;
+    setSidePanelMode("off");
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        buildPrintScheduleFullLetter();
         window.print();
       });
     });
