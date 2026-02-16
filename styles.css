@@ -94,9 +94,9 @@
   --letter-spacing-base: 0.02em;
 
   /* ── Heading scale (H1 page, H2 card, H3 small section) ─────── */
-  --heading-1-size: 1.25rem;   /* 20px */
+  --heading-1-size: 1.25rem; /* 20px */
   --heading-1-weight: 600;
-  --heading-2-size: 1rem;      /* 16px */
+  --heading-2-size: 1rem; /* 16px */
   --heading-2-weight: 600;
   --heading-3-size: 0.6875rem; /* 11px */
   --heading-3-weight: 700;
@@ -132,6 +132,7 @@
   --space-8: 48px;
 
   /* ── Radii (unified 8px scale for buttons, inputs, trip bar) ───── */
+  --radius-icon: 2px;
   --radius-sm: 8px;
   --radius-md: 8px;
   --radius-lg: 12px;
@@ -213,11 +214,11 @@
   /* ── Surface Colors ─────────────────────────────────────────── */
   --app-bg: rgb(20 20 20); /* app background */
   --surface-0: rgb(30 30 30); /* topbar */
-  --surface-1: rgb(40 40 40); /* table header, sticky cells */
+  --surface-1: rgb(20 20 20 ); /* table header, sticky cells */
   --surface-2: rgb(40 40 40); /* cards */
   --surface-3: rgb(56 56 56); /* inputs / controls */
   --surface-4: rgb(68 68 68); /* hover / active */
-  --schedule-bg: rgb(40 40 40); /* schedule background */
+  --schedule-bg: rgb(20 20 20); /* schedule background */
 
   /* ── Border Colors ──────────────────────────────────────────── */
   --border: rgb(70 70 70);
@@ -255,9 +256,10 @@
 
   /* ── Control Dimensions ─────────────────────────────────────── */
   --control-height: 36px;
+  --control-height-icon: 28px;
   --control-padding-x: 10px;
   --control-radius: var(--radius-sm);
-  --control-radius-icon: var(--radius-full);
+  --control-radius-icon: var(--radius-icon);
   --control-font-size: var(--font-size-2);
   --control-font-weight: var(--font-weight-medium);
 
@@ -389,8 +391,8 @@
   /* ── Surfaces (background → topbar → header → card → input → hover) ───── */
   --app-bg: rgb(245 245 245); /* #f5f5f5 */
   --surface-0: rgb(255 255 255); /* topbar */
-  --surface-1: rgb(255 255 255); /* table header / sticky cells */
-  --schedule-bg: rgb(255 255 255); /* main schedule surface */
+  --surface-1: rgb(245 245 245); /* table header / sticky cells */
+  --schedule-bg: rgb(245 245 245); /* main schedule surface */
   --surface-2: rgb(255 255 255); /* cards */
   --surface-3: rgb(244 244 245); /* inputs / controls on cards */
   --surface-4: rgb(236 236 238); /* hover / active fill */
@@ -409,7 +411,7 @@
   --text-driver: rgba(0, 0, 0, 0.88);
 
   /* ── Borders (subtle + strong) ───────────────────────────────────────── */
-  --border: rgba(0, 0, 0, 0.12);
+  --border: rgba(0, 0, 0, 0.20);
   --color-border-subtle: rgba(0, 0, 0, 0.08);
   --border-strong: rgba(0, 0, 0, 0.18);
   --color-border-disabled: rgba(0, 0, 0, 0.06);
@@ -537,7 +539,7 @@ samp {
   outline-offset: 2px;
 }
 
-/* Standardized focus for form controls */
+/* Standardized focus: ring only so buttons and form controls (e.g. notes textarea) look the same */
 button:focus-visible,
 .btn:focus-visible,
 .icon-chip:focus-visible,
@@ -548,7 +550,7 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
   outline: none;
-  border-color: var(--focus);
+  border-color: transparent;
   box-shadow: var(--focus-ring);
 }
 
@@ -560,7 +562,7 @@ textarea:focus-visible {
 
 :where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn):focus-visible {
   outline: none;
-  border-color: var(--focus);
+  border-color: transparent;
   box-shadow: var(--focus-ring);
 }
 
@@ -767,13 +769,13 @@ input[type="date"].weekpicker[aria-disabled="true"] {
   border-radius: var(--control-radius);
   border: 1px solid transparent;
   background: var(--color-button-bg);
-  height: var(--control-height);
+  height: var(--control-height-icon);
 }
 
 .seg__btn {
   border: 0;
   background: transparent;
-  height: calc(var(--control-height) - 4px);
+  height: calc(var(--control-height-icon) - 4px);
   padding: 0 var(--space-2);
 }
 
@@ -793,9 +795,9 @@ input[type="date"].weekpicker[aria-disabled="true"] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--control-radius);
-  width: var(--control-height);
-  height: var(--control-height);
+  border-radius: var(--control-radius-icon);
+  width: var(--control-height-icon);
+  height: var(--control-height-icon);
 }
 
 .btn-icon:hover {
@@ -930,7 +932,7 @@ select {
 }
 
 textarea {
-  min-height: 84px;
+  min-height: 76px;
   padding: 6px;
   resize: vertical;
 }
@@ -1254,38 +1256,15 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 /* ==========================================================================
    8) UI COMPONENTS — Cards / Toasts / Menus / Badges
    ========================================================================== */
-/* Cards */
 .card {
-  /* overflow: hidden; */
   border-radius: 0;
   min-width: 0;
   background: var(--surface-2);
   border-inline-start: none;
-  transition: box-shadow var(--dur-2) var(--ease-standard);
+
   position: relative;
   isolation: isolate;
 }
-
-/*.panel-main > .card {
-  box-shadow: var(--shadow-1) !important;
-}
-*/
-
-/*OPTION 2: Maximum depth with 4 layers (uncomment to use)*/
-/*.panel-main > .card {
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.05),
-    0 20px 60px rgba(0, 0, 0, 0.5),
-    0 8px 24px rgba(0, 0, 0, 0.35),
-    0 2px 8px rgba(0, 0, 0, 0.25) !important;
-}
-*/
-
-/* Main schedule card — same elevation as control layer */
-.panel-main > .card {
-  box-shadow: var(--shadow-elevated) !important;
-}
-
 .card.compact {
   padding: 0;
 }
@@ -1295,8 +1274,8 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
-  margin-top: 12px;
-  padding: 0 6px;
+  margin-top: 8px;
+  padding: 0 12px;
   height: 36px;
 }
 
@@ -1352,7 +1331,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   /* 12px */
   font-weight: 400;
   color: var(--text-muted);
-  padding: none;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -1639,9 +1618,17 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex: 1;
-  min-width: 0;
+
+  
 }
+
+.topbar-end {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+   
+    min-width: 0;
+  }
 
 .logo-wrap {
   display: flex;
@@ -1715,7 +1702,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .nav-controls {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
 }
 
 #todayBtnMobile {
@@ -1746,11 +1733,11 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   padding-bottom: 24px;
 }
 
-/* Sidebar symmetry: identical padding and background for both panels */
+/* Sidebar symmetry: identical background for both panels (padding on .card-content only) */
 .panel-start:not(.panel-collapsed),
 .panel-end:not(.panel-collapsed) {
   background: var(--surface-2);
-  padding: 0 var(--card-padding);
+  padding: 0;
   box-shadow: var(--shadow-elevated);
 }
 
@@ -1759,12 +1746,13 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   /* Match table height, don't stretch */
   max-height: 100%;
   /* But don't exceed viewport */
-  padding: var(--card-padding);
+
+  padding: 0 12px;
   border-radius: none;
   background: var(--schedule-bg);
   display: flex;
   flex-direction: column;
-  margin: var(--card-padding);
+  margin-top: 8px;
   overflow: visible;
   /* border: 1px solid var(--border); */
   /* Let table container handle scrolling */
@@ -1842,7 +1830,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
       width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
       opacity 0.2s ease,
       margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
+    overflow: visible;
     white-space: nowrap;
   }
 
@@ -1906,7 +1894,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     flex: auto;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow: visible;
   }
 
   .panel-start > .card:not(.is-hidden) .card-content,
@@ -1914,6 +1902,9 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     flex: auto;
     overflow-y: auto;
     min-height: 0;
+    /* Horizontal padding so focus ring isn't clipped and Trip Editor has margins */
+    padding-left: var(--card-padding);
+    padding-right: var(--card-padding);
   }
 
   .panel-main {
@@ -1922,7 +1913,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   }
 
   .panel-main > .card {
-    box-shadow: var(--shadow-elevated) !important;
+    box-shadow: none;
   }
 
   .panel-end.is-hidden {
@@ -2225,6 +2216,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   background: var(--surface-1);
   padding: 0;
   height: var(--day-row-h);
+  border-top: 1px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 2000;
@@ -2240,6 +2232,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .week-table th:first-child {
   position: sticky;
   inset-inline-start: 0;
+  border-top: 1px solid var(--border);
   z-index: 3000;
   background: var(--surface-1);
 }
@@ -2284,7 +2277,7 @@ th.day-today .day-date {
   width: 28px;
   height: 28px;
   border-radius: 9999px;
-  background: var(--accent);
+  background: color-mix(in srgb, var(--accent) 33%, transparent);
   border: 2px solid var(--accent);
   color: var(--text);
   font-weight: 600;
@@ -2346,6 +2339,7 @@ th.day-today .day-name {
 }
 
 /* Sticky first column */
+/* Bus column: keep right border so only one line (no ::after = no doubled border) */
 .week-table td:first-child {
   position: sticky;
   inset-inline-start: 0;
@@ -2359,8 +2353,8 @@ th.day-today .day-name {
   min-width: var(--bus-col-w);
   max-width: var(--bus-col-w);
 
-  border-inline-start: none;
-  border-inline-end: none;
+  border-inline-start: 1px solid var(--border);
+  /* border-inline-end: from general rule — single line, no ::after */
 }
 
 .week-table th:first-child {
@@ -2368,31 +2362,17 @@ th.day-today .day-name {
   inset-inline-start: 0;
   z-index: 3000 !important;
   background: var(--surface-1);
-  border-inline-start: none;
-  border-inline-end: none;
+  border-inline-start: 1px solid var(--border);
+  /* border-inline-end: from general rule — single line */
 }
 
 /* Remove outer right and bottom borders */
 .week-table th:last-child,
 .week-table td:last-child {
-  border-inline-end: none;
+  border-inline-end: 1px solid var(--border);
 }
 
-.week-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.week-table td:first-child::after,
-.week-table th:first-child::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  inset-inline-end: -1px;
-  width: 1px;
-  height: 100%;
-  background: var(--border);
-  pointer-events: none;
-}
+/* Keep bottom border on last row so table has a visible bottom edge (no override) */
 
 .week-table td.day-cell {
   cursor: pointer;
@@ -2460,7 +2440,7 @@ th.day-today .day-name {
 }
 
 .bus-id-wrap .bus-sleeper {
-  color: color-mix(in srgb, var(--white) 90%, transparent);
+  color: color-mix(in srgb, var(--text) 90%, transparent);
 }
 
 /* ======================================================================
@@ -3183,22 +3163,27 @@ th.day-today .day-name {
    ========================================================================== */
 /* --- 1. The Global Form Container --- */
 .form-grid {
-  container-type: inline-size;
-  container-name: form-grid;
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-columns: repeat(12, 1fr);
+  /* Rigid fractions */
+  width: 100%;
+  /* Fixed width slightly smaller than panel (420px) to allow for padding/gutters */
   gap: 8px;
-  margin: 8px 6px;
+  margin: 8px auto;
   align-items: start;
 }
 
 /* --- 3. Unified Form Group --- */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  min-width: 0;
-  align-items: stretch;
+.form-group > label,
+.field-label {
+  display: block;
+  font-size: var(--font-size-1);
+  font-weight: 600;
+  color: var(--text-muted);
+  line-height: 1;
+  margin-bottom: 4px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 /* Ensure consistent alignment for all form groups — same spacing as .field-label */
@@ -3258,18 +3243,25 @@ th.day-today .day-name {
 .subsection {
   grid-column: span 12;
   margin-top: 4px;
-  padding-top: 8px;
+  padding-top: 12px;
   border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Strict field-to-field gap within sections */
 }
 
-/* Requirements: no extra margin so label-to-content gap is 4px like form groups */
+/* Section label to first content = 4px (match .form-group label-to-field); subsection gap stays 8px */
+.subsection > .field-label {
+  margin-bottom: -4px !important;
+}
+
 .subsection > .toggle-pill-grid {
   margin-top: 0;
 }
 
 /* Bus assignment: reduce gap between header row and first dropdown row to 4px (grid gap is 8px) */
 #busGrid.bus-assign .field-label {
-  margin-bottom: -4px;
+  margin-bottom: -4px !important;
 }
 
 .subsection-grid {
@@ -3361,11 +3353,12 @@ th.day-today .day-name {
 /* ==========================================================================
    13) DRIVER / STATUS PANELS
    ========================================================================== */
+/* Match Trip Editor: horizontal spacing from .card-content padding only; vertical margin for header/content separation */
 .driver-week-wrap {
   width: auto;
   max-width: 100%;
-  margin: 6px 6px;
   overflow: auto;
+  margin: 0;
   background: var(--surface-3);
 }
 
@@ -3374,7 +3367,6 @@ th.day-today .day-name {
   border-collapse: collapse;
   table-layout: auto;
   -webkit-user-select: none;
-
   user-select: none;
 }
 
@@ -3429,12 +3421,20 @@ th.day-today .day-name {
   font-weight: 700;
 }
 
+/* --- 4. Status Grid Optimization --- */
 .status-grid {
   display: grid;
-  width: auto;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 8px;
-  align-items: start;
+  width: 100%;
+}
+
+/* --- 5. Rigid Bus Assignment --- */
+#busGrid.bus-assign {
+  display: grid;
+  grid-template-columns: 70px 1fr 1fr;
+  column-gap: 8px;
+  row-gap: 8px;
 }
 
 /* Standardized status pattern - uses CSS variables set by status classes */
@@ -3470,7 +3470,7 @@ select.status-confirmed {
 
 #busGrid.bus-assign {
   display: grid;
-  grid-template-columns: 60px 1fr 1fr;
+  grid-template-columns: 70px 1fr 1fr;
   gap: 8px;
 }
 
@@ -3502,7 +3502,7 @@ select.status-confirmed {
 
 .waiting-list-row td {
   background-color: var(--surface-1) !important;
-  border-top: 1px solid var(--border);
+  border-top: none;
   vertical-align: top;
 }
 
@@ -3527,27 +3527,37 @@ select.status-confirmed {
   flex: 1;
   min-height: 200px;
   max-height: 100%;
-  background: #fff6cc;
-  color: #2b2b2b;
-  border-radius: 0;
+  background: var(--surface-3);
+  color: var(--text);
+  border-radius: 2px;
   padding: 6px 6px;
-  font-size: 0.875rem;
+  font-size: var(--font-size-2);
   /* 14px */
   font-weight: 400;
   line-height: 1.5;
-  margin: 6px 6px;
   resize: none;
   overflow-y: auto;
   outline: none;
-  transition: border-color 0.2s;
+  margin: 0;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.12s ease;
 }
 
-/* Focus states handled by global focus rules */
+/* Same thick focus ring as Comments and other form controls (3px) */
+.notes-textarea:focus-visible {
+  outline: none;
+  border-color: transparent;
+  box-shadow: var(--focus-ring) !important;
+}
 
-/* Notes card layout */
 #notesCard .card-content {
   display: flex;
   flex-direction: column;
+  overflow: visible;
+  /* Match Trip Editor side padding in all viewports */
+  padding-left: var(--card-padding);
+  padding-right: var(--card-padding);
 }
 
 .notes-wrap {
@@ -3555,6 +3565,7 @@ select.status-confirmed {
   flex-direction: column;
   flex: 1;
   min-height: 0;
+  overflow: visible;
 }
 
 /* ==========================================================================
