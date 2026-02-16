@@ -212,17 +212,18 @@
   --text-driver: var(--yellow); /* driver names */
 
   /* ── Surface Colors ─────────────────────────────────────────── */
-  --app-bg: rgb(20 20 20); /* app background */
-  --surface-0: rgb(30 30 30); /* topbar */
-  --surface-1: rgb(20 20 20 ); /* table header, sticky cells */
-  --surface-2: rgb(40 40 40); /* cards */
-  --surface-3: rgb(56 56 56); /* inputs / controls */
-  --surface-4: rgb(68 68 68); /* hover / active */
-  --schedule-bg: rgb(20 20 20); /* schedule background */
+  --app-bg: rgb(19 19 21); /* app background */
+  --surface-0: rgb(29 29 31); /* topbar */
+  --surface-1: rgb(9 9 11); /* table header, sticky cells */
+  --surface-2: rgb(39 39 41); /* cards */
+  --surface-3: rgb(74 74 76); /* inputs / controls */
+  --surface-4: rgb(69 69 71); /* hover / active */
+  --schedule-bg: rgb(9 9 11); /* schedule background */
+  --agenda-header-bg: var(--surface-1); /* agenda header (week date + nav) */
 
   /* ── Border Colors ──────────────────────────────────────────── */
-  --border: rgb(70 70 70);
-  --border-strong: #3a3a3a;
+  --border: rgb(49 49 51);
+  --border-strong: rgb(59 59 61);
   --color-border-subtle: color-mix(in srgb, var(--border) 60%, transparent);
   --color-border-disabled: color-mix(in srgb, var(--border) 55%, transparent);
 
@@ -257,6 +258,7 @@
   /* ── Control Dimensions ─────────────────────────────────────── */
   --control-height: 36px;
   --control-height-icon: 28px;
+  --week-picker-height: 32px;
   --control-padding-x: 10px;
   --control-radius: var(--radius-sm);
   --control-radius-icon: var(--radius-icon);
@@ -393,6 +395,7 @@
   --surface-0: rgb(255 255 255); /* topbar */
   --surface-1: rgb(245 245 245); /* table header / sticky cells */
   --schedule-bg: rgb(245 245 245); /* main schedule surface */
+  --agenda-header-bg: var(--surface-1); /* agenda header (week date + nav) */
   --surface-2: rgb(255 255 255); /* cards */
   --surface-3: rgb(244 244 245); /* inputs / controls on cards */
   --surface-4: rgb(236 236 238); /* hover / active fill */
@@ -795,9 +798,9 @@ input[type="date"].weekpicker[aria-disabled="true"] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--control-radius-icon);
-  width: var(--control-height-icon);
-  height: var(--control-height-icon);
+  border-radius: 0;
+  width: var(--week-picker-height);
+  height: var(--week-picker-height);
 }
 
 .btn-icon:hover {
@@ -1033,13 +1036,17 @@ textarea::placeholder {
 /* Week picker */
 input[type="date"].weekpicker {
   width: 140px;
-  height: var(--control-height);
+  height: var(--week-picker-height);
   padding: 0;
-  border-radius: var(--control-radius);
+  border-radius: 0;
   background: var(--surface-3);
   box-shadow: var(--field-inset);
   color: var(--text);
   text-align: start;
+}
+
+input[type="date"].weekpicker:hover {
+  background-color: var(--surface-4);
 }
 
 input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
@@ -1274,9 +1281,8 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
-  margin-top: 8px;
   padding: 0 12px;
-  height: 36px;
+  height: 40px;
 }
 
 .card-header-actions {
@@ -1598,9 +1604,15 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .topbar {
   position: sticky;
   background: var(--surface-0);
-  height: 44px;
+  min-height: 44px;
   z-index: 1000;
   box-shadow: var(--shadow-elevated);
+  display: flex;
+  align-items: center;
+}
+
+.topbar > .container {
+  height: 100%;
   display: flex;
   align-items: center;
 }
@@ -1612,23 +1624,27 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   width: 100%;
   padding: 0 16px;
   height: 100%;
+  min-height: var(--week-picker-height);
 }
 
 .topbar-start {
   display: flex;
   align-items: center;
   gap: 12px;
-
-  
 }
 
 .topbar-end {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-   
-    min-width: 0;
-  }
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.topbar-end .btn-icon {
+  width: var(--week-picker-height);
+  height: var(--week-picker-height);
+  flex-shrink: 0;
+}
 
 .logo-wrap {
   display: flex;
@@ -1666,15 +1682,15 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   align-items: center;
   gap: 0;
   cursor: pointer;
-  height: var(--control-height);
+  height: var(--week-picker-height);
   padding: 0 var(--control-padding-x);
-  border-radius: var(--control-radius);
+  border-radius: 0;
   transition: background-color var(--dur-1) ease;
   position: relative;
 }
 
 .week-picker-trigger:hover {
-  background-color: var(--surface-3);
+  background-color: var(--surface-4);
   color: var(--text);
 }
 
@@ -1747,12 +1763,12 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   max-height: 100%;
   /* But don't exceed viewport */
 
-  padding: 0 12px;
+  padding: 0 18px;
   border-radius: none;
-  background: var(--schedule-bg);
+  background: transparent;
   display: flex;
   flex-direction: column;
-  margin-top: 8px;
+ 
   overflow: visible;
   /* border: 1px solid var(--border); */
   /* Let table container handle scrolling */
@@ -2033,9 +2049,9 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   }
 
   .btn-icon {
-    min-width: 36px;
-    width: 36px;
-    height: 36px;
+    min-width: 32px;
+    width: 32px;
+    height: 32px;
     position: relative;
     z-index: 10;
   }
@@ -2132,9 +2148,13 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
    Agenda header (date + prev/next week above week table)
    ========================================================================== */
 .agenda-header {
-  background: var(--surface-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--app-bg);
   border-bottom: none;
   flex-shrink: 0;
+  height: 40px;
 }
 
 .agenda-header-inner {
@@ -2143,12 +2163,18 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   justify-content: space-between;
   gap: var(--space-4);
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .agenda-header .nav-controls {
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+.agenda-header .nav-controls .btn-icon {
+  width: var(--week-picker-height);
+  height: var(--week-picker-height);
 }
 
 .agenda-header .week-heading {
@@ -2220,6 +2246,8 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   position: sticky;
   top: 0;
   z-index: 2000;
+  text-align: center;
+  vertical-align: middle;
 }
 
 /* Day columns */
@@ -2228,7 +2256,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   min-width: 160px;
 }
 
-/* Sticky top-start corner */
+/* Sticky top-start corner (bus column header) */
 .week-table th:first-child {
   position: sticky;
   inset-inline-start: 0;
@@ -2237,7 +2265,11 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   background: var(--surface-1);
 }
 
-/* Header cells */
+/* Header cells: center day labels in the cell */
+.week-table thead th .day-label {
+  width: 100%;
+}
+
 .day-label {
   display: flex;
   flex-direction: row;
@@ -3538,7 +3570,7 @@ select.status-confirmed {
   resize: none;
   overflow-y: auto;
   outline: none;
-  margin: 0;
+  margin: 0 0 var(--space-3) 0;
   transition:
     border-color 0.2s,
     box-shadow 0.12s ease;
