@@ -2164,7 +2164,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .agenda-header .week-date .wk-month-end {
   /* month - ACCENT */
   font-weight: 700;
-  font-size: var(--heading-2-size);
+  font-size: inherit;
   letter-spacing: var(--heading-2-letter-spacing);
   line-height: var(--heading-2-line-height);
   color: var(--accent);
@@ -2173,7 +2173,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .agenda-header .week-date .wk-dates {
   /* dates - WHITE */
   font-weight: var(--heading-2-weight);
-  font-size: var(--heading-2-size);
+  font-size: inherit;
   letter-spacing: var(--heading-2-letter-spacing);
   line-height: var(--heading-2-line-height);
   color: var(--heading-2-color);
@@ -2183,7 +2183,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .agenda-header .week-date .wk-year {
   /* year - GREY */
   font-weight: var(--heading-2-weight);
-  font-size: var(--heading-2-size);
+  font-size: inherit;
   letter-spacing: var(--heading-2-letter-spacing);
   line-height: var(--heading-2-line-height);
   color: var(--heading-2-color);
