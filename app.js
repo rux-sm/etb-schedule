@@ -1181,24 +1181,33 @@ function updateWeekTitle() {
 
   const monthOpt = { month: "long" };
   const startMonth = start.toLocaleDateString("en-US", monthOpt);
-  const startDay = start.getDate();
-  const endDay = end.getDate();
-  const yearLabel = start.getFullYear();
+  const startYear = start.getFullYear();
+  const endYear = end.getFullYear();
 
   let html;
-  if (start.getMonth() === end.getMonth()) {
-    html =
-      `<span class="wk-month">${startMonth}</span> ` +
-      `<span class="wk-dates">${startDay} — ${endDay}</span> ` +
-      `<span class="wk-year">${yearLabel}</span>`;
-  } else {
+
+  // Scenario 1: Same Month & Year (February 2026)
+  if (start.getMonth() === end.getMonth() && startYear === endYear) {
+    html = `<span class="wk-month">${startMonth}</span> ` + `<span class="wk-year">${startYear}</span>`;
+  }
+  // Scenario 2: Different Month, Same Year (February – March 2026)
+  else if (startYear === endYear) {
     const endMonth = end.toLocaleDateString("en-US", monthOpt);
     html =
       `<span class="wk-month">${startMonth}</span> ` +
-      `<span class="wk-dates">${startDay}</span> — ` +
-      `<span class="wk-month-end">${endMonth}</span> ` +
-      `<span class="wk-dates">${endDay}</span> ` +
-      `<span class="wk-year">${yearLabel}</span>`;
+      `<span class="wk-sep">–</span> ` +
+      `<span class="wk-month">${endMonth}</span> ` +
+      `<span class="wk-year">${startYear}</span>`;
+  }
+  // Scenario 3: Different Year (December 2025 – January 2026)
+  else {
+    const endMonth = end.toLocaleDateString("en-US", monthOpt);
+    html =
+      `<span class="wk-month">${startMonth}</span> ` +
+      `<span class="wk-year">${startYear}</span> ` +
+      `<span class="wk-sep">–</span> ` +
+      `<span class="wk-month">${endMonth}</span> ` +
+      `<span class="wk-year">${endYear}</span>`;
   }
 
   if (dom.headerWeek) {
@@ -1616,8 +1625,14 @@ function positionBarWithinOverlay(bar, bars, col, startIdx, endIdx, overrides) {
   const el = bar.closest("#printRoot") || document.documentElement;
   const root = getComputedStyle(el);
   const insetAll = parseFloat(root.getPropertyValue("--tripbar-inset")) || 6;
-  const insetL = overrides?.insetL !== undefined ? overrides.insetL : (parseFloat(root.getPropertyValue("--tripbar-inset-left")) || insetAll);
-  const insetR = overrides?.insetR !== undefined ? overrides.insetR : (parseFloat(root.getPropertyValue("--tripbar-inset-right")) || insetAll);
+  const insetL =
+    overrides?.insetL !== undefined
+      ? overrides.insetL
+      : parseFloat(root.getPropertyValue("--tripbar-inset-left")) || insetAll;
+  const insetR =
+    overrides?.insetR !== undefined
+      ? overrides.insetR
+      : parseFloat(root.getPropertyValue("--tripbar-inset-right")) || insetAll;
 
   // Simplified: exactly match the calculated start and width without extends
   const leftPx = Math.max(0, (col.starts[startIdx] ?? 0) + insetL);
@@ -3133,7 +3148,9 @@ function renderTripDetailsModalFromData(t, assigns) {
   }
 
   function getDetailStatusClass(fieldId, val) {
-    const v = String(val || "").trim().toLowerCase();
+    const v = String(val || "")
+      .trim()
+      .toLowerCase();
     if (!v) return "";
     if (fieldId === "driverStatus") {
       if (v === "pending") return "status-pending";
@@ -3596,7 +3613,7 @@ function buildPrintScheduleTwoPages() {
     const contentW = card.scrollWidth || card.offsetWidth;
     const contentH = card.scrollHeight || card.offsetHeight;
     const legalPrintableW = 1296; /* 13.5in at 96dpi */
-    const legalPrintableH = 720;  /* 7.5in at 96dpi — leave buffer for page margins */
+    const legalPrintableH = 720; /* 7.5in at 96dpi — leave buffer for page margins */
     const scaleW = contentW > 0 ? legalPrintableW / contentW : 1;
     const scaleH = contentH > 0 ? legalPrintableH / contentH : 1;
     const scale = Math.min(1, scaleW, scaleH) * 0.97; /* 3% buffer for reliable fit */
