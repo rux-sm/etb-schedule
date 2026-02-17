@@ -2128,7 +2128,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  margin: 0 12px;
+  margin: 0;
   flex-wrap: wrap;
   width: 100%;
 }
@@ -2163,7 +2163,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .agenda-header .week-date .wk-month,
 .agenda-header .week-date .wk-month-end {
   /* month - ACCENT */
-  font-weight: var(--heading-2-weight);
+  font-weight: 700;
   font-size: var(--heading-2-size);
   letter-spacing: var(--heading-2-letter-spacing);
   line-height: var(--heading-2-line-height);
