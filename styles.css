@@ -1,3 +1,39 @@
+/* Agenda header: date left, controls right (Option 2) */
+.agenda-header-inner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.agenda-header-date-left {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  min-width: 0;
+}
+.agenda-header-nav-right {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+/* Icon group for agenda header (week picker + nav arrows + today) */
+.agenda-header-icon-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+/* Inline nav-controls for agenda header (between weekpicker and week heading) */
+.agenda-header-inline-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+}
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
 /* ==========================================================================
@@ -18,12 +54,13 @@
     "opsz" 24;
   font-weight: normal;
   font-style: normal;
-  font-size: 1.5rem; /* 24px */
+  font-size: 1.375rem; /* 22px, matches heading-2-size */
   line-height: 1;
   display: inline-block;
   white-space: nowrap;
   direction: ltr;
   -webkit-font-smoothing: antialiased;
+  vertical-align: middle;
 }
 
 /* ==========================================================================
@@ -93,23 +130,23 @@
 
   /* H1: Topbar (44px height) */
   --heading-1-size: 1.375rem; /* 22px */
-  --heading-1-weight: 600;
+  --heading-1-weight: 500;
   --heading-1-line-height: 1.3;
-  --heading-1-letter-spacing: -0.01em;
+  --heading-1-letter-spacing: 0.01em;
   --heading-1-color: var(--text-muted);
 
   /* H2: Sidebar/Cards (40px height) */
-  --heading-2-size: 1.25rem; /* 20px */
+  --heading-2-size: 1.375rem; /* 22px */
   --heading-2-weight: 500;
   --heading-2-line-height: 1.25;
   --heading-2-letter-spacing: -0.005em;
-  --heading-2-color: var(--text-muted);
+  --heading-2-color: var(--text);
 
   /* H3: Table Headers/Section Labels (36px height) */
-  --heading-3-size: 0.875rem; /* 14px */
-  --heading-3-weight: 600;
+  --heading-3-size: 1rem; /* 16px */
+  --heading-3-weight: 500;
   --heading-3-line-height: 1.4;
-  --heading-3-letter-spacing: 0.01em;
+  --heading-3-letter-spacing: 0.02em;
   --heading-3-color: var(--text-muted);
 
   /* ── Color Palette ─────────────────────────────────────────── */
@@ -281,9 +318,14 @@
   --layout-logo-height: 28px;
   --panel-width: 420px;
   --card-padding: 18px;
+
+  /* Bar/header system: all headers and footers 40px (except table day row 36px) */
+  --bar-height: 40px;
+  --topbar-height: var(--bar-height);
+  --bar-padding-x: var(--card-padding);
   --card-footer-padding-y: 12px;
   --card-footer-padding-x: var(--card-padding);
-  --card-footer-min-height: 44px;
+  --card-footer-min-height: var(--bar-height);
 
   /* ── Schedule Grid ──────────────────────────────────────────── */
   --schedule-row-height: 101px;
@@ -545,7 +587,6 @@ button:focus-visible,
 .icon-chip:focus-visible,
 .theme-toggle:focus-visible,
 .seg__btn:focus-visible,
-input[type="date"].weekpicker:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
@@ -610,8 +651,7 @@ button,
 .btn,
 .icon-chip,
 .theme-toggle,
-.seg__btn,
-input[type="date"].weekpicker {
+.seg__btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -645,8 +685,7 @@ button:hover,
 .btn:hover,
 .icon-chip:hover,
 .theme-toggle:hover,
-.seg__btn:hover,
-input[type="date"].weekpicker:hover {
+.seg__btn:hover {
   background-color: var(--color-button-hover-bg);
   border-color: transparent;
 }
@@ -662,10 +701,6 @@ button:active:not(.toggle-pill),
   outline: none !important;
 }
 
-input[type="date"].weekpicker:active {
-  transform: none;
-}
-
 /* Focus states moved to global focus section above */
 
 /* Disabled */
@@ -674,13 +709,11 @@ button:disabled,
 .icon-chip:disabled,
 .theme-toggle:disabled,
 .seg__btn:disabled,
-input[type="date"].weekpicker:disabled,
 button[aria-disabled="true"],
 .btn[aria-disabled="true"],
 .icon-chip[aria-disabled="true"],
 .theme-toggle[aria-disabled="true"],
-.seg__btn[aria-disabled="true"],
-input[type="date"].weekpicker[aria-disabled="true"] {
+.seg__btn[aria-disabled="true"] {
   opacity: 1;
   cursor: not-allowed;
   pointer-events: none;
@@ -1009,47 +1042,21 @@ textarea::placeholder {
   vertical-align: middle;
 }
 
-.date-input-overlay {
+/* Week picker triggered by agenda button — visually hidden */
+/* Wrap button + hidden input so picker opens at button position */
+.weekpicker-trigger-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.weekpicker-trigger-wrap .weekpicker-trigger-input {
   position: absolute;
-  top: 0;
-  inset-inline-start: 0;
-  width: 100% !important;
-  height: 100% !important;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   opacity: 0;
-  z-index: 10;
   cursor: pointer;
-}
-
-/* Week picker — match section header (20px) */
-input[type="date"].weekpicker {
-  width: 140px;
-  height: var(--week-picker-height);
-  padding: 0;
-  border-radius: 0;
-  background: var(--surface-3);
-  box-shadow: var(--field-inset);
-  color: var(--text);
-  text-align: start;
-  font-size: var(--heading-2-size); /* 20px, same as .section-title */
-}
-
-/* Force 20px on date input inner text (WebKit often ignores input font-size) */
-input[type="date"].weekpicker::-webkit-datetime-edit,
-input[type="date"].weekpicker::-webkit-datetime-edit-fields-wrapper,
-input[type="date"].weekpicker::-webkit-datetime-edit-text {
-  font-size: var(--heading-2-size);
-}
-
-input[type="date"].weekpicker:hover {
-  background-color: var(--surface-4);
-}
-
-input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
-  padding: 0;
-  width: 16px;
-  height: 16px;
-  margin-inline-start: -20px;
-  margin-inline-end: 0;
+  pointer-events: none;
 }
 
 /* ==========================================================================
@@ -1123,7 +1130,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 }
 
 .modal-head.card-header {
-  min-height: 36px;
+  height: var(--bar-height);
 }
 
 .modal-body {
@@ -1141,9 +1148,11 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .modal-actions,
 .modal-foot {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
   gap: var(--space-2);
-  padding: var(--space-3) var(--space-4);
+  min-height: var(--bar-height);
+  padding: 0 var(--space-4);
   border-top: 1px solid var(--border);
   background: var(--surface-2);
 }
@@ -1273,13 +1282,21 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   padding: 0;
 }
 
+/* Bar/header system: topbar, card-header, modal-header, footers all 40px */
 .card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
-  padding: 0 var(--card-padding);
-  height: 40px;
+  padding: 0;
+  height: var(--bar-height);
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* Schedule card: lighter border to match grid */
+.agenda-header .card-header {
+  border-bottom: 1px solid var(--grid-line);
 }
 
 .card-header-actions {
@@ -1301,6 +1318,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   color: var(--text-muted);
   cursor: pointer;
   opacity: 0.5;
+  margin-right: 18px;
   transition:
     opacity var(--dur-1) ease,
     background var(--dur-1) ease;
@@ -1327,6 +1345,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   line-height: var(--heading-2-line-height) !important; /* Tighter vertical rhythm */
   letter-spacing: var(--heading-2-letter-spacing); /* 0.02em */
   color: var(--heading-2-color);
+  padding: 0 18px;
 }
 
 .card-content {
@@ -1607,7 +1626,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .topbar {
   position: sticky;
   background: var(--surface-0);
-  min-height: 44px;
+  min-height: var(--topbar-height);
   z-index: 1000;
   border-bottom: 1px solid transparent; /* Remove border, rely on surface diff */
   display: flex;
@@ -1625,7 +1644,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 0 16px;
+  padding: 0;
   height: 100%;
   min-height: var(--week-picker-height);
 }
@@ -1633,6 +1652,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 .topbar-start {
   display: flex;
   align-items: center;
+  margin-left: 12px;
   gap: 12px;
 }
 
@@ -1640,6 +1660,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   display: flex;
   align-items: center;
   gap: 6px;
+  margin-right: 12px;
   min-width: 0;
 }
 
@@ -2026,22 +2047,6 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   }
 
   /* Fix 4: Sticky Header alignment */
-  .week-picker-trigger {
-    padding: 0 var(--space-2);
-    justify-content: flex-start; /* Align left to match logo position */
-  }
-
-  .week-picker-trigger .date-input-overlay {
-    width: 100% !important;
-    inset-inline-start: 0 !important;
-    top: 0 !important;
-    height: 100% !important;
-  }
-
-  .agenda-header .week-heading {
-    font-size: 0.875rem;
-    /* 14px */
-  }
 
   /* Scheduler layout — single column on mobile */
   .layout-panels {
@@ -2100,14 +2105,6 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
     inset-inline-end: -10px;
     min-width: 180px;
   }
-
-  .weekpicker.date-input-overlay {
-    width: 400px !important;
-    inset-inline-start: 0 !important;
-    top: 0 !important;
-    top: 0 !important;
-    height: 100% !important;
-  }
 }
 
 @media (max-width: 899px) {
@@ -2128,17 +2125,20 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   background: var(--app-bg);
   border-bottom: none;
   flex-shrink: 0;
-  height: 40px;
+  height: var(--bar-height);
 }
 
 .agenda-header-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  /* Inherits flex/dims from .card-header */
   gap: var(--space-4);
-  margin: 0;
   flex-wrap: wrap;
-  width: 100%;
+}
+
+.agenda-header-date-left .btn-icon,
+.agenda-header-nav-right .btn-icon,
+.agenda-header-nav-right .weekpicker-trigger-wrap .btn-icon {
+  width: var(--week-picker-height);
+  height: var(--week-picker-height);
 }
 
 .agenda-header .nav-controls {
@@ -2152,71 +2152,67 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   height: var(--week-picker-height);
 }
 
+.date-picker-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Week heading - Default (Desktop 20px), match section-title */
-.agenda-header .week-heading,
-.week-picker-trigger .week-heading {
+.agenda-header .week-heading {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 6px;
+  justify-content: space-between;
   white-space: nowrap;
-  font-family: var(--font-sans);
-  font-weight: var(--heading-2-weight);
-  color: var(--heading-2-color);
+  height: 40px;
+  line-height: 40px;
   margin: 0;
-  line-height: var(--heading-2-line-height);
-  letter-spacing: var(--heading-2-letter-spacing);
-}
-
-/* Week heading - Mobile Override (14px) */
-@media (max-width: 899px) {
-  .agenda-header .week-heading {
-    font-size: var(--heading-2-size) !important;
-    font-weight: var(--heading-2-weight);
-    letter-spacing: var(--heading-2-letter-spacing);
-    line-height: var(--heading-2-line-height);
-    color: var(--heading-2-color);
-    margin: 0;
-  }
 }
 
 /* Week date pieces — month, dates, year formatted independently */
 .agenda-header .week-date .wk-month,
 .agenda-header .week-date .wk-month-end {
   /* month - ACCENT */
-  font-weight: var(--heading-2-weight);
-  font-size: var(--heading-2-size) !important;
+  font-weight: 700;
+  font-size: 1.375rem;
   letter-spacing: var(--heading-2-letter-spacing);
-  line-height: var(--heading-2-line-height);
   color: var(--accent);
+  line-height: 40px;
+  height: 40px;
+  text-transform: uppercase;
 }
 
 .agenda-header .week-date .wk-dates {
   /* dates - WHITE */
-  font-weight: var(--heading-2-weight);
-  font-size: var(--heading-2-size) !important;
+  font-weight: 400;
+  font-size: 1.375rem;
   letter-spacing: var(--heading-2-letter-spacing);
-  line-height: var(--heading-2-line-height);
-  color: var(--heading-2-color);
+  color: var(--text);
   margin-inline-start: 2px;
+  line-height: 40px;
+  height: 40px;
 }
 
 .agenda-header .week-date .wk-year {
   /* year - GREY */
-  font-weight: var(--heading-2-weight);
-  font-size: var(--heading-2-size) !important;
+  font-weight: 700;
+  font-size: 1.375rem;
   letter-spacing: var(--heading-2-letter-spacing);
-  line-height: var(--heading-2-line-height);
-  color: var(--heading-2-color);
-  margin-inline-start: 4px;
+  height: 40px;
+  line-height: 40px;
+  color: var(--text-muted);
+  margin-inline-start: 2px;
 }
 
 .agenda-header .week-date .wk-sep {
-  color: var(--heading-2-color);
-  font-size: var(--heading-2-size) !important ;
-  font-weight: var(--heading-2-weight);
-  letter-spacing: var(--heading-2-letter-spacing);
-  line-height: var(--heading-2-line-height);
+  color: var(--gray);
+  font-size: var(--heading-1-size);
+  font-weight: var(--heading-1-weight);
+  letter-spacing: var(--heading-1-letter-spacing);
+  line-height: 40px;
+  height: 40px;
   margin: 0 2px;
 }
 
@@ -2285,17 +2281,6 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   vertical-align: middle;
 }
 
-.week-table th.card {
-  background: var(--schedule-bg);
-  border-radius: 8px; /* Softer corners */
-  box-shadow: var(--shadow-elevated);
-  border: none !important;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  height: 100%;
-}
-
 /* Day columns */
 .week-table th:not(:first-child),
 .week-table td:not(:first-child) {
@@ -2314,6 +2299,13 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
 /* Header cells: center day labels in the cell */
 .week-table thead th .day-label {
   width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  gap: 8px;
 }
 
 .day-label {
@@ -2330,7 +2322,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   /* 16px */
   color: var(--heading-3-color);
   font-weight: var(--heading-3-weight);
-  line-height: var(--heading-3-line-height);
+  line-height: 1;
   letter-spacing: var(--heading-3-letter-spacing);
 }
 
@@ -2340,7 +2332,7 @@ input[type="date"].weekpicker::-webkit-calendar-picker-indicator {
   font-weight: 600;
   color: var(--text);
   letter-spacing: var(--heading-3-letter-spacing);
-  line-height: var(--heading-3-line-height);
+  line-height: 1;
 }
 
 th.day-today {
@@ -2747,6 +2739,17 @@ th.day-today .day-date {
 
   /* 5. Text Overflow */
   white-space: nowrap;
+  /* Prevent text from wrapping to a second line */
+  overflow: hidden;
+  /* Clip any text that exceeds width */
+  text-overflow: ellipsis;
+  /* Add "..." to show the user there is more text */
+
+  /* 6. Interaction: Specific behavior on hover/touch */
+  /* cursor: help; */
+  /* Change cursor if hovering shows a tooltip */
+  /* pointer-events: none; */
+  /* Ignore title clicks so the bar behind handles it */
 }
 
 /* Hide content elements when they have no text, row space is preserved by the grid */

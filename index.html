@@ -44,10 +44,7 @@
               </div>
 
               <!-- 2. Header / title text (right of logo) -->
-              <h1 class="heading-1 topbar__title" id="topbarTitle" aria-label="Application title">
-                Trip Schedule
-              </h1>
-
+              <h1 class="heading-1 topbar__title" id="topbarTitle" aria-label="Application title">Trip Schedule</h1>
             </div>
 
             <!-- END GROUP: Settings & Tools -->
@@ -55,11 +52,7 @@
               <!-- Hidden buttons that JS might look for (can be cleaned up later, keeping for safety) -->
               <!-- Tools -->
               <button id="tripInputBtn" class="btn-icon" type="button" title="Trip Editor" aria-label="Trip Editor">
-                <span class="material-symbols-outlined">add_ad</span>
-              </button>
-
-              <button id="notesBtn" class="btn-icon" type="button" title="Weekly Notes" aria-label="Weekly Notes">
-                <span class="material-symbols-outlined">sticky_note_2</span>
+                <span class="material-symbols-outlined">add</span>
               </button>
 
               <button
@@ -70,6 +63,10 @@
                 aria-label="Driver Assignments"
               >
                 <span class="material-symbols-outlined">groups</span>
+              </button>
+
+              <button id="notesBtn" class="btn-icon" type="button" title="Weekly Notes" aria-label="Weekly Notes">
+                <span class="material-symbols-outlined">sticky_note_2</span>
               </button>
 
               <button id="waitingListBtn" class="btn-icon" type="button" title="Waiting List" aria-label="Waiting List">
@@ -93,7 +90,6 @@
                 >
                   <span class="material-symbols-outlined">settings</span>
                 </button>
-
                 <div id="settingsMenu" class="dropdown-menu" hidden>
                   <button id="refreshBtn2" class="dropdown-item" type="button">
                     <span class="dropdown-icon material-symbols-outlined">refresh</span>
@@ -450,19 +446,8 @@
 
                 <!-- Agenda header: week date + prev/next navigation -->
                 <div class="agenda-header">
-                  <div class="agenda-header-inner">
-                    <div id="dateWrapper" class="date-picker-wrapper week-picker-trigger">
-                      <h2 class="week-heading">
-                        <span class="week-date" id="headerWeek" aria-label="Active week"></span>
-                      </h2>
-                      <input
-                        type="date"
-                        id="weekPicker"
-                        class="weekpicker date-input-overlay"
-                        aria-label="Select Date for Week"
-                      />
-                    </div>
-                    <div class="nav-controls">
+                  <div class="agenda-header-inner card-header">
+                    <div class="agenda-header-date-left">
                       <button
                         id="prevWeekBtn"
                         class="btn-icon"
@@ -470,13 +455,37 @@
                         aria-label="Previous Week"
                         title="Previous Week"
                       >
-                        <span class="material-symbols-outlined">arrow_back</span>
-                      </button>
-                      <button id="todayBtn" class="btn-icon" type="button" aria-label="Today" title="Today">
-                        <span class="material-symbols-outlined">calendar_today</span>
+                        <span class="material-symbols-outlined">arrow_back_ios_new</span>
                       </button>
                       <button id="nextWeekBtn" class="btn-icon" type="button" aria-label="Next Week" title="Next Week">
-                        <span class="material-symbols-outlined">arrow_forward</span>
+                        <span class="material-symbols-outlined">arrow_forward_ios</span>
+                      </button>
+                      <div id="dateWrapper" class="date-picker-wrapper">
+                        <h2 class="week-heading">
+                          <span class="week-date" id="headerWeek" aria-label="Active week"></span>
+                        </h2>
+                      </div>
+                    </div>
+                    <div class="agenda-header-nav-right">
+                      <div class="weekpicker-trigger-wrap">
+                        <button
+                          id="agendaLeftBtn"
+                          class="btn-icon"
+                          type="button"
+                          aria-label="Select week"
+                          title="Select week"
+                        >
+                          <span class="material-symbols-outlined">calendar_month</span>
+                        </button>
+                        <input
+                          type="date"
+                          id="weekPicker"
+                          class="weekpicker weekpicker-trigger-input"
+                          aria-label="Select week"
+                        />
+                      </div>
+                      <button id="todayBtn" class="btn-icon" type="button" aria-label="Today" title="Today">
+                        <span class="material-symbols-outlined">calendar_today</span>
                       </button>
                     </div>
                   </div>
