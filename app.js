@@ -1925,8 +1925,17 @@ function _renderAgendaInner() {
     const continuesLeft = depY < weekStart;
     const continuesRight = arrY > weekEnd;
 
-    for (let assignIdx = 0; assignIdx < assigns.length; assignIdx++) {
-      const a = assigns[assignIdx];
+    // Sort by schedule row order: top row = 1/2, next = 2/2, etc. (order as rendered in agenda)
+    const sortedAssigns = [...assigns].sort((a, b) => {
+      const busIdA = String(a.busId || "").trim();
+      const busIdB = String(b.busId || "").trim();
+      const rowA = busIdA === "WAITING_LIST" ? 9999 : (state.busRowIndex.get(busIdA) ?? 9999);
+      const rowB = busIdB === "WAITING_LIST" ? 9999 : (state.busRowIndex.get(busIdB) ?? 9999);
+      return rowA - rowB;
+    });
+
+    for (let assignIdx = 0; assignIdx < sortedAssigns.length; assignIdx++) {
+      const a = sortedAssigns[assignIdx];
       const busId = String(a.busId || "").trim();
 
       let bars = null;
@@ -2197,7 +2206,7 @@ function _renderAgendaInner() {
       bar.classList.toggle("danger", touchesConflict);
 
       // Multi-bus indicator: e.g. 1/3, 2/3, 3/3 (only when trip has multiple buses)
-      const total = assigns.length;
+      const total = sortedAssigns.length;
       bar.classList.toggle("has-multi-bus", total > 1);
       if (bar._multiBadge) {
         if (total > 1) {
