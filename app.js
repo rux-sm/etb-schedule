@@ -3706,6 +3706,139 @@ function buildPrintScheduleTwoPages() {
   printRoot.style.cssText = "";
 }
 
+/**
+ * Build Letter-landscape print layout (Full 10-row schedule on 1 page).
+ */
+function buildPrintScheduleFullLetter() {
+  const printRoot = document.getElementById("printRoot");
+  if (!printRoot) return;
+
+  const weekTable = document.querySelector(".week-table");
+  if (!weekTable) return;
+
+  const weekTitle = document.getElementById("headerWeek")?.textContent || "Schedule";
+
+  function repositionBarsForPrint(table, col) {
+    if (!col) return;
+    const body = table.querySelector("tbody:not([hidden])");
+    if (!body) return;
+    const total = Math.round(col.total);
+    body.querySelectorAll(".row-bars").forEach((bars) => {
+      bars.style.width = `${total}px`;
+      bars.querySelectorAll(".trip-bar").forEach((bar) => {
+        const sidx = Number(bar.dataset.sidx);
+        const eidx = Number(bar.dataset.eidx);
+        if (!Number.isFinite(sidx) || !Number.isFinite(eidx)) return;
+        positionBarWithinOverlay(bar, bars, col, sidx, eidx, { insetL: 0, insetR: 0 });
+        const left = bar.style.left;
+        const w = bar.style.width;
+        if (left) bar.style.left = `${Math.round(parseFloat(left))}px`;
+        if (w) bar.style.width = `${Math.round(parseFloat(w))}px`;
+      });
+    });
+  }
+
+  function computePrintScale() {
+    const card = printRoot.querySelector(".print-card");
+    if (!card) return 1;
+    const contentW = card.scrollWidth || card.offsetWidth;
+    const contentH = card.scrollHeight || card.offsetHeight;
+    // Letter printable area (approx 10in x 7.5in) -> 960x720
+    const letterPrintableW = 960;
+    const letterPrintableH = 720;
+    const scaleW = contentW > 0 ? letterPrintableW / contentW : 1;
+    const scaleH = contentH > 0 ? letterPrintableH / contentH : 1;
+    const scale = Math.min(1, scaleW, scaleH) * 0.98;
+    return Math.max(0.4, Math.min(1, scale));
+  }
+
+  function makeFullTable() {
+    const clone = weekTable.cloneNode(true);
+    clone.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
+
+    const body = clone.querySelector("tbody:not([hidden])");
+    if (!body) return null;
+
+    clone.querySelectorAll("tbody[hidden]").forEach((el) => el.remove());
+
+    // Add 2 empty note rows under each bus row
+    const rows = Array.from(body.querySelectorAll("tr"));
+    rows.forEach((tr) => {
+      for (let j = 0; j < 2; j++) {
+        const notesRow = document.createElement("tr");
+        notesRow.className = "notes-row";
+        const tdEmpty = document.createElement("td");
+        tdEmpty.className = "bus-id-cell";
+        notesRow.appendChild(tdEmpty);
+        for (let i = 0; i < 7; i++) {
+          const td = document.createElement("td");
+          td.className = "day-cell";
+          notesRow.appendChild(td);
+        }
+        tr.parentNode.insertBefore(notesRow, tr.nextSibling);
+      }
+    });
+
+    const page = document.createElement("div");
+    page.className = "print-page";
+    const card = document.createElement("div");
+    card.className = "print-card";
+
+    const agendaHeader = document.querySelector(".agenda-header");
+    const headerClone = agendaHeader ? agendaHeader.cloneNode(true) : null;
+    if (headerClone) {
+      headerClone.classList.add("print-header");
+      headerClone
+        .querySelectorAll(".nav-controls, .date-input-overlay, input.weekpicker, .weekpicker-trigger-wrap")
+        .forEach((el) => el.remove());
+      const topbarLogo = document.querySelector(".logo-wrap");
+      const headerInner = headerClone.querySelector(".agenda-header-inner");
+      if (topbarLogo && headerInner) {
+        const logoClone = topbarLogo.cloneNode(true);
+        logoClone.classList.add("print-header-logo");
+        headerInner.insertBefore(logoClone, headerInner.firstChild);
+      }
+      card.appendChild(headerClone);
+    } else {
+      const title = document.createElement("div");
+      title.className = "print-title";
+      title.textContent = weekTitle;
+      card.appendChild(title);
+    }
+    clone.classList.add("print-table");
+    card.appendChild(clone);
+    page.appendChild(card);
+    return page;
+  }
+
+  printRoot.innerHTML = "";
+  printRoot.classList.add("print-mode-letter-full");
+  printRoot.appendChild(makeFullTable());
+
+  // Fixed metrics matched to the CSS widths
+  const printCardWidth = 1400;
+  const busColWidth = 52;
+  const dayColTotal = 1400 - busColWidth;
+  const dayColWidth = dayColTotal / 7;
+  const colMetrics = {
+    starts: Array.from({ length: 7 }, (_, i) => i * dayColWidth),
+    widths: Array(7).fill(dayColWidth),
+    total: dayColWidth * 7,
+  };
+
+  printRoot.classList.remove("is-hidden");
+  printRoot.style.cssText = `position:absolute;left:-9999px;visibility:hidden;width:${printCardWidth}px;`;
+
+  // Force layout recalculation
+  void printRoot.offsetHeight;
+
+  printRoot.querySelectorAll(".print-table").forEach((t) => repositionBarsForPrint(t, colMetrics));
+  printRoot.style.setProperty("--print-scale", String(computePrintScale()));
+
+  printRoot.classList.add("is-hidden");
+  printRoot.style.cssText = "";
+}
+
 function clearPrintRoot() {
   const printRoot = document.getElementById("printRoot");
   if (printRoot) {
@@ -3729,7 +3862,6 @@ function setPrintPageSize(size) {
 }
 
 window.addEventListener("afterprint", clearPrintRoot);
-
 
 // ======================================================
 // 33) DATA LOADING (DRIVERS/BUSES)
@@ -4684,6 +4816,7 @@ function wireSettingsMenu() {
     setSidePanelMode("off");
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
+        setPrintPageSize("letter");
         buildPrintScheduleFullLetter();
         window.print();
       });

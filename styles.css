@@ -3977,28 +3977,27 @@ select.status-confirmed {
     page-break-after: auto;
   }
 
-  /* Letter full: use full content area; scale in JS fits to 0.5in margins (Safari/Chrome default) */
-  #printRoot.print-mode-letter-full .print-page {
-    position: relative;
-    width: 100% !important;
-    height: 7.5in !important;
-    min-height: 7.5in !important;
-    max-height: 7.5in !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow: hidden !important;
-    page-break-after: auto;
-    box-sizing: border-box;
-  }
-
   /* Force Letter Landscape content area (10in @ 96dpi = 960px) — prevents 2nd page overflow */
   #printRoot.print-mode-letter-full .print-page {
     width: 960px !important;
     height: 720px !important;
-    overflow: hidden !important;
+    overflow: visible !important; /* FIX: Prevents the bottom edge from being clipped */
     page-break-after: avoid !important;
     padding: 2mm !important;
     box-sizing: border-box !important;
+  }
+
+  /* Letter full: scale 1400px agenda to fit; anchor to top left to avoid browser clipping bugs */
+  #printRoot.print-mode-letter-full .print-card {
+    position: relative !important; /* FIX: Removed absolute positioning */
+    top: 0 !important;
+    left: 0 !important; /* FIX: Removed 50% offset */
+    width: 1400px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box;
+    transform: scale(var(--print-scale, 1)) !important; /* FIX: Removed translateX(-50%) */
+    transform-origin: top left !important; /* FIX: Anchors safely to the corner */
   }
 
   /* Fix for trip bar clipping in print mode */
@@ -4011,19 +4010,6 @@ select.status-confirmed {
     width: 100%;
     transform: scale(var(--print-scale, 1));
     transform-origin: top left;
-  }
-
-  /* Letter full: scale 1400px agenda to fit; card centered horizontally on page */
-  #printRoot.print-mode-letter-full .print-card {
-    position: absolute !important;
-    top: 0 !important;
-    left: 50% !important;
-    width: 1400px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    box-sizing: border-box;
-    transform: translateX(-50%) scale(var(--print-scale, 1)) !important;
-    transform-origin: top center !important;
   }
 
   /* Print header: schedule-style header (cloned agenda-header) */
@@ -4196,6 +4182,13 @@ select.status-confirmed {
 
   /* Trip bar: fill row height — same size as row */
   .print-table .trip-bar {
+    /* --- NEW FIXES FOR BROWSER PRINT BUGS --- */
+    container-type: normal !important; /* Fixes disappearing elements in Chrome 122+ */
+    backdrop-filter: none !important; /* Fixes blank/dropped boxes */
+    -webkit-backdrop-filter: none !important;
+    background: color-mix(in srgb, var(--tripbar-color) 33%, white) !important; /* Mix with white, not transparent */
+    /* ---------------------------------------- */
+
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     box-shadow: none !important;
@@ -4208,6 +4201,12 @@ select.status-confirmed {
     border-radius: 4px !important;
     z-index: 10;
     font-size: 9pt !important;
+  }
+
+  /* Force all child elements (text, badges) inside the bar to print their colors */
+  .print-table .trip-bar * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   /* Ensure all bar rows and content stay visible for print */
