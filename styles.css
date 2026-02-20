@@ -1092,8 +1092,9 @@ textarea::placeholder {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: min(600px, calc(100vw - 24px));
+  width: min(800px, calc(100vw - 24px));
   max-height: 80vh;
+  overflow: visible;
 
   display: flex;
   flex-direction: column;
@@ -1102,7 +1103,6 @@ textarea::placeholder {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-2);
-  /* overflow: hidden; */
 
   animation: modalPopIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -1124,19 +1124,21 @@ textarea::placeholder {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
-  padding: var(--space-3) var(--space-4);
+  padding: 0 var(--space-4);
+  padding-top: var(--space-4);
   border-bottom: 1px solid var(--border);
   background: var(--surface-2);
+  height: 40px;
 }
 
 .modal-head.card-header {
-  height: var(--bar-height);
+  height: 40px;
 }
 
 .modal-body {
   flex: 1 1 auto;
   min-height: 0;
-  overflow-y: auto;
+  overflow: visible;
   padding: var(--space-4);
   background: var(--surface-2);
 }
@@ -1152,7 +1154,7 @@ textarea::placeholder {
   justify-content: flex-end;
   gap: var(--space-2);
   min-height: var(--bar-height);
-  padding: 0 var(--space-4);
+  padding: 0;
   border-top: 1px solid var(--border);
   background: var(--surface-2);
 }
@@ -1160,10 +1162,14 @@ textarea::placeholder {
 /* Textarea inside modal */
 .modal-body textarea {
   width: 100%;
-  min-height: 200px;
+  min-height: 400px;
+  max-height: calc(80vh - 120px); /* Allow expansion up to modal's max height minus header/footer */
+  height: 100%;
   resize: vertical;
+  overflow-y: auto;
+  margin-bottom: 16px;
 
-  padding: var(--space-3);
+  padding: 12px;
   font-family: var(--font-sans);
   font-size: var(--font-size-1);
   line-height: 1.5;
@@ -2565,6 +2571,8 @@ th.day-today .day-date {
   box-shadow: none;
   -webkit-backdrop-filter: blur(var(--tripbar-blur));
   backdrop-filter: blur(var(--tripbar-blur));
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 
   /* 5. Overflow */
   overflow: hidden;
@@ -3715,6 +3723,7 @@ select.status-confirmed {
 .detail-value-block.detail-text.pre-wrap {
   color: var(--text-secondary);
   font-size: var(--font-size-1);
+  font-family: var(--font-mono);
 }
 
 /* Section spacing only; typography from .toggle-pill-grid-label */
@@ -3747,10 +3756,17 @@ select.status-confirmed {
   height: 100%;
 }
 
-.detail-itinerary-scroll {
+.detail-text.detail-itinerary-scroll {
   max-height: min(28rem, 45vh);
   overflow-y: auto;
   overflow-x: hidden;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2);
+}
+
+#itineraryModalField {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2);
 }
 
 .detail-assignments-grid {
@@ -3790,7 +3806,7 @@ select.status-confirmed {
 }
 
 /* Trip details modal: mobile portrait — gutter and single-column grid */
-@media (max-width: 600px) {
+@media (max-width: 800px) {
   .modal-card.modal-card-details {
     width: calc(100vw - 32px);
     max-width: none;
@@ -3983,6 +3999,11 @@ select.status-confirmed {
     page-break-after: avoid !important;
     padding: 2mm !important;
     box-sizing: border-box !important;
+  }
+
+  /* Fix for trip bar clipping in print mode */
+  .row-bars {
+    overflow: visible !important;
   }
 
   .print-card {
