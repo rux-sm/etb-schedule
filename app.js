@@ -3153,14 +3153,9 @@ function renderTripDetailsModalFromData(t, assigns) {
   let html = "";
 
   function detailGridItem(label, val, itemClass) {
-    if (!val) return "";
+    const display = val ? escHtml(val) : "—";
     const wrapClass = itemClass ? `detail-grid-item ${itemClass}` : "detail-grid-item";
-    return `<div class="${wrapClass}"><span class="toggle-pill-grid-label">${label}:</span> <span class="detail-value">${escHtml(val)}</span></div>`;
-  }
-  function formatShortDate(iso) {
-    if (!iso || iso.length < 10) return "";
-    const [y, m, d] = iso.slice(0, 10).split("-").map(Number);
-    return `${m}/${d}/${String(y).slice(-2)}`;
+    return `<div class="${wrapClass}"><span class="toggle-pill-grid-label">${label}:</span> <span class="detail-value">${display}</span></div>`;
   }
 
   function getDetailStatusClass(fieldId, val) {
@@ -3189,83 +3184,32 @@ function renderTripDetailsModalFromData(t, assigns) {
     return "status-ok";
   }
 
-  function rowStatus(label, val, fieldId) {
-    if (!val) return "";
-    const cls = getDetailStatusClass(fieldId, val);
+  function rowStatus(label, val, fieldId, extraClass) {
+    const display = val ? escHtml(val) : "—";
+    const cls = val ? getDetailStatusClass(fieldId, val) : "";
+    const wrapClass = extraClass ? `detail-grid-item ${extraClass}` : "detail-grid-item";
     const valueSpan = cls
-      ? `<span class="detail-value ${cls}">${escHtml(val)}</span>`
-      : `<span class="detail-value">${escHtml(val)}</span>`;
-    return `<div class="detail-grid-item"><span class="toggle-pill-grid-label">${label}:</span> ${valueSpan}</div>`;
+      ? `<span class="detail-value ${cls}">${display}</span>`
+      : `<span class="detail-value">${display}</span>`;
+    return `<div class="${wrapClass}"><span class="toggle-pill-grid-label">${label}:</span> ${valueSpan}</div>`;
   }
 
   function section(title) {
     return `<div class="detail-section-title toggle-pill-grid-label">${title}</div>`;
   }
 
-  const depDate = String(t.departureDate || "").slice(0, 10);
-  const arrDate = String(t.arrivalDate || "").slice(0, 10);
-  const depTime = formatTime12(t.departureTime);
-  const arrTime = formatTime12(t.arrivalTime);
-  const departStr = (formatShortDate(depDate) || "—") + (depTime ? " " + depTime : "");
-  const arriveStr = (formatShortDate(arrDate) || "—") + (arrTime ? " " + arrTime : "");
-
-  /* Single grid: Column 1 = Destination, Contact, Depart; Column 2 = Customer, Phone, Arrive; then Buses */
-  html += `<div class="detail-meta-grid">`;
-  html += detailGridItem("Destination", t.destination);
-  html += detailGridItem("Customer", t.customer);
+  html += `<div class="detail-meta-grid detail-status-grid">`;
+  html += rowStatus("Itinerary Status", t.itineraryStatus, "itineraryStatus", "detail-hide-mobile");
+  html += rowStatus("Contact Status", t.contactStatus, "contactStatus", "detail-hide-mobile");
+  html += rowStatus("Approval Status", t.paymentStatus, "paymentStatus", "detail-hide-mobile");
+  html += rowStatus("Driver Status", t.driverStatus, "driverStatus", "detail-hide-mobile");
+  html += rowStatus("Invoice Status", t.invoiceStatus, "invoiceStatus", "detail-hide-mobile");
+  html += detailGridItem("Invoice Number", t.invoiceNumber, "detail-hide-mobile");
   html += detailGridItem("Contact", t.contactName);
   html += detailGridItem("Phone", t.phone);
-  html += detailGridItem("Depart", departStr, "detail-grid-item--datetime");
-  html += detailGridItem("Arrive", arriveStr, "detail-grid-item--datetime");
-  html += detailGridItem("Buses Needed", t.busesNeeded);
   html += `</div>`;
-
-  html += `<div class="detail-divider"></div>`;
-
-  html += `<div class="detail-meta-grid detail-status-grid">`;
-  html += rowStatus("Itinerary Status", t.itineraryStatus, "itineraryStatus");
-  html += rowStatus("Contact Status", t.contactStatus, "contactStatus");
-  html += rowStatus("Approval Status", t.paymentStatus, "paymentStatus");
-  html += rowStatus("Driver Status", t.driverStatus, "driverStatus");
-  html += rowStatus("Invoice Status", t.invoiceStatus, "invoiceStatus");
-  if (t.invoiceNumber) html += detailGridItem("Invoice Number", t.invoiceNumber);
-  html += `</div>`;
-
-  if (assigns && assigns.length) {
-    html += `<div class="detail-divider"></div>`;
-    html += `<div class="detail-labeled-block">`;
-    html += `<span class="toggle-pill-grid-label">Assignments:</span>`;
-    html += `<div class="detail-value-block detail-assignments-grid">`;
-    assigns.forEach((a) => {
-      const n = a.busNumber ? `#${a.busNumber}` : "";
-      const bus = a.busId ? `Bus ${a.busId}` : "Bus —";
-      const d1 = a.driver1 && a.driver1 !== "None" ? a.driver1 : "—";
-      const d2 = a.driver2 && a.driver2 !== "None" ? a.driver2 : "";
-      html += `<div class="detail-assignment">• ${n} ${bus}: ${d1}${d2 ? " / " + d2 : ""}</div>`;
-    });
-    html += `</div></div>`;
-  }
-
-  if (t.notes) {
-    html += `<div class="detail-divider"></div>`;
-    html += `<div class="detail-labeled-block">`;
-    html += `<span class="toggle-pill-grid-label">Notes:</span>`;
-    html += `<div class="detail-value-block detail-single-field-grid">`;
-    html += `<div class="detail-assignment detail-plain-wrap">${escHtml(t.notes)}</div>`;
-    html += `</div></div>`;
-  }
-
-  if (t.comments) {
-    html += `<div class="detail-divider"></div>`;
-    html += `<div class="detail-labeled-block">`;
-    html += `<span class="toggle-pill-grid-label">Comments:</span>`;
-    html += `<div class="detail-value-block detail-single-field-grid">`;
-    html += `<div class="detail-assignment detail-plain-wrap">${escHtml(t.comments)}</div>`;
-    html += `</div></div>`;
-  }
 
   if (t.itinerary) {
-    html += `<div class="detail-divider"></div>`;
     html += section("Itinerary:");
     html += `<div class="detail-text pre-wrap detail-itinerary-scroll">${escHtml(t.itinerary)}</div>`;
   }
