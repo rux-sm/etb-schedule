@@ -1076,7 +1076,7 @@ textarea::placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-4);
+  padding: 0;
   margin: 0 !important;
 }
 .modal[hidden] {
@@ -1095,13 +1095,13 @@ textarea::placeholder {
 }
 
 /* --- Base: card shell (shared) --- */
-/* Default 600px max; 85vh height; pop-in animation. Mobile/landscape overrides inside. */
+/* Default 600px max; 90vh height; pop-in animation. Mobile/landscape overrides inside. */
 .modal-card {
   position: relative;
   width: 100%;
   max-width: 600px;
-  height: 85vh;
-  max-height: 85vh;
+  height: 90vh;
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
   background: var(--surface-2);
@@ -1113,8 +1113,8 @@ textarea::placeholder {
   @media (max-width: 899px) {
     max-width: 100% !important;
     margin: 0 !important;
-    height: 85vh !important;
-    max-height: 85vh !important;
+    height: 90vh !important;
+    max-height: 90vh !important;
     /* Trip Details: status grid collapses to 2 columns on mobile */
     .detail-meta-grid {
       grid-template-columns: repeat(2, 1fr) !important;
@@ -1123,15 +1123,21 @@ textarea::placeholder {
       display: none !important;
     }
     @media (orientation: landscape) {
-      height: 85vh !important;
-      max-height: 85vh !important;
+      height: 90vh !important;
+      max-height: 90vh !important;
       max-width: 80vw !important;
     }
   }
 }
 @keyframes modalPopIn {
-  from { opacity: 0; transform: translateY(20px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* --- Base: header, body, footer (shared) --- */
@@ -1263,10 +1269,18 @@ textarea::placeholder {
   min-width: 0;
   word-break: break-word;
 }
-.detail-value.status-pending { color: var(--color-status-pending); }
-.detail-value.status-ok { color: var(--color-status-ok); }
-.detail-value.status-assigned { color: var(--color-status-assigned); }
-.detail-value.status-blue { color: var(--color-status-blue); }
+.detail-value.status-pending {
+  color: var(--color-status-pending);
+}
+.detail-value.status-ok {
+  color: var(--color-status-ok);
+}
+.detail-value.status-assigned {
+  color: var(--color-status-assigned);
+}
+.detail-value.status-blue {
+  color: var(--color-status-blue);
+}
 /* Divider between status grid and itinerary block */
 .detail-divider {
   border-top: 1px solid var(--grid-line);
@@ -1298,7 +1312,7 @@ textarea::placeholder {
   max-width: 100%;
   @media (max-width: 899px) {
     min-height: 120px;
-    font-size: var(--font-size-1);
+    font-size: 11px;
   }
 }
 
