@@ -1064,151 +1064,242 @@ textarea::placeholder {
    ========================================================================== */
 
 /* ==========================================================================
-   6) MODALS (single source of truth)
+   6) MODALS
    ========================================================================== */
+
+/* --- Base: wrapper, visibility, backdrop (shared by all modals) --- */
+/* Full-screen overlay; centers the modal card; 16px gutter from viewport edges */
 .modal {
   position: fixed;
   inset: 0;
   z-index: var(--z-modal);
-  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
   margin: 0 !important;
 }
-
 .modal[hidden] {
-  display: none;
+  display: none !important;
 }
-
-/* Backdrop */
-.modal::before {
+/* Dark blurred overlay behind the card */
+.modal::before,
+.modal-backdrop {
   content: "";
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.4);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  z-index: -1;
 }
 
-/* Card */
+/* --- Base: card shell (shared) --- */
+/* Default 600px max; 85vh height; pop-in animation. Mobile/landscape overrides inside. */
 .modal-card {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 560px;
-  max-width: calc(100vw - 24px);
-  height: 80vh;
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  height: 85vh;
+  max-height: 85vh;
   display: flex;
   flex-direction: column;
+  background: var(--surface-2);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2);
+  overflow: hidden;
+  animation: modalPopIn 0.3s var(--ease-standard);
 
   @media (max-width: 899px) {
-    width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
-
-    /* Center modal on mobile */
-    top: 50% !important;
-    bottom: auto !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    height: 80vh !important;
-
-    /* Mobile specific content adjustments */
+    height: 85vh !important;
+    max-height: 85vh !important;
+    /* Trip Details: status grid collapses to 2 columns on mobile */
     .detail-meta-grid {
       grid-template-columns: repeat(2, 1fr) !important;
     }
     .detail-hide-mobile {
       display: none !important;
     }
-
     @media (orientation: landscape) {
-      height: 90vh !important;
+      height: 85vh !important;
+      max-height: 85vh !important;
       max-width: 80vw !important;
     }
   }
-
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-2);
-
-  animation: modalPopIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
-
 @keyframes modalPopIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -48%) scale(0.96);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* --- Base: header, body, footer (shared) --- */
+/* Header: 12px padding, border-bottom, flex layout */
 .modal-head {
+  flex-shrink: 0;
+  min-height: var(--bar-height);
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--grid-line);
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: var(--space-2);
-  padding: var(--card-padding);
-  border-bottom: 1px solid var(--border);
   background: var(--surface-2);
 }
-
-.modal-head.card-header {
-  height: auto;
-  margin-bottom: var(--space-4);
-  margin-top: var(--space-4);
+.modal-head .section-title {
+  padding: 0;
 }
-
+/* Body: 12px padding, flex column, scrollable content area */
 .modal-body {
   flex: 1 1 auto;
   min-height: 0;
-  overflow-y: hidden;
+  overflow: hidden;
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
   background: var(--surface-2);
-  margin-bottom: var(--space-2);
 }
-
-.modal-card-details .modal-body {
-  overflow-y: auto;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
-}
-
-.modal-card-details .modal-body::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
-}
-
+/* Footer: 12px padding, border-top, right-aligned buttons */
 .modal-actions,
 .modal-foot {
+  flex-shrink: 0;
+  padding: var(--space-3);
+  border-top: 1px solid var(--grid-line);
   display: flex;
-  align-items: center;
   justify-content: flex-end;
   gap: var(--space-2);
-  min-height: var(--bar-height);
-  padding: 0;
-  border-top: 1px solid var(--border);
   background: var(--surface-2);
 }
 
-/* Textarea inside modal */
-.modal-body textarea {
-  width: 100%;
-  min-height: 400px;
-  max-height: calc(98vh - 120px); /* Synchronized with 98vh modal limit */
-  height: 100%;
-  resize: vertical;
-  overflow-y: hidden;
-
-  padding: 12px;
+/* --- ITINERARY MODAL (editable textarea) --- */
+/* Card: 56ch width + padding; font-mono so ch units match monospace character width */
+.modal-itinerary .modal-card {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2);
+  max-width: calc(56ch + 2 * var(--space-3) + 2 * var(--space-3));
+}
+/* Header/footer: keep sans-serif for title and buttons */
+.modal-itinerary .modal-head,
+.modal-itinerary .modal-foot {
   font-family: var(--font-sans);
-  font-size: var(--font-size-1);
+}
+/* Textarea: 8px top/bottom, 12px left/right padding; fills body; vertical scroll only */
+.modal-itinerary .modal-body textarea {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  resize: none;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2);
   line-height: 1.5;
-
-  color: var(--text);
+  letter-spacing: normal;
+  font-variant-numeric: normal;
+  white-space: pre;
+  color: var(--text-secondary);
   background: var(--surface-3);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
+}
+#itineraryModalField:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+/* --- TRIP DETAILS MODAL (read-only content) --- */
+/* Card: same 56ch width as Itinerary for consistency */
+.modal-trip-details .modal-card {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2);
+  max-width: calc(56ch + 2 * var(--space-3) + 2 * var(--space-3));
+}
+/* Header/footer: keep sans-serif */
+.modal-trip-details .modal-head,
+.modal-trip-details .modal-foot {
+  font-family: var(--font-sans);
+}
+/* Scrollable itinerary block: same padding as Itinerary textarea */
+.modal-trip-details .detail-text.detail-itinerary-scroll {
+  padding: var(--space-2) var(--space-3);
+}
+
+/* --- Trip Details: content structure --- */
+/* Wrapper: flex column for status grid + divider + scroll block */
+.trip-details-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-size: var(--font-size-2);
+  color: var(--text);
+}
+/* Status grid: sans-serif; 4 columns; 16px margin below */
+.detail-meta-grid {
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-4);
+}
+/* Each label-value pair */
+.detail-grid-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-2);
+  align-items: baseline;
+  min-width: 0;
+}
+.detail-value {
+  font-size: var(--font-size-1);
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1;
+  min-width: 0;
+  word-break: break-word;
+}
+.detail-value.status-pending { color: var(--color-status-pending); }
+.detail-value.status-ok { color: var(--color-status-ok); }
+.detail-value.status-assigned { color: var(--color-status-assigned); }
+.detail-value.status-blue { color: var(--color-status-blue); }
+/* Divider between status grid and itinerary block */
+.detail-divider {
+  border-top: 1px solid var(--grid-line);
+  padding-top: var(--space-3);
+  padding-bottom: 0;
+  flex-shrink: 0;
+}
+.detail-section-title {
+  margin-top: var(--space-2);
+}
+/* Scrollable read-only itinerary block (manifest text); same look as Itinerary textarea */
+.detail-text.detail-itinerary-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2);
+  white-space: pre;
+  color: var(--text-secondary);
+  background: var(--surface-3);
+  padding: var(--space-3);
+  line-height: 1.5;
+  letter-spacing: normal;
+  font-variant-numeric: normal;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  width: 100%;
+  max-width: 100%;
+  @media (max-width: 899px) {
+    min-height: 120px;
+    font-size: var(--font-size-1);
+  }
 }
 
 /* Focus states handled by global focus rules */
@@ -2084,7 +2175,7 @@ textarea::placeholder {
 
   .status-grid {
     grid-template-columns: 1fr; /* Stack them to prevent horizontal squishing */
-    gap: var(--space-4);
+    gap: var(--space-3);
   }
 
   .topbar-end {
@@ -3686,98 +3777,6 @@ select.status-confirmed {
   flex: 1;
   min-height: 0;
   overflow: visible;
-}
-
-/* ==========================================================================
-   15) TRIP DETAILS MODAL CONTENT
-   ========================================================================== */
-.trip-details-content {
-  font-size: var(--font-size-2);
-  color: var(--text);
-  margin: 0 var(--space-2);
-}
-
-.detail-meta-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-2) var(--space-4);
-  margin-bottom: var(--space-4);
-  margin-left: var(--space-2); /* padding size is 8px */
-}
-
-.detail-grid-item {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: var(--space-2);
-  align-items: baseline;
-  min-width: 0;
-}
-
-.detail-value {
-  font-size: var(--font-size-1);
-  font-weight: 400;
-  color: var(--text);
-  line-height: 1;
-  min-width: 0;
-  word-break: break-word;
-}
-
-/* Section spacing only; typography from .toggle-pill-grid-label */
-.detail-section-title {
-  margin-top: var(--space-2);
-  margin-left: var(--space-2); /* padding size is 8px */
-}
-
-.detail-text.detail-itinerary-scroll {
-  flex: 1; /* Stretch to fill all available space in the modal body */
-  min-height: 0;
-
-  @media (max-width: 899px) {
-    min-height: 120px;
-  }
-  overflow-y: auto;
-  overflow-x: hidden;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
-  &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
-  }
-  font-family: var(--font-mono);
-  font-size: var(--font-size-1);
-  white-space: pre;
-  color: var(--text-secondary);
-  background: var(--surface-3);
-  padding: var(--space-2);
-  line-height: 1.5;
-  letter-spacing: 0.02em;
-  border: none;
-  border-radius: 0;
-  width: 100%;
-  max-width: 100%;
-}
-
-#itineraryModalField {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-1);
-  white-space: pre;
-  overflow-x: hidden;
-  width: max-content;
-  max-width: 100%;
-  min-width: min(100%, 68ch);
-}
-
-/* Status value colors in trip details modal (semantic cues only) */
-.detail-value.status-pending {
-  color: var(--color-status-pending);
-}
-.detail-value.status-ok {
-  color: var(--color-status-ok);
-}
-.detail-value.status-assigned {
-  color: var(--color-status-assigned);
-}
-.detail-value.status-blue {
-  color: var(--color-status-blue);
 }
 
 /* ==========================================================================

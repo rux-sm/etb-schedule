@@ -3209,6 +3209,8 @@ function renderTripDetailsModalFromData(t, assigns) {
   html += detailGridItem("Phone", t.phone);
   html += `</div>`;
 
+  html += `<div class="detail-divider"></div>`;
+
   if (t.itinerary) {
     html += `<div class="detail-text pre-wrap detail-itinerary-scroll">${escHtml(t.itinerary)}</div>`;
   }

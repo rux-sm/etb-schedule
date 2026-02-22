@@ -622,41 +622,40 @@
     </div>
 
     <!-- Itinerary Modal -->
-    <div id="itineraryModal" class="modal" hidden>
+    <div id="itineraryModal" class="modal modal-itinerary" hidden>
       <div class="modal-backdrop" data-close></div>
 
-      <div class="modal-card" role="dialog" aria-modal="true">
+      <div class="modal-card" role="dialog" aria-modal="true" aria-label="Trip itinerary">
         <div class="modal-head">
-          <div class="section-title">Trip Itinerary</div>
+          <h2 class="section-title">Trip Itinerary</h2>
         </div>
 
         <div class="modal-body">
           <textarea id="itineraryModalField" placeholder=""></textarea>
+        </div>
 
-          <div class="modal-actions">
-            <button id="itineraryCopyBtn" class="btn btn-compact" type="button">Copy</button>
-            <button id="itinerarySaveBtn" class="btn btn-compact" type="button">Close</button>
-          </div>
+        <div class="modal-foot">
+          <button id="itineraryCopyBtn" class="btn btn-compact" type="button">Copy</button>
+          <button id="itinerarySaveBtn" class="btn btn-compact" type="button" aria-label="Close">Close</button>
         </div>
       </div>
     </div>
 
     <!-- Trip Details Modal (read-only) -->
-    <div id="tripDetailsModal" class="modal" hidden>
+    <div id="tripDetailsModal" class="modal modal-trip-details" hidden>
       <div class="modal-backdrop" data-close-details></div>
 
       <div class="modal-card modal-card-details" role="dialog" aria-modal="true" aria-label="Trip details">
-        <div class="modal-head card-header">
+        <div class="modal-head">
           <h2 class="section-title">Trip Details</h2>
-          <div class="card-header-actions">
-            <button class="btn-close-card" type="button" data-close-details aria-label="Close">
-              <span class="material-symbols-outlined">close</span>
-            </button>
-          </div>
         </div>
 
-        <div class="modal-body modal-body-scroll">
+        <div class="modal-body">
           <div id="tripDetailsBody" class="trip-details-content"></div>
+        </div>
+
+        <div class="modal-foot">
+          <button class="btn btn-compact" type="button" data-close-details aria-label="Close">Close</button>
         </div>
       </div>
     </div>
