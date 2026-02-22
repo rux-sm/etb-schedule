@@ -1070,6 +1070,8 @@ textarea::placeholder {
   position: fixed;
   inset: 0;
   z-index: var(--z-modal);
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .modal[hidden] {
@@ -1092,24 +1094,40 @@ textarea::placeholder {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: min(560px, calc(100vw - 24px));
-  max-height: 80vh;
-  padding: var(--space-4);
-
-  @media (max-width: 899px) {
-    max-height: 95vh;
-
-    @media (orientation: landscape) {
-      width: calc(100vw - 128px); /* narrower in landscape to show backdrop */
-    }
-  }
-
+  width: 560px;
+  max-width: calc(100vw - 24px);
+  height: 80vh;
   display: flex;
   flex-direction: column;
 
+  @media (max-width: 899px) {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+
+    /* Center modal on mobile */
+    top: 50% !important;
+    bottom: auto !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    height: 80vh !important;
+
+    /* Mobile specific content adjustments */
+    .detail-meta-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+    .detail-hide-mobile {
+      display: none !important;
+    }
+
+    @media (orientation: landscape) {
+      height: 90vh !important;
+      max-width: 80vw !important;
+    }
+  }
+
   background: var(--surface-2);
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
   box-shadow: var(--shadow-2);
 
   animation: modalPopIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1139,32 +1157,26 @@ textarea::placeholder {
 
 .modal-head.card-header {
   height: auto;
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-4);
+  margin-top: var(--space-4);
 }
 
 .modal-body {
   flex: 1 1 auto;
   min-height: 0;
-  overflow: visible;
+  overflow-y: hidden;
   background: var(--surface-2);
+  margin-bottom: var(--space-2);
 }
 
 .modal-card-details .modal-body {
   overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
 }
 
 .modal-card-details .modal-body::-webkit-scrollbar {
-  width: 6px;
-}
-.modal-card-details .modal-body::-webkit-scrollbar-track {
-  background: transparent;
-}
-.modal-card-details .modal-body::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 3px;
-}
-.modal-card-details .modal-body:hover::-webkit-scrollbar-thumb {
-  background: var(--text-muted);
+  display: none; /* Chrome, Safari, Opera */
 }
 
 .modal-actions,
@@ -1183,11 +1195,10 @@ textarea::placeholder {
 .modal-body textarea {
   width: 100%;
   min-height: 400px;
-  max-height: calc(80vh - 120px); /* Allow expansion up to modal's max height minus header/footer */
+  max-height: calc(98vh - 120px); /* Synchronized with 98vh modal limit */
   height: 100%;
   resize: vertical;
-  overflow-y: auto;
-  margin-bottom: 16px;
+  overflow-y: hidden;
 
   padding: 12px;
   font-family: var(--font-sans);
@@ -1340,11 +1351,11 @@ textarea::placeholder {
   padding: 0;
   border: none;
   border-radius: var(--radius-sm);
-  background: transparent;
+  background: var(--surface-2);
   color: var(--text-muted);
   cursor: pointer;
   opacity: 0.5;
-
+  margin-right: var(--space-2); /* padding size is 8px */
   transition:
     opacity var(--dur-1) ease,
     background var(--dur-1) ease;
@@ -3663,7 +3674,7 @@ select.status-confirmed {
 #notesCard .card-content {
   display: flex;
   flex-direction: column;
-  overflow: visible;
+  overflow: hidden;
   /* Match Trip Editor side padding in all viewports */
   padding-left: var(--card-padding);
   padding-right: var(--card-padding);
@@ -3683,13 +3694,15 @@ select.status-confirmed {
 .trip-details-content {
   font-size: var(--font-size-2);
   color: var(--text);
+  margin: 0 var(--space-2);
 }
 
 .detail-meta-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--space-2) var(--space-4);
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-4);
+  margin-left: var(--space-2); /* padding size is 8px */
 }
 
 .detail-grid-item {
@@ -3711,25 +3724,30 @@ select.status-confirmed {
 
 /* Section spacing only; typography from .toggle-pill-grid-label */
 .detail-section-title {
-  margin-bottom: var(--space-2);
   margin-top: var(--space-2);
+  margin-left: var(--space-2); /* padding size is 8px */
 }
 
 .detail-text.detail-itinerary-scroll {
-  max-height: calc(80vh - 26rem);
+  flex: 1; /* Stretch to fill all available space in the modal body */
+  min-height: 0;
 
   @media (max-width: 899px) {
-    max-height: none; /* Let it grow to fill modal body scroll */
     min-height: 120px;
   }
   overflow-y: auto;
-  overflow-x: auto;
+  overflow-x: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
   font-family: var(--font-mono);
   font-size: var(--font-size-1);
   white-space: pre;
   color: var(--text-secondary);
   background: var(--surface-3);
-  padding: var(--space-4);
+  padding: var(--space-2);
   line-height: 1.5;
   letter-spacing: 0.02em;
   border: none;
@@ -3742,7 +3760,7 @@ select.status-confirmed {
   font-family: var(--font-mono);
   font-size: var(--font-size-1);
   white-space: pre;
-  overflow-x: auto;
+  overflow-x: hidden;
   width: max-content;
   max-width: 100%;
   min-width: min(100%, 68ch);
@@ -3760,29 +3778,6 @@ select.status-confirmed {
 }
 .detail-value.status-blue {
   color: var(--color-status-blue);
-}
-
-/* Trip details modal: mobile portrait — gutter and single-column grid */
-@media (max-width: 800px) {
-  .modal-card.modal-card-details {
-    width: calc(100vw - 16px);
-    max-width: none;
-    padding: var(--space-3);
-  }
-
-  .detail-meta-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .detail-hide-mobile {
-    display: none;
-  }
-
-  .detail-text.detail-itinerary-scroll {
-    font-size: 9px;
-    overflow-x: hidden;
-    padding: 6px;
-  }
 }
 
 /* ==========================================================================

@@ -3210,7 +3210,6 @@ function renderTripDetailsModalFromData(t, assigns) {
   html += `</div>`;
 
   if (t.itinerary) {
-    html += section("Itinerary:");
     html += `<div class="detail-text pre-wrap detail-itinerary-scroll">${escHtml(t.itinerary)}</div>`;
   }
 
