@@ -182,8 +182,8 @@
   /* ── Radii (unified 8px scale for buttons, inputs, trip bar) ───── */
   --radius-icon: 2px;
   --radius-sm: 8px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
   --radius-full: 9999px; /* icon-only circular controls */
 
   /* ── Motion ─────────────────────────────────────────────────── */
@@ -248,20 +248,20 @@
 
   /* ── Text Colors (dark mode, primary stays pure white) ─────────── */
   --text: rgb(255 255 255); /* primary text */
-  --text-secondary: rgba(255, 255, 255, 0.72); /* secondary labels, subheads */
+  --text-secondary: rgba(154 155 156); /* secondary labels, subheads */
   --text-muted: rgba(198 198 198); /* helper/meta text */
   --placeholder: rgba(255, 255, 255, 0.42); /* placeholders */
   --color-text-disabled: rgba(255, 255, 255, 0.32); /* disabled controls/text */
   --text-driver: var(--yellow); /* driver names */
 
   /* ── Surface Colors ─────────────────────────────────────────── */
-  --app-bg: #0d0d0f; /* Level 0: Deepest background */
+  --app-bg: rgb(0 0 0); /* Level 0: Deepest background */
   --surface-0: #161618; /* Level 1: Topbar */
   --surface-1: #161618; /* Level 1: Table headers */
-  --surface-2: #1e1e21; /* Level 1: Panels */
-  --surface-3: rgb(74 74 76); /* inputs / controls */
+  --surface-2: rgb(31 32 33); /* Level 1: Panels */
+  --surface-3: rgb(13 13 13); /* inputs / controls */
   --surface-4: rgb(69 69 71); /* hover / active */
-  --schedule-bg: #161618; /* schedule background */
+  --schedule-bg: rgb(31 32 33); /* schedule background */
   --agenda-header-bg: var(--surface-1); /* agenda header (week date + nav) */
 
   /* ── Border Colors ──────────────────────────────────────────── */
@@ -292,7 +292,8 @@
   /* ── Input Dimensions ───────────────────────────────────────── */
   --input-height: 28px;
   --input-padding-x: 6px;
-  --input-font-size: 0.875rem;
+  --input-font-size: 0.875rem; /* 14px */
+  --input-border-radius: var(--radius-md);
   /* 14px */
   --input-font-weight: var(--font-weight-regular);
   --field-inset: inset 0 1px 0 rgba(255, 255, 255, 0.03);
@@ -336,7 +337,7 @@
   /* ── Trip Bar Layout & Geometry ────────────────────────────── */
   --tripbar-height: 98px;
   --tripbar-border: 2px;
-  --tripbar-radius: var(--radius-sm);
+  --tripbar-radius: var(--radius-lg);
   --tripbar-gap: 100px; /* Vertical space between lanes */
   --tripbar-lane-step: calc(var(--tripbar-height) + var(--tripbar-gap));
   --waiting-list-height: 100px;
@@ -429,7 +430,7 @@
 
   /* ── Multi-Bus Identity ─────────────────────────────────────── */
   --tripbar-multi-badge-padding: 0px;
-  --tripbar-multi-badge-radius: 4px;
+  --tripbar-multi-badge-radius: 6px;
   --tripbar-multi-badge-font-size: 0.625rem; /* 10px */
   --tripbar-multi-badge-bg: 100%;
   --tripbar-multi-bus-indent: 22px;
@@ -904,14 +905,15 @@ textarea {
   width: 100%;
   padding: 0 var(--input-padding-x);
   height: var(--input-height);
-  border: 1px solid var(--color-input-border);
-  border-radius: 2px;
+  border: none;
+  border-radius: var(--input-border-radius);
   font-size: var(--input-font-size);
   font-weight: var(--input-font-weight);
   color: var(--text);
   background-color: var(--color-input-bg);
   box-shadow: var(--field-inset);
   cursor: text;
+  text-align: center;
   outline: none;
   transition:
     border-color 0.12s ease,
@@ -945,7 +947,7 @@ select {
   padding: 0 8px;
   /* Removed right padding since arrow is removed */
   line-height: var(--input-height);
-  text-align: start;
+  text-align: center;
   /* Arrow removed - cleaner look */
   background-image: none;
 }
@@ -1179,11 +1181,11 @@ textarea::placeholder {
 }
 
 /* --- ITINERARY MODAL (editable textarea) --- */
-/* Card: 56ch width + padding; font-mono so ch units match monospace character width */
+/* Card: 100ch width + padding; font-mono so ch units match monospace character width */
 .modal-itinerary .modal-card {
   font-family: var(--font-mono);
   font-size: var(--font-size-2);
-  max-width: calc(56ch + 2 * var(--space-3) + 2 * var(--space-3));
+  max-width: calc(103ch + 2 * var(--space-3) + 2 * var(--space-3));
 }
 /* Header/footer: keep sans-serif for title and buttons */
 .modal-itinerary .modal-head,
@@ -1217,11 +1219,11 @@ textarea::placeholder {
 }
 
 /* --- TRIP DETAILS MODAL (read-only content) --- */
-/* Card: same 56ch width as Itinerary for consistency */
+/* Card: same 100ch width as Itinerary for consistency */
 .modal-trip-details .modal-card {
   font-family: var(--font-mono);
   font-size: var(--font-size-2);
-  max-width: calc(56ch + 2 * var(--space-3) + 2 * var(--space-3));
+  max-width: calc(103ch + 2 * var(--space-3) + 2 * var(--space-3));
 }
 /* Header/footer: keep sans-serif */
 .modal-trip-details .modal-head,
@@ -1296,7 +1298,7 @@ textarea::placeholder {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: auto;
   font-family: var(--font-mono);
   font-size: var(--font-size-2);
   white-space: pre;
