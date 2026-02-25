@@ -6,6 +6,7 @@
   justify-content: space-between;
   width: 100%;
 }
+
 .agenda-header-date-left {
   flex: 1 1 0;
   display: flex;
@@ -14,12 +15,14 @@
   gap: 4px;
   min-width: 0;
 }
+
 .agenda-header-nav-right {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 4px;
 }
+
 /* Icon group for agenda header (week picker + nav arrows + today) */
 .agenda-header-icon-group {
   display: flex;
@@ -27,6 +30,7 @@
   justify-content: center;
   gap: 10px;
 }
+
 /* Inline nav-controls for agenda header (between weekpicker and week heading) */
 .agenda-header-inline-nav {
   display: inline-flex;
@@ -34,6 +38,7 @@
   gap: 4px;
   margin-left: 8px;
 }
+
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
 /* ==========================================================================
@@ -54,7 +59,8 @@
     "opsz" 24;
   font-weight: normal;
   font-style: normal;
-  font-size: 1.375rem; /* 22px, matches heading-2-size */
+  font-size: 1.375rem;
+  /* 22px, matches heading-2-size */
   line-height: 1;
   display: inline-block;
   white-space: nowrap;
@@ -129,21 +135,24 @@
   /* ── Final Heading scale (44-40-36 Grid) ─────── */
 
   /* H1: Topbar (44px height) */
-  --heading-1-size: 1.375rem; /* 22px */
+  --heading-1-size: 1.375rem;
+  /* 22px */
   --heading-1-weight: 500;
   --heading-1-line-height: 1.3;
   --heading-1-letter-spacing: 0.01em;
   --heading-1-color: var(--text-muted);
 
   /* H2: Sidebar/Cards (40px height) */
-  --heading-2-size: 1.375rem; /* 22px */
+  --heading-2-size: 1.375rem;
+  /* 22px */
   --heading-2-weight: 500;
   --heading-2-line-height: 1.25;
   --heading-2-letter-spacing: -0.005em;
   --heading-2-color: var(--text);
 
   /* H3: Table Headers/Section Labels (36px height) */
-  --heading-3-size: 1rem; /* 16px */
+  --heading-3-size: 1rem;
+  /* 16px */
   --heading-3-weight: 500;
   --heading-3-line-height: 1.4;
   --heading-3-letter-spacing: 0.02em;
@@ -184,7 +193,8 @@
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
-  --radius-full: 9999px; /* icon-only circular controls */
+  --radius-full: 9999px;
+  /* icon-only circular controls */
 
   /* ── Motion ─────────────────────────────────────────────────── */
   --dur-1: 160ms;
@@ -247,27 +257,43 @@
   /* ── Text Colors ─────────────────────────────────────────────── */
 
   /* ── Text Colors (dark mode, primary stays pure white) ─────────── */
-  --text: rgb(255 255 255); /* primary text */
-  --text-secondary: rgba(154 155 156); /* secondary labels, subheads */
-  --text-muted: rgba(198 198 198); /* helper/meta text */
-  --placeholder: rgba(255, 255, 255, 0.42); /* placeholders */
-  --color-text-disabled: rgba(255, 255, 255, 0.32); /* disabled controls/text */
-  --text-driver: var(--yellow); /* driver names */
+  --text: rgb(255 255 255);
+  /* primary text */
+  --text-secondary: rgba(154 155 156);
+  /* secondary labels, subheads */
+  --text-muted: rgba(198 198 198);
+  /* helper/meta text */
+  --placeholder: rgba(255, 255, 255, 0.42);
+  /* placeholders */
+  --color-text-disabled: rgba(255, 255, 255, 0.32);
+  /* disabled controls/text */
+  --text-driver: var(--yellow);
+  /* driver names */
 
   /* ── Surface Colors ─────────────────────────────────────────── */
-  --app-bg: rgb(0 0 0); /* Level 0: Deepest background */
-  --surface-0: #161618; /* Level 1: Topbar */
-  --surface-1: #161618; /* Level 1: Table headers */
-  --surface-2: rgb(31 32 33); /* Level 1: Panels */
-  --surface-3: rgb(13 13 13); /* inputs / controls */
-  --surface-4: rgb(69 69 71); /* hover / active */
-  --schedule-bg: rgb(31 32 33); /* schedule background */
-  --agenda-header-bg: var(--surface-1); /* agenda header (week date + nav) */
+  --app-bg: rgb(0 0 0);
+  /* Level 0: Deepest background */
+  --surface-0: rgb(21 22 23);
+  /* Level 1: Topbar */
+  --surface-1: rgb(21 21 23);
+  /* Level 1: Table headers */
+  --surface-2: rgb(31 32 33);
+  /* Level 1: Panels */
+  --surface-3: rgb(11 12 13);
+  /* inputs / controls */
+  --surface-4: rgb(71 72 73);
+  /* hover / active */
+  --schedule-bg: rgb(21 21 23);
+  /* schedule background */
+  --agenda-header-bg: rgb(31 32 33);
+  /* agenda header (week date + nav) */
 
   /* ── Border Colors ──────────────────────────────────────────── */
-  --border: transparent; /* Remove most borders for clean look */
-  --grid-line: rgba(255, 255, 255, 0.04); /* Ghost grid for schedule */
-  --border-strong: rgb(59 59 61);
+  --border: transparent;
+  /* Remove most borders for clean look */
+  --grid-line: rgb(0 0 0);
+  /* Ghost grid for schedule */
+  --border-strong: rgb(61, 59, 59);
   --color-border-subtle: color-mix(in srgb, var(--border) 60%, transparent);
   --color-border-disabled: color-mix(in srgb, var(--border) 55%, transparent);
 
@@ -292,7 +318,8 @@
   /* ── Input Dimensions ───────────────────────────────────────── */
   --input-height: 28px;
   --input-padding-x: 6px;
-  --input-font-size: 0.875rem; /* 14px */
+  --input-font-size: 0.875rem;
+  /* 14px */
   --input-border-radius: var(--radius-md);
   /* 14px */
   --input-font-weight: var(--font-weight-regular);
@@ -336,9 +363,10 @@
 
   /* ── Trip Bar Layout & Geometry ────────────────────────────── */
   --tripbar-height: 98px;
-  --tripbar-border: 2px;
-  --tripbar-radius: var(--radius-lg);
-  --tripbar-gap: 100px; /* Vertical space between lanes */
+  --tripbar-border: 0px;
+  --tripbar-radius: 8px;
+  --tripbar-gap: 100px;
+  /* Vertical space between lanes */
   --tripbar-lane-step: calc(var(--tripbar-height) + var(--tripbar-gap));
   --waiting-list-height: 100px;
 
@@ -353,62 +381,72 @@
   --tripbar-padding-x: 0px;
   --tripbar-padding-y: 0px;
   --tripbar-row-gap: 0px;
-  --tripbar-gap-inline: 3px; /* Between badges/icons */
-  --tripbar-gap-drivers: 6px; /* Between driver names */
+  --tripbar-gap-inline: 3px;
+  /* Between badges/icons */
+  --tripbar-gap-drivers: 6px;
+  /* Between driver names */
 
   /* ── Per-Row Typography ─────────────────────────────────────── */
 
   /* R1: Destination — line-height matches row height to prevent vertical drift */
-  --tripbar-r1-font-size: 0.75rem; /* 12px */
+  --tripbar-r1-font-size: 0.75rem;
+  /* 12px */
   --tripbar-r1-row-height: 14px;
   --tripbar-r1-font-weight: 700;
   --tripbar-r1-line-height: 14px;
   --tripbar-r1-letter-spacing: 0.02em;
 
   /* R2: Customer */
-  --tripbar-r2-font-size: 0.625rem; /* 10px */
+  --tripbar-r2-font-size: 0.625rem;
+  /* 10px */
   --tripbar-r2-row-height: 12px;
   --tripbar-r2-font-weight: 600;
   --tripbar-r2-line-height: 12px;
   --tripbar-r2-letter-spacing: 0.02em;
 
   /* R3: Contact */
-  --tripbar-r3-font-size: 0.625rem; /* 10px */
+  --tripbar-r3-font-size: 0.625rem;
+  /* 10px */
   --tripbar-r3-row-height: 12px;
   --tripbar-r3-font-weight: 600;
   --tripbar-r3-line-height: 12px;
   --tripbar-r3-letter-spacing: 0.02em;
 
   /* R4: Times */
-  --tripbar-r4-font-size: 0.75rem; /* 12px */
+  --tripbar-r4-font-size: 0.75rem;
+  /* 12px */
   --tripbar-r4-row-height: 14px;
   --tripbar-r4-font-weight: 700;
   --tripbar-r4-line-height: 14px;
   --tripbar-r4-letter-spacing: 0.02em;
 
   /* R5: Status / Icons (icon-based, font-size via --tripbar-icon-size) */
-  --tripbar-r5-font-size: 0.75rem; /* 12px */
+  --tripbar-r5-font-size: 0.75rem;
+  /* 12px */
   --tripbar-r5-row-height: 16px;
   --tripbar-r5-font-weight: 400;
   --tripbar-r5-line-height: 16px;
   --tripbar-r5-letter-spacing: 0.02em;
 
   /* R6: Notes */
-  --tripbar-r6-font-size: 0.625rem; /* 10px */
+  --tripbar-r6-font-size: 0.625rem;
+  /* 10px */
   --tripbar-r6-row-height: 12px;
   --tripbar-r6-font-weight: 400;
   --tripbar-r6-line-height: 12px;
   --tripbar-r6-letter-spacing: 0.02em;
 
   /* R7: Drivers */
-  --tripbar-r7-font-size: 0.75rem; /* 12px */
+  --tripbar-r7-font-size: 0.75rem;
+  /* 12px */
   --tripbar-r7-row-height: 14px;
   --tripbar-r7-font-weight: 700;
   --tripbar-r7-line-height: 14px;
   --tripbar-r7-letter-spacing: 0.02em;
 
   /* ── Components (Icons & Badges) — fixed 16px gutter for column alignment ── */
-  --tripbar-icon-size: 0.875rem; /* 14px */
+  --tripbar-icon-size: 1rem;
+  /* 14px */
   --tripbar-icon-gutter: 16px;
   --tripbar-mini-badge: 14px;
   --tripbar-badge-radius: 4px;
@@ -425,15 +463,17 @@
   --tripbar-danger-font: 0.6875rem;
   --tripbar-danger-offset: 4px;
 
-  --tripbar-arrow-size: 1rem; /* 16px */
+  --tripbar-arrow-size: 1rem;
+  /* 16px */
   --tripbar-arrow-offset: 4px;
 
   /* ── Multi-Bus Identity ─────────────────────────────────────── */
   --tripbar-multi-badge-padding: 0px;
-  --tripbar-multi-badge-radius: 6px;
-  --tripbar-multi-badge-font-size: 0.625rem; /* 10px */
+  --tripbar-multi-badge-radius: 4px;
+  --tripbar-multi-badge-font-size: 0.625rem;
+  /* 10px */
   --tripbar-multi-badge-bg: 100%;
-  --tripbar-multi-bus-indent: 22px;
+  --tripbar-multi-bus-indent: 1px;
 }
 
 /* Light theme — improved contrast & field visibility (inputs pop, clearer borders) */
@@ -441,14 +481,20 @@
   color-scheme: light;
 
   /* ── Surfaces (deeper background; white topbar/cards; darker inset for inputs) ───── */
-  --app-bg: rgb(243 244 246); /* lighter gray app bg */
-  --surface-0: rgb(229 231 235); /* Topbar: Gray-200 (Darker than cards) */
-  --surface-1: rgb(255 255 255); /* Table headers: matching app bg */
+  --app-bg: rgb(243 244 246);
+  /* lighter gray app bg */
+  --surface-0: rgb(229 231 235);
+  /* Topbar: Gray-200 (Darker than cards) */
+  --surface-1: rgb(255 255 255);
+  /* Table headers: matching app bg */
   --schedule-bg: rgb(255 255 255);
   --agenda-header-bg: rgb(255 255 255);
-  --surface-2: rgb(255 255 255); /* cards / panels */
-  --surface-3: rgb(225 228 232); /* visible input background */
-  --surface-4: rgb(209 213 219); /* hover / active */
+  --surface-2: rgb(255 255 255);
+  /* cards / panels */
+  --surface-3: rgb(225 228 232);
+  /* visible input background */
+  --surface-4: rgb(209 213 219);
+  /* hover / active */
 
   /* ── Text (stronger contrast, readable hierarchy) ─────────────────────────── */
   --text: rgb(17 24 39);
@@ -461,7 +507,8 @@
 
   /* ── Borders (same roles as dark: default + strong + subtle + disabled) ───────────────── */
   --border: rgba(0, 0, 0, 0.15);
-  --grid-line: rgba(0, 0, 0, 0.06); /* Light mode grid */
+  --grid-line: rgb(243 244 246);
+  /* Light mode grid */
   --border-strong: rgba(0, 0, 0, 0.3);
   --color-border-subtle: rgba(0, 0, 0, 0.08);
   --color-border-disabled: rgba(0, 0, 0, 0.06);
@@ -810,7 +857,7 @@ button[aria-disabled="true"],
   border: none !important;
   box-shadow: none !important;
   padding: var(--control-padding-x) !important;
-  color: var(--text);
+  color: var(--text-secondary);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -868,6 +915,7 @@ label .label-link:active {
   bottom: 4px;
   transform: translateX(-50%);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 1px;
@@ -1081,9 +1129,11 @@ textarea::placeholder {
   padding: 0;
   margin: 0 !important;
 }
+
 .modal[hidden] {
   display: none !important;
 }
+
 /* Dark blurred overlay behind the card */
 .modal::before,
 .modal-backdrop {
@@ -1117,13 +1167,16 @@ textarea::placeholder {
     margin: 0 !important;
     height: 90vh !important;
     max-height: 90vh !important;
+
     /* Trip Details: status grid collapses to 2 columns on mobile */
     .detail-meta-grid {
       grid-template-columns: repeat(2, 1fr) !important;
     }
+
     .detail-hide-mobile {
       display: none !important;
     }
+
     @media (orientation: landscape) {
       height: 90vh !important;
       max-height: 90vh !important;
@@ -1131,11 +1184,13 @@ textarea::placeholder {
     }
   }
 }
+
 @keyframes modalPopIn {
   from {
     opacity: 0;
     transform: translateY(20px) scale(0.98);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -1154,9 +1209,11 @@ textarea::placeholder {
   justify-content: space-between;
   background: var(--surface-2);
 }
+
 .modal-head .section-title {
   padding: 0;
 }
+
 /* Body: 12px padding, flex column, scrollable content area */
 .modal-body {
   flex: 1 1 auto;
@@ -1168,6 +1225,7 @@ textarea::placeholder {
   gap: var(--space-3);
   background: var(--surface-2);
 }
+
 /* Footer: 12px padding, border-top, right-aligned buttons */
 .modal-actions,
 .modal-foot {
@@ -1185,13 +1243,15 @@ textarea::placeholder {
 .modal-itinerary .modal-card {
   font-family: var(--font-mono);
   font-size: var(--font-size-2);
-  max-width: calc(103ch + 2 * var(--space-3) + 2 * var(--space-3));
+  max-width: calc(92ch + 2 * var(--space-3) + 2 * var(--space-3));
 }
+
 /* Header/footer: keep sans-serif for title and buttons */
 .modal-itinerary .modal-head,
 .modal-itinerary .modal-foot {
   font-family: var(--font-sans);
 }
+
 /* Textarea: 8px top/bottom, 12px left/right padding; fills body; vertical scroll only */
 .modal-itinerary .modal-body textarea {
   flex: 1 1 auto;
@@ -1212,6 +1272,7 @@ textarea::placeholder {
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
 }
+
 #itineraryModalField:focus {
   outline: none;
   border-color: var(--accent);
@@ -1223,13 +1284,17 @@ textarea::placeholder {
 .modal-trip-details .modal-card {
   font-family: var(--font-mono);
   font-size: var(--font-size-2);
-  max-width: calc(103ch + 2 * var(--space-3) + 2 * var(--space-3));
+  text-align: center;
+
+  max-width: calc(92ch + 2 * var(--space-3) + 2 * var(--space-3));
 }
+
 /* Header/footer: keep sans-serif */
 .modal-trip-details .modal-head,
 .modal-trip-details .modal-foot {
   font-family: var(--font-sans);
 }
+
 /* Scrollable itinerary block: same padding as Itinerary textarea */
 .modal-trip-details .detail-text.detail-itinerary-scroll {
   padding: var(--space-2) var(--space-3);
@@ -1246,23 +1311,27 @@ textarea::placeholder {
   font-size: var(--font-size-2);
   color: var(--text);
 }
+
 /* Status grid: sans-serif; 4 columns; 16px margin below */
 .detail-meta-grid {
   flex-shrink: 0;
   font-family: var(--font-sans);
   display: grid;
+  align-items: center;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--space-2) var(--space-3);
-  margin-bottom: var(--space-4);
 }
+
 /* Each label-value pair */
 .detail-grid-item {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: var(--space-2);
-  align-items: baseline;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
   min-width: 0;
+  margin-bottom: var(--space-3); /* 12px */
 }
+
 .detail-value {
   font-size: var(--font-size-1);
   font-weight: 400;
@@ -1271,28 +1340,27 @@ textarea::placeholder {
   min-width: 0;
   word-break: break-word;
 }
+
 .detail-value.status-pending {
   color: var(--color-status-pending);
 }
+
 .detail-value.status-ok {
   color: var(--color-status-ok);
 }
+
 .detail-value.status-assigned {
   color: var(--color-status-assigned);
 }
+
 .detail-value.status-blue {
   color: var(--color-status-blue);
 }
-/* Divider between status grid and itinerary block */
-.detail-divider {
-  border-top: 1px solid var(--grid-line);
-  padding-top: var(--space-3);
-  padding-bottom: 0;
-  flex-shrink: 0;
-}
+
 .detail-section-title {
   margin-top: var(--space-2);
 }
+
 /* Scrollable read-only itinerary block (manifest text); same look as Itinerary textarea */
 .detail-text.detail-itinerary-scroll {
   flex: 1;
@@ -1312,6 +1380,7 @@ textarea::placeholder {
   border-radius: var(--radius-sm);
   width: 100%;
   max-width: 100%;
+
   @media (max-width: 899px) {
     min-height: 120px;
     font-size: 11px;
@@ -1413,7 +1482,8 @@ textarea::placeholder {
    ========================================================================== */
 .card {
   background: var(--surface-2);
-  border-radius: 8px; /* Softer corners */
+  border-radius: 8px;
+  /* Softer corners */
   box-shadow: var(--shadow-elevated);
   border: none !important;
   min-width: 0;
@@ -1422,6 +1492,7 @@ textarea::placeholder {
   position: relative;
   isolation: isolate;
 }
+
 .card.compact {
   padding: 0;
 }
@@ -1462,7 +1533,8 @@ textarea::placeholder {
   color: var(--text-muted);
   cursor: pointer;
   opacity: 0.5;
-  margin-right: var(--space-2); /* padding size is 8px */
+  margin-right: var(--space-2);
+  /* padding size is 8px */
   transition:
     opacity var(--dur-1) ease,
     background var(--dur-1) ease;
@@ -1483,11 +1555,16 @@ textarea::placeholder {
 }
 
 .section-title {
-  font-family: var(--font-sans); /* Inter */
-  font-size: var(--heading-2-size); /* 20px */
-  font-weight: var(--heading-2-weight); /* 500 */
-  line-height: var(--heading-2-line-height) !important; /* Tighter vertical rhythm */
-  letter-spacing: var(--heading-2-letter-spacing); /* 0.02em */
+  font-family: var(--font-sans);
+  /* Inter */
+  font-size: var(--heading-2-size);
+  /* 20px */
+  font-weight: var(--heading-2-weight);
+  /* 500 */
+  line-height: var(--heading-2-line-height) !important;
+  /* Tighter vertical rhythm */
+  letter-spacing: var(--heading-2-letter-spacing);
+  /* 0.02em */
   color: var(--heading-2-color);
   padding: 0 16px;
 }
@@ -1772,7 +1849,8 @@ textarea::placeholder {
   background: var(--surface-0);
   min-height: var(--topbar-height);
   z-index: 1000;
-  border-bottom: 1px solid transparent; /* Remove border, rely on surface diff */
+  border-bottom: 1px solid transparent;
+  /* Remove border, rely on surface diff */
   display: flex;
   align-items: center;
 }
@@ -1846,6 +1924,7 @@ textarea::placeholder {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .week-picker-trigger {
   display: flex;
   align-items: center;
@@ -1961,7 +2040,8 @@ textarea::placeholder {
     flex: 1;
     overflow: visible;
     min-height: 0;
-    gap: 16px; /* Increased gutter */
+    gap: 16px;
+    /* Increased gutter */
   }
 
   .panel-main {
@@ -2004,8 +2084,10 @@ textarea::placeholder {
     z-index: 2;
     display: flex;
     flex-direction: column;
-    gap: 16px; /* Increased gutter */
-    border-right: none; /* Remove border */
+    gap: 16px;
+    /* Increased gutter */
+    border-right: none;
+    /* Remove border */
     transition:
       width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
       opacity 0.2s ease,
@@ -2021,7 +2103,8 @@ textarea::placeholder {
   .panel-end {
     order: 2;
     border-right: none;
-    border-left: none; /* Remove border */
+    border-left: none;
+    /* Remove border */
   }
 
   .panel-start.panel-collapsed,
@@ -2113,7 +2196,8 @@ textarea::placeholder {
   /* Fix 1: Ensure the main card reaches the edges for a full-screen mobile look */
   .panel-main > .card {
     margin: 0 !important;
-    padding: 0 !important; /* Remove the 18px padding */
+    padding: 0 !important;
+    /* Remove the 18px padding */
     width: 100% !important;
     border-radius: 0;
   }
@@ -2174,7 +2258,8 @@ textarea::placeholder {
   }
 
   .topbar-inner {
-    padding: 0 var(--space-4) !important; /* Increase from space-2 to space-4 */
+    padding: 0 var(--space-4) !important;
+    /* Increase from space-2 to space-4 */
   }
 
   .logo-wrap {
@@ -2190,7 +2275,8 @@ textarea::placeholder {
   }
 
   .status-grid {
-    grid-template-columns: 1fr; /* Stack them to prevent horizontal squishing */
+    grid-template-columns: 1fr;
+    /* Stack them to prevent horizontal squishing */
     gap: var(--space-3);
   }
 
@@ -2441,10 +2527,10 @@ textarea::placeholder {
 }
 
 .week-table th {
-  background: var(--surface-1);
+  background: var(--agenda-header-bg);
   padding: 0;
   height: var(--day-row-h);
-  border-top: 1px solid var(--grid-line);
+  border-top: none;
   position: sticky;
   top: 0;
   z-index: 2000;
@@ -2462,9 +2548,9 @@ textarea::placeholder {
 .week-table th:first-child {
   position: sticky;
   inset-inline-start: 0;
-  border-top: 1px solid var(--grid-line);
+  border-top: none;
   z-index: 3000;
-  background: var(--schedule-bg);
+  background: var(--agenda-header-bg);
 }
 
 /* Header cells: center day labels in the cell */
@@ -2508,7 +2594,7 @@ textarea::placeholder {
 
 th.day-today {
   /* Only accent the date number (no full-cell highlight) */
-  background: var(--surface-1);
+  background: var(--agenda-header-bg);
   overflow: visible;
 }
 
@@ -2523,7 +2609,8 @@ th.day-today .day-date {
   border: none;
   color: var(--text);
   font-weight: 600;
-  line-height: 1; /* Force 1 to prevent vertical drift in flex circle */
+  line-height: 1;
+  /* Force 1 to prevent vertical drift in flex circle */
 }
 
 .week-table tbody tr {
@@ -2582,8 +2669,9 @@ th.day-today .day-date {
   position: sticky;
   inset-inline-start: 0;
   z-index: 500;
-  background: var(--surface-1);
-  font-size: 0.875rem; /* 14px */
+  background: var(--agenda-header-bg);
+  font-size: 0.875rem;
+  /* 14px */
   font-weight: 500;
   color: var(--text);
 
@@ -2598,15 +2686,15 @@ th.day-today .day-date {
   position: sticky;
   inset-inline-start: 0;
   z-index: 3000 !important;
-  background: var(--surface-1);
+  background: var(--agenda-header-bg);
   border-inline-start: 1px solid var(--grid-line);
   /* border-inline-end: from general rule — single line */
 }
 
-/* Remove outer right and bottom borders */
+/* Ensure the outer right border uses the grid-line color for consistency */
 .week-table th:last-child,
 .week-table td:last-child {
-  border-inline-end: 1px solid var(--border);
+  border-inline-end: 1px solid var(--grid-line);
 }
 
 /* Keep bottom border on last row so table has a visible bottom edge (no override) */
@@ -2650,7 +2738,8 @@ th.day-today .day-date {
 }
 
 .bus-id-num {
-  font-size: var(--heading-3-size); /* 14px */
+  font-size: var(--heading-3-size);
+  /* 14px */
   font-weight: var(--heading-3-weight);
   color: var(--heading-3-color);
   letter-spacing: var(--heading-3-letter-spacing);
@@ -2669,7 +2758,8 @@ th.day-today .day-date {
 .bus-id-wrap .bus-sleeper {
   position: static;
   transform: none;
-  font-size: 1rem; /* 16px */
+  font-size: 1rem;
+  /* 16px */
 }
 
 .bus-id-wrap .bus-lift {
@@ -2707,13 +2797,8 @@ th.day-today .day-date {
   /* 1. Layout & Display */
   display: grid;
   grid-template-rows:
-    var(--tripbar-r1-row-height)
-    var(--tripbar-r2-row-height)
-    var(--tripbar-r3-row-height)
-    var(--tripbar-r4-row-height)
-    var(--tripbar-r5-row-height)
-    var(--tripbar-r6-row-height)
-    var(--tripbar-r7-row-height);
+    var(--tripbar-r1-row-height) var(--tripbar-r2-row-height) var(--tripbar-r3-row-height) var(--tripbar-r4-row-height)
+    var(--tripbar-r5-row-height) var(--tripbar-r6-row-height) var(--tripbar-r7-row-height);
   row-gap: var(--tripbar-row-gap);
   container-type: inline-size;
   align-content: center;
@@ -2731,7 +2816,8 @@ th.day-today .day-date {
   /* 4. Visual / Color */
   background: color-mix(in srgb, var(--tripbar-color) 33%, transparent);
   border: none;
-  border-left: 4px solid var(--tripbar-color); /* Indicator strip */
+  border-left: 4px solid var(--tripbar-color);
+  /* Indicator strip */
   border-radius: var(--tripbar-radius);
   box-shadow: none;
   -webkit-backdrop-filter: blur(var(--tripbar-blur));
@@ -2779,7 +2865,8 @@ th.day-today .day-date {
   box-shadow: none;
   -webkit-backdrop-filter: blur(18px);
   backdrop-filter: blur(18px);
-  transform: translateY(1px); /* Physical feedback */
+  transform: translateY(1px);
+  /* Physical feedback */
 }
 
 /* Visual marker when a bar participates in a conflict */
@@ -3164,19 +3251,18 @@ th.day-today .day-date {
   height: var(--tripbar-icon-gutter, 16px);
   min-width: 16px;
   min-height: 16px;
-  flex-shrink: 0;
 
   /* 3. Typography */
   font-size: var(--tripbar-icon-size);
   line-height: 1;
   font-weight: normal;
   font-variation-settings:
-    "FILL" 0,
+    "FILL" 1,
     "opsz" 20;
 
   /* 4. Visual / Color */
-  color: color-mix(in srgb, var(--black) 100%, transparent);
-  background: color-mix(in srgb, var(--white) 100%, transparent);
+  color: var(--black);
+  background: var(--white);
   border-radius: var(--tripbar-badge-radius);
 }
 
@@ -3203,8 +3289,8 @@ th.day-today .day-date {
   /* 2. Positioning & Box Model */
   width: var(--tripbar-mini-badge);
   height: var(--tripbar-mini-badge);
-  min-width: 14px;
-  min-height: 14px;
+  min-width: 16px;
+  min-height: 16px;
   flex-shrink: 0;
 
   /* 4. Visual / Color */
@@ -3222,7 +3308,7 @@ th.day-today .day-date {
   line-height: 1;
   font-weight: normal;
   font-variation-settings:
-    "FILL" 0,
+    "FILL" 1,
     "opsz" 20;
 }
 
@@ -3409,12 +3495,15 @@ th.day-today .day-date {
 .form-group > label,
 .field-label {
   display: block;
-  font-size: var(--font-size-1); /* 12px */
-  font-weight: 500; /* Bumped to 500 for better legibility at 12px */
+  font-size: var(--font-size-1);
+  /* 12px */
+  font-weight: 500;
+  /* Bumped to 500 for better legibility at 12px */
   color: var(--text-muted);
 
   /* Increased line-height for descender safety */
-  line-height: 1.25; /* ~15px */
+  line-height: 1.25;
+  /* ~15px */
 
   /* Reduced margin to keep the 16px vertical footprint */
   margin-bottom: 1px !important;
@@ -3483,7 +3572,8 @@ th.day-today .day-date {
   border-top: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  margin-bottom: calc(1px - 7px) !important; /* -7px effectively */
+  margin-bottom: calc(1px - 7px) !important;
+  /* -7px effectively */
 }
 
 /* Section label to first content = 4px (match .form-group label-to-field); subsection gap stays 8px */
@@ -3497,7 +3587,8 @@ th.day-today .day-date {
 
 /* We use negative margin to counteract the 8px grid gap, leaving 1px visual space + border */
 #busGrid.bus-assign .field-label {
-  margin-bottom: calc(1px - 7px) !important; /* -7px effectively */
+  margin-bottom: calc(1px - 7px) !important;
+  /* -7px effectively */
 }
 
 .subsection-grid {
@@ -3855,16 +3946,19 @@ select.status-confirmed {
   --tripbar-inset-left: 0px;
   --tripbar-inset-right: 0px;
 }
+
 #printRoot.print-mode-letter-full .print-table thead th {
   height: 28px !important;
   min-height: 28px !important;
   max-height: 28px !important;
 }
+
 #printRoot.print-mode-letter-full .print-table tbody td {
   height: 100px !important;
   min-height: 100px !important;
   max-height: 100px !important;
 }
+
 @media print {
   @page {
     /* Legal landscape: 14in × 8.5in — tighter margins to fill width */
@@ -3894,24 +3988,29 @@ select.status-confirmed {
     --tripbar-inset-left: 0px;
     --tripbar-inset-right: 0px;
   }
+
   #printRoot.print-mode-letter-full .print-table {
     width: 1400px !important;
     min-width: 1400px !important;
     table-layout: fixed !important;
   }
+
   #printRoot.print-mode-letter-full .print-table thead th {
     height: 28px !important;
     padding: 0 !important;
   }
+
   #printRoot.print-mode-letter-full .print-table tbody td {
     height: 100px !important;
     min-height: 100px !important;
     max-height: 100px !important;
     padding: 0 !important;
   }
+
   #printRoot.print-mode-letter-full .day-date {
     font-size: 10pt !important;
   }
+
   #printRoot.print-mode-letter-full .day-name {
     font-size: 9pt !important;
   }
@@ -3955,7 +4054,8 @@ select.status-confirmed {
   #printRoot.print-mode-letter-full .print-page {
     width: 960px !important;
     height: 720px !important;
-    overflow: visible !important; /* FIX: Prevents the bottom edge from being clipped */
+    overflow: visible !important;
+    /* FIX: Prevents the bottom edge from being clipped */
     page-break-after: avoid !important;
     padding: 2mm !important;
     box-sizing: border-box !important;
@@ -3963,15 +4063,19 @@ select.status-confirmed {
 
   /* Letter full: scale 1400px agenda to fit; anchor to top left to avoid browser clipping bugs */
   #printRoot.print-mode-letter-full .print-card {
-    position: relative !important; /* FIX: Removed absolute positioning */
+    position: relative !important;
+    /* FIX: Removed absolute positioning */
     top: 0 !important;
-    left: 0 !important; /* FIX: Removed 50% offset */
+    left: 0 !important;
+    /* FIX: Removed 50% offset */
     width: 1400px !important;
     margin: 0 !important;
     padding: 0 !important;
     box-sizing: border-box;
-    transform: scale(var(--print-scale, 1)) !important; /* FIX: Removed translateX(-50%) */
-    transform-origin: top left !important; /* FIX: Anchors safely to the corner */
+    transform: scale(var(--print-scale, 1)) !important;
+    /* FIX: Removed translateX(-50%) */
+    transform-origin: top left !important;
+    /* FIX: Anchors safely to the corner */
   }
 
   /* Fix for trip bar clipping in print mode */
@@ -3995,6 +4099,7 @@ select.status-confirmed {
     padding: 0 !important;
     justify-content: flex-start !important;
   }
+
   .print-header .agenda-header-inner {
     margin: 0 !important;
     min-height: 0 !important;
@@ -4005,23 +4110,28 @@ select.status-confirmed {
     margin-inline-end: 10px;
     display: flex !important;
   }
+
   .print-header-logo .logo-img {
     height: 24px;
     width: auto;
     object-fit: contain;
   }
+
   .print-header .week-heading {
     color: #333 !important;
     font-size: 14pt !important;
     line-height: 1.2 !important;
   }
+
   .print-header .week-date .wk-month,
   .print-header .week-date .wk-month-end {
     color: #111 !important;
   }
+
   .print-header .week-date .wk-dates {
     color: #444 !important;
   }
+
   .print-header .week-date .wk-year {
     color: #0066cc !important;
   }
@@ -4038,7 +4148,8 @@ select.status-confirmed {
 
   .print-table {
     width: 100% !important;
-    min-width: 100% !important; /* card content: 1320 - 20 padding */
+    min-width: 100% !important;
+    /* card content: 1320 - 20 padding */
     border-collapse: collapse !important;
     table-layout: fixed !important;
     --bus-col-w: 50px !important;
@@ -4053,13 +4164,16 @@ select.status-confirmed {
     table-layout: fixed !important;
     box-sizing: border-box !important;
   }
+
   #printRoot.print-mode-letter-full .print-table th:last-child,
   #printRoot.print-mode-letter-full .print-table td:last-child {
     border-right: 1px solid #ccc !important;
   }
+
   #printRoot.print-mode-letter-full .print-table .col-bus {
     width: 52px !important;
   }
+
   #printRoot.print-mode-letter-full .print-table .col-day,
   #printRoot.print-mode-letter-full .print-table col.col-day {
     width: calc((1400px - 52px) / 7) !important;
@@ -4071,7 +4185,8 @@ select.status-confirmed {
 
   .print-table .col-day,
   .print-table col.col-day {
-    width: calc((100% - 50px) / 7) !important; /* 7 equal day columns */
+    width: calc((100% - 50px) / 7) !important;
+    /* 7 equal day columns */
   }
 
   .print-table tbody tr:not(.notes-row) {
@@ -4101,19 +4216,23 @@ select.status-confirmed {
     margin-bottom: 6px !important;
     padding: 0 !important;
   }
+
   #printRoot.print-mode-letter-full .print-header .week-heading {
     font-size: 14pt !important;
     line-height: 1.2 !important;
   }
+
   #printRoot.print-mode-letter-full .print-header-logo .logo-img {
     height: 24px !important;
   }
+
   /* Letter: 28px header to give more room to data rows; 100px body rows for 98px trip bars */
   #printRoot.print-mode-letter-full .print-table thead th {
     height: 28px !important;
     padding: 0 !important;
     font-size: inherit !important;
   }
+
   #printRoot.print-mode-letter-full .print-table tbody td {
     height: 100px !important;
     min-height: 100px !important;
@@ -4121,11 +4240,13 @@ select.status-confirmed {
     padding: 0 !important;
     font-size: inherit !important;
   }
+
   /* Trip bars: sharper corners for print */
   #printRoot.print-mode-letter-full .print-table .trip-bar {
     border-radius: 2px !important;
     border: 1px solid rgba(0, 0, 0, 0.4) !important;
   }
+
   /* Letter print: hide driver names, customer name, status icons, and notes (invisible on paper, space collapsed) */
   #printRoot.print-mode-letter-full .print-table .trip-bar .bar-drivers,
   #printRoot.print-mode-letter-full .print-table .trip-bar .bar-contact,
@@ -4157,10 +4278,13 @@ select.status-confirmed {
   /* Trip bar: fill row height — same size as row */
   .print-table .trip-bar {
     /* --- NEW FIXES FOR BROWSER PRINT BUGS --- */
-    container-type: normal !important; /* Fixes disappearing elements in Chrome 122+ */
-    backdrop-filter: none !important; /* Fixes blank/dropped boxes */
+    container-type: normal !important;
+    /* Fixes disappearing elements in Chrome 122+ */
+    backdrop-filter: none !important;
+    /* Fixes blank/dropped boxes */
     -webkit-backdrop-filter: none !important;
-    background: color-mix(in srgb, var(--tripbar-color) 33%, white) !important; /* Mix with white, not transparent */
+    background: color-mix(in srgb, var(--tripbar-color) 33%, white) !important;
+    /* Mix with white, not transparent */
     /* ---------------------------------------- */
 
     -webkit-print-color-adjust: exact !important;
@@ -4187,6 +4311,7 @@ select.status-confirmed {
   .print-table .trip-bar .bar-row {
     display: flex !important;
   }
+
   .print-table .trip-bar .bar-title,
   .print-table .trip-bar .bar-sub,
   .print-table .trip-bar .bar-pre-drivers {

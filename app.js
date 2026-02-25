@@ -2161,7 +2161,7 @@ function _renderAgendaInner() {
         { key: "req56Pass", icon: "tatami_seat" },
         { key: "reqSleeper", icon: "airline_seat_flat" },
         { key: "reqLift", icon: "accessible" },
-        { key: "reqRelief", icon: "person_alert" },
+        { key: "reqRelief", icon: "warning" },
         { key: "reqCoDriver", icon: "person_add" },
         { key: "reqHotel", icon: "apartment" },
       ];
