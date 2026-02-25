@@ -1312,6 +1312,11 @@ textarea::placeholder {
   color: var(--text);
 }
 
+#nextDayReportBody {
+  overflow-y: auto;
+  padding: 0 var(--space-4) var(--space-4) var(--space-4);
+}
+
 /* Status grid: sans-serif; 4 columns; 16px margin below */
 .detail-meta-grid {
   flex-shrink: 0;

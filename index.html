@@ -1,689 +1,662 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; 
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; 
                script-src 'self' https://script.google.com https://script.googleusercontent.com; 
                style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
                font-src 'self' https://fonts.gstatic.com; 
                connect-src 'self' https://script.google.com https://script.googleusercontent.com; 
                frame-src 'self' https://script.google.com https://script.googleusercontent.com;
-               img-src 'self' data:;"
-    />
-    <title>Trip Schedule</title>
+               img-src 'self' data:;" />
+  <title>Trip Schedule</title>
 
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-    />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
-    <link rel="stylesheet" href="styles.css?v=37" />
-  </head>
+  <link rel="stylesheet" href="styles.css?v=37" />
+</head>
 
-  <body>
-    <div class="app">
-      <header class="topbar">
-        <div class="container">
-          <div class="topbar-inner">
-            <div class="topbar-start">
-              <!-- 1. Logo -->
-              <div class="logo-wrap">
-                <img
-                  src="logo.png"
-                  class="logo-img"
-                  alt="Logo"
-                  onerror="
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="container">
+        <div class="topbar-inner">
+          <div class="topbar-start">
+            <!-- 1. Logo -->
+            <div class="logo-wrap">
+              <img src="logo.png" class="logo-img" alt="Logo" onerror="
                     this.style.display = 'none';
                     this.nextElementSibling.style.display = 'inline-flex';
-                  "
-                />
-                <div class="logo-placeholder is-hidden" aria-label="Logo placeholder">LOGO</div>
-              </div>
-
-              <!-- 2. Header / title text (right of logo) -->
-              <h1 class="heading-1 topbar__title" id="topbarTitle" aria-label="Application title">Trip Schedule</h1>
+                  " />
+              <div class="logo-placeholder is-hidden" aria-label="Logo placeholder">LOGO</div>
             </div>
 
-            <!-- END GROUP: Settings & Tools -->
-            <div class="topbar-end">
-              <!-- Hidden buttons that JS might look for (can be cleaned up later, keeping for safety) -->
-              <!-- Tools -->
-              <button id="tripInputBtn" class="btn-icon" type="button" title="Trip Editor" aria-label="Trip Editor">
-                <span class="material-symbols-outlined">add</span>
-              </button>
+            <!-- 2. Header / title text (right of logo) -->
+            <h1 class="heading-1 topbar__title" id="topbarTitle" aria-label="Application title">Trip Schedule</h1>
+          </div>
 
-              <button
-                id="driversBtn"
-                class="btn-icon"
-                type="button"
-                title="Driver Assignments"
-                aria-label="Driver Assignments"
-              >
-                <span class="material-symbols-outlined">groups</span>
-              </button>
+          <!-- END GROUP: Settings & Tools -->
+          <div class="topbar-end">
+            <!-- Hidden buttons that JS might look for (can be cleaned up later, keeping for safety) -->
+            <!-- Tools -->
+            <button id="tripInputBtn" class="btn-icon" type="button" title="Trip Editor" aria-label="Trip Editor">
+              <span class="material-symbols-outlined">add</span>
+            </button>
 
-              <button id="notesBtn" class="btn-icon" type="button" title="Weekly Notes" aria-label="Weekly Notes">
-                <span class="material-symbols-outlined">sticky_note_2</span>
-              </button>
+            <button id="driversBtn" class="btn-icon" type="button" title="Driver Assignments"
+              aria-label="Driver Assignments">
+              <span class="material-symbols-outlined">groups</span>
+            </button>
 
-              <button id="waitingListBtn" class="btn-icon" type="button" title="Waiting List" aria-label="Waiting List">
-                <span class="material-symbols-outlined">low_priority</span>
-              </button>
+            <button id="notesBtn" class="btn-icon" type="button" title="Weekly Notes" aria-label="Weekly Notes">
+              <span class="material-symbols-outlined">sticky_note_2</span>
+            </button>
 
-              <!-- Settings Dropdown -->
-              <button id="todayBtnMobile" class="btn-icon" type="button" aria-label="Today" title="Today">
-                <span class="material-symbols-outlined">today</span>
-              </button>
+            <button id="waitingListBtn" class="btn-icon" type="button" title="Waiting List" aria-label="Waiting List">
+              <span class="material-symbols-outlined">low_priority</span>
+            </button>
 
-              <div class="dropdown-wrapper">
-                <button
-                  id="settingsBtn"
-                  class="btn-icon"
-                  type="button"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                  title="Settings"
-                  aria-label="Settings"
-                >
-                  <span class="material-symbols-outlined">settings</span>
+            <!-- Settings Dropdown -->
+            <button id="todayBtnMobile" class="btn-icon" type="button" aria-label="Today" title="Today">
+              <span class="material-symbols-outlined">today</span>
+            </button>
+
+            <div class="dropdown-wrapper">
+              <button id="settingsBtn" class="btn-icon" type="button" aria-haspopup="true" aria-expanded="false"
+                title="Settings" aria-label="Settings">
+                <span class="material-symbols-outlined">settings</span>
+              </button>
+              <div id="settingsMenu" class="dropdown-menu" hidden>
+                <button id="refreshBtn2" class="dropdown-item" type="button">
+                  <span class="dropdown-icon material-symbols-outlined">refresh</span>
+                  <span>Refresh Data</span>
                 </button>
-                <div id="settingsMenu" class="dropdown-menu" hidden>
-                  <button id="refreshBtn2" class="dropdown-item" type="button">
-                    <span class="dropdown-icon material-symbols-outlined">refresh</span>
-                    <span>Refresh Data</span>
-                  </button>
 
-                  <hr class="dropdown-divider" />
+                <hr class="dropdown-divider" />
 
-                  <button id="themeToggle2" class="dropdown-item" type="button">
-                    <span class="dropdown-icon material-symbols-outlined">dark_mode</span>
-                    <span>Toggle Theme</span>
-                  </button>
+                <button id="themeToggle2" class="dropdown-item" type="button">
+                  <span class="dropdown-icon material-symbols-outlined">dark_mode</span>
+                  <span>Toggle Theme</span>
+                </button>
 
-                  <button id="printBtn2" class="dropdown-item" type="button">
-                    <span class="dropdown-icon material-symbols-outlined">print</span>
-                    <span>Print Schedule (Legal)</span>
-                  </button>
+                <button id="printBtn2" class="dropdown-item" type="button">
+                  <span class="dropdown-icon material-symbols-outlined">print</span>
+                  <span>Print Schedule (Legal)</span>
+                </button>
 
-                  <button id="printBtn2Full" class="dropdown-item" type="button">
-                    <span class="dropdown-icon material-symbols-outlined">print</span>
-                    <span>Print Full Schedule (Letter)</span>
-                  </button>
+                <button id="printBtn2Full" class="dropdown-item" type="button">
+                  <span class="dropdown-icon material-symbols-outlined">print</span>
+                  <span>Print Full Schedule (Letter)</span>
+                </button>
 
-                  <hr class="dropdown-divider" />
+                <hr class="dropdown-divider" />
 
-                  <button id="weekStartToggle" class="dropdown-item" type="button">
-                    <span class="dropdown-icon material-symbols-outlined">toggle_off</span>
-                    <span>Week starts Monday</span>
-                  </button>
-                </div>
+                <button id="nextDayReportBtn" class="dropdown-item" type="button">
+                  <span class="dropdown-icon material-symbols-outlined">event_upcoming</span>
+                  <span>Weekly Maintenance</span>
+                </button>
+
+                <button id="weekStartToggle" class="dropdown-item" type="button">
+                  <span class="dropdown-icon material-symbols-outlined">toggle_off</span>
+                  <span>Week starts Monday</span>
+                </button>
               </div>
             </div>
           </div>
         </div>
-      </header>
+      </div>
+    </header>
 
-      <main class="main">
-        <div class="container">
-          <div class="layout-panels" id="layoutPanels">
-            <!-- START PANEL -->
-            <div class="panel-start panel-collapsed" id="panelStart">
-              <!-- Placeholder for new left panel cards -->
-              <div class="card compact is-hidden" id="leftPanelCard1">
-                <div class="card-header">
-                  <h2 class="section-title">Left Panel Card 1</h2>
-                </div>
-                <div class="card-content">
-                  <p>Add your content here</p>
-                </div>
+    <main class="main">
+      <div class="container">
+        <div class="layout-panels" id="layoutPanels">
+          <!-- START PANEL -->
+          <div class="panel-start panel-collapsed" id="panelStart">
+            <!-- Placeholder for new left panel cards -->
+            <div class="card compact is-hidden" id="leftPanelCard1">
+              <div class="card-header">
+                <h2 class="section-title">Left Panel Card 1</h2>
+              </div>
+              <div class="card-content">
+                <p>Add your content here</p>
               </div>
             </div>
+          </div>
 
-            <!-- END PANEL (Trip Editor, Drivers, Notes) -->
-            <div class="panel-end panel-collapsed" id="panelEnd">
-              <!-- Driver Week Card (hidden by default) -->
-              <div class="card compact is-hidden" id="driverWeekCard">
-                <div class="card-header">
-                  <h2 class="section-title">Driver Assignments</h2>
-                  <div class="card-header-actions">
-                    <button type="button" class="btn-close-card" data-card="drivers" aria-label="Close" title="Close">
-                      <span class="material-symbols-outlined">close</span>
-                    </button>
-                  </div>
-                </div>
-
-                <div class="card-content">
-                  <div class="driver-week-wrap">
-                    <table class="driver-week-table">
-                      <thead>
-                        <tr id="driverWeekHeadRow"></tr>
-                      </thead>
-                      <tbody id="driverWeekBody"></tbody>
-                    </table>
-                  </div>
-                </div>
-
-                <div class="card-footer"></div>
-              </div>
-
-              <!-- Notes Card (hidden by default) -->
-              <div class="card compact is-hidden" id="notesCard">
-                <div class="card-header">
-                  <h2 class="section-title">Weekly Notes</h2>
-                  <div class="card-header-actions">
-                    <button type="button" class="btn-close-card" data-card="notes" aria-label="Close" title="Close">
-                      <span class="material-symbols-outlined">close</span>
-                    </button>
-                  </div>
-                </div>
-
-                <div class="card-content">
-                  <div class="notes-wrap">
-                    <textarea
-                      id="scheduleNotes"
-                      class="notes-textarea"
-                      placeholder="Enter week notes here..."
-                    ></textarea>
-                  </div>
-                </div>
-
-                <div class="card-footer">
-                  <div class="form-actions">
-                    <button type="button" class="btn" id="saveNotesBtn">Save Notes</button>
-                  </div>
+          <!-- END PANEL (Trip Editor, Drivers, Notes) -->
+          <div class="panel-end panel-collapsed" id="panelEnd">
+            <!-- Driver Week Card (hidden by default) -->
+            <div class="card compact is-hidden" id="driverWeekCard">
+              <div class="card-header">
+                <h2 class="section-title">Driver Assignments</h2>
+                <div class="card-header-actions">
+                  <button type="button" class="btn-close-card" data-card="drivers" aria-label="Close" title="Close">
+                    <span class="material-symbols-outlined">close</span>
+                  </button>
                 </div>
               </div>
 
-              <!-- Trip Info Card -->
-              <div class="card compact is-hidden" id="tripInfoCard">
-                <div class="card-header">
-                  <h2 class="section-title">Trip Editor</h2>
-                  <div class="card-header-actions">
-                    <span id="tripIdBadge" class="badge badge-primary trip-id-badge is-hidden"></span>
-                    <button type="button" class="btn-close-card" data-card="trip" aria-label="Close" title="Close">
-                      <span class="material-symbols-outlined">close</span>
-                    </button>
-                  </div>
-                </div>
-
-                <div class="card-content">
-                  <form id="tripForm" class="form-grid" target="hidden_iframe" method="POST">
-                    <input type="hidden" name="action" id="action" value="create" />
-                    <input type="hidden" name="tripKey" id="tripKey" value="" />
-                    <input type="hidden" name="tripId" id="tripId" value="" />
-                    <input type="hidden" name="req56Pass" id="req56PassValue" value="false" />
-                    <input type="hidden" name="reqSleeper" id="reqSleeperValue" value="false" />
-                    <input type="hidden" name="reqLift" id="reqLiftValue" value="false" />
-                    <input type="hidden" name="reqRelief" id="reqReliefValue" value="false" />
-                    <input type="hidden" name="reqCoDriver" id="reqCoDriverValue" value="false" />
-                    <input type="hidden" name="reqHotel" id="reqHotelValue" value="false" />
-
-                    <div class="form-group col-6">
-                      <label for="destination">Destination</label>
-                      <input type="text" id="destination" name="destination" placeholder="" required />
-                    </div>
-
-                    <div class="form-group col-6">
-                      <label for="customer">Customer</label>
-                      <input type="text" id="customer" name="customer" placeholder="" required />
-                    </div>
-
-                    <div class="form-group col-5">
-                      <label for="contactName">Name</label>
-                      <input type="text" id="contactName" name="contactName" placeholder="" required />
-                    </div>
-
-                    <div class="form-group col-5">
-                      <label for="phone">Phone</label>
-                      <input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="" />
-                    </div>
-
-                    <div class="form-group col-2">
-                      <label for="busesNeeded">Buses</label>
-                      <select id="busesNeeded" name="busesNeeded" required>
-                        <option value="" disabled selected>-</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                      </select>
-                    </div>
-
-                    <div class="form-group col-6">
-                      <label for="tripDate">Departure Date</label>
-                      <input type="date" id="tripDate" name="departureDate" required />
-                    </div>
-
-                    <div class="form-group col-6">
-                      <label for="arrivalDate">Arrival Date</label>
-                      <input type="date" id="arrivalDate" name="arrivalDate" />
-                    </div>
-
-                    <div class="form-group col-6">
-                      <label for="departureTime">Departure Time</label>
-                      <input type="time" id="departureTime" name="departureTime" />
-                    </div>
-
-                    <div class="form-group col-6">
-                      <label for="arrivalTime">Arrival Time</label>
-                      <input type="time" id="arrivalTime" name="arrivalTime" />
-                    </div>
-
-                    <div class="form-group col-8">
-                      <label for="notes">Notes</label>
-                      <input type="text" id="notes" name="notes" placeholder="" />
-                    </div>
-
-                    <div class="form-group col-4">
-                      <label for="tripColor">Color</label>
-                      <select id="tripColor" name="tripColor">
-                        <option value="" selected>Auto</option>
-                        <option value="Yellow">Yellow</option>
-                        <option value="Orange">Orange</option>
-                        <option value="Pink">Pink</option>
-                        <option value="Purple">Purple</option>
-                        <option value="Teal">Teal</option>
-                        <option value="Green">Green</option>
-                      </select>
-                    </div>
-
-                    <div class="form-group col-12">
-                      <label for="comments">Comments</label>
-                      <textarea id="comments" name="comments" placeholder=""></textarea>
-                    </div>
-
-                    <div class="subsection col-12">
-                      <div class="status-grid">
-                        <div class="form-group">
-                          <label for="itineraryStatus">
-                            Itinerary Status
-                            <button
-                              id="itineraryBtn"
-                              type="button"
-                              class="label-link"
-                              title="Edit Itinerary"
-                              aria-label="Edit Itinerary"
-                            >
-                              (view)
-                            </button>
-                          </label>
-                          <select id="itineraryStatus" name="itineraryStatus" required>
-                            <option value="" disabled selected></option>
-                            <option value="Pending">Pending</option>
-                            <option value="Received">Received</option>
-                            <option value="Not Required">Not Required</option>
-                          </select>
-                        </div>
-
-                        <div class="form-group">
-                          <label for="contactStatus">Contact Status</label>
-                          <select id="contactStatus" name="contactStatus" required>
-                            <option value="" disabled selected></option>
-                            <option value="Pending">Pending</option>
-                            <option value="Received">Received</option>
-                            <option value="Not Required">Not Required</option>
-                          </select>
-                        </div>
-
-                        <div class="form-group">
-                          <label for="paymentStatus">Approval Status</label>
-                          <select id="paymentStatus" name="paymentStatus" required>
-                            <option value="" disabled selected></option>
-                            <option value="Pending Quote">Pending Quote</option>
-                            <option value="Quoted">Quoted</option>
-                            <option value="Contract Signed">Contract Signed</option>
-                            <option value="PO Received">PO Received</option>
-                            <option value="Not Required">Not Required</option>
-                          </select>
-                        </div>
-
-                        <div class="form-group">
-                          <label for="driverStatus">Driver Status</label>
-                          <select id="driverStatus" name="driverStatus" required>
-                            <option value="" disabled selected></option>
-                            <option value="Pending">Pending</option>
-                            <option value="Assigned">Assigned</option>
-                            <option value="Confirmed">Confirmed</option>
-                          </select>
-                        </div>
-
-                        <div class="form-group">
-                          <label for="invoiceStatus">Invoice Status</label>
-                          <select id="invoiceStatus" name="invoiceStatus" required>
-                            <option value="" disabled selected></option>
-                            <option value="Pending Invoice">Pending Invoice</option>
-                            <option value="Invoiced">Invoiced</option>
-                            <option value="Deposit Received">Deposit Received</option>
-                            <option value="Paid in Full">Paid in Full</option>
-                          </select>
-                        </div>
-
-                        <div class="form-group is-hidden" id="invoiceNumberGroup">
-                          <label for="invoiceNumber">Invoice Number</label>
-                          <input type="text" id="invoiceNumber" name="invoiceNumber" placeholder="#" />
-                        </div>
-                      </div>
-                    </div>
-
-                    <textarea
-                      id="itinerary"
-                      name="itinerary"
-                      class="is-hidden"
-                      aria-label="Itinerary Content"
-                    ></textarea>
-                    <div class="subsection col-12">
-                      <span class="field-label">Requirements</span>
-                      <div class="toggle-pill-grid" role="group" aria-label="Requirements">
-                        <button type="button" class="toggle-pill" id="req56Pass" aria-pressed="false">
-                          56 Pax
-                          <span class="toggle-pill-icon material-symbols-outlined" aria-hidden="true">tatami_seat</span>
-                        </button>
-                        <button type="button" class="toggle-pill" id="reqSleeper" aria-pressed="false">
-                          Sleeper
-                          <span class="toggle-pill-icon material-symbols-outlined" aria-hidden="true"
-                            >airline_seat_flat</span
-                          >
-                        </button>
-                        <button type="button" class="toggle-pill" id="reqLift" aria-pressed="false">
-                          Lift
-                          <span class="toggle-pill-icon material-symbols-outlined" aria-hidden="true">accessible</span>
-                        </button>
-                        <button type="button" class="toggle-pill" id="reqRelief" aria-pressed="false">
-                          Relief<span class="toggle-pill-icon material-symbols-outlined" aria-hidden="true"
-                            >warning</span
-                          >
-                        </button>
-                        <button type="button" class="toggle-pill" id="reqCoDriver" aria-pressed="false">
-                          Co-Driver
-                          <span class="toggle-pill-icon material-symbols-outlined" aria-hidden="true">person_add</span>
-                        </button>
-                        <button type="button" class="toggle-pill" id="reqHotel" aria-pressed="false">
-                          Hotel
-                          <span class="toggle-pill-icon material-symbols-outlined" aria-hidden="true">apartment</span>
-                        </button>
-                      </div>
-                    </div>
-
-                    <div class="subsection col-12" id="busPanel">
-                      <div id="busGrid"></div>
-                    </div>
-                  </form>
-                </div>
-
-                <div class="card-footer">
-                  <div class="form-actions">
-                    <button type="submit" class="btn" id="saveBtn" form="tripForm">Save</button>
-                    <button type="button" class="btn" id="newBtn">Clear</button>
-                    <button type="button" class="btn btn-danger" id="deleteBtn" disabled>Delete</button>
-                  </div>
-                </div>
-
-                <iframe
-                  id="hidden_iframe"
-                  name="hidden_iframe"
-                  class="is-hidden"
-                  title="Hidden submission iframe"
-                ></iframe>
-              </div>
-            </div>
-
-            <!-- MAIN PANEL (Schedule) -->
-            <div class="panel-main">
-              <div class="card">
-                <!-- Conflicts badge (overlay) -->
-                <div class="schedule-badge-wrap">
-                  <span id="overflowBadge" class="badge badge-error is-hidden"> Conflicts detected </span>
-                </div>
-
-                <!-- Agenda header: week date + prev/next navigation -->
-                <div class="agenda-header">
-                  <div class="agenda-header-inner card-header">
-                    <div class="agenda-header-date-left">
-                      <button
-                        id="prevWeekBtn"
-                        class="btn-icon"
-                        type="button"
-                        aria-label="Previous Week"
-                        title="Previous Week"
-                      >
-                        <span class="material-symbols-outlined">arrow_back_ios_new</span>
-                      </button>
-                      <button id="nextWeekBtn" class="btn-icon" type="button" aria-label="Next Week" title="Next Week">
-                        <span class="material-symbols-outlined">arrow_forward_ios</span>
-                      </button>
-                      <div id="dateWrapper" class="date-picker-wrapper">
-                        <h2 class="week-heading">
-                          <span class="week-date" id="headerWeek" aria-label="Active week"></span>
-                        </h2>
-                      </div>
-                    </div>
-                    <div class="agenda-header-nav-right">
-                      <div class="weekpicker-trigger-wrap">
-                        <button
-                          id="agendaLeftBtn"
-                          class="btn-icon"
-                          type="button"
-                          aria-label="Select week"
-                          title="Select week"
-                        >
-                          <span class="material-symbols-outlined">calendar_month</span>
-                        </button>
-                        <input
-                          type="date"
-                          id="weekPicker"
-                          class="weekpicker weekpicker-trigger-input"
-                          aria-label="Select week"
-                        />
-                      </div>
-                      <button id="todayBtn" class="btn-icon" type="button" aria-label="Today" title="Today">
-                        <span class="material-symbols-outlined">calendar_today</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="week-table-container">
-                  <table class="week-table">
-                    <colgroup>
-                      <col class="col-bus" />
-                      <col class="col-day" />
-                      <col class="col-day" />
-                      <col class="col-day" />
-                      <col class="col-day" />
-                      <col class="col-day" />
-                      <col class="col-day" />
-                      <col class="col-day" />
-                    </colgroup>
-
+              <div class="card-content">
+                <div class="driver-week-wrap">
+                  <table class="driver-week-table">
                     <thead>
-                      <tr>
-                        <th></th>
-
-                        <th id="sun">
-                          <span class="day-label">
-                            <span class="day-date"></span>
-                            <span class="day-name">Sun</span>
-                          </span>
-                        </th>
-
-                        <th id="mon">
-                          <span class="day-label">
-                            <span class="day-date"></span>
-                            <span class="day-name">Mon</span>
-                          </span>
-                        </th>
-
-                        <th id="tue">
-                          <span class="day-label">
-                            <span class="day-date"></span>
-                            <span class="day-name">Tue</span>
-                          </span>
-                        </th>
-
-                        <th id="wed">
-                          <span class="day-label">
-                            <span class="day-date"></span>
-                            <span class="day-name">Wed</span>
-                          </span>
-                        </th>
-
-                        <th id="thu">
-                          <span class="day-label">
-                            <span class="day-date"></span>
-                            <span class="day-name">Thu</span>
-                          </span>
-                        </th>
-
-                        <th id="fri">
-                          <span class="day-label">
-                            <span class="day-date"></span>
-                            <span class="day-name">Fri</span>
-                          </span>
-                        </th>
-
-                        <th id="sat">
-                          <span class="day-label">
-                            <span class="day-date"></span>
-                            <span class="day-name">Sat</span>
-                          </span>
-                        </th>
-                      </tr>
+                      <tr id="driverWeekHeadRow"></tr>
                     </thead>
-
-                    <tbody id="agendaBody"></tbody>
-                    <tbody id="waitingBody" hidden></tbody>
+                    <tbody id="driverWeekBody"></tbody>
                   </table>
                 </div>
+              </div>
 
-                <div id="conflictPanel" class="card is-hidden mt-4">
-                  <div class="card-title">
-                    Conflicts
-                    <span class="badge badge-error">Needs attention</span>
+              <div class="card-footer"></div>
+            </div>
+
+            <!-- Notes Card (hidden by default) -->
+            <div class="card compact is-hidden" id="notesCard">
+              <div class="card-header">
+                <h2 class="section-title">Weekly Notes</h2>
+                <div class="card-header-actions">
+                  <button type="button" class="btn-close-card" data-card="notes" aria-label="Close" title="Close">
+                    <span class="material-symbols-outlined">close</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="card-content">
+                <div class="notes-wrap">
+                  <textarea id="scheduleNotes" class="notes-textarea" placeholder="Enter week notes here..."></textarea>
+                </div>
+              </div>
+
+              <div class="card-footer">
+                <div class="form-actions">
+                  <button type="button" class="btn" id="saveNotesBtn">Save Notes</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Trip Info Card -->
+            <div class="card compact is-hidden" id="tripInfoCard">
+              <div class="card-header">
+                <h2 class="section-title">Trip Editor</h2>
+                <div class="card-header-actions">
+                  <span id="tripIdBadge" class="badge badge-primary trip-id-badge is-hidden"></span>
+                  <button type="button" class="btn-close-card" data-card="trip" aria-label="Close" title="Close">
+                    <span class="material-symbols-outlined">close</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="card-content">
+                <form id="tripForm" class="form-grid" target="hidden_iframe" method="POST">
+                  <input type="hidden" name="action" id="action" value="create" />
+                  <input type="hidden" name="tripKey" id="tripKey" value="" />
+                  <input type="hidden" name="tripId" id="tripId" value="" />
+                  <input type="hidden" name="req56Pass" id="req56PassValue" value="false" />
+                  <input type="hidden" name="reqSleeper" id="reqSleeperValue" value="false" />
+                  <input type="hidden" name="reqLift" id="reqLiftValue" value="false" />
+                  <input type="hidden" name="reqRelief" id="reqReliefValue" value="false" />
+                  <input type="hidden" name="reqCoDriver" id="reqCoDriverValue" value="false" />
+                  <input type="hidden" name="reqHotel" id="reqHotelValue" value="false" />
+
+                  <div class="form-group col-6">
+                    <label for="destination">Destination</label>
+                    <input type="text" id="destination" name="destination" placeholder="" required />
                   </div>
-                  <div class="card-content">
-                    <div id="conflictList" class="help"></div>
+
+                  <div class="form-group col-6">
+                    <label for="customer">Customer</label>
+                    <input type="text" id="customer" name="customer" placeholder="" required />
                   </div>
+
+                  <div class="form-group col-5">
+                    <label for="contactName">Name</label>
+                    <input type="text" id="contactName" name="contactName" placeholder="" required />
+                  </div>
+
+                  <div class="form-group col-5">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="" />
+                  </div>
+
+                  <div class="form-group col-2">
+                    <label for="busesNeeded">Buses</label>
+                    <select id="busesNeeded" name="busesNeeded" required>
+                      <option value="" disabled selected>-</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group col-6">
+                    <label for="tripDate">Departure Date</label>
+                    <input type="date" id="tripDate" name="departureDate" required />
+                  </div>
+
+                  <div class="form-group col-6">
+                    <label for="arrivalDate">Arrival Date</label>
+                    <input type="date" id="arrivalDate" name="arrivalDate" />
+                  </div>
+
+                  <div class="form-group col-6">
+                    <label for="departureTime">Departure Time</label>
+                    <input type="time" id="departureTime" name="departureTime" />
+                  </div>
+
+                  <div class="form-group col-6">
+                    <label for="arrivalTime">Arrival Time</label>
+                    <input type="time" id="arrivalTime" name="arrivalTime" />
+                  </div>
+
+                  <div class="form-group col-8">
+                    <label for="notes">Notes</label>
+                    <input type="text" id="notes" name="notes" placeholder="" />
+                  </div>
+
+                  <div class="form-group col-4">
+                    <label for="tripColor">Color</label>
+                    <select id="tripColor" name="tripColor">
+                      <option value="" selected>Auto</option>
+                      <option value="Yellow">Yellow</option>
+                      <option value="Orange">Orange</option>
+                      <option value="Pink">Pink</option>
+                      <option value="Purple">Purple</option>
+                      <option value="Teal">Teal</option>
+                      <option value="Green">Green</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group col-12">
+                    <label for="comments">Comments</label>
+                    <textarea id="comments" name="comments" placeholder=""></textarea>
+                  </div>
+
+                  <div class="subsection col-12">
+                    <div class="status-grid">
+                      <div class="form-group">
+                        <label for="itineraryStatus">
+                          Itinerary Status
+                          <button id="itineraryBtn" type="button" class="label-link" title="Edit Itinerary"
+                            aria-label="Edit Itinerary">
+                            (view)
+                          </button>
+                        </label>
+                        <select id="itineraryStatus" name="itineraryStatus" required>
+                          <option value="" disabled selected></option>
+                          <option value="Pending">Pending</option>
+                          <option value="Received">Received</option>
+                          <option value="Not Required">Not Required</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="contactStatus">Contact Status</label>
+                        <select id="contactStatus" name="contactStatus" required>
+                          <option value="" disabled selected></option>
+                          <option value="Pending">Pending</option>
+                          <option value="Received">Received</option>
+                          <option value="Not Required">Not Required</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="paymentStatus">Approval Status</label>
+                        <select id="paymentStatus" name="paymentStatus" required>
+                          <option value="" disabled selected></option>
+                          <option value="Pending Quote">Pending Quote</option>
+                          <option value="Quoted">Quoted</option>
+                          <option value="Contract Signed">Contract Signed</option>
+                          <option value="PO Received">PO Received</option>
+                          <option value="Not Required">Not Required</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="driverStatus">Driver Status</label>
+                        <select id="driverStatus" name="driverStatus" required>
+                          <option value="" disabled selected></option>
+                          <option value="Pending">Pending</option>
+                          <option value="Assigned">Assigned</option>
+                          <option value="Confirmed">Confirmed</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="invoiceStatus">Invoice Status</label>
+                        <select id="invoiceStatus" name="invoiceStatus" required>
+                          <option value="" disabled selected></option>
+                          <option value="Pending Invoice">Pending Invoice</option>
+                          <option value="Invoiced">Invoiced</option>
+                          <option value="Deposit Received">Deposit Received</option>
+                          <option value="Paid in Full">Paid in Full</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group is-hidden" id="invoiceNumberGroup">
+                        <label for="invoiceNumber">Invoice Number</label>
+                        <input type="text" id="invoiceNumber" name="invoiceNumber" placeholder="#" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <textarea id="itinerary" name="itinerary" class="is-hidden" aria-label="Itinerary Content"></textarea>
+                  <div class="subsection col-12">
+                    <span class="field-label">Requirements</span>
+                    <div class="toggle-pill-grid" role="group" aria-label="Requirements">
+                      <button type="button" class="toggle-pill" id="req56Pass" aria-pressed="false">
+                        56 Pax
+                        <span class="toggle-pill-icon material-symbols-outlined" aria-hidden="true">tatami_seat</span>
+                      </button>
+                      <button type="button" class="toggle-pill" id="reqSleeper" aria-pressed="false">
+                        Sleeper
+                        <span class="toggle-pill-icon material-symbols-outlined"
+                          aria-hidden="true">airline_seat_flat</span>
+                      </button>
+                      <button type="button" class="toggle-pill" id="reqLift" aria-pressed="false">
+                        Lift
+                        <span class="toggle-pill-icon material-symbols-outlined" aria-hidden="true">accessible</span>
+                      </button>
+                      <button type="button" class="toggle-pill" id="reqRelief" aria-pressed="false">
+                        Relief<span class="toggle-pill-icon material-symbols-outlined" aria-hidden="true">warning</span>
+                      </button>
+                      <button type="button" class="toggle-pill" id="reqCoDriver" aria-pressed="false">
+                        Co-Driver
+                        <span class="toggle-pill-icon material-symbols-outlined" aria-hidden="true">person_add</span>
+                      </button>
+                      <button type="button" class="toggle-pill" id="reqHotel" aria-pressed="false">
+                        Hotel
+                        <span class="toggle-pill-icon material-symbols-outlined" aria-hidden="true">apartment</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="subsection col-12" id="busPanel">
+                    <div id="busGrid"></div>
+                  </div>
+                </form>
+              </div>
+
+              <div class="card-footer">
+                <div class="form-actions">
+                  <button type="submit" class="btn" id="saveBtn" form="tripForm">Save</button>
+                  <button type="button" class="btn" id="newBtn">Clear</button>
+                  <button type="button" class="btn btn-danger" id="deleteBtn" disabled>Delete</button>
+                </div>
+              </div>
+
+              <iframe id="hidden_iframe" name="hidden_iframe" class="is-hidden"
+                title="Hidden submission iframe"></iframe>
+            </div>
+          </div>
+
+          <!-- MAIN PANEL (Schedule) -->
+          <div class="panel-main">
+            <div class="card">
+              <!-- Conflicts badge (overlay) -->
+              <div class="schedule-badge-wrap">
+                <span id="overflowBadge" class="badge badge-error is-hidden"> Conflicts detected </span>
+              </div>
+
+              <!-- Agenda header: week date + prev/next navigation -->
+              <div class="agenda-header">
+                <div class="agenda-header-inner card-header">
+                  <div class="agenda-header-date-left">
+                    <button id="prevWeekBtn" class="btn-icon" type="button" aria-label="Previous Week"
+                      title="Previous Week">
+                      <span class="material-symbols-outlined">arrow_back_ios_new</span>
+                    </button>
+                    <button id="nextWeekBtn" class="btn-icon" type="button" aria-label="Next Week" title="Next Week">
+                      <span class="material-symbols-outlined">arrow_forward_ios</span>
+                    </button>
+                    <div id="dateWrapper" class="date-picker-wrapper">
+                      <h2 class="week-heading">
+                        <span class="week-date" id="headerWeek" aria-label="Active week"></span>
+                      </h2>
+                    </div>
+                  </div>
+                  <div class="agenda-header-nav-right">
+                    <div class="weekpicker-trigger-wrap">
+                      <button id="agendaLeftBtn" class="btn-icon" type="button" aria-label="Select week"
+                        title="Select week">
+                        <span class="material-symbols-outlined">calendar_month</span>
+                      </button>
+                      <input type="date" id="weekPicker" class="weekpicker weekpicker-trigger-input"
+                        aria-label="Select week" />
+                    </div>
+                    <button id="todayBtn" class="btn-icon" type="button" aria-label="Today" title="Today">
+                      <span class="material-symbols-outlined">calendar_today</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="week-table-container">
+                <table class="week-table">
+                  <colgroup>
+                    <col class="col-bus" />
+                    <col class="col-day" />
+                    <col class="col-day" />
+                    <col class="col-day" />
+                    <col class="col-day" />
+                    <col class="col-day" />
+                    <col class="col-day" />
+                    <col class="col-day" />
+                  </colgroup>
+
+                  <thead>
+                    <tr>
+                      <th></th>
+
+                      <th id="sun">
+                        <span class="day-label">
+                          <span class="day-date"></span>
+                          <span class="day-name">Sun</span>
+                        </span>
+                      </th>
+
+                      <th id="mon">
+                        <span class="day-label">
+                          <span class="day-date"></span>
+                          <span class="day-name">Mon</span>
+                        </span>
+                      </th>
+
+                      <th id="tue">
+                        <span class="day-label">
+                          <span class="day-date"></span>
+                          <span class="day-name">Tue</span>
+                        </span>
+                      </th>
+
+                      <th id="wed">
+                        <span class="day-label">
+                          <span class="day-date"></span>
+                          <span class="day-name">Wed</span>
+                        </span>
+                      </th>
+
+                      <th id="thu">
+                        <span class="day-label">
+                          <span class="day-date"></span>
+                          <span class="day-name">Thu</span>
+                        </span>
+                      </th>
+
+                      <th id="fri">
+                        <span class="day-label">
+                          <span class="day-date"></span>
+                          <span class="day-name">Fri</span>
+                        </span>
+                      </th>
+
+                      <th id="sat">
+                        <span class="day-label">
+                          <span class="day-date"></span>
+                          <span class="day-name">Sat</span>
+                        </span>
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody id="agendaBody"></tbody>
+                  <tbody id="waitingBody" hidden></tbody>
+                </table>
+              </div>
+
+              <div id="conflictPanel" class="card is-hidden mt-4">
+                <div class="card-title">
+                  Conflicts
+                  <span class="badge badge-error">Needs attention</span>
+                </div>
+                <div class="card-content">
+                  <div id="conflictList" class="help"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </main>
-    </div>
-
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay" hidden>
-      <div class="loading-backdrop"></div>
-
-      <div class="loading-card" role="status" aria-live="polite" aria-atomic="true">
-        <div class="loading-title" id="loadingOverlayText">Loading…</div>
-
-        <div class="loading-bar">
-          <div class="loading-bar__inner"></div>
-        </div>
-
-        <div class="loading-sub" id="loadingOverlaySub">Please wait</div>
       </div>
-    </div>
+    </main>
+  </div>
 
-    <!-- Toast backdrop (blur + click-blocker) -->
-    <div id="toastBackdrop" class="toast-backdrop" hidden></div>
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="loading-overlay" hidden>
+    <div class="loading-backdrop"></div>
 
-    <!-- Global toast -->
-    <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true" hidden>
-      <div class="toast-row">
-        <span class="toast-icon" aria-hidden="true"></span>
-        <span id="toastText"></span>
+    <div class="loading-card" role="status" aria-live="polite" aria-atomic="true">
+      <div class="loading-title" id="loadingOverlayText">Loading…</div>
+
+      <div class="loading-bar">
+        <div class="loading-bar__inner"></div>
       </div>
 
-      <div class="toast-progress" aria-hidden="true">
-        <div class="toast-progress__inner"></div>
+      <div class="loading-sub" id="loadingOverlaySub">Please wait</div>
+    </div>
+  </div>
+
+  <!-- Toast backdrop (blur + click-blocker) -->
+  <div id="toastBackdrop" class="toast-backdrop" hidden></div>
+
+  <!-- Global toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true" hidden>
+    <div class="toast-row">
+      <span class="toast-icon" aria-hidden="true"></span>
+      <span id="toastText"></span>
+    </div>
+
+    <div class="toast-progress" aria-hidden="true">
+      <div class="toast-progress__inner"></div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay (Trip Edit) -->
+  <div id="loadingOverlay" class="loading-overlay" hidden>
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Loading Trip...</div>
+      <div class="loading-bar">
+        <div class="loading-bar__inner"></div>
       </div>
     </div>
+  </div>
 
-    <!-- Loading Overlay (Trip Edit) -->
-    <div id="loadingOverlay" class="loading-overlay" hidden>
-      <div class="loading-content">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">Loading Trip...</div>
-        <div class="loading-bar">
-          <div class="loading-bar__inner"></div>
-        </div>
+  <!-- Itinerary Modal -->
+  <div id="itineraryModal" class="modal modal-itinerary" hidden>
+    <div class="modal-backdrop" data-close></div>
+
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="Trip itinerary">
+      <div class="modal-head">
+        <h2 class="section-title">Trip Itinerary</h2>
+      </div>
+
+      <div class="modal-body">
+        <textarea id="itineraryModalField" placeholder=""></textarea>
+      </div>
+
+      <div class="modal-foot">
+        <button id="itineraryCopyBtn" class="btn btn-compact" type="button">Copy</button>
+        <button id="itinerarySaveBtn" class="btn btn-compact" type="button" aria-label="Close">Close</button>
       </div>
     </div>
+  </div>
 
-    <!-- Itinerary Modal -->
-    <div id="itineraryModal" class="modal modal-itinerary" hidden>
-      <div class="modal-backdrop" data-close></div>
+  <!-- Trip Details Modal (read-only) -->
+  <div id="tripDetailsModal" class="modal modal-trip-details" hidden>
+    <div class="modal-backdrop" data-close-details></div>
 
-      <div class="modal-card" role="dialog" aria-modal="true" aria-label="Trip itinerary">
-        <div class="modal-head">
-          <h2 class="section-title">Trip Itinerary</h2>
-        </div>
+    <div class="modal-card modal-card-details" role="dialog" aria-modal="true" aria-label="Trip details">
+      <div class="modal-head">
+        <h2 class="section-title">Trip Details</h2>
+      </div>
 
-        <div class="modal-body">
-          <textarea id="itineraryModalField" placeholder=""></textarea>
-        </div>
+      <div class="modal-body">
+        <div id="tripDetailsBody" class="trip-details-content"></div>
+      </div>
 
-        <div class="modal-foot">
-          <button id="itineraryCopyBtn" class="btn btn-compact" type="button">Copy</button>
-          <button id="itinerarySaveBtn" class="btn btn-compact" type="button" aria-label="Close">Close</button>
-        </div>
+      <div class="modal-foot">
+        <button class="btn btn-compact" type="button" data-close-details aria-label="Close">Close</button>
       </div>
     </div>
+  </div>
 
-    <!-- Trip Details Modal (read-only) -->
-    <div id="tripDetailsModal" class="modal modal-trip-details" hidden>
-      <div class="modal-backdrop" data-close-details></div>
+  <!-- Next Day Report Modal -->
+  <div id="nextDayReportModal" class="modal modal-trip-details" hidden>
+    <div class="modal-backdrop" id="closeNextDayReportBackdrop"></div>
 
-      <div class="modal-card modal-card-details" role="dialog" aria-modal="true" aria-label="Trip details">
-        <div class="modal-head">
-          <h2 class="section-title">Trip Details</h2>
-        </div>
+    <div class="modal-card modal-card-details" role="dialog" aria-modal="true" aria-label="Next Day Report">
+      <div class="modal-head"
+        style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <h2 class="section-title" style="margin: 0;">Weekly Maintenance Report</h2>
+        <input type="date" id="nextDayReportDateInput" class="form-control" style="width: auto;"
+          aria-label="Select Date for Report" />
+      </div>
 
-        <div class="modal-body">
-          <div id="tripDetailsBody" class="trip-details-content"></div>
-        </div>
+      <div class="modal-body">
+        <div id="nextDayReportBody" class="trip-details-content"></div>
+      </div>
 
-        <div class="modal-foot">
-          <button class="btn btn-compact" type="button" data-close-details aria-label="Close">Close</button>
-        </div>
+      <div class="modal-foot">
+        <button id="printNextDayReportBtn" class="btn btn-compact" type="button">Print</button>
+        <button id="closeNextDayReportBtn" class="btn btn-compact" type="button" aria-label="Close">Close</button>
       </div>
     </div>
+  </div>
 
-    <div id="printRoot" class="is-hidden"></div>
+  <div id="printRoot" class="is-hidden"></div>
 
-    <!-- Context Menu -->
-    <div id="tripContextMenu" class="context-menu" hidden>
-      <div class="context-header" id="ctxHeader">Trip Actions</div>
-      <button id="ctxEditBtn" class="context-item">
-        <span class="material-symbols-outlined">edit</span>
-        <span>Edit Trip</span>
-      </button>
-      <button id="ctxViewBtn" class="context-item">
-        <span class="material-symbols-outlined">visibility</span>
-        <span>View Details</span>
-      </button>
-    </div>
+  <!-- Context Menu -->
+  <div id="tripContextMenu" class="context-menu" hidden>
+    <div class="context-header" id="ctxHeader">Trip Actions</div>
+    <button id="ctxEditBtn" class="context-item">
+      <span class="material-symbols-outlined">edit</span>
+      <span>Edit Trip</span>
+    </button>
+    <button id="ctxViewBtn" class="context-item">
+      <span class="material-symbols-outlined">visibility</span>
+      <span>View Details</span>
+    </button>
+  </div>
 
-    <!-- Empty Cell Context Menu -->
-    <div id="cellContextMenu" class="context-menu" hidden>
-      <div class="context-header">New Entry</div>
-      <button id="ctxNewTripBtn" class="context-item">
-        <span class="material-symbols-outlined">add</span>
-        <span>New Trip</span>
-      </button>
-    </div>
+  <!-- Empty Cell Context Menu -->
+  <div id="cellContextMenu" class="context-menu" hidden>
+    <div class="context-header">New Entry</div>
+    <button id="ctxNewTripBtn" class="context-item">
+      <span class="material-symbols-outlined">add</span>
+      <span>New Trip</span>
+    </button>
+  </div>
 
-    <script src="app.js?v=57" defer></script>
-  </body>
+  <script src="app.js?v=57" defer></script>
+</body>
+
 </html>

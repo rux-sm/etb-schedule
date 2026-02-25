@@ -80,12 +80,12 @@ const CACHE = {
         expiry: Date.now() + ttlMs,
       };
       localStorage.setItem(key, JSON.stringify(payload));
-    } catch {}
+    } catch { }
   },
   remove(key) {
     try {
       localStorage.removeItem(key);
-    } catch {}
+    } catch { }
   },
   clearAll() {
     try {
@@ -97,7 +97,7 @@ const CACHE = {
           localStorage.removeItem(k);
         }
       });
-    } catch {}
+    } catch { }
   },
 };
 
@@ -183,6 +183,15 @@ const dom = {
   printBtn2Full: $("printBtn2Full"),
   weekStartToggle: $("weekStartToggle"),
   refreshBtn2: $("refreshBtn2"),
+  nextDayReportBtn: $("nextDayReportBtn"),
+
+  // Next Day Report Modal
+  nextDayReportModal: $("nextDayReportModal"),
+  nextDayReportBody: $("nextDayReportBody"),
+  closeNextDayReportBtn: $("closeNextDayReportBtn"),
+  closeNextDayReportBackdrop: $("closeNextDayReportBackdrop"),
+  printNextDayReportBtn: $("printNextDayReportBtn"),
+  nextDayReportDateInput: $("nextDayReportDateInput"),
 
   // Context Menu
   ctxMenu: $("tripContextMenu"),
@@ -281,7 +290,7 @@ function clamp(n, min, max) {
 function safeUUID() {
   try {
     return crypto.randomUUID();
-  } catch {}
+  } catch { }
   return `tk_${Date.now()}_${Math.floor(Math.random() * 1e9)}`;
 }
 
@@ -1150,7 +1159,7 @@ function applyWeekStart(isMonday) {
 
   try {
     localStorage.setItem("weekStartMonday", state.weekStartsOnMonday ? "1" : "0");
-  } catch {}
+  } catch { }
 
   syncWeekStartUI();
 
@@ -1344,7 +1353,7 @@ function prefetchAdjacentWeeks() {
 
     // ✅ FIX: Calculate Monday for the adjacent week
     const { notesKey } = getWeekRange(targetDate); // We will update getWeekRange to support a date arg
-    fetchWeekDataCached(start, end, notesKey).catch(() => {});
+    fetchWeekDataCached(start, end, notesKey).catch(() => { });
   }
 }
 
@@ -4742,6 +4751,12 @@ function wireSettingsMenu() {
     dom.settingsMenu.hidden = true;
   });
 
+  // Next Day Maintenance Report
+  dom.nextDayReportBtn?.addEventListener("click", () => {
+    dom.settingsMenu.hidden = true;
+    generateNextDayReport();
+  });
+
   // 3. Print (Legal, 2 pages)
   dom.printBtn2?.addEventListener("click", () => {
     dom.settingsMenu.hidden = true;
@@ -4792,7 +4807,401 @@ function wireSettingsMenu() {
 }
 
 // ======================================================
-// 38) BOOT
+// 38) WEEKLY MAINTENANCE REPORT
+// ======================================================
+function generateNextDayReport(selectedDate = null) {
+  let startD = selectedDate ? new Date(selectedDate) : new Date(state.currentDate || new Date());
+
+  if (!selectedDate) {
+    if (state.weekStartsMonday) {
+      if (startD.getDay() === 0) startD = addDays(startD, -6);
+      else startD = addDays(startD, 1 - startD.getDay());
+    } else {
+      startD = addDays(startD, -startD.getDay());
+    }
+  }
+
+  const startYMD = ymd(startD);
+  if (dom.nextDayReportDateInput && dom.nextDayReportDateInput.value !== startYMD) {
+    dom.nextDayReportDateInput.value = startYMD;
+  }
+
+  let fullHtml = `<div style="padding-bottom: 20px;">`;
+
+  // Loop 7 days
+  for (let i = 0; i < 7; i++) {
+    const today = addDays(startD, i);
+    const tomorrow = addDays(today, 1);
+    const todayYMD = ymd(today);
+    const tomorrowYMD = ymd(tomorrow);
+
+    // Find all buses that have a trip departing tomorrow
+    const busesDepartingTomorrow = new Set();
+    const tripsDepartingTomorrow = state.trips.filter(t => t.departureDate === tomorrowYMD);
+
+    tripsDepartingTomorrow.forEach(trip => {
+      const assigns = state.assignmentsByTripKey[trip.tripKey] || [];
+      assigns.forEach(a => {
+        const busId = String(a.busId || "").trim();
+        if (busId && busId !== "None" && busId !== "WAITING_LIST") {
+          busesDepartingTomorrow.add(busId);
+        }
+      });
+    });
+
+    // For these buses, find when they arrive today
+    const reportData = [];
+    const priorityBusesInfo = [];
+
+    busesDepartingTomorrow.forEach(busId => {
+      // Find trips for this bus arriving today
+      let arrivalTimeToday = "Already in yard / No arrival today";
+      let departureTimeTomorrow = "Unknown";
+      let maintenanceWindow = "Flexible (Bus is in yard)";
+
+      // Find departure time tomorrow
+      const tomorrowTrip = tripsDepartingTomorrow.find(t => {
+        const assigns = state.assignmentsByTripKey[t.tripKey] || [];
+        return assigns.some(a => String(a.busId).trim() === busId);
+      });
+
+      if (tomorrowTrip && tomorrowTrip.departureTime) {
+        departureTimeTomorrow = formatTime12(tomorrowTrip.departureTime);
+      }
+
+      // Find arrival time today
+      const tripsArrivingToday = state.trips.filter(t => {
+        const arrDate = t.arrivalDate || t.departureDate;
+        if (arrDate !== todayYMD) return false;
+        const assigns = state.assignmentsByTripKey[t.tripKey] || [];
+        return assigns.some(a => String(a.busId).trim() === busId);
+      });
+
+      // Sort by arrival time descending
+      tripsArrivingToday.sort((a, b) => {
+        const timeA = normalizeTime(a.arrivalTime) || "00:00";
+        const timeB = normalizeTime(b.arrivalTime) || "00:00";
+        return timeB.localeCompare(timeA);
+      });
+
+      if (tripsArrivingToday.length > 0) {
+        const lastTripToday = tripsArrivingToday[0];
+        if (lastTripToday.arrivalTime) {
+          arrivalTimeToday = formatTime12(lastTripToday.arrivalTime);
+
+          let arrHour = 0;
+          const normedArr = normalizeTime(lastTripToday.arrivalTime);
+          if (normedArr) {
+            arrHour = parseInt(normedArr.split(':')[0], 10);
+          }
+
+          if (arrHour < 8) {
+            maintenanceWindow = "8:00 AM - 4:00 PM";
+          } else if (arrHour >= 8 && arrHour <= 16) {
+            maintenanceWindow = "4:00 PM - 12:00 AM (Midnight)";
+          } else {
+            maintenanceWindow = "Night Shift (After Arrival)";
+          }
+        }
+
+        let arrTimeNum = 0;
+        if (lastTripToday.arrivalTime) {
+          const normedArr = normalizeTime(lastTripToday.arrivalTime);
+          if (normedArr) {
+            arrTimeNum = parseInt(normedArr.split(':')[0], 10) + parseInt(normedArr.split(':')[1], 10) / 60;
+          }
+        }
+
+        let depTimeNum = 32; // Default 8 AM tomorrow
+        if (tomorrowTrip && tomorrowTrip.departureTime) {
+          const normedDep = normalizeTime(tomorrowTrip.departureTime);
+          if (normedDep) {
+            depTimeNum = 24 + parseInt(normedDep.split(':')[0], 10) + parseInt(normedDep.split(':')[1], 10) / 60;
+          }
+        }
+        priorityBusesInfo.push({ a: arrTimeNum, d: depTimeNum });
+
+        reportData.push({
+          busId,
+          arrivalTimeToday,
+          departureTimeTomorrow,
+          maintenanceWindow,
+          priority: tripsArrivingToday.length > 0 ? 1 : 2 // 1 High Priority (arriving today), 2 Low Priority (in yard)
+        });
+      } else {
+        reportData.push({
+          busId,
+          arrivalTimeToday,
+          departureTimeTomorrow,
+          maintenanceWindow,
+          priority: 2 // Low Priority (in yard)
+        });
+      }
+    });
+
+    // Sort by Priority first (1 then 2), then by bus number
+    reportData.sort((a, b) => {
+      if (a.priority !== b.priority) return a.priority - b.priority;
+      return parseInt(a.busId) - parseInt(b.busId);
+    });
+
+    // Calculate best 8-hour shift
+    let shiftDisplay = "";
+    if (priorityBusesInfo.length > 0) {
+      let bestShift = null;
+      for (let s = 12; s <= 32; s += 0.5) {
+        let valid = true;
+        for (const b of priorityBusesInfo) {
+          const overlap = Math.min(s + 8, b.d) - Math.max(s, b.a);
+          if (overlap < 2) {
+            valid = false;
+            break;
+          }
+        }
+        if (valid) {
+          bestShift = s;
+          break; // Earliest valid 8-hour window
+        }
+      }
+
+      if (bestShift !== null) {
+        const formatTimeNum = (num) => {
+          let isTmrw = num >= 24;
+          let h = Math.floor(num) % 24;
+          let m = Math.round((num - Math.floor(num)) * 60);
+          let ampm = h >= 12 ? 'PM' : 'AM';
+          h = h % 12; if (h === 0) h = 12;
+          let ms = String(m).padStart(2, '0');
+          let dayStr = isTmrw ? " (Next Day)" : "";
+          if (isTmrw && h === 12 && ampm === 'AM') dayStr = ""; // it's just midnight
+          return `${h}:${ms} ${ampm}${dayStr}`;
+        };
+
+        shiftDisplay = `<div style="background: var(--card-bg, #1a1a1a); padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid var(--primary-color, #0284c7);">
+        <strong style="display: block; font-size: 1.05rem; margin-bottom: 4px; color: var(--text-color, #fff);">Optimal 8-Hour Maintenance Shift: <span style="color: var(--primary-color, #38bdf8);">${formatTimeNum(bestShift)} - ${formatTimeNum(bestShift + 8)}</span></strong>
+        <span style="font-size: 0.85em; color: var(--text-muted, #9ca3af);">This window guarantees at least 2 hours of available yard time for every priority bus.</span>
+      </div>`;
+      } else {
+        shiftDisplay = `<div style="background: var(--card-bg, #1a1a1a); padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid var(--danger-color, #dc2626);">
+        <strong style="display: block; font-size: 1.05rem; margin-bottom: 4px; color: var(--danger-color, #dc2626);">No single 8-hour shift possible</strong>
+        <span style="font-size: 0.85em; color: var(--text-muted, #9ca3af);">Cannot find a single 8-hour window that gives 2+ hours to all priority buses. You may need staggered shifts.</span>
+      </div>`;
+      }
+    } else if (reportData.length > 0) {
+      shiftDisplay = `<div style="background: var(--card-bg, #1a1a1a); padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid #10b981;">
+        <strong style="display: block; font-size: 1.05rem; margin-bottom: 4px; color: #10b981;">All Buses in Yard (Flexible)</strong>
+        <span style="font-size: 0.85em; color: var(--text-muted, #9ca3af);">No priority arrivals. Maintenance shifts can be scheduled anytime.</span>
+      </div>`;
+    }
+
+    // Build HTML for loop iteration
+    const dayName = today.toLocaleDateString('en-US', { weekday: 'long' });
+    let dayHtml = `<div class="weekly-report-day" style="margin-bottom: 40px; border-bottom: 2px dashed var(--border-color); padding-bottom: 20px;">
+      <h3 style="margin-top: 0; margin-bottom: 12px; color: var(--text-color, #fff); font-size: 1.25rem;">
+        ${dayName} Maintenance Schedule
+        <span style="color: var(--text-muted, #9ca3af); font-size: 0.75em; font-weight: normal; display: block; margin-top: 4px;">
+          (Handling arrivals from ${formatDateForToast(todayYMD)} for departures on ${formatDateForToast(tomorrowYMD)})
+        </span>
+      </h3>`;
+
+    dayHtml += shiftDisplay;
+    if (reportData.length === 0) {
+      dayHtml += `<p style="color: var(--text-muted);">No buses found that depart tomorrow (${tomorrowYMD}).</p>`;
+    } else {
+      dayHtml += `<table class="next-day-report-table" style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+        <thead>
+          <tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
+            <th style="padding: 8px; color: var(--text-muted);">Bus</th>
+            <th style="padding: 8px; color: var(--text-muted);">Status</th>
+            <th style="padding: 8px; color: var(--text-muted);">Depart Tomorrow</th>
+            <th style="padding: 8px; color: var(--text-muted);">Suggested Window</th>
+          </tr>
+        </thead>
+        <tbody>`;
+      reportData.forEach(row => {
+        const priorityLabel = row.priority === 1 ?
+          `<span style="color: #dc2626; font-weight: bold; font-size: 0.85em; display: inline-block; background: #fef2f2; padding: 2px 6px; border-radius: 4px; border: 1px solid #fecaca;">PRIORITY</span>` :
+          `<span style="color: #16a34a; font-size: 0.85em; display: inline-block; background: #f0fdf4; padding: 2px 6px; border-radius: 4px; border: 1px solid #bbf7d0;">IN YARD</span>`;
+
+        dayHtml += `<tr style="border-bottom: 1px solid var(--row-border, rgba(0,0,0,0.05)); hover: background-color: rgba(0,0,0,0.02);">
+          <td style="padding: 10px 8px;"><strong>${row.busId}</strong><br/>${priorityLabel}</td>
+          <td style="padding: 10px 8px; line-height: 1.3;">${row.priority === 1 ? `Arrives Today: <br/><strong>${row.arrivalTimeToday}</strong>` : `Already in yard`}</td>
+          <td style="padding: 10px 8px;"><strong>${row.departureTimeTomorrow}</strong></td>
+          <td style="padding: 10px 8px; color: var(--primary-color, #0284c7); font-weight: 500;">${row.maintenanceWindow}</td>
+        </tr>`;
+      });
+      dayHtml += `</tbody></table>`;
+    }
+
+    dayHtml += `</div>`;
+    fullHtml += dayHtml;
+  }
+
+  fullHtml += `</div>`;
+  dom.nextDayReportBody.innerHTML = fullHtml;
+  dom.nextDayReportModal.hidden = false;
+}
+
+// Close and Print handlers
+if (dom.nextDayReportDateInput) {
+  dom.nextDayReportDateInput.addEventListener("change", (e) => {
+    const d = parseYMD(e.target.value);
+    if (d) {
+      generateNextDayReport(d);
+    }
+  });
+}
+if (dom.closeNextDayReportBtn) {
+  dom.closeNextDayReportBtn.addEventListener("click", () => {
+    dom.nextDayReportModal.hidden = true;
+  });
+}
+if (dom.closeNextDayReportBackdrop) {
+  dom.closeNextDayReportBackdrop.addEventListener("click", () => {
+    dom.nextDayReportModal.hidden = true;
+  });
+}
+if (dom.printNextDayReportBtn) {
+  dom.printNextDayReportBtn.addEventListener("click", () => {
+    const printWindow = window.open('', '', 'height=800,width=1000');
+    printWindow.document.write('<html><head><title>Weekly Maintenance Report</title>');
+
+    // Inject custom print styles tailored for fitting 7 days into 1 page
+    printWindow.document.write(`
+      <style>
+        @page { size: landscape; margin: 0.25in; }
+        body { 
+          font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+          padding: 0; 
+          margin: 0;
+          font-size: 9px; /* Reduced for better fit in landscape */
+          color: #222; 
+          line-height: 1.25;
+        }
+        
+        /* Clean Header */
+        h2 { 
+          text-align: center; 
+          font-size: 16px; 
+          margin: 0 0 12px 0;
+          text-transform: uppercase;
+          letter-spacing: 1.5px;
+          border-bottom: 2px solid #222;
+          padding-bottom: 6px;
+          color: #111;
+        }
+        
+        .print-wrapper { 
+          columns: 3; 
+          column-gap: 20px; 
+        }
+        
+        /* Day Blocks */
+        .print-wrapper > div.weekly-report-day {
+          break-inside: avoid;
+          page-break-inside: avoid;
+          margin-bottom: 12px !important;
+          padding-bottom: 8px !important;
+          border-bottom: 1px dotted #ccc !important;
+        }
+        
+        /* Date Headers */
+        h3 { 
+          font-size: 13px !important; 
+          margin: 0 0 6px 0 !important; 
+          color: #111 !important; 
+          font-weight: 600 !important;
+        }
+        h3 span { 
+          color: #666 !important; 
+          font-weight: 400 !important; 
+          font-size: 10px !important;
+        }
+        
+        /* Shift Alert Box */
+        div[style*="#1a1a1a"] {
+          background: #fdfdfd !important;
+          border: 1px solid #e0e0e0 !important;
+          border-left: 3px solid #0284c7 !important; /* Keep a subtle blue left border */
+          padding: 8px 12px !important;
+          box-shadow: none !important;
+          border-radius: 4px !important;
+          margin-bottom: 8px !important;
+        }
+        
+        /* Flexible Shift Alert */
+        div[style*="#10b981"] {
+          border-left-color: #10b981 !important; 
+        }
+        
+        /* Table Styling */
+        table { 
+          width: 100%; 
+          border-collapse: collapse; 
+          margin-top: 6px !important; 
+          font-size: 9.5px !important; /* Slightly smaller to fit rows gracefully */
+        }
+        th, td { 
+          padding: 5px 4px !important; 
+          border-bottom: 1px solid #f0f0f0 !important; 
+          text-align: left; 
+          color: #222 !important;
+          vertical-align: top;
+        }
+        th { 
+          color: #444 !important; 
+          font-weight: 700 !important; 
+          border-bottom: 1px solid #999 !important; 
+          text-transform: capitalize;
+        }
+        
+        td strong { 
+          color: #111 !important; 
+          font-weight: 600;
+        }
+        
+        /* Override dark mode text */
+        strong[style*="#fff"] { color: #111 !important; font-size: 12px !important; }
+        strong[style*="#dc2626"] { color: #b91c1c !important; font-size: 12px !important; }
+        span[style*="#9ca3af"] { color: #555 !important; font-size: 9px !important; display: block; margin-top: 2px;}
+        span[style*="#38bdf8"] { color: #0369a1 !important; }
+        
+        /* Status Badges */
+        /* Make them look like clean print labels instead of web buttons */
+        td span[style*="border-radius: 4px"] {
+          background: transparent !important;
+          border: none !important;
+          padding: 0 !important;
+          font-size: 8px !important;
+          font-weight: 700 !important;
+          letter-spacing: 0.5px;
+          display: block;
+          margin-top: 2px;
+        }
+        
+        p { margin: 4px 0 !important; color: #444 !important; }
+      </style>
+    `);
+
+    printWindow.document.write('</head><body>');
+    printWindow.document.write('<h2>Weekly Maintenance Report</h2>');
+    printWindow.document.write('<div class="print-wrapper">');
+    printWindow.document.write(dom.nextDayReportBody.innerHTML);
+    printWindow.document.write('</div>');
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.focus();
+
+    // setTimeout to allow rendering before the print dialog freezes the thread
+    setTimeout(() => {
+      printWindow.print();
+      printWindow.close();
+    }, 250);
+  });
+}
+
+// ======================================================
+// 39) BOOT
 // ======================================================
 (function boot() {
   try {
@@ -4801,7 +5210,7 @@ function wireSettingsMenu() {
 .week-table-container.is-loading-bars .trip-bar { opacity: 0.18; pointer-events: none; }
 `;
     document.head.appendChild(style);
-  } catch {}
+  } catch { }
 
   setSidePanelMode("off");
   enforceDesktopEditing();
