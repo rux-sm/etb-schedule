@@ -2619,7 +2619,7 @@ th.day-today .day-date {
   font-weight: 600;
   line-height: 1;
   /* Force 1 to prevent vertical drift in flex circle */
-  animation: today-pulse 0.25s infinite alternate ease-in-out;
+  animation: today-pulse 0.50s infinite alternate ease-in-out;
 }
 
 @keyframes today-pulse {
