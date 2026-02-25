@@ -3667,130 +3667,91 @@ function buildPrintScheduleFullLetter() {
   const printRoot = document.getElementById("printRoot");
   if (!printRoot) return;
 
-  const weekTable = document.querySelector(".week-table");
-  if (!weekTable) return;
-
   const weekTitle = document.getElementById("headerWeek")?.textContent || "Schedule";
+  const dates = getWeekDates();
+  const dayIds = getDayIds();
 
-  function repositionBarsForPrint(table, col) {
-    if (!col) return;
-    const body = table.querySelector("tbody:not([hidden])");
-    if (!body) return;
-    const total = Math.round(col.total);
-    body.querySelectorAll(".row-bars").forEach((bars) => {
-      bars.style.width = `${total}px`;
-      bars.querySelectorAll(".trip-bar").forEach((bar) => {
-        const sidx = Number(bar.dataset.sidx);
-        const eidx = Number(bar.dataset.eidx);
-        if (!Number.isFinite(sidx) || !Number.isFinite(eidx)) return;
-        positionBarWithinOverlay(bar, bars, col, sidx, eidx, { insetL: 0, insetR: 0 });
-        const left = bar.style.left;
-        const w = bar.style.width;
-        if (left) bar.style.left = `${Math.round(parseFloat(left))}px`;
-        if (w) bar.style.width = `${Math.round(parseFloat(w))}px`;
+  // Create the fresh static tabular HTML based on State
+  let html = `
+    <div class="print-page print-page-letter">
+      <div class="print-header">
+        <h2 class="print-title">${escHtml(weekTitle)}</h2>
+      </div>
+      <table class="print-data-table">
+        <thead>
+          <tr>
+            <th class="col-bus">Bus</th>
+            ${dates.map((d, i) => {
+    const dObj = parseYMD(d);
+    const dayStr = dObj ? dObj.toLocaleDateString('en-US', { weekday: 'short' }) : dayIds[i];
+    const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
+    return `<th class="col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
+  }).join("")}
+          </tr>
+        </thead>
+        <tbody>
+  `;
+
+  const buses = state.busesList || [];
+  for (const bus of buses) {
+    const busId = String(bus.busId || bus.id || "").trim();
+    if (!busId || busId === "None" || busId === "WAITING_LIST") continue;
+
+    const busTrips = state.trips.filter(t => {
+      const a = state.assignmentsByTripKey[t.tripKey] || {};
+      return String(a.busId).trim() === busId;
+    });
+
+    html += `<tr>`;
+    html += `<td class="bus-id-cell"><strong>${escHtml(busId)}</strong></td>`;
+
+    let skipDays = 0;
+    for (let i = 0; i < 7; i++) {
+      if (skipDays > 0) {
+        skipDays--;
+        continue;
+      }
+
+      const currentYMD = dates[i];
+      const tripsToday = busTrips.filter(t => {
+        const start = ymd(parseYMD(t.departureDate));
+        const end = ymd(parseYMD(t.arrivalDate) || parseYMD(t.departureDate));
+        return currentYMD >= start && currentYMD <= end;
       });
-    });
-  }
 
-  function computePrintScale() {
-    const card = printRoot.querySelector(".print-card");
-    if (!card) return 1;
-    const contentW = card.scrollWidth || card.offsetWidth;
-    const contentH = card.scrollHeight || card.offsetHeight;
-    // Letter printable area (approx 10in x 7.5in) -> 960x720
-    const letterPrintableW = 960;
-    const letterPrintableH = 720;
-    const scaleW = contentW > 0 ? letterPrintableW / contentW : 1;
-    const scaleH = contentH > 0 ? letterPrintableH / contentH : 1;
-    const scale = Math.min(1, scaleW, scaleH) * 0.98;
-    return Math.max(0.4, Math.min(1, scale));
-  }
+      if (tripsToday.length === 0) {
+        html += `<td></td>`;
+      } else {
+        tripsToday.sort((a, b) => (a.departureTime || "").localeCompare(b.departureTime || ""));
+        const t = tripsToday[0];
+        const a = state.assignmentsByTripKey[t.tripKey] || {};
 
-  function makeFullTable() {
-    const clone = weekTable.cloneNode(true);
-    clone.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
-
-    const body = clone.querySelector("tbody:not([hidden])");
-    if (!body) return null;
-
-    clone.querySelectorAll("tbody[hidden]").forEach((el) => el.remove());
-
-    // Add 2 empty note rows under each bus row
-    const rows = Array.from(body.querySelectorAll("tr"));
-    rows.forEach((tr) => {
-      for (let j = 0; j < 2; j++) {
-        const notesRow = document.createElement("tr");
-        notesRow.className = "notes-row";
-        const tdEmpty = document.createElement("td");
-        tdEmpty.className = "bus-id-cell";
-        notesRow.appendChild(tdEmpty);
-        for (let i = 0; i < 7; i++) {
-          const td = document.createElement("td");
-          td.className = "day-cell";
-          notesRow.appendChild(td);
+        const tEndYMD = ymd(parseYMD(t.arrivalDate) || parseYMD(t.departureDate));
+        let colspan = 1;
+        for (let j = i + 1; j < 7; j++) {
+          if (dates[j] <= tEndYMD) colspan++;
+          else break;
         }
-        tr.parentNode.insertBefore(notesRow, tr.nextSibling);
-      }
-    });
 
-    const page = document.createElement("div");
-    page.className = "print-page";
-    const card = document.createElement("div");
-    card.className = "print-card";
+        html += `<td colspan="${colspan}" class="trip-cell">
+          <div class="trip-content">
+            <div class="trip-dest-cust"><strong>${escHtml(t.destination)}</strong> - ${escHtml(t.customer)}</div>
+            <div class="trip-times">⏱ ${normalizeTime(t.departureTime)} - ${normalizeTime(t.arrivalTime)}</div>
+            <div class="trip-drivers">👤 D1: ${escHtml(a.driver1 || '—')} | D2: ${escHtml(a.driver2 || '—')}</div>
+            <div class="trip-notes">📝 ${escHtml(t.notes || '')}</div>
+          </div>
+        </td>`;
 
-    const agendaHeader = document.querySelector(".agenda-header");
-    const headerClone = agendaHeader ? agendaHeader.cloneNode(true) : null;
-    if (headerClone) {
-      headerClone.classList.add("print-header");
-      headerClone
-        .querySelectorAll(".nav-controls, .date-input-overlay, input.weekpicker, .weekpicker-trigger-wrap")
-        .forEach((el) => el.remove());
-      const topbarLogo = document.querySelector(".logo-wrap");
-      const headerInner = headerClone.querySelector(".agenda-header-inner");
-      if (topbarLogo && headerInner) {
-        const logoClone = topbarLogo.cloneNode(true);
-        logoClone.classList.add("print-header-logo");
-        headerInner.insertBefore(logoClone, headerInner.firstChild);
+        skipDays = colspan - 1;
       }
-      card.appendChild(headerClone);
-    } else {
-      const title = document.createElement("div");
-      title.className = "print-title";
-      title.textContent = weekTitle;
-      card.appendChild(title);
     }
-    clone.classList.add("print-table");
-    card.appendChild(clone);
-    page.appendChild(card);
-    return page;
+    html += `</tr>`;
   }
 
-  printRoot.innerHTML = "";
+  html += `</tbody></table></div>`;
+
+  printRoot.innerHTML = html;
   printRoot.classList.add("print-mode-letter-full");
-  printRoot.appendChild(makeFullTable());
-
-  // Fixed metrics matched to the CSS widths
-  const printCardWidth = 1400;
-  const busColWidth = 52;
-  const dayColTotal = 1400 - busColWidth;
-  const dayColWidth = dayColTotal / 7;
-  const colMetrics = {
-    starts: Array.from({ length: 7 }, (_, i) => i * dayColWidth),
-    widths: Array(7).fill(dayColWidth),
-    total: dayColWidth * 7,
-  };
-
-  printRoot.classList.remove("is-hidden");
-  printRoot.style.cssText = `position:absolute;left:-9999px;visibility:hidden;width:${printCardWidth}px;`;
-
-  // Force layout recalculation
-  void printRoot.offsetHeight;
-
-  printRoot.querySelectorAll(".print-table").forEach((t) => repositionBarsForPrint(t, colMetrics));
-  printRoot.style.setProperty("--print-scale", String(computePrintScale()));
-
-  printRoot.classList.add("is-hidden");
-  printRoot.style.cssText = "";
 }
 
 function clearPrintRoot() {
@@ -5069,64 +5030,71 @@ if (dom.printNextDayReportBtn) {
     // Inject custom print styles tailored for fitting 7 days into 1 page
     printWindow.document.write(`
       <style>
-        @page { size: landscape; margin: 0.25in; }
+        @page { size: portrait; margin: 0.5in; }
         body { 
           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
           padding: 0; 
           margin: 0;
-          font-size: 9px; /* Reduced for better fit in landscape */
+          font-size: 11px;
           color: #222; 
-          line-height: 1.25;
+          line-height: 1.3;
         }
         
         /* Clean Header */
         h2 { 
           text-align: center; 
-          font-size: 16px; 
-          margin: 0 0 12px 0;
+          font-size: 18px; 
+          margin: 0 0 16px 0;
           text-transform: uppercase;
-          letter-spacing: 1.5px;
+          letter-spacing: 1px;
           border-bottom: 2px solid #222;
           padding-bottom: 6px;
           color: #111;
         }
         
-        .print-wrapper { 
-          columns: 3; 
-          column-gap: 20px; 
+        .print-wrapper {
+          display: block;
+          width: 100%;
         }
         
         /* Day Blocks */
-        .print-wrapper > div.weekly-report-day {
+        .weekly-report-day {
           break-inside: avoid;
           page-break-inside: avoid;
-          margin-bottom: 12px !important;
-          padding-bottom: 8px !important;
-          border-bottom: 1px dotted #ccc !important;
+          margin-bottom: 24px !important;
+          padding-bottom: 12px !important;
+          border-bottom: 1px dashed #ccc !important;
+        }
+        
+        .weekly-report-day:last-child {
+          border-bottom: none !important;
         }
         
         /* Date Headers */
         h3 { 
-          font-size: 13px !important; 
-          margin: 0 0 6px 0 !important; 
+          font-size: 14px !important; 
+          margin: 0 0 8px 0 !important; 
           color: #111 !important; 
-          font-weight: 600 !important;
+          font-weight: 700 !important;
+          line-height: 1.2 !important;
         }
         h3 span { 
-          color: #666 !important; 
+          color: #555 !important; 
           font-weight: 400 !important; 
-          font-size: 10px !important;
+          font-size: 11px !important;
+          display: block;
+          margin-top: 2px !important;
         }
         
         /* Shift Alert Box */
         div[style*="#1a1a1a"] {
           background: #fdfdfd !important;
           border: 1px solid #e0e0e0 !important;
-          border-left: 3px solid #0284c7 !important; /* Keep a subtle blue left border */
+          border-left: 3px solid #0284c7 !important; 
           padding: 8px 12px !important;
           box-shadow: none !important;
           border-radius: 4px !important;
-          margin-bottom: 8px !important;
+          margin-bottom: 12px !important;
         }
         
         /* Flexible Shift Alert */
@@ -5138,11 +5106,13 @@ if (dom.printNextDayReportBtn) {
         table { 
           width: 100%; 
           border-collapse: collapse; 
-          margin-top: 6px !important; 
-          font-size: 9.5px !important; /* Slightly smaller to fit rows gracefully */
+          margin-top: 8px !important; 
+          font-size: 11px !important; 
+          table-layout: auto;
         }
+        
         th, td { 
-          padding: 5px 4px !important; 
+          padding: 6px 4px !important; 
           border-bottom: 1px solid #f0f0f0 !important; 
           text-align: left; 
           color: #222 !important;
@@ -5161,18 +5131,17 @@ if (dom.printNextDayReportBtn) {
         }
         
         /* Override dark mode text */
-        strong[style*="#fff"] { color: #111 !important; font-size: 12px !important; }
-        strong[style*="#dc2626"] { color: #b91c1c !important; font-size: 12px !important; }
-        span[style*="#9ca3af"] { color: #555 !important; font-size: 9px !important; display: block; margin-top: 2px;}
+        strong[style*="#fff"] { color: #111 !important; font-size: 11px !important; }
+        strong[style*="#dc2626"] { color: #b91c1c !important; font-size: 11px !important; }
+        span[style*="#9ca3af"] { color: #444 !important; font-size: 10px !important; display: block; margin-top: 2px;}
         span[style*="#38bdf8"] { color: #0369a1 !important; }
         
         /* Status Badges */
-        /* Make them look like clean print labels instead of web buttons */
         td span[style*="border-radius: 4px"] {
           background: transparent !important;
           border: none !important;
           padding: 0 !important;
-          font-size: 8px !important;
+          font-size: 9px !important;
           font-weight: 700 !important;
           letter-spacing: 0.5px;
           display: block;

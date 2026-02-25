@@ -418,7 +418,7 @@
   --tripbar-r4-row-height: 14px;
   --tripbar-r4-font-weight: 700;
   --tripbar-r4-line-height: 14px;
-  --tripbar-r4-letter-spacing: 0.02em;
+  --tripbar-r4-letter-spacing: -0.02em;
 
   /* R5: Status / Icons (icon-based, font-size via --tripbar-icon-size) */
   --tripbar-r5-font-size: 0.75rem;
@@ -2612,14 +2612,14 @@ th.day-today .day-date {
   justify-content: center;
   width: 24px;
   height: 24px;
-  border-radius: 50%;
+  border-radius: 4px;
   background: color-mix(in srgb, var(--accent) 66%, transparent);
   border: none;
   color: var(--text);
   font-weight: 600;
   line-height: 1;
   /* Force 1 to prevent vertical drift in flex circle */
-  animation: today-pulse 1.5s infinite alternate ease-in-out;
+  animation: today-pulse 0.25s infinite alternate ease-in-out;
 }
 
 @keyframes today-pulse {
@@ -2627,7 +2627,7 @@ th.day-today .day-date {
     box-shadow:
       0 0 0 0 color-mix(in srgb, var(--accent) 40%, transparent),
       0 0 4px color-mix(in srgb, var(--accent) 20%, transparent);
-    background: color-mix(in srgb, var(--accent) 66%, transparent);
+    background: color-mix(in srgb, var(--accent) 100%, transparent);
     filter: brightness(1) saturate(1);
   }
 
@@ -4483,6 +4483,98 @@ select.status-confirmed {
   .print-table .trip-bar .mini-badge,
   .print-table .trip-bar .bar-req-icon {
     -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
+  }
+}
+
+/* ==========================================================================
+   18) PRINT (FULL LETTER LAYOUT - NEW TABULAR VERSION)
+   ========================================================================== */
+@media print {
+  .print-page-letter {
+    width: 100%;
+    page-break-after: always;
+  }
+
+  .print-page-letter:last-child {
+    page-break-after: auto;
+  }
+
+  /* When using print-mode-letter-full, the page is Letter Landscape */
+  #printRoot.print-mode-letter-full {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-header {
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #ccc;
+  }
+
+  #printRoot.print-mode-letter-full .print-title {
+    font-size: 18pt;
+    font-weight: bold;
+    color: black;
+    margin: 0;
+  }
+
+  #printRoot.print-mode-letter-full .print-data-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    table-layout: fixed !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-data-table th,
+  #printRoot.print-mode-letter-full .print-data-table td {
+    border: 1px solid #ccc !important;
+    padding: 6px !important;
+    font-size: 9pt !important;
+    vertical-align: top !important;
+    color: black !important;
+    background: white !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-data-table th {
+    background-color: #f8f9fa !important;
+    font-weight: bold !important;
+    text-align: center !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-data-table .col-bus {
+    width: 60px !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-data-table tbody tr {
+    page-break-inside: avoid !important;
+  }
+
+  #printRoot.print-mode-letter-full .bus-id-cell strong {
+    font-size: 11pt !important;
+  }
+
+  #printRoot.print-mode-letter-full .trip-cell {
+    background-color: white !important;
+  }
+
+  #printRoot.print-mode-letter-full .trip-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  #printRoot.print-mode-letter-full .trip-dest-cust {
+    font-size: 9.5pt;
+  }
+
+  #printRoot.print-mode-letter-full .trip-times,
+  #printRoot.print-mode-letter-full .trip-drivers,
+  #printRoot.print-mode-letter-full .trip-notes {
+    font-size: 9pt;
   }
 }
