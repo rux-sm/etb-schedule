@@ -166,7 +166,7 @@
   --red: rgb(255 56 60);
   --orange: rgb(255 141 40);
   --yellow: rgb(255 204 0);
-  --pink: rgb(255 45 85);
+  --pink: rgb(242 60 181);
   --mint: rgb(0 200 179);
   --cyan: rgb(0 192 232);
   --indigo: rgb(97 85 245);
@@ -273,6 +273,7 @@
   /* disabled controls/text */
   --text-driver: var(--yellow);
   /* driver names */
+  --tripbar-text-notes: color-mix(in srgb, var(--pink), white 55%);
 
   /* ── Surface Colors ─────────────────────────────────────────── */
   --app-bg: rgb(0 0 0);
@@ -369,6 +370,12 @@
   --tripbar-height: 104px;
   --tripbar-border: 0px;
   --tripbar-radius: 0px;
+  --tripbar-bg-mix-color: black;
+  --tripbar-bg-mix-percent: 45%;
+  --tripbar-text-color: rgb(255 255 255);
+  --tripbar-text-shadow: 0 0 1px rgba(0, 0, 0, 0.9), 0 1px 2px rgba(0, 0, 0, 0.6);
+  --tripbar-text-shadow-accent: var(--tripbar-text-shadow);
+  --tripbar-text-driver: var(--yellow);
   --tripbar-gap: 0px;
   /* Vertical space between lanes */
   --tripbar-lane-step: 0px;
@@ -395,49 +402,56 @@
   /* ── Per-Row Typography ─────────────────────────────────────── */
 
   /* R1: Destination — line-height matches row height to prevent vertical drift */
-  --tripbar-r1-font-size: 0.75rem; /* 12px */
+  --tripbar-r1-font-size: 0.75rem;
+  /* 12px */
   --tripbar-r1-row-height: 14px;
   --tripbar-r1-font-weight: 600;
   --tripbar-r1-line-height: 14px;
   --tripbar-r1-letter-spacing: 0.02em;
 
   /* R2: Customer */
-  --tripbar-r2-font-size: 0.625rem; /* 10px */
+  --tripbar-r2-font-size: 0.625rem;
+  /* 10px */
   --tripbar-r2-row-height: 12px;
   --tripbar-r2-font-weight: 500;
   --tripbar-r2-line-height: 12px;
   --tripbar-r2-letter-spacing: 0.02em;
 
   /* R3: Contact */
-  --tripbar-r3-font-size: 0.625rem; /* 10px */
+  --tripbar-r3-font-size: 0.625rem;
+  /* 10px */
   --tripbar-r3-row-height: 12px;
   --tripbar-r3-font-weight: 600;
   --tripbar-r3-line-height: 12px;
   --tripbar-r3-letter-spacing: 0.02em;
 
   /* R4: Times */
-  --tripbar-r4-font-size: 0.75rem; /* 12px */
+  --tripbar-r4-font-size: 0.75rem;
+  /* 12px */
   --tripbar-r4-row-height: 14px;
   --tripbar-r4-font-weight: 500;
   --tripbar-r4-line-height: 14px;
   --tripbar-r4-letter-spacing: -0.02em;
 
   /* R5: Status / Icons (icon-based, font-size via --tripbar-icon-size) */
-  --tripbar-r5-font-size: 0.75rem; /* 12px */
+  --tripbar-r5-font-size: 0.75rem;
+  /* 12px */
   --tripbar-r5-row-height: 18px;
   --tripbar-r5-font-weight: 500;
   --tripbar-r5-line-height: 18px;
   --tripbar-r5-letter-spacing: 0.02em;
 
   /* R6: Notes */
-  --tripbar-r6-font-size: 0.625rem; /* 10px */
+  --tripbar-r6-font-size: 0.625rem;
+  /* 10px */
   --tripbar-r6-row-height: 12px;
-  --tripbar-r6-font-weight: 500;
+  --tripbar-r6-font-weight: 400;
   --tripbar-r6-line-height: 12px;
   --tripbar-r6-letter-spacing: 0.02em;
 
   /* R7: Drivers */
-  --tripbar-r7-font-size: 0.75rem; /* 12px */
+  --tripbar-r7-font-size: 0.75rem;
+  /* 12px */
   --tripbar-r7-row-height: 14px;
   --tripbar-r7-font-weight: 600;
   --tripbar-r7-line-height: 14px;
@@ -480,14 +494,14 @@
   color-scheme: light;
 
   /* ── Surfaces (deeper background; white topbar/cards; darker inset for inputs) ───── */
-  --app-bg: rgb(200 200 200);
+  --app-bg: rgb(201 202 203);
   /* lighter gray app bg */
-  --surface-0: rgb(229 231 235);
+  --surface-0: rgb(231 232 233);
   /* Topbar: Gray-200 (Darker than cards) */
   --surface-1: rgb(255 255 255);
   /* Table headers: matching app bg */
   --schedule-bg: rgb(255 255 255);
-  --agenda-header-bg: rgb(255 255 255);
+  --agenda-header-bg: rgb(231 232 233);
   --surface-2: rgb(255 255 255);
   /* cards / panels */
   --surface-3: rgb(225 228 232);
@@ -506,7 +520,7 @@
 
   /* ── Borders (same roles as dark: default + strong + subtle + disabled) ───────────────── */
   --border: rgba(0, 0, 0, 0.15);
-  --grid-line: rgb(200 200 200);
+  --grid-line: rgb(201 202 203);
   /* Light mode grid */
   --border-strong: rgba(0, 0, 0, 0.3);
   --color-border-subtle: rgba(0, 0, 0, 0.08);
@@ -547,6 +561,45 @@
   --shadow-1: 0 1px 0 rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.06);
   --shadow-2: 0 1px 0 rgba(0, 0, 0, 0.06), 0 10px 32px rgba(0, 0, 0, 0.14), 0 4px 12px rgba(0, 0, 0, 0.1);
   --shadow-elevated: 0 4px 20px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+
+  /* ── Trip Bar Light Mode Mix ────────────────────────────────────────── */
+  --tripbar-bg-mix-color: white;
+  --tripbar-bg-mix-percent: 55%;
+  --tripbar-text-color: rgb(0 0 0);
+  /* Near black to match light theme text */
+  --tripbar-text-shadow: none;
+  /* Remove dark shadow in light mode */
+  --tripbar-text-shadow-accent: none;
+  --tripbar-text-driver: color-mix(in srgb, var(--yellow), black 100%);
+  --tripbar-text-driver-shadow: none;
+  --tripbar-text-notes: color-mix(in srgb, var(--pink), black 10%);
+  --tripbar-text-notes-shadow: none;
+
+  --text-muted: rgb(0 0 0);
+
+  .bus-id-num {
+    color: var(--black);
+    text-shadow: none;
+  }
+
+  .bus-id-wrap .bus-lift {
+    text-shadow: none;
+  }
+
+  .bus-id-wrap .bus-sleeper {
+    text-shadow: none;
+  }
+
+  th.day-today .day-date {
+
+    color: var(--white);
+
+    text-shadow: none;
+
+
+  }
+
+  /* Darker yellow/orange for contrast */
 }
 
 /* Light theme: formerly had driver overrides, removed to keep them yellow */
@@ -1851,7 +1904,7 @@ textarea::placeholder {
   align-items: center;
 }
 
-.topbar > .container {
+.topbar>.container {
   height: 100%;
   display: flex;
   align-items: center;
@@ -1988,7 +2041,7 @@ textarea::placeholder {
   /* box-shadow removed for flat UI */
 }
 
-.panel-main > .card {
+.panel-main>.card {
   height: auto;
   /* Match table height, don't stretch */
   max-height: 100%;
@@ -2050,7 +2103,7 @@ textarea::placeholder {
     /* Stretch card to full width */
   }
 
-  .panel-main > .card {
+  .panel-main>.card {
     height: auto;
     /* Match table height, don't stretch */
     max-height: 100%;
@@ -2111,8 +2164,8 @@ textarea::placeholder {
     pointer-events: none;
   }
 
-  .panel-start > .card,
-  .panel-end > .card {
+  .panel-start>.card,
+  .panel-end>.card {
     min-width: 100%;
     width: 100%;
     height: 700px;
@@ -2150,16 +2203,16 @@ textarea::placeholder {
     }
   }
 
-  .panel-start > .card:not(.is-hidden),
-  .panel-end > .card:not(.is-hidden) {
+  .panel-start>.card:not(.is-hidden),
+  .panel-end>.card:not(.is-hidden) {
     flex: auto;
     display: flex;
     flex-direction: column;
     overflow: visible;
   }
 
-  .panel-start > .card:not(.is-hidden) .card-content,
-  .panel-end > .card:not(.is-hidden) .card-content {
+  .panel-start>.card:not(.is-hidden) .card-content,
+  .panel-end>.card:not(.is-hidden) .card-content {
     flex: auto;
     overflow-y: auto;
     min-height: 0;
@@ -2173,7 +2226,7 @@ textarea::placeholder {
     z-index: 1;
   }
 
-  .panel-main > .card {
+  .panel-main>.card {
     box-shadow: none;
   }
 
@@ -2189,8 +2242,9 @@ textarea::placeholder {
 
 /* Mobile layout */
 @media (max-width: 899px) {
+
   /* Fix 1: Ensure the main card reaches the edges for a full-screen mobile look */
-  .panel-main > .card {
+  .panel-main>.card {
     margin: 0 !important;
     padding: 0 !important;
     /* Remove the 18px padding */
@@ -2338,7 +2392,7 @@ textarea::placeholder {
     min-height: 0;
   }
 
-  .panel-main > .card {
+  .panel-main>.card {
     flex: 0 1 auto;
     height: auto;
     width: 100%;
@@ -2362,6 +2416,7 @@ textarea::placeholder {
 }
 
 @media (max-width: 899px) {
+
   .panel-main .card-content,
   .card .card-content {
     padding: 0;
@@ -2483,7 +2538,7 @@ textarea::placeholder {
 }
 
 /* When inside panel-main card, use flexbox to fill available space */
-.panel-main > .card .week-table-container {
+.panel-main>.card .week-table-container {
   flex: 1;
   min-height: 0;
 }
@@ -2603,7 +2658,7 @@ th.day-today .day-date {
   border-radius: 0px;
   background: color-mix(in srgb, var(--accent) 66%, transparent);
   border: none;
-  color: var(--text);
+  color: var(--white);
   font-weight: 600;
   line-height: 1;
   text-shadow:
@@ -2768,11 +2823,11 @@ th.day-today .day-date {
     0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
-.week-table tbody tr.has-bus-color > td:first-child {
+.week-table tbody tr.has-bus-color>td:first-child {
   transition: background-color 0.15s ease;
 }
 
-.week-table tbody tr.has-bus-color > td:first-child:hover {
+.week-table tbody tr.has-bus-color>td:first-child:hover {
   background-color: var(--bus-accent-color, var(--surface-1));
 }
 
@@ -2825,14 +2880,13 @@ th.day-today .day-date {
   /* 1. Layout & Display */
   display: grid;
   grid-template-rows:
-    var(--tripbar-r1-row-height) var(--tripbar-r2-row-height) var(--tripbar-r3-row-height) var(--tripbar-r4-row-height)
-    var(--tripbar-r5-row-height) var(--tripbar-r6-row-height) var(--tripbar-r7-row-height);
+    var(--tripbar-r1-row-height) var(--tripbar-r2-row-height) var(--tripbar-r3-row-height) var(--tripbar-r4-row-height) var(--tripbar-r5-row-height) var(--tripbar-r6-row-height) var(--tripbar-r7-row-height);
   row-gap: var(--tripbar-row-gap);
   container-type: inline-size;
   align-content: center;
-  /* Force white text even in light mode for dark trip bars */
-  --text: rgb(255 255 255);
-  --text-driver: var(--yellow);
+  /* Use theme-aware variables for trip bar text to accommodate light mode */
+  --text: var(--tripbar-text-color);
+  --text-driver: var(--tripbar-text-driver);
 
   /* 2. Positioning & Box Model */
   position: absolute;
@@ -2843,12 +2897,10 @@ th.day-today .day-date {
 
   /* 3. Typography */
   font-variant-numeric: tabular-nums;
-  text-shadow:
-    0 0 1px rgba(0, 0, 0, 0.9),
-    0 1px 2px rgba(0, 0, 0, 0.6);
+  text-shadow: var(--tripbar-text-shadow);
 
   /* 4. Visual / Color */
-  background: color-mix(in srgb, var(--tripbar-color) 45%, black);
+  background: color-mix(in srgb, var(--tripbar-color) var(--tripbar-bg-mix-percent), var(--tripbar-bg-mix-color));
   border: none;
   border-left: 4px solid var(--tripbar-color);
   /* Indicator strip */
@@ -2965,6 +3017,7 @@ th.day-today .day-date {
 }
 
 @keyframes jello {
+
   0%,
   11.1%,
   100% {
@@ -3061,7 +3114,7 @@ th.day-today .day-date {
 .trip-bar.color-mint,
 .trip-bar.color-black,
 .trip-bar.color-white {
-  background: color-mix(in srgb, var(--tripbar-color) 45%, black);
+  background: color-mix(in srgb, var(--tripbar-color) var(--tripbar-bg-mix-percent), var(--tripbar-bg-mix-color));
   /* border-color handled by base class now */
 }
 
@@ -3366,6 +3419,7 @@ th.day-today .day-date {
 .trip-bar .bar-time.center {
   justify-content: center !important;
   color: var(--yellow);
+  text-shadow: var(--tripbar-text-shadow-accent);
 }
 
 .trip-bar .bar-time.right {
@@ -3521,7 +3575,9 @@ th.day-today .day-date {
   text-transform: uppercase;
 
   /* 4. Visual / Color */
-  color: color-mix(in srgb, var(--text) var(--tripbar-text-secondary-opacity), transparent);
+  color: var(--tripbar-text-notes);
+  font-family: var(--font-mono);
+  text-shadow: var(--tripbar-text-shadow-accent);
 
   /* 5. Text Overflow */
   white-space: nowrap;
@@ -3553,7 +3609,8 @@ th.day-today .day-date {
   text-transform: uppercase;
 
   /* 4. Visual / Color — readable on pink, teal, blue, green, etc. */
-  color: var(--yellow);
+  color: var(--tripbar-text-driver);
+  text-shadow: var(--tripbar-text-shadow-accent);
 
   /* 5. Text Overflow */
   min-width: 0;
@@ -3614,6 +3671,7 @@ th.day-today .day-date {
 }
 
 @keyframes arrow-left-bounce {
+
   0%,
   100% {
     transform: translate(0, -50%);
@@ -3625,6 +3683,7 @@ th.day-today .day-date {
 }
 
 @keyframes arrow-right-bounce {
+
   0%,
   100% {
     transform: translate(0, -50%);
@@ -3651,7 +3710,7 @@ th.day-today .day-date {
 }
 
 /* --- 3. Unified Form Group --- */
-.form-group > label,
+.form-group>label,
 .field-label {
   display: block;
   font-size: var(--font-size-1);
@@ -3671,7 +3730,7 @@ th.day-today .day-date {
 }
 
 /* Ensure consistent alignment for all form groups — same spacing as .field-label */
-.form-group > label {
+.form-group>label {
   display: block;
   width: 100%;
   font-size: var(--font-size-1);
@@ -3682,9 +3741,9 @@ th.day-today .day-date {
   margin-bottom: 1px !important;
 }
 
-.form-group > input,
-.form-group > select,
-.form-group > textarea {
+.form-group>input,
+.form-group>select,
+.form-group>textarea {
   width: 100%;
   box-sizing: border-box;
 }
@@ -3736,11 +3795,11 @@ th.day-today .day-date {
 }
 
 /* Section label to first content = 4px (match .form-group label-to-field); subsection gap stays 8px */
-.subsection > .field-label {
+.subsection>.field-label {
   margin-bottom: 1px !important;
 }
 
-.subsection > .toggle-pill-grid {
+.subsection>.toggle-pill-grid {
   margin-top: 0;
 }
 
@@ -3769,6 +3828,7 @@ th.day-today .day-date {
 /* Container queries for form layouts - responsive within form-grid containers */
 /* Only apply when form-grid container is narrower than 350px (for extremely narrow containers) */
 @container form-grid (max-width: 350px) {
+
   .col-2,
   .col-4,
   .col-6,
@@ -3787,6 +3847,7 @@ th.day-today .day-date {
 
 /* Media query for viewport-based responsive behavior */
 @media (max-width: 800px) {
+
   .form-grid .col-2,
   .form-grid .col-4,
   .form-grid .col-6,
@@ -3978,13 +4039,13 @@ select.status-confirmed {
 }
 
 .waiting-list-row td {
-  background-color: var(--surface-1) !important;
+  background-color: var(--agenda-header-bg) !important;
   border-top: none;
   vertical-align: top;
 }
 
 .waiting-list-row .bus-id-cell {
-  background-color: var(--surface-1) !important;
+  background-color: var(--agenda-header-bg) !important;
   border-top: 1px solid var(--border);
   color: var(--text-muted);
   font-size: 0.6875rem;
