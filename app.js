@@ -80,12 +80,12 @@ const CACHE = {
         expiry: Date.now() + ttlMs,
       };
       localStorage.setItem(key, JSON.stringify(payload));
-    } catch { }
+    } catch {}
   },
   remove(key) {
     try {
       localStorage.removeItem(key);
-    } catch { }
+    } catch {}
   },
   clearAll() {
     try {
@@ -97,7 +97,7 @@ const CACHE = {
           localStorage.removeItem(k);
         }
       });
-    } catch { }
+    } catch {}
   },
 };
 
@@ -192,6 +192,15 @@ const dom = {
   closeNextDayReportBackdrop: $("closeNextDayReportBackdrop"),
   printNextDayReportBtn: $("printNextDayReportBtn"),
   nextDayReportDateInput: $("nextDayReportDateInput"),
+
+  // Daily Maintenance Plan Modal
+  dailyMaintenancePlanBtn: $("dailyMaintenancePlanBtn"),
+  dailyMaintenancePlanModal: $("dailyMaintenancePlanModal"),
+  dailyMaintenancePlanBody: $("dailyMaintenancePlanBody"),
+  closeDailyMaintenancePlanBtn: $("closeDailyMaintenancePlanBtn"),
+  closeDailyMaintenancePlanBackdrop: $("closeDailyMaintenancePlanBackdrop"),
+  printDailyMaintenancePlanBtn: $("printDailyMaintenancePlanBtn"),
+  dailyMaintenancePlanDateInput: $("dailyMaintenancePlanDateInput"),
 
   // Context Menu
   ctxMenu: $("tripContextMenu"),
@@ -290,7 +299,7 @@ function clamp(n, min, max) {
 function safeUUID() {
   try {
     return crypto.randomUUID();
-  } catch { }
+  } catch {}
   return `tk_${Date.now()}_${Math.floor(Math.random() * 1e9)}`;
 }
 
@@ -564,6 +573,7 @@ function sanitizeWeekResp(resp) {
         departureDate: asStr(t?.departureDate).slice(0, 10),
         arrivalDate: asStr(t?.arrivalDate).slice(0, 10),
         departureTime: normalizeTime(t?.departureTime),
+        spotTime: normalizeTime(t?.spotTime),
         arrivalTime: normalizeTime(t?.arrivalTime),
         busesNeeded: String(clamp(asInt(t?.busesNeeded, 0), 0, 10) || ""),
         tripColor: asStr(t?.tripColor).trim(),
@@ -1159,7 +1169,7 @@ function applyWeekStart(isMonday) {
 
   try {
     localStorage.setItem("weekStartMonday", state.weekStartsOnMonday ? "1" : "0");
-  } catch { }
+  } catch {}
 
   syncWeekStartUI();
 
@@ -1353,7 +1363,7 @@ function prefetchAdjacentWeeks() {
 
     // ✅ FIX: Calculate Monday for the adjacent week
     const { notesKey } = getWeekRange(targetDate); // We will update getWeekRange to support a date arg
-    fetchWeekDataCached(start, end, notesKey).catch(() => { });
+    fetchWeekDataCached(start, end, notesKey).catch(() => {});
   }
 }
 
@@ -1641,15 +1651,27 @@ function syncRowBarsWidth(col) {
 function positionBarWithinOverlay(bar, bars, col, startIdx, endIdx, overrides) {
   const el = bar.closest("#printRoot") || document.documentElement;
   const root = getComputedStyle(el);
-  const insetAll = parseFloat(root.getPropertyValue("--tripbar-inset")) || 6;
+
+  const parseCss = (val, fallback) => {
+    const p = parseFloat(val);
+    return isNaN(p) ? fallback : p;
+  };
+
+  const insetAll = parseCss(root.getPropertyValue("--tripbar-inset"), 6);
   const insetL =
     overrides?.insetL !== undefined
       ? overrides.insetL
-      : parseFloat(root.getPropertyValue("--tripbar-inset-left")) || insetAll;
+      : parseCss(root.getPropertyValue("--tripbar-inset-left"), insetAll);
   const insetR =
     overrides?.insetR !== undefined
       ? overrides.insetR
-      : parseFloat(root.getPropertyValue("--tripbar-inset-right")) || insetAll;
+      : parseCss(root.getPropertyValue("--tripbar-inset-right"), insetAll);
+
+  const insetT =
+    overrides?.insetT !== undefined ? overrides.insetT : parseCss(root.getPropertyValue("--tripbar-inset-top"), 0);
+
+  const insetB =
+    overrides?.insetB !== undefined ? overrides.insetB : parseCss(root.getPropertyValue("--tripbar-inset-bottom"), 3);
 
   // Simplified: exactly match the calculated start and width without extends
   const leftPx = Math.max(0, (col.starts[startIdx] ?? 0) + insetL);
@@ -1676,6 +1698,8 @@ function positionBarWithinOverlay(bar, bars, col, startIdx, endIdx, overrides) {
 
   bar.style.left = `${leftPx}px`;
   bar.style.width = `${widthPx}px`;
+  bar.style.top = `${insetT}px`;
+  bar.style.height = `calc(100% - ${insetT + insetB}px)`;
 }
 
 // ======================================================
@@ -2025,9 +2049,11 @@ function _renderAgendaInner() {
         timeRow.className = "bar-time-row";
         const left = document.createElement("span");
         left.className = "bar-time left";
+        const center = document.createElement("span");
+        center.className = "bar-time center";
         const right = document.createElement("span");
         right.className = "bar-time right";
-        timeRow.append(left, right);
+        timeRow.append(left, center, right);
         r4.appendChild(timeRow);
 
         // Row 5: Status icons
@@ -2092,6 +2118,7 @@ function _renderAgendaInner() {
         bar._line2 = line2;
         bar._line3 = line3;
         bar._left = left;
+        bar._center = center;
         bar._right = right;
         bar._bI = bI;
         bar._bC = bC;
@@ -2245,6 +2272,7 @@ function _renderAgendaInner() {
       bar._line3.textContent = name;
 
       const depTime = t.departureTime;
+      const spotTime = t.spotTime;
       const arrTime = t.arrivalTime;
 
       const isActualSingleDay = depY === arrY;
@@ -2261,9 +2289,11 @@ function _renderAgendaInner() {
         // Single-Day: show depart on left and arrive on right
         if (!tDep && !tArr) {
           bar._left.textContent = "TBD";
+          bar._center.textContent = formatTime12(spotTime) || "";
           bar._right.textContent = "";
         } else {
           bar._left.textContent = tDep || "TBD";
+          bar._center.textContent = formatTime12(spotTime) || "";
           bar._right.textContent = tArr || "TBD";
         }
       } else {
@@ -2272,8 +2302,10 @@ function _renderAgendaInner() {
         // Right side shows Arr Time (only if this bar is the trip end)
         if (isStartDay) {
           bar._left.textContent = formatTime12(depTime) || "TBD";
+          bar._center.textContent = formatTime12(spotTime) || "";
         } else {
           bar._left.textContent = "";
+          bar._center.textContent = "";
         }
 
         if (isEndDay) {
@@ -3352,6 +3384,7 @@ async function openTripForEdit(tripKey) {
     $("tripDate").value = String(t.departureDate || "").slice(0, 10);
     $("arrivalDate").value = String(t.arrivalDate || "").slice(0, 10);
     $("departureTime").value = normalizeTime(t.departureTime) || "";
+    $("spotTime").value = normalizeTime(t.spotTime) || "";
     $("arrivalTime").value = normalizeTime(t.arrivalTime) || "";
 
     $("itineraryStatus").value = t.itineraryStatus || "";
@@ -3681,12 +3714,14 @@ function buildPrintScheduleFullLetter() {
         <thead>
           <tr>
             <th class="col-bus">Bus</th>
-            ${dates.map((d, i) => {
-    const dObj = parseYMD(d);
-    const dayStr = dObj ? dObj.toLocaleDateString('en-US', { weekday: 'short' }) : dayIds[i];
-    const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
-    return `<th class="col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
-  }).join("")}
+            ${dates
+              .map((d, i) => {
+                const dObj = parseYMD(d);
+                const dayStr = dObj ? dObj.toLocaleDateString("en-US", { weekday: "short" }) : dayIds[i];
+                const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
+                return `<th class="col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
+              })
+              .join("")}
           </tr>
         </thead>
         <tbody>
@@ -3697,7 +3732,7 @@ function buildPrintScheduleFullLetter() {
     const busId = String(bus.busId || bus.id || "").trim();
     if (!busId || busId === "None" || busId === "WAITING_LIST") continue;
 
-    const busTrips = state.trips.filter(t => {
+    const busTrips = state.trips.filter((t) => {
       const a = state.assignmentsByTripKey[t.tripKey] || {};
       return String(a.busId).trim() === busId;
     });
@@ -3713,7 +3748,7 @@ function buildPrintScheduleFullLetter() {
       }
 
       const currentYMD = dates[i];
-      const tripsToday = busTrips.filter(t => {
+      const tripsToday = busTrips.filter((t) => {
         const start = ymd(parseYMD(t.departureDate));
         const end = ymd(parseYMD(t.arrivalDate) || parseYMD(t.departureDate));
         return currentYMD >= start && currentYMD <= end;
@@ -3737,8 +3772,8 @@ function buildPrintScheduleFullLetter() {
           <div class="trip-content">
             <div class="trip-dest-cust"><strong>${escHtml(t.destination)}</strong> - ${escHtml(t.customer)}</div>
             <div class="trip-times">⏱ ${normalizeTime(t.departureTime)} - ${normalizeTime(t.arrivalTime)}</div>
-            <div class="trip-drivers">👤 D1: ${escHtml(a.driver1 || '—')} | D2: ${escHtml(a.driver2 || '—')}</div>
-            <div class="trip-notes">📝 ${escHtml(t.notes || '')}</div>
+            <div class="trip-drivers">👤 D1: ${escHtml(a.driver1 || "—")} | D2: ${escHtml(a.driver2 || "—")}</div>
+            <div class="trip-notes">📝 ${escHtml(t.notes || "")}</div>
           </div>
         </td>`;
 
@@ -4718,6 +4753,12 @@ function wireSettingsMenu() {
     generateNextDayReport();
   });
 
+  // Daily Maintenance Plan
+  dom.dailyMaintenancePlanBtn?.addEventListener("click", () => {
+    dom.settingsMenu.hidden = true;
+    generateDailyMaintenancePlan();
+  });
+
   // 3. Print (Legal, 2 pages)
   dom.printBtn2?.addEventListener("click", () => {
     dom.settingsMenu.hidden = true;
@@ -4798,11 +4839,11 @@ function generateNextDayReport(selectedDate = null) {
 
     // Find all buses that have a trip departing tomorrow
     const busesDepartingTomorrow = new Set();
-    const tripsDepartingTomorrow = state.trips.filter(t => t.departureDate === tomorrowYMD);
+    const tripsDepartingTomorrow = state.trips.filter((t) => t.departureDate === tomorrowYMD);
 
-    tripsDepartingTomorrow.forEach(trip => {
+    tripsDepartingTomorrow.forEach((trip) => {
       const assigns = state.assignmentsByTripKey[trip.tripKey] || [];
-      assigns.forEach(a => {
+      assigns.forEach((a) => {
         const busId = String(a.busId || "").trim();
         if (busId && busId !== "None" && busId !== "WAITING_LIST") {
           busesDepartingTomorrow.add(busId);
@@ -4814,16 +4855,16 @@ function generateNextDayReport(selectedDate = null) {
     const reportData = [];
     const priorityBusesInfo = [];
 
-    busesDepartingTomorrow.forEach(busId => {
+    busesDepartingTomorrow.forEach((busId) => {
       // Find trips for this bus arriving today
       let arrivalTimeToday = "Already in yard / No arrival today";
       let departureTimeTomorrow = "Unknown";
       let maintenanceWindow = "Flexible (Bus is in yard)";
 
       // Find departure time tomorrow
-      const tomorrowTrip = tripsDepartingTomorrow.find(t => {
+      const tomorrowTrip = tripsDepartingTomorrow.find((t) => {
         const assigns = state.assignmentsByTripKey[t.tripKey] || [];
-        return assigns.some(a => String(a.busId).trim() === busId);
+        return assigns.some((a) => String(a.busId).trim() === busId);
       });
 
       if (tomorrowTrip && tomorrowTrip.departureTime) {
@@ -4831,11 +4872,11 @@ function generateNextDayReport(selectedDate = null) {
       }
 
       // Find arrival time today
-      const tripsArrivingToday = state.trips.filter(t => {
+      const tripsArrivingToday = state.trips.filter((t) => {
         const arrDate = t.arrivalDate || t.departureDate;
         if (arrDate !== todayYMD) return false;
         const assigns = state.assignmentsByTripKey[t.tripKey] || [];
-        return assigns.some(a => String(a.busId).trim() === busId);
+        return assigns.some((a) => String(a.busId).trim() === busId);
       });
 
       // Sort by arrival time descending
@@ -4853,7 +4894,7 @@ function generateNextDayReport(selectedDate = null) {
           let arrHour = 0;
           const normedArr = normalizeTime(lastTripToday.arrivalTime);
           if (normedArr) {
-            arrHour = parseInt(normedArr.split(':')[0], 10);
+            arrHour = parseInt(normedArr.split(":")[0], 10);
           }
 
           if (arrHour < 8) {
@@ -4869,7 +4910,7 @@ function generateNextDayReport(selectedDate = null) {
         if (lastTripToday.arrivalTime) {
           const normedArr = normalizeTime(lastTripToday.arrivalTime);
           if (normedArr) {
-            arrTimeNum = parseInt(normedArr.split(':')[0], 10) + parseInt(normedArr.split(':')[1], 10) / 60;
+            arrTimeNum = parseInt(normedArr.split(":")[0], 10) + parseInt(normedArr.split(":")[1], 10) / 60;
           }
         }
 
@@ -4877,7 +4918,7 @@ function generateNextDayReport(selectedDate = null) {
         if (tomorrowTrip && tomorrowTrip.departureTime) {
           const normedDep = normalizeTime(tomorrowTrip.departureTime);
           if (normedDep) {
-            depTimeNum = 24 + parseInt(normedDep.split(':')[0], 10) + parseInt(normedDep.split(':')[1], 10) / 60;
+            depTimeNum = 24 + parseInt(normedDep.split(":")[0], 10) + parseInt(normedDep.split(":")[1], 10) / 60;
           }
         }
         priorityBusesInfo.push({ a: arrTimeNum, d: depTimeNum });
@@ -4887,7 +4928,7 @@ function generateNextDayReport(selectedDate = null) {
           arrivalTimeToday,
           departureTimeTomorrow,
           maintenanceWindow,
-          priority: tripsArrivingToday.length > 0 ? 1 : 2 // 1 High Priority (arriving today), 2 Low Priority (in yard)
+          priority: tripsArrivingToday.length > 0 ? 1 : 2, // 1 High Priority (arriving today), 2 Low Priority (in yard)
         });
       } else {
         reportData.push({
@@ -4895,7 +4936,7 @@ function generateNextDayReport(selectedDate = null) {
           arrivalTimeToday,
           departureTimeTomorrow,
           maintenanceWindow,
-          priority: 2 // Low Priority (in yard)
+          priority: 2, // Low Priority (in yard)
         });
       }
     });
@@ -4930,11 +4971,12 @@ function generateNextDayReport(selectedDate = null) {
           let isTmrw = num >= 24;
           let h = Math.floor(num) % 24;
           let m = Math.round((num - Math.floor(num)) * 60);
-          let ampm = h >= 12 ? 'PM' : 'AM';
-          h = h % 12; if (h === 0) h = 12;
-          let ms = String(m).padStart(2, '0');
+          let ampm = h >= 12 ? "PM" : "AM";
+          h = h % 12;
+          if (h === 0) h = 12;
+          let ms = String(m).padStart(2, "0");
           let dayStr = isTmrw ? " (Next Day)" : "";
-          if (isTmrw && h === 12 && ampm === 'AM') dayStr = ""; // it's just midnight
+          if (isTmrw && h === 12 && ampm === "AM") dayStr = ""; // it's just midnight
           return `${h}:${ms} ${ampm}${dayStr}`;
         };
 
@@ -4956,7 +4998,7 @@ function generateNextDayReport(selectedDate = null) {
     }
 
     // Build HTML for loop iteration
-    const dayName = today.toLocaleDateString('en-US', { weekday: 'long' });
+    const dayName = today.toLocaleDateString("en-US", { weekday: "long" });
     let dayHtml = `<div class="weekly-report-day" style="margin-bottom: 40px; border-bottom: 2px dashed var(--border-color); padding-bottom: 20px;">
       <h3 style="margin-top: 0; margin-bottom: 12px; color: var(--text-color, #fff); font-size: 1.25rem;">
         ${dayName} Maintenance Schedule
@@ -4979,10 +5021,11 @@ function generateNextDayReport(selectedDate = null) {
           </tr>
         </thead>
         <tbody>`;
-      reportData.forEach(row => {
-        const priorityLabel = row.priority === 1 ?
-          `<span style="color: #dc2626; font-weight: bold; font-size: 0.85em; display: inline-block; background: #fef2f2; padding: 2px 6px; border-radius: 4px; border: 1px solid #fecaca;">PRIORITY</span>` :
-          `<span style="color: #16a34a; font-size: 0.85em; display: inline-block; background: #f0fdf4; padding: 2px 6px; border-radius: 4px; border: 1px solid #bbf7d0;">IN YARD</span>`;
+      reportData.forEach((row) => {
+        const priorityLabel =
+          row.priority === 1
+            ? `<span style="color: #dc2626; font-weight: bold; font-size: 0.85em; display: inline-block; background: #fef2f2; padding: 2px 6px; border-radius: 4px; border: 1px solid #fecaca;">PRIORITY</span>`
+            : `<span style="color: #16a34a; font-size: 0.85em; display: inline-block; background: #f0fdf4; padding: 2px 6px; border-radius: 4px; border: 1px solid #bbf7d0;">IN YARD</span>`;
 
         dayHtml += `<tr style="border-bottom: 1px solid var(--row-border, rgba(0,0,0,0.05)); hover: background-color: rgba(0,0,0,0.02);">
           <td style="padding: 10px 8px;"><strong>${row.busId}</strong><br/>${priorityLabel}</td>
@@ -5024,8 +5067,8 @@ if (dom.closeNextDayReportBackdrop) {
 }
 if (dom.printNextDayReportBtn) {
   dom.printNextDayReportBtn.addEventListener("click", () => {
-    const printWindow = window.open('', '', 'height=800,width=1000');
-    printWindow.document.write('<html><head><title>Weekly Maintenance Report</title>');
+    const printWindow = window.open("", "", "height=800,width=1000");
+    printWindow.document.write("<html><head><title>Weekly Maintenance Report</title>");
 
     // Inject custom print styles tailored for fitting 7 days into 1 page
     printWindow.document.write(`
@@ -5152,16 +5195,213 @@ if (dom.printNextDayReportBtn) {
       </style>
     `);
 
-    printWindow.document.write('</head><body>');
-    printWindow.document.write('<h2>Weekly Maintenance Report</h2>');
+    printWindow.document.write("</head><body>");
+    printWindow.document.write("<h2>Weekly Maintenance Report</h2>");
     printWindow.document.write('<div class="print-wrapper">');
     printWindow.document.write(dom.nextDayReportBody.innerHTML);
-    printWindow.document.write('</div>');
-    printWindow.document.write('</body></html>');
+    printWindow.document.write("</div>");
+    printWindow.document.write("</body></html>");
     printWindow.document.close();
     printWindow.focus();
 
     // setTimeout to allow rendering before the print dialog freezes the thread
+    setTimeout(() => {
+      printWindow.print();
+      printWindow.close();
+    }, 250);
+  });
+}
+
+function generateDailyMaintenancePlan(selectedDate = null) {
+  let startD = selectedDate ? new Date(selectedDate) : new Date(state.currentDate || new Date());
+
+  if (!selectedDate) {
+    if (state.weekStartsMonday) {
+      if (startD.getDay() === 0) startD = addDays(startD, -6);
+      else startD = addDays(startD, 1 - startD.getDay());
+    } else {
+      startD = addDays(startD, -startD.getDay());
+    }
+  }
+
+  const startYMD = ymd(startD);
+  if (dom.dailyMaintenancePlanDateInput && dom.dailyMaintenancePlanDateInput.value !== startYMD) {
+    dom.dailyMaintenancePlanDateInput.value = startYMD;
+  }
+
+  const buses = ["218", "763", "470", "133", "506", "746", "607", "897", "898", "474"];
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const endD = addDays(startD, 6);
+  let titleStr = `${monthNames[startD.getMonth()]} ${startD.getDate()} - ${endD.getDate()}, ${endD.getFullYear()}`;
+  if (startD.getMonth() !== endD.getMonth()) {
+    titleStr = `${monthNames[startD.getMonth()]} ${startD.getDate()} - ${monthNames[endD.getMonth()]} ${endD.getDate()}, ${endD.getFullYear()}`;
+  }
+
+  let fullHtml = `<div class="daily-plan-container" style="font-family: Arial, sans-serif; background:#fff; color:#000; padding:10px;">`;
+  fullHtml += `<h1 style="margin:0 0 15px 0; font-size:20px; font-weight:bold; border-bottom: 2px solid #000; padding-bottom: 5px;">Weekly Maintenance Priority Plan: <span style="font-weight:normal; font-size:18px;">${titleStr}</span></h1>`;
+
+  for (let i = 0; i < 7; i++) {
+    const currentDay = addDays(startD, i);
+    const currentYMD = ymd(currentDay);
+    const tomorrowYMD = ymd(addDays(currentDay, 1));
+    const dayName = currentDay.toLocaleDateString("en-US", { weekday: "long" });
+    const formattedDate = `${monthNames[currentDay.getMonth()]} ${currentDay.getDate()}`;
+
+    let tripsDepartingTomorrow = state.trips.filter((t) => t.departureDate === tomorrowYMD);
+    let busesDepartingTomorrow = new Set();
+    tripsDepartingTomorrow.forEach((trip) => {
+      let assigns = state.assignmentsByTripKey[trip.tripKey] || [];
+      assigns.forEach((a) => {
+        let busId = String(a.busId || "").trim();
+        if (busId && busId !== "None" && busId !== "WAITING_LIST") {
+          busesDepartingTomorrow.add(busId);
+        }
+      });
+    });
+
+    let priority1 = []; // Arriving Today
+    let priority3 = []; // Already in yard (Flexible)
+
+    let nightShiftRequired = false;
+
+    buses.forEach((busId) => {
+      if (busesDepartingTomorrow.has(busId)) {
+        let arrivalTimeToday = "In Yard";
+        let departureTimeTomorrow = "Unknown";
+        let arrivalHour = 0;
+        let arrivingToday = false;
+
+        let tomorrowTrip = tripsDepartingTomorrow.find((t) => {
+          let assigns = state.assignmentsByTripKey[t.tripKey] || [];
+          return assigns.some((a) => String(a.busId).trim() === busId);
+        });
+        if (tomorrowTrip && tomorrowTrip.departureTime) {
+          departureTimeTomorrow = formatTime12(tomorrowTrip.departureTime);
+        }
+
+        let tripsArrivingToday = state.trips.filter((t) => {
+          let arrDate = t.arrivalDate || t.departureDate;
+          if (arrDate !== currentYMD) return false;
+          let assigns = state.assignmentsByTripKey[t.tripKey] || [];
+          return assigns.some((a) => String(a.busId).trim() === busId);
+        });
+
+        tripsArrivingToday.sort((a, b) => {
+          let timeA = normalizeTime(a.arrivalTime) || "00:00";
+          let timeB = normalizeTime(b.arrivalTime) || "00:00";
+          return timeB.localeCompare(timeA);
+        });
+
+        if (tripsArrivingToday.length > 0) {
+          arrivingToday = true;
+          let lastTripToday = tripsArrivingToday[0];
+          if (lastTripToday.arrivalTime) {
+            arrivalTimeToday = formatTime12(lastTripToday.arrivalTime);
+            let normedArr = normalizeTime(lastTripToday.arrivalTime);
+            if (normedArr) arrivalHour = parseInt(normedArr.split(":")[0], 10);
+          }
+        }
+
+        let info = { busId: busId, in: arrivalTimeToday, out: departureTimeTomorrow };
+
+        if (arrivingToday) {
+          priority1.push(info);
+          if (arrivalHour >= 8) {
+            nightShiftRequired = true; // Any late arrival forces a night shift to fix it
+          }
+        } else {
+          priority3.push(info);
+        }
+      }
+    });
+
+    let recommendedShift = nightShiftRequired ? "Night Shift (6:00 PM - 2:00 AM)" : "Morning Shift (8:00 AM - 5:00 PM)";
+    let shiftColor = nightShiftRequired ? "#b45309" : "#0e7490";
+    if (priority1.length === 0 && priority3.length === 0) {
+      recommendedShift = "No Shift Needed";
+      shiftColor = "#9ca3af";
+    }
+
+    fullHtml += `<div style="margin-bottom: 25px; page-break-inside: avoid;">`;
+    fullHtml += `<h2 style="margin:0 0 8px 0; font-size:16px; background:#e5e7eb; padding:6px 10px; border-left:4px solid #4f46e5;">${dayName} <span style="font-weight:normal; font-size:14px; color:#4b5563;">- ${formattedDate}</span></h2>`;
+
+    fullHtml += `<div style="padding-left: 10px; margin-bottom:10px;">`;
+    fullHtml += `  <div style="font-weight:bold; color:${shiftColor};">Recommended Schedule: ${recommendedShift}</div>`;
+    fullHtml += `</div>`;
+
+    fullHtml += `<div style="padding-left: 10px;">`;
+    fullHtml += `<h3 style="margin:5px 0 5px 0; font-size:14px; color:#374151;">Priority:</h3>`;
+    if (priority1.length > 0) {
+      priority1.forEach((b) => {
+        fullHtml += `<div style="font-size:13px; margin-bottom:4px;"><b>Bus ${b.busId}</b> &nbsp;&nbsp;|&nbsp;&nbsp; <span style="color:#ea580c">In: ${b.in}</span> &nbsp;&nbsp;|&nbsp;&nbsp; <span style="color:#dc2626">Out: ${b.out} (Tomorrow)</span></div>`;
+      });
+    } else {
+      fullHtml += `<div style="font-size:13px; color:#9ca3af; font-style:italic;">None</div>`;
+    }
+
+    fullHtml += `<h3 style="margin:10px 0 5px 0; font-size:14px; color:#15803d;">Already in Yard Today:</h3>`;
+    if (priority3.length > 0) {
+      priority3.forEach((b) => {
+        fullHtml += `<div style="font-size:13px; margin-bottom:4px;"><b>Bus ${b.busId}</b> &nbsp;&nbsp;|&nbsp;&nbsp; <span style="color:#ca8a04">In: Yard</span> &nbsp;&nbsp;|&nbsp;&nbsp; <span style="color:#dc2626">Out: ${b.out} (Tomorrow)</span></div>`;
+      });
+    } else {
+      fullHtml += `<div style="font-size:13px; color:#9ca3af; font-style:italic;">None</div>`;
+    }
+    fullHtml += `</div></div>`;
+  }
+
+  fullHtml += `</div>`;
+  dom.dailyMaintenancePlanBody.innerHTML = fullHtml;
+  dom.dailyMaintenancePlanModal.hidden = false;
+}
+
+if (dom.dailyMaintenancePlanDateInput) {
+  dom.dailyMaintenancePlanDateInput.addEventListener("change", (e) => {
+    const d = parseYMD(e.target.value);
+    if (d) {
+      generateDailyMaintenancePlan(d);
+    }
+  });
+}
+if (dom.closeDailyMaintenancePlanBtn) {
+  dom.closeDailyMaintenancePlanBtn.addEventListener("click", () => {
+    dom.dailyMaintenancePlanModal.hidden = true;
+  });
+}
+if (dom.closeDailyMaintenancePlanBackdrop) {
+  dom.closeDailyMaintenancePlanBackdrop.addEventListener("click", () => {
+    dom.dailyMaintenancePlanModal.hidden = true;
+  });
+}
+if (dom.printDailyMaintenancePlanBtn) {
+  dom.printDailyMaintenancePlanBtn.addEventListener("click", () => {
+    const printWindow = window.open("", "", "height=800,width=800");
+    printWindow.document.write("<html><head><title>Daily Maintenance Plan</title>");
+    printWindow.document.write(`
+      <style>
+        @page { size: portrait; margin: 0.5in; }
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 0; margin: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      </style>
+    `);
+    printWindow.document.write("</head><body>");
+    printWindow.document.write(dom.dailyMaintenancePlanBody.innerHTML);
+    printWindow.document.write("</body></html>");
+    printWindow.document.close();
+    printWindow.focus();
     setTimeout(() => {
       printWindow.print();
       printWindow.close();
@@ -5179,7 +5419,7 @@ if (dom.printNextDayReportBtn) {
 .week-table-container.is-loading-bars .trip-bar { opacity: 0.18; pointer-events: none; }
 `;
     document.head.appendChild(style);
-  } catch { }
+  } catch {}
 
   setSidePanelMode("off");
   enforceDesktopEditing();
