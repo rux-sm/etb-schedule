@@ -1,0 +1,462 @@
+/* ==========================================================================
+   17) PRINT
+   ========================================================================== */
+/* Letter full: 100px body rows (98px bars + 2px); 32px header; table forced to 1400px for scale coupling */
+
+#printRoot.print-mode-letter-full .print-table thead th {
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+}
+
+#printRoot.print-mode-letter-full .print-table tbody td {
+  height: var(--schedule-row-height) !important;
+  min-height: var(--schedule-row-height) !important;
+  max-height: var(--schedule-row-height) !important;
+}
+
+@media print {
+  @page {
+    /* Legal landscape: 14in × 8.5in — tighter margins to fill width */
+    size: legal landscape;
+    margin: 0.25in;
+  }
+
+  /* Remove default padding/margin so content fits with Safari/Chrome print defaults */
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100%;
+    height: 100%;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 10pt;
+  }
+
+  /* Letter full: 100px body rows; 32px header; lock table width to JS math */
+  #printRoot.print-mode-letter-full {
+    --schedule-row-height: 100px !important;
+    --tripbar-inset: 0px;
+    --tripbar-inset-left: 0px;
+    --tripbar-inset-right: 0px;
+  }
+
+  #printRoot.print-mode-letter-full .print-table {
+    width: 1400px !important;
+    min-width: 1400px !important;
+    table-layout: fixed !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-table thead th {
+    height: 28px !important;
+    padding: 0 !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-table tbody td {
+    height: var(--schedule-row-height) !important;
+    min-height: var(--schedule-row-height) !important;
+    max-height: var(--schedule-row-height) !important;
+    padding: 0 !important;
+  }
+
+  #printRoot.print-mode-letter-full .schedule-grid__day-date {
+    font-size: 10pt !important;
+  }
+
+  #printRoot.print-mode-letter-full .schedule-grid__day-name {
+    font-size: 9pt !important;
+  }
+
+  /* Remove "today" highlight colors for print */
+  .schedule-grid__header-cell--today {
+    background: transparent !important;
+    border-top: none !important;
+  }
+
+  .schedule-grid__header-cell--today .schedule-grid__day-date {
+    background: transparent !important;
+    color: inherit !important;
+    width: auto !important;
+    height: auto !important;
+    text-shadow: none !important;
+    animation: none !important;
+    font-weight: normal !important;
+  }
+
+  .app,
+  .app-header,
+  .theme-toggle,
+  .context-menu,
+  .modal,
+  .loading-overlay,
+  #toast,
+  #toastBackdrop {
+    display: none !important;
+  }
+
+  #printRoot {
+    display: block !important;
+    visibility: visible !important;
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .print-page {
+    page-break-after: always;
+    padding: 0.1in;
+    box-sizing: border-box;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .print-page:last-child {
+    page-break-after: auto;
+  }
+
+  /* Force Letter Landscape content area (10in @ 96dpi = 960px) — prevents 2nd page overflow */
+  #printRoot.print-mode-letter-full .print-page {
+    width: 960px !important;
+    height: 720px !important;
+    overflow: visible !important;
+    /* FIX: Prevents the bottom edge from being clipped */
+    page-break-after: avoid !important;
+    padding: 2mm !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Letter full: scale 1400px agenda to fit; anchor to top left to avoid browser clipping bugs */
+  #printRoot.print-mode-letter-full .print-card {
+    position: relative !important;
+    /* FIX: Removed absolute positioning */
+    top: 0 !important;
+    left: 0 !important;
+    /* FIX: Removed 50% offset */
+    width: 1400px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box;
+    transform: scale(var(--print-scale, 1)) !important;
+    /* FIX: Removed translateX(-50%) */
+    transform-origin: top left !important;
+    /* FIX: Anchors safely to the corner */
+  }
+
+  /* Fix for trip bar clipping in legal print grid */
+  .schedule-grid__row-bars {
+    overflow: visible !important;
+  }
+
+  #printRoot .print-table .schedule-grid__row-bars {
+    position: absolute !important;
+    overflow: visible !important;
+    z-index: 10 !important;
+  }
+
+  #printRoot .print-table td.week-start-cell {
+    overflow: visible !important;
+    position: relative !important;
+  }
+
+  #printRoot .print-table .schedule-grid__trip-bar {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    overflow: visible !important;
+  }
+
+  .print-card {
+    background: white;
+    width: 100%;
+    transform: scale(var(--print-scale, 1));
+    transform-origin: top left;
+  }
+
+  /* Print header: schedule-style header (cloned agenda-header) */
+  .print-header {
+    background: white !important;
+    height: auto !important;
+    min-height: 24px !important;
+    margin-bottom: 6px !important;
+    padding: 0 !important;
+    justify-content: flex-start !important;
+  }
+
+  .print-header .agenda-header__inner {
+    margin: 0 !important;
+    min-height: 0 !important;
+  }
+
+  .print-header-logo {
+    flex-shrink: 0;
+    margin-inline-end: 10px;
+    display: flex !important;
+  }
+
+  .print-header-logo .app-header__logo-img {
+    height: 24px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .print-header .agenda-header__week-heading {
+    color: #333 !important;
+    font-size: 14pt !important;
+    line-height: 1.2 !important;
+  }
+
+  .print-header .agenda-header__week-date .wk-month,
+  .print-header .agenda-header__week-date .wk-month-end {
+    color: #111 !important;
+  }
+
+  .print-header .agenda-header__week-date .wk-dates {
+    color: #444 !important;
+  }
+
+  .print-header .agenda-header__week-date .wk-year {
+    color: #0066cc !important;
+  }
+
+  .print-title {
+    font-size: 16pt;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: start;
+    border-bottom: none;
+    padding-bottom: 5px;
+    color: #333;
+  }
+
+  .print-table {
+    width: 100% !important;
+    min-width: 100% !important;
+    /* card content: 1320 - 20 padding */
+    border-collapse: collapse !important;
+    table-layout: fixed !important;
+    border: none !important;
+    border-inline-start: none !important;
+  }
+
+  /* Letter full: force 1400px so column metrics and scale are tightly coupled; 52px bus matches JS colMetrics */
+  #printRoot.print-mode-letter-full .print-table {
+    width: 1400px !important;
+    min-width: 1400px !important;
+    max-width: 1400px !important;
+    border-collapse: collapse !important;
+    table-layout: fixed !important;
+    box-sizing: border-box !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-table th:last-child,
+  #printRoot.print-mode-letter-full .print-table td:last-child {
+    border-right: 1px solid #ccc !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-table .schedule-grid__col-bus {
+    width: 52px !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-table .schedule-grid__col-day,
+  #printRoot.print-mode-letter-full .print-table col.schedule-grid__col-day {
+    width: calc((1400px - 52px) / 7) !important;
+  }
+
+  .print-table .schedule-grid__col-bus {
+    width: var(--bus-col-w) !important;
+  }
+
+  .print-table .schedule-grid__col-day,
+  .print-table col.schedule-grid__col-day {
+    width: calc((100% - var(--bus-col-w)) / 7) !important;
+    /* 7 equal day columns */
+  }
+
+  .print-table tbody tr:not(.schedule-grid__row--notes) {
+    page-break-inside: avoid;
+  }
+
+  .print-table td.week-start-cell {
+    padding: 0 !important;
+  }
+
+  .print-table th {
+    background-color: #f8f9fa !important;
+  }
+
+  .print-table td {
+    border: 1px solid #ccc !important;
+    padding: 2px !important;
+    font-size: 9pt !important;
+    position: relative;
+    height: 90px !important;
+    vertical-align: top;
+  }
+
+  .print-table thead th {
+    border: 1px solid #ccc !important;
+    padding: 2px !important;
+    font-size: 9pt !important;
+    position: relative;
+    height: var(--day-row-h) !important;
+    vertical-align: top;
+  }
+
+  .print-table tbody tr.schedule-grid__row--notes td,
+  .print-table tbody tr.schedule-grid__row--notes {
+    height: 16px !important;
+    min-height: 16px !important;
+    max-height: 16px !important;
+  }
+
+  /* Letter full: same proportions as 1400px agenda (row height from theme), scale handles fit */
+  #printRoot.print-mode-letter-full .print-header {
+    height: 40px !important;
+    max-height: 40px !important;
+    overflow: hidden !important;
+    margin-bottom: 6px !important;
+    padding: 0 !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-header .agenda-header__week-heading {
+    font-size: 14pt !important;
+    line-height: 1.2 !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-header-logo .app-header__logo-img {
+    height: 24px !important;
+  }
+
+  /* Letter: 28px header to give more room to data rows; 100px body rows for 98px trip bars */
+  #printRoot.print-mode-letter-full .print-table thead th {
+    height: 28px !important;
+    padding: 0 !important;
+    font-size: inherit !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-table tbody td {
+    height: 100px !important;
+    min-height: 100px !important;
+    max-height: 100px !important;
+    padding: 0 !important;
+    font-size: inherit !important;
+  }
+
+  /* Trip bars: sharper corners for print */
+
+  /* Print-specific trip bar overrides in css/5-components/_schedule-grid.css */
+}
+
+/* ==========================================================================
+   18) PRINT (FULL LETTER LAYOUT - NEW TABULAR VERSION)
+   ========================================================================== */
+@media print {
+  .print-page-letter {
+    width: 100%;
+    page-break-after: always;
+  }
+
+  .print-page-letter:last-child {
+    page-break-after: auto;
+  }
+
+  /* When using print-mode-letter-full, the page is Letter Landscape */
+  #printRoot.print-mode-letter-full {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-header {
+    height: 40px !important;
+    max-height: 40px !important;
+    overflow: hidden !important;
+    margin-bottom: 5px !important;
+    padding-bottom: 0 !important;
+    border-bottom: 2px solid #ccc;
+    display: flex;
+    align-items: center;
+  }
+
+  #printRoot.print-mode-letter-full .print-title {
+    font-size: 16pt !important;
+    font-weight: bold;
+    color: black;
+    margin: 0;
+    line-height: 40px !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-data-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    table-layout: fixed !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-data-table th,
+  #printRoot.print-mode-letter-full .print-data-table td {
+    border: 1px solid #ccc !important;
+    padding: 6px !important;
+    font-size: 9pt !important;
+    vertical-align: top !important;
+    color: black !important;
+    background: white !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-data-table th {
+    background-color: #f8f9fa !important;
+    font-weight: bold !important;
+    text-align: center !important;
+    height: 24px !important;
+    max-height: 24px !important;
+    padding: 2px 4px !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-data-table .schedule-grid__col-bus {
+    width: 60px !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-data-table th:first-child {
+    font-size: 8pt !important;
+    padding: 2px !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-data-table tbody tr {
+    page-break-inside: avoid !important;
+  }
+
+  #printRoot.print-mode-letter-full .schedule-grid__bus-cell strong {
+    font-size: 11pt !important;
+  }
+
+  #printRoot.print-mode-letter-full .trip-cell {
+    background-color: white !important;
+  }
+
+  #printRoot.print-mode-letter-full .trip-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  #printRoot.print-mode-letter-full .trip-dest-cust {
+    font-size: 9.5pt;
+  }
+
+  #printRoot.print-mode-letter-full .trip-times,
+  #printRoot.print-mode-letter-full .trip-drivers,
+  #printRoot.print-mode-letter-full .trip-notes {
+    font-size: 9pt;
+  }
+}

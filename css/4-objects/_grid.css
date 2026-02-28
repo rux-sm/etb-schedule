@@ -1,0 +1,141 @@
+/* ==========================================================================
+   4-OBJECTS / GRID
+   Responsive form layout grid and column system
+   (BEM refactor of .form-grid and .col-*)
+   ========================================================================== */
+
+/* --- 1. The Global Form Container --- */
+.form-layout {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  /* Rigid fractions */
+  width: 100%;
+  /* Fixed width slightly smaller than panel (420px) to allow for padding/gutters */
+  gap: 8px;
+  margin: 16px auto;
+  align-items: start;
+  container-type: inline-size;
+  container-name: form-layout;
+}
+
+/* --- 2. Unified Form Group Wrapper --- */
+.form-layout__group > label,
+.form-layout__label {
+  display: block;
+  font-size: var(--font-size-1);
+  font-weight: 500;
+  color: var(--text-muted);
+  line-height: 1.25;
+  margin-bottom: 1px !important;
+  letter-spacing: 0.05em;
+  width: 100%;
+  min-height: 1.4em;
+}
+
+.form-layout__group > input,
+.form-layout__group > select,
+.form-layout__group > textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* --- 3. Column Spans --- */
+.form-layout__col-2 {
+  grid-column: span 2;
+}
+.form-layout__col-4 {
+  grid-column: span 4;
+}
+.form-layout__col-5 {
+  grid-column: span 5;
+}
+.form-layout__col-6 {
+  grid-column: span 6;
+}
+.form-layout__col-8 {
+  grid-column: span 8;
+}
+.form-layout__col-12 {
+  grid-column: span 12;
+}
+
+/* --- 4. Subsections --- */
+.form-layout__subsection {
+  grid-column: span 12;
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  margin-bottom: calc(1px - 7px) !important;
+}
+
+.form-layout__subsection > .form-layout__label {
+  margin-bottom: 1px !important;
+}
+
+.form-layout__subsection > .toggle-pill-grid {
+  margin-top: 0;
+}
+
+/* We use negative margin to counteract the 8px grid gap, leaving 1px visual space + border */
+#busGrid.bus-assign .form-layout__label {
+  margin-bottom: calc(1px - 7px) !important;
+}
+
+.form-layout__subsection-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+/* --- 5. Actions Row --- */
+.form-layout__actions {
+  display: flex;
+  gap: var(--space-2);
+  padding: 0 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ==========================================================================
+   Container & Media Queries for Grid Responsiveness
+   ========================================================================== */
+
+/* Container query for extremely narrow form layouts */
+@container form-layout (max-width: 350px) {
+  .form-layout__col-2,
+  .form-layout__col-4,
+  .form-layout__col-5,
+  .form-layout__col-6,
+  .form-layout__col-8 {
+    grid-column: span 12;
+  }
+
+  .form-layout__subsection-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-layout__actions {
+    justify-content: flex-start;
+  }
+}
+
+/* Viewport-based responsive behavior */
+@media (max-width: 800px) {
+  .form-layout .form-layout__col-2,
+  .form-layout .form-layout__col-4,
+  .form-layout .form-layout__col-5,
+  .form-layout .form-layout__col-6,
+  .form-layout .form-layout__col-8 {
+    grid-column: span 12;
+  }
+
+  .form-layout .form-layout__subsection-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-layout .form-layout__actions {
+    justify-content: flex-start;
+  }
+}

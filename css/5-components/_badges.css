@@ -1,0 +1,35 @@
+/* ==========================================================================
+   5-COMPONENTS / BADGES
+   Small status indicators and counters
+   ========================================================================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 10px 0 10px;
+  font-size: var(--input-font-size);
+  /* 16px */
+  font-weight: 400;
+  border-radius: var(--radius-full);
+  height: 24px;
+  line-height: normal;
+  letter-spacing: 0.02em;
+  vertical-align: middle;
+}
+
+/* BEM: .badge--primary, .badge--error */
+.badge-primary,
+.badge--primary {
+  background: color-mix(in srgb, var(--accent) 33%, transparent);
+  color: var(--text-secondary);
+  border: 1px solid var(--accent);
+  vertical-align: middle;
+}
+
+.badge-error,
+.badge--error {
+  background: color-mix(in srgb, var(--color-danger) 33%, transparent);
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+}

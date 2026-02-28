@@ -1,0 +1,228 @@
+/* ==========================================================================
+   4-OBJECTS / LAYOUT
+   App shell (.app, .main, .container), shared .heading-1; BEM in _objects.css, _app-header.css.
+   ========================================================================== */
+.app {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
+  width: 100%;
+  background: var(--app-bg);
+  overflow: hidden;
+}
+
+.main {
+  padding: 0 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  /* Prevent main from scrolling */
+  flex: 1;
+  /* Take available space */
+}
+
+.container {
+  max-width: var(--layout-container-max);
+  margin: 0 auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: visible;
+  /* Allow dropdowns to display outside container */
+}
+
+/* Page-level title: shared style (app header, agenda week) */
+.heading-1 {
+  font-family: var(--font-sans);
+  font-size: var(--heading-1-size);
+  font-weight: var(--heading-1-weight);
+  color: var(--heading-1-color);
+  line-height: var(--heading-1-line-height);
+  margin: 0;
+  letter-spacing: var(--heading-1-letter-spacing);
+  white-space: nowrap;
+}
+
+/* App header (top bar) BEM in css/5-components/_app-header.css */
+
+.week-picker-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  cursor: pointer;
+  height: var(--week-picker-height);
+  padding: 0 var(--control-padding-x);
+  border-radius: var(--control-radius-icon);
+  transition: background-color var(--dur-1) ease;
+  position: relative;
+}
+
+.week-picker-trigger:hover {
+  background-color: var(--surface-4);
+  color: var(--text);
+}
+
+.week-picker-trigger .date-input-overlay {
+  inset-inline-start: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Control groups */
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#todayBtnMobile {
+  display: none;
+}
+
+/* Panel layout: .app-layout* defined in _objects.css */
+
+/* Mobile layout */
+@media (max-width: 899px) {
+  .app {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .main {
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+
+    /* Portrait: Home bar protection at bottom */
+    @media (orientation: portrait) {
+      padding-bottom: env(safe-area-inset-bottom, 20px);
+    }
+
+    /* Landscape: Notch protection on sides + Home bar bottom */
+    @media (orientation: landscape) {
+      padding-left: env(safe-area-inset-left, 0);
+      padding-right: env(safe-area-inset-right, 0);
+      padding-bottom: env(safe-area-inset-bottom, 12px);
+    }
+  }
+
+  .container {
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .schedule-grid {
+    min-width: 100%;
+  }
+
+  .schedule-grid th:not(:first-child),
+  .schedule-grid td:not(:first-child) {
+    min-width: 180px;
+  }
+
+  /* Hide desktop-only toolbar buttons */
+  #notesBtn,
+  #waitingListBtn,
+  #themeToggle,
+  #todayBtn,
+  #tripInputBtn,
+  #driversBtn,
+  #printBtn,
+  #refreshBtn,
+  .week-start {
+    display: none !important;
+  }
+
+  #todayBtnMobile {
+    display: inline-flex;
+  }
+
+  .app-header__inner {
+    padding: 0 var(--space-4) !important;
+    /* Increase from space-2 to space-4 */
+  }
+
+  .app-header__logo-wrap {
+    display: none !important;
+  }
+
+  .app-header__start {
+    display: flex !important;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .status-grid {
+    grid-template-columns: 1fr;
+    /* Stack them to prevent horizontal squishing */
+    gap: var(--space-3);
+  }
+
+  .app-header__end {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-inline-start: auto;
+    flex-shrink: 0;
+  }
+
+  .nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin: 0 !important;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 10;
+  }
+
+  .btn-icon {
+    min-width: 32px;
+    width: 32px;
+    height: 32px;
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Fix 4: Sticky Header alignment */
+
+  /* Scheduler layout — single column on mobile (app-layout in _objects.css) */
+
+  .dropdown-menu,
+  .dropdown__menu {
+    inset-inline-end: -10px;
+    min-width: 180px;
+  }
+}
+
+@media (max-width: 899px) {
+  .app-layout__main .card__content,
+  .card .card__content {
+    padding: 0;
+  }
+}
+
+/* ==========================================================================
+   Agenda header (date + prev/next week above week table)
+   ========================================================================== */
+
+/* Agenda header in css/5-components/_agenda-header.css */
+
+/* ==========================================================================
+/* ==========================================================================
+   10) WEEK TABLE
+   ========================================================================== */
+
+/* Week table and day label styles in css/5-components/_schedule-grid.css */
+
+/* Week table styles in css/5-components/_schedule-grid.css */
+
+/* Trip bar styles in css/5-components/_schedule-grid.css */
+
+/* ==========================================================================

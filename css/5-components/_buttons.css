@@ -1,0 +1,324 @@
+/* ==========================================================================
+   5-COMPONENTS / BUTTONS & CONTROLS
+   Buttons, chips, toggles, segmented controls
+   ========================================================================== */
+
+button,
+.btn,
+.icon-chip,
+.theme-toggle,
+.seg__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  height: var(--control-height);
+  padding: 0 var(--control-padding-x);
+
+  border: 1px solid transparent;
+  border-radius: var(--control-radius);
+
+  font-size: var(--font-size-3);
+  font-weight: var(--input-font-weight);
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+
+  color: var(--color-button-text);
+  background-color: var(--color-button-bg);
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.12s ease,
+    border-color 0.12s ease,
+    box-shadow 0.12s ease,
+    transform 0.04s ease;
+}
+
+/* Hover */
+button:hover,
+.btn:hover,
+.icon-chip:hover,
+.theme-toggle:hover,
+.seg__btn:hover {
+  background-color: var(--color-button-hover-bg);
+  border-color: transparent;
+}
+
+/* Active */
+button:active:not(.toggle-pill),
+.btn:active,
+.icon-chip:active,
+.theme-toggle:active,
+.seg__btn:active {
+  transform: translateY(1px);
+  border-color: transparent !important;
+  outline: none !important;
+}
+
+/* Disabled */
+button:disabled,
+.btn:disabled,
+.icon-chip:disabled,
+.theme-toggle:disabled,
+.seg__btn:disabled,
+button[aria-disabled="true"],
+.btn[aria-disabled="true"],
+.icon-chip[aria-disabled="true"],
+.theme-toggle[aria-disabled="true"],
+.seg__btn[aria-disabled="true"] {
+  opacity: 1;
+  cursor: not-allowed;
+  pointer-events: none;
+
+  color: var(--color-text-disabled);
+  background-color: var(--overlay-hover);
+  border-color: transparent;
+
+  box-shadow: none;
+  transform: none;
+}
+
+/* Optional: remove default button styles in Safari/Firefox */
+:where(button, .btn, .theme-toggle, .seg__btn) {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Destructive button (BEM: .btn--danger) */
+.btn-danger,
+.btn--danger {
+  color: var(--red);
+  background: var(--color-danger-soft);
+  border-color: transparent;
+}
+
+.btn-danger:hover,
+.btn--danger:hover {
+  background: color-mix(in srgb, var(--red) 22%, transparent);
+  border-color: transparent;
+}
+
+.btn-danger:active,
+.btn--danger:active {
+  background: color-mix(in srgb, var(--red) 28%, transparent);
+  border-color: transparent;
+}
+
+/* Compact button (BEM: .btn--compact) — smaller padding/font for modal footers */
+.btn-compact,
+.btn--compact {
+  height: 32px;
+  padding: 0 var(--space-2);
+  font-size: var(--font-size-2);
+}
+
+/* Toggle Buttons (aria-pressed) */
+:where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn) {
+  border: 1px solid transparent;
+  background-color: var(--color-button-bg);
+  color: var(--color-button-text);
+}
+
+:where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn):hover {
+  background-color: var(--color-button-hover-bg);
+  border-color: transparent;
+}
+
+:where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn)[aria-pressed="true"] {
+  background-color: var(--color-primary) !important;
+  border-color: transparent !important;
+  color: var(--accent) !important;
+}
+
+:where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn)[aria-pressed="true"]:hover {
+  background-color: var(--color-primary-hover);
+}
+
+:where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn)[aria-pressed="true"]:active {
+  background-color: var(--color-primary-active);
+}
+
+/* Segmented controls */
+.seg {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 2px;
+  border-radius: var(--control-radius);
+  border: 1px solid transparent;
+  background: var(--color-button-bg);
+  height: var(--control-height-icon);
+}
+
+.seg__btn {
+  border: 0;
+  background: transparent;
+  height: calc(var(--control-height-icon) - 4px);
+  padding: 0 var(--space-2);
+}
+
+.seg__btn[aria-pressed="true"] {
+  background: var(--color-primary);
+  border: 1px solid transparent;
+  color: var(--color-on-primary);
+}
+
+/* Icon button */
+.btn-icon {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--control-radius-icon) !important;
+  width: var(--week-picker-height);
+  height: var(--week-picker-height);
+}
+
+.btn-icon:hover {
+  box-shadow: none !important;
+  background: var(--surface-4) !important;
+  color: var(--text);
+}
+
+.btn-icon:active {
+  box-shadow: none !important;
+  background: var(--accent) !important;
+}
+
+.btn-icon:disabled {
+  color: var(--color-text-disabled);
+  background: var(--surface-2) !important;
+}
+
+/* Inline label link - subtle text link within labels */
+label .label-link {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-inline-start: 6px;
+  color: var(--accent);
+  font-size: inherit;
+  font-weight: var(--font-weight-regular);
+  text-decoration: none;
+  cursor: pointer;
+  vertical-align: baseline;
+  line-height: 1.4;
+  display: inline;
+  height: auto;
+}
+
+label .label-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+label .label-link:active {
+  color: var(--accent);
+  opacity: 0.8;
+}
+
+.bus-icons {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  z-index: 5;
+}
+
+/* Toggle pill group (BEM: .toggle-pill__grid, .toggle-pill__label) */
+.toggle-pill-grid,
+.toggle-pill__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.toggle-pill-grid-label,
+.toggle-pill__label {
+  grid-column: 1 / -1;
+  font-size: var(--font-size-1);
+  font-weight: var(--font-weight-regular);
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+  /* Tighter gap from label to first row than between pill rows */
+  margin-bottom: calc(var(--space-1) - var(--space-2));
+}
+
+/* Toggle pill — simple aria-pressed button (block: .toggle-pill, element: .toggle-pill__icon) */
+.toggle-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: var(--font-size-1);
+  font-weight: 600;
+  padding: 6px 14px;
+  line-height: 1;
+  border-radius: var(--radius-sm);
+  border: 2px solid transparent;
+  background: var(--surface-3);
+  color: var(--text);
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  transition:
+    background var(--dur-1) ease,
+    border-color var(--dur-1) ease;
+}
+
+.toggle-pill-icon,
+.toggle-pill__icon {
+  font-size: 1rem;
+  /* 18px - matches text height */
+}
+
+.toggle-pill[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--color-on-primary);
+}
+
+/* Card Close Button (Moved from legacy UI components) */
+.btn-close-card {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text-muted);
+  cursor: pointer;
+  opacity: 0.5;
+  margin-right: var(--space-2);
+  /* padding size is 8px */
+  transition:
+    opacity var(--dur-1) ease,
+    background var(--dur-1) ease;
+}
+
+.btn-close-card:hover {
+  opacity: 1;
+  background: var(--surface-3);
+}
+
+.btn-close-card:active {
+  transform: none;
+}
+
+.btn-close-card .material-symbols-outlined {
+  font-size: 1.125rem;
+  /* 18px */
+}

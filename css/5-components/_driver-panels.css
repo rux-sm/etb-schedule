@@ -1,0 +1,172 @@
+/* ==========================================================================
+   13) DRIVER / STATUS PANELS
+   BEM: .driver-week (block), .driver-week__wrap, .driver-week__table, .driver-week__cell--on, etc.
+   ========================================================================== */
+/* Match Trip Editor: horizontal spacing from .card-content padding only; vertical margin for header/content separation */
+.driver-week__wrap {
+  width: auto;
+  max-width: 100%;
+  overflow: auto;
+  margin: 0;
+  background: var(--surface-3);
+}
+
+.driver-week__table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.driver-week__table th {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.driver-week__table th,
+.driver-week__table td {
+  padding: 6px 8px;
+  font-size: var(--font-size-1);
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+  border-inline-end: 1px solid var(--surface-2);
+  border-bottom: 1px solid var(--surface-2);
+}
+
+.driver-week__table th:last-child,
+.driver-week__table td:last-child {
+  border-inline-end: none;
+}
+
+.driver-week__table tr:last-child td {
+  border-bottom: none;
+}
+
+.driver-week__table th:first-child,
+.driver-week__table td:first-child {
+  width: 90px;
+  text-align: start;
+  padding-inline-start: 6px;
+  color: var(--text);
+  font-weight: 400;
+}
+
+.driver-week__table th:first-child {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.driver-week__count {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.driver-week__cell--off {
+  /* Default: available, not selected */
+}
+
+.driver-week__cell--unavailable {
+  background: var(--red) !important;
+  color: #fff !important;
+}
+
+.driver-week__cell--on {
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+}
+
+/* --- 4. Status Grid Optimization --- */
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+/* --- 5. Rigid Bus Assignment --- */
+/* Bus panel: disabled until Buses (1–10) selected */
+#busPanel.is-disabled {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+#busGrid.bus-assign {
+  display: grid;
+  grid-template-columns: 70px 1fr 1fr;
+  column-gap: 8px;
+  row-gap: 8px;
+}
+
+/* Standardized status pattern - uses CSS variables set by status classes */
+select[class*="status-"] {
+  background-color: var(--status-bg);
+  border: 1px solid var(--status-border);
+}
+
+select.status-pending {
+  --status-color: var(--color-status-pending);
+  --status-bg: color-mix(in srgb, var(--status-color) 60%, transparent);
+  --status-border: var(--status-color);
+}
+
+select.status-ok {
+  --status-color: var(--color-status-ok);
+  --status-bg: color-mix(in srgb, var(--status-color) 60%, transparent);
+  --status-border: var(--status-color);
+}
+
+select.status-assigned {
+  --status-color: var(--color-status-assigned);
+  --status-bg: color-mix(in srgb, var(--status-color) 60%, transparent);
+  --status-border: var(--status-color);
+}
+
+select.status-blue,
+select.status-confirmed {
+  --status-color: var(--color-status-blue);
+  --status-bg: color-mix(in srgb, var(--status-color) 60%, transparent);
+  --status-border: var(--status-color);
+}
+
+#busGrid.bus-assign {
+  display: grid;
+  grid-template-columns: 70px 1fr 1fr;
+  gap: 8px;
+}
+
+.bus-assign__head {
+  font-size: var(--font-size-1);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  line-height: 1.4;
+  padding-bottom: 0;
+  margin-bottom: 1px !important;
+}
+
+/* Waiting list — height can grow via --waiting-list-dynamic-height (set from JS) */
+#waitingBody tr.waiting-list-row,
+#waitingBody tr.waiting-list-row td {
+  height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
+  min-height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
+  max-height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
+}
+
+.waiting-list-row td {
+  background-color: var(--agenda-header-bg) !important;
+  border-top: none;
+  vertical-align: top;
+}
+
+.waiting-list-row .schedule-grid__bus-cell {
+  background-color: var(--agenda-header-bg) !important;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+  /* 11px */
+}
+
+/* ==========================================================================

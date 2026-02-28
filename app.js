@@ -3,7 +3,10 @@
 // ======================================================
 function initThemeSystem() {
   const html = document.documentElement;
-  const toggles = [document.getElementById("themeToggle"), document.getElementById("themeToggle2")].filter(Boolean);
+  const toggles = [
+    document.getElementById("themeToggle"),
+    document.getElementById("themeToggle2"),
+  ].filter(Boolean);
 
   const savedTheme = localStorage.getItem("theme") || "dark";
   html.setAttribute("data-theme", savedTheme);
@@ -479,14 +482,24 @@ function truthyLift(v) {
   if (v === false || v == null) return false;
 
   const s = String(v).trim().toLowerCase();
-  return s === "true" || s === "yes" || s === "y" || s === "1" || s === "on" || s === "lift" || s === "x" || s === "✅";
+  return (
+    s === "true" ||
+    s === "yes" ||
+    s === "y" ||
+    s === "1" ||
+    s === "on" ||
+    s === "lift" ||
+    s === "x" ||
+    s === "✅"
+  );
 }
 
 function computeLiftSet() {
   const set = new Set();
 
   for (const b of state.busesList || []) {
-    const rawHasLift = b.hasLift ?? b.lift ?? b.wheelchairLift ?? b.wheelchair ?? b.wcLift ?? b.accessible;
+    const rawHasLift =
+      b.hasLift ?? b.lift ?? b.wheelchairLift ?? b.wheelchair ?? b.wcLift ?? b.accessible;
 
     const has = truthyLift(rawHasLift);
     const busKey = String(b.busId ?? b.id ?? b.busNumber ?? "").trim();
@@ -966,39 +979,40 @@ function updateStatusSelect(el) {
     .trim()
     .toLowerCase();
 
-  el.classList.remove("status-pending", "status-ok", "status-assigned", "status-confirmed", "status-blue");
+  const classes = [
+    "status-pending",
+    "status-ok",
+    "status-assigned",
+    "status-confirmed",
+    "status-blue",
+  ];
+  el.classList.remove(...classes);
+  const trigger = el.closest?.(".select-dropdown")?.querySelector(".select-trigger");
+  if (trigger) trigger.classList.remove(...classes);
   if (!v) return;
 
+  let addClass = "";
   if (id === "driverStatus") {
-    if (v === "pending") el.classList.add("status-pending");
-    else if (v === "assigned") el.classList.add("status-assigned");
-    else if (v === "confirmed") el.classList.add("status-ok");
-    else el.classList.add("status-ok"); // Driver Info Sent
-    return;
+    if (v === "pending") addClass = "status-pending";
+    else if (v === "assigned") addClass = "status-assigned";
+    else if (v === "confirmed") addClass = "status-ok";
+    else addClass = "status-ok";
+  } else if (id === "paymentStatus") {
+    if (v === "pending quote") addClass = "status-pending";
+    else if (v === "quoted") addClass = "status-assigned";
+    else addClass = "status-ok";
+  } else if (id === "invoiceStatus") {
+    if (v === "pending invoice") addClass = "status-pending";
+    else if (v === "invoiced") addClass = "status-assigned";
+    else if (v === "deposit received") addClass = "status-blue";
+    else if (v === "paid in full") addClass = "status-ok";
+  } else {
+    addClass = v === "pending" ? "status-pending" : "status-ok";
   }
-
-  if (id === "paymentStatus") {
-    if (v === "pending quote")
-      el.classList.add("status-pending"); // Red
-    else if (v === "quoted")
-      el.classList.add("status-assigned"); // Yellow (reusing assigned)
-    else el.classList.add("status-ok"); // Contract Signed, PO Received, Not Required (Green)
-    return;
+  if (addClass) {
+    el.classList.add(addClass);
+    if (trigger) trigger.classList.add(addClass);
   }
-
-  if (id === "invoiceStatus") {
-    if (v === "pending invoice")
-      el.classList.add("status-pending"); // Red
-    else if (v === "invoiced")
-      el.classList.add("status-assigned"); // Yellow
-    else if (v === "deposit received")
-      el.classList.add("status-blue"); // Blue
-    else if (v === "paid in full") el.classList.add("status-ok"); // Green
-    return;
-  }
-
-  if (v === "pending") el.classList.add("status-pending");
-  else el.classList.add("status-ok");
 }
 
 function setSelectToPlaceholder(id) {
@@ -1021,7 +1035,13 @@ function maybeApplyPendingDefaults() {
   const dep = $("tripDate")?.value;
   if (!dep || !hasSelectedBusForTrip()) return;
 
-  const ids = ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus", "invoiceStatus"];
+  const ids = [
+    "itineraryStatus",
+    "contactStatus",
+    "paymentStatus",
+    "driverStatus",
+    "invoiceStatus",
+  ];
   let changed = false;
 
   ids.forEach((id) => {
@@ -1151,12 +1171,14 @@ function syncEmptyStateForForm() {
 function syncWeekStartUI() {
   const isMon = state.weekStartsOnMonday;
 
-  if (dom.weekStartMonBtn) dom.weekStartMonBtn.setAttribute("aria-pressed", isMon ? "true" : "false");
-  if (dom.weekStartSunBtn) dom.weekStartSunBtn.setAttribute("aria-pressed", isMon ? "false" : "true");
+  if (dom.weekStartMonBtn)
+    dom.weekStartMonBtn.setAttribute("aria-pressed", isMon ? "true" : "false");
+  if (dom.weekStartSunBtn)
+    dom.weekStartSunBtn.setAttribute("aria-pressed", isMon ? "false" : "true");
 
   // Update toggle button icon and text
   if (dom.weekStartToggle) {
-    const icon = dom.weekStartToggle.querySelector(".dropdown-icon");
+    const icon = dom.weekStartToggle.querySelector(".dropdown__icon");
     if (icon) {
       icon.textContent = isMon ? "toggle_on" : "toggle_off";
       icon.classList.toggle("is-active", isMon);
@@ -1180,7 +1202,7 @@ function applyWeekStart(isMonday) {
 }
 
 function setHeaderOrder() {
-  const theadRow = document.querySelector(".week-table thead tr");
+  const theadRow = document.querySelector(".schedule-grid thead tr");
   if (!theadRow) return;
 
   const cells = Array.from(theadRow.children);
@@ -1400,7 +1422,7 @@ function hideScheduleRenderToast() {
 }
 
 function setBarsHidden(hidden) {
-  const wrap = document.querySelector(".week-table-container");
+  const wrap = document.querySelector(".schedule-grid-container");
   wrap?.classList?.toggle("is-loading-bars", !!hidden);
 }
 
@@ -1408,7 +1430,7 @@ function setBarsHidden(hidden) {
 // 17) BAR ELEMENT REUSE HELPERS
 // ======================================================
 function clearBarsNow() {
-  dom.agendaBody?.querySelectorAll(".row-bars").forEach((b) => (b.innerHTML = ""));
+  dom.agendaBody?.querySelectorAll(".schedule-grid__row-bars").forEach((b) => (b.innerHTML = ""));
   state.barElByKey?.clear?.();
 }
 
@@ -1471,34 +1493,40 @@ function buildAgendaRows() {
     state.busRowIndex.set(String(busId), idx);
 
     const tr = document.createElement("tr");
+    tr.className = "schedule-grid__row";
 
     // Data-driven coloring - apply as left border on row (enterprise style)
     const colorVal =
-      busObj.busColor || busObj.buscolor || busObj.BusColor || busObj["Bus Color"] || busObj["bus color"];
+      busObj.busColor ||
+      busObj.buscolor ||
+      busObj.BusColor ||
+      busObj["Bus Color"] ||
+      busObj["bus color"];
     if (colorVal) {
       tr.style.setProperty("--bus-accent-color", String(colorVal).trim());
-      tr.classList.add("has-bus-color");
+      tr.classList.add("schedule-grid__row--has-bus-color");
     }
 
     const tdBus = document.createElement("td");
-    tdBus.className = "bus-id-cell";
+    tdBus.className = "schedule-grid__bus-cell schedule-grid__cell";
 
     const wrap = document.createElement("div");
-    wrap.className = "bus-id-wrap";
+    wrap.className = "schedule-grid__bus-indicator";
 
     const num = document.createElement("span");
-    num.className = "bus-id-num";
+    num.className = "schedule-grid__bus-num";
     num.textContent = busId;
 
     wrap.appendChild(num);
 
     const icons = document.createElement("div");
-    icons.className = "bus-icons";
+    icons.className = "schedule-grid__bus-icons";
 
     const busKey = String(busId ?? "").trim();
     if (liftSet.has(busKey)) {
       const icon = document.createElement("span");
-      icon.className = "bus-lift material-symbols-outlined";
+      icon.className =
+        "schedule-grid__bus-icon schedule-grid__bus-icon--lift material-symbols-outlined";
       icon.textContent = "accessible";
       icon.title = "Wheelchair lift equipped";
       icon.setAttribute("aria-label", "Wheelchair lift equipped");
@@ -1507,7 +1535,8 @@ function buildAgendaRows() {
 
     if (sleeperSet.has(busKey)) {
       const icon = document.createElement("span");
-      icon.className = "bus-sleeper material-symbols-outlined";
+      icon.className =
+        "schedule-grid__bus-icon schedule-grid__bus-icon--sleeper material-symbols-outlined";
       icon.textContent = "airline_seat_flat";
       icon.title = "Sleeper bus";
       icon.setAttribute("aria-label", "Sleeper bus");
@@ -1520,16 +1549,16 @@ function buildAgendaRows() {
 
     for (let i = 0; i < 7; i++) {
       const td = document.createElement("td");
-      td.className = "day-cell";
+      td.className = "schedule-grid__day-cell schedule-grid__cell";
       td.dataset.dayId = dayIds[i];
-      if (i === todayColIndex) td.classList.add("day-today");
+      if (i === todayColIndex) td.classList.add("schedule-grid__day-cell--today");
       tr.appendChild(td);
     }
 
     tr.cells[1].classList.add("week-start-cell");
 
     const bars = document.createElement("div");
-    bars.className = "row-bars";
+    bars.className = "schedule-grid__row-bars";
     tr.cells[1].appendChild(bars);
 
     dom.agendaBody.appendChild(tr);
@@ -1547,18 +1576,18 @@ function buildAgendaRows() {
     // So we invoke a special render for it here.
 
     const tr = document.createElement("tr");
-    tr.className = "waiting-list-row";
+    tr.className = "waiting-list-row schedule-grid__row";
 
     const tdBus = document.createElement("td");
-    tdBus.className = "bus-id-cell";
-    tdBus.innerHTML = `<div class="bus-id-wrap"><span class="material-symbols-outlined" style="font-size: 24px;">low_priority</span></div>`;
+    tdBus.className = "schedule-grid__bus-cell schedule-grid__cell";
+    tdBus.innerHTML = `<div class="schedule-grid__bus-indicator"><span class="material-symbols-outlined">low_priority</span></div>`;
     tr.appendChild(tdBus);
 
     for (let i = 0; i < 7; i++) {
       const td = document.createElement("td");
-      td.className = "day-cell";
+      td.className = "schedule-grid__day-cell schedule-grid__cell";
       td.dataset.dayId = dayIds[i];
-      if (i === todayColIndex) td.classList.add("day-today");
+      if (i === todayColIndex) td.classList.add("schedule-grid__day-cell--today");
       tr.appendChild(td);
     }
 
@@ -1566,7 +1595,7 @@ function buildAgendaRows() {
     tr.cells[1].classList.add("week-start-cell");
 
     const bars = document.createElement("div");
-    bars.className = "row-bars";
+    bars.className = "schedule-grid__row-bars";
     tr.cells[1].appendChild(bars);
 
     waitingBody.appendChild(tr);
@@ -1635,14 +1664,14 @@ function syncRowBarsWidth(col) {
   const total = col.total ?? col.widths.reduce((a, b) => a + (b || 0), 0);
 
   // Sync main table rows
-  dom.agendaBody.querySelectorAll(".row-bars").forEach((bars) => {
+  dom.agendaBody.querySelectorAll(".schedule-grid__row-bars").forEach((bars) => {
     bars.style.width = `${total}px`;
   });
 
   // Sync waiting list rows
   const wb = document.getElementById("waitingBody");
   if (wb) {
-    wb.querySelectorAll(".row-bars").forEach((bars) => {
+    wb.querySelectorAll(".schedule-grid__row-bars").forEach((bars) => {
       bars.style.width = `${total}px`;
     });
   }
@@ -1668,10 +1697,14 @@ function positionBarWithinOverlay(bar, bars, col, startIdx, endIdx, overrides) {
       : parseCss(root.getPropertyValue("--tripbar-inset-right"), insetAll);
 
   const insetT =
-    overrides?.insetT !== undefined ? overrides.insetT : parseCss(root.getPropertyValue("--tripbar-inset-top"), 0);
+    overrides?.insetT !== undefined
+      ? overrides.insetT
+      : parseCss(root.getPropertyValue("--tripbar-inset-top"), 0);
 
   const insetB =
-    overrides?.insetB !== undefined ? overrides.insetB : parseCss(root.getPropertyValue("--tripbar-inset-bottom"), 3);
+    overrides?.insetB !== undefined
+      ? overrides.insetB
+      : parseCss(root.getPropertyValue("--tripbar-inset-bottom"), 3);
 
   // Simplified: exactly match the calculated start and width without extends
   const leftPx = Math.max(0, (col.starts[startIdx] ?? 0) + insetL);
@@ -1748,7 +1781,7 @@ function showConflictsPanel(conflicts) {
           const tripKey = escHtml(String(it.tripKey || ""));
 
           return `
-          <div class="trip-chip conflict-indicator" data-tripkey="${tripKey}" style="margin-top:10px;" role="button" tabindex="0">
+          <div class="trip-chip conflict-indicator" data-tripkey="${tripKey}" role="button" tabindex="0">
             <div class="title">⚠ ${title}</div>
             <div class="meta">${cust}${cust ? " • " : ""}Bus ${bus} • ${d1}${d2 && d2 !== "—" ? " / " + d2 : ""}</div>
           </div>
@@ -1757,7 +1790,7 @@ function showConflictsPanel(conflicts) {
         .join("");
 
       return `
-      <div style="margin-top:${idx === 0 ? 0 : 14}px;">
+      <div class="conflict-group">
         <div class="conflict-title">Bus ${bus} — ${when}</div>
         <div class="help">${c.items.length} trip(s) overlap</div>
         ${tripsHtml}
@@ -1770,7 +1803,9 @@ function showConflictsPanel(conflicts) {
 
   dom.conflictList.querySelectorAll("[data-tripkey]").forEach((el) => {
     const open = () =>
-      isMobileOnly() ? openTripDetailsModal(el.dataset.tripkey) : openTripForEdit(el.dataset.tripkey);
+      isMobileOnly()
+        ? openTripDetailsModal(el.dataset.tripkey)
+        : openTripForEdit(el.dataset.tripkey);
 
     el.addEventListener("click", open);
     el.addEventListener("keydown", (e) => {
@@ -1808,8 +1843,8 @@ function renderAgenda() {
     // Show error state with retry option
     if (dom.agendaBody) {
       dom.agendaBody.innerHTML = `
-        <tr><td colspan="8" style="text-align:center;padding:40px;">
-          <div style="color:var(--danger);margin-bottom:12px;">Failed to render schedule</div>
+        <tr><td colspan="8" class="schedule-error__cell">
+          <div class="schedule-error__message">Failed to render schedule</div>
           <button onclick="location.reload()" class="btn">Reload Page</button>
         </td></tr>
       `;
@@ -1843,7 +1878,7 @@ function _renderAgendaInner() {
   const barsByRowIdx = new Map();
   for (let i = 0; i < dom.agendaBody.rows.length; i++) {
     const r = dom.agendaBody.rows[i];
-    const bars = r.querySelector(".row-bars");
+    const bars = r.querySelector(".schedule-grid__row-bars");
     if (bars) barsByRowIdx.set(i, bars);
   }
 
@@ -1851,7 +1886,7 @@ function _renderAgendaInner() {
   const waitingBody = document.getElementById("waitingBody");
   if (waitingBody && waitingBody.rows.length > 0) {
     const wRow = waitingBody.rows[0];
-    const wBars = wRow.querySelector(".row-bars");
+    const wBars = wRow.querySelector(".schedule-grid__row-bars");
     if (wBars) barsByRowIdx.set("WAITING", wBars);
   }
 
@@ -2006,68 +2041,69 @@ function _renderAgendaInner() {
 
       if (!bar) {
         bar = document.createElement("div");
-        bar.className = "trip-bar";
+        bar.className = "schedule-grid__trip-bar";
         bar.setAttribute("draggable", "false");
 
         // Helper: fixed slot row
-        function makeRow(slotClass) {
+        function makeRow(slotMod) {
           const el = document.createElement("div");
-          el.className = `bar-row ${slotClass}`;
+          el.className = `schedule-grid__trip-bar__row schedule-grid__trip-bar__row--${slotMod}`;
           return el;
         }
 
         // 7 fixed rows
-        const r1 = makeRow("r1");
-        const r2 = makeRow("r2");
-        const r3 = makeRow("r3");
-        const r4 = makeRow("r4");
-        const r5 = makeRow("r5");
-        const r6 = makeRow("r6");
-        const r7 = makeRow("r7");
+        const r1 = makeRow("1");
+        const r2 = makeRow("2");
+        const r3 = makeRow("3");
+        const r4 = makeRow("4");
+        const r5 = makeRow("5");
+        const r6 = makeRow("6");
+        const r7 = makeRow("7");
 
         // Row 1: Multi-bus badge (top-left) + Title
         const multiBadge = document.createElement("span");
-        multiBadge.className = "trip-bar-multi-badge";
+        multiBadge.className = "schedule-grid__trip-bar__multi-badge";
         multiBadge.setAttribute("aria-hidden", "true");
         r1.appendChild(multiBadge);
         const line1 = document.createElement("div");
-        line1.className = "bar-title";
+        line1.className = "schedule-grid__trip-bar__title";
         r1.appendChild(line1);
 
         // Row 2: Customer (sub)
         const line2 = document.createElement("div");
-        line2.className = "bar-sub";
+        line2.className = "schedule-grid__trip-bar__sub";
         r2.appendChild(line2);
 
         // Row 3: Contact name (sub)
         const line3 = document.createElement("div");
-        line3.className = "bar-sub bar-contact";
+        line3.className = "schedule-grid__trip-bar__sub schedule-grid__trip-bar__contact";
         r3.appendChild(line3);
 
         // Row 4: Time row (left/right)
         const timeRow = document.createElement("div");
-        timeRow.className = "bar-time-row";
+        timeRow.className = "schedule-grid__trip-bar__time-row";
         const left = document.createElement("span");
-        left.className = "bar-time left";
+        left.className = "schedule-grid__trip-bar__time schedule-grid__trip-bar__time--left";
         const center = document.createElement("span");
-        center.className = "bar-time center";
+        center.className = "schedule-grid__trip-bar__time schedule-grid__trip-bar__time--center";
         const right = document.createElement("span");
-        right.className = "bar-time right";
+        right.className = "schedule-grid__trip-bar__time schedule-grid__trip-bar__time--right";
         timeRow.append(left, center, right);
         r4.appendChild(timeRow);
 
         // Row 5: Status icons
         const statusRow = document.createElement("div");
-        statusRow.className = "bar-status-row";
+        statusRow.className = "schedule-grid__trip-bar__status-row";
 
         function makeMini(content, isIcon = false) {
           const b = document.createElement("span");
-          b.className = "mini-badge";
+          b.className = "schedule-grid__trip-bar__mini-badge";
           const g = document.createElement("span");
           if (isIcon) {
-            g.className = "badge-glyph material-symbols-outlined badge-icon";
+            g.className =
+              "schedule-grid__trip-bar__badge-glyph material-symbols-outlined schedule-grid__trip-bar__badge-icon";
           } else {
-            g.className = "badge-glyph";
+            g.className = "schedule-grid__trip-bar__badge-glyph";
           }
           g.textContent = content;
           b.appendChild(g);
@@ -2080,17 +2116,17 @@ function _renderAgendaInner() {
         const bD = makeMini("person", true); // Driver
         const bInv = makeMini("receipt_long", true); // Invoice
         const invText = document.createElement("span");
-        invText.className = "mini-badge-text";
+        invText.className = "schedule-grid__trip-bar__mini-badge-text";
         bInv.appendChild(invText);
         bInv._text = invText;
 
         bInv.classList.add("is-hidden"); // start hidden
 
         const barReqIcons = document.createElement("div");
-        barReqIcons.className = "bar-req-icons";
+        barReqIcons.className = "schedule-grid__trip-bar__req-icons";
 
         const statusBadgesWrap = document.createElement("div");
-        statusBadgesWrap.className = "bar-status-badges";
+        statusBadgesWrap.className = "schedule-grid__trip-bar__status-badges";
         statusBadgesWrap.append(b$, bI, bC, bD, bInv);
 
         statusBadgesWrap.append(b$, bI, bC, bD, bInv, barReqIcons);
@@ -2100,12 +2136,12 @@ function _renderAgendaInner() {
 
         // Row 6: Notes / pre-drivers
         const preDriversRow = document.createElement("div");
-        preDriversRow.className = "bar-pre-drivers";
+        preDriversRow.className = "schedule-grid__trip-bar__pre-drivers";
         r6.appendChild(preDriversRow);
 
         // Row 7: Drivers
         const driversRow = document.createElement("div");
-        driversRow.className = "bar-drivers";
+        driversRow.className = "schedule-grid__trip-bar__drivers";
         r7.appendChild(driversRow);
 
         // Append all 7 fixed rows to bar (critical)
@@ -2206,7 +2242,7 @@ function _renderAgendaInner() {
         reqSpec.forEach(({ key, icon }) => {
           if (!truthyRequirement(t[key])) return;
           const span = document.createElement("span");
-          span.className = "bar-req-icon material-symbols-outlined";
+          span.className = "schedule-grid__trip-bar__req-icon material-symbols-outlined";
           span.textContent = icon;
           span.setAttribute("aria-hidden", "true");
           bar._reqIcons.appendChild(span);
@@ -2229,7 +2265,13 @@ function _renderAgendaInner() {
       bar.classList.toggle("driverstatus-confirmed", ds === "confirmed");
 
       // Color Override
-      bar.classList.remove("color-green", "color-yellow", "color-gray", "color-violet", "color-pink");
+      bar.classList.remove(
+        "color-green",
+        "color-yellow",
+        "color-gray",
+        "color-violet",
+        "color-pink",
+      );
       const tripColor = String(t.tripColor || "")
         .trim()
         .toLowerCase();
@@ -2318,8 +2360,8 @@ function _renderAgendaInner() {
       bar._preDrivers.textContent = t.notes ? clipText(t.notes, 500) : "";
 
       bar._drivers.innerHTML = `
-            <span class="driver">${escHtml(d1)}</span>
-            ${d2 && d2 !== "—" ? `<span class="driver">${escHtml(d2)}</span>` : ""}
+            <span class="schedule-grid__trip-bar__driver">${escHtml(d1)}</span>
+            ${d2 && d2 !== "—" ? `<span class="schedule-grid__trip-bar__driver">${escHtml(d2)}</span>` : ""}
         `;
 
       positionBarWithinOverlay(bar, bars, col, startIdx, endIdx);
@@ -2536,7 +2578,7 @@ function renderDriverWeekHeader() {
 
   const thCount = document.createElement("th");
   thCount.textContent = "";
-  thCount.className = "driver-week-count";
+  thCount.className = "driver-week__count";
   dom.driverWeekHeadRow.appendChild(thCount);
 }
 function renderDriverWeekGrid() {
@@ -2593,7 +2635,9 @@ function renderDriverWeekGrid() {
     }
   }
 
-  const driverNames = (state.driversList || []).map((d) => String(d.driverName || "").trim()).filter(Boolean);
+  const driverNames = (state.driversList || [])
+    .map((d) => String(d.driverName || "").trim())
+    .filter(Boolean);
 
   for (const name of onDaysByDriver.keys()) {
     if (!driverNames.includes(name)) driverNames.push(name);
@@ -2607,9 +2651,9 @@ function renderDriverWeekGrid() {
         .map((dStr, idx) => {
           const on = set.has(idx);
           const unavailable = state.unavailabilityByDriver[name]?.[dStr];
-          let cls = "driver-cell-off";
-          if (on) cls = "driver-cell-on";
-          else if (unavailable) cls = "driver-cell-unavailable";
+          let cls = "driver-week__cell--off";
+          if (on) cls = "driver-week__cell--on";
+          else if (unavailable) cls = "driver-week__cell--unavailable";
 
           return `<td class="${cls}" data-driver="${escHtml(name)}" data-date="${dStr}"></td>`;
         })
@@ -2619,7 +2663,7 @@ function renderDriverWeekGrid() {
 <tr>
 <td>${escHtml(name)}</td>
 ${cells}
-<td class="driver-week-count">${set.size}</td>
+<td class="driver-week__count">${set.size}</td>
 </tr>
 `;
     })
@@ -2688,10 +2732,10 @@ function showCardInPanel(cardType, panel) {
   // Add to target panel
   if (panel === "left" && panelStart) {
     panelStart.appendChild(config.card);
-    panelStart.classList.remove("panel-collapsed");
+    panelStart.classList.remove("app-layout__sidebar--collapsed");
   } else if (panel === "right" && panelEndEl) {
     panelEndEl.appendChild(config.card);
-    panelEndEl.classList.remove("panel-collapsed");
+    panelEndEl.classList.remove("app-layout__sidebar--collapsed");
   }
 
   // Show the card
@@ -2744,10 +2788,10 @@ function hideCard(cardType) {
   const rightHasCards = Object.values(state.cardPanelAssignments).includes("right");
 
   if (panelStart && !leftHasCards) {
-    panelStart.classList.add("panel-collapsed");
+    panelStart.classList.add("app-layout__sidebar--collapsed");
   }
   if (panelEndEl && !rightHasCards) {
-    panelEndEl.classList.add("panel-collapsed");
+    panelEndEl.classList.add("app-layout__sidebar--collapsed");
   }
 
   scheduleAgendaReflow();
@@ -2766,7 +2810,9 @@ function toggleCard(cardType) {
       showCardInPanel(cardType, availablePanel);
     } else {
       // Both panels full - close leftmost card and open new one there
-      const leftCard = Object.keys(state.cardPanelAssignments).find((k) => state.cardPanelAssignments[k] === "left");
+      const leftCard = Object.keys(state.cardPanelAssignments).find(
+        (k) => state.cardPanelAssignments[k] === "left",
+      );
       if (leftCard) {
         hideCard(leftCard);
       }
@@ -2806,7 +2852,7 @@ function setPanelStartMode(show) {
   const panelStart = document.getElementById("panelStart");
   if (!panelStart) return;
 
-  panelStart.classList.toggle("panel-collapsed", !show);
+  panelStart.classList.toggle("app-layout__sidebar--collapsed", !show);
 
   const btn = document.getElementById("panelStartBtn");
   if (btn) {
@@ -2874,7 +2920,8 @@ function getDriverOptions() {
 function syncBusSelectEmptyState() {
   document.querySelectorAll("#busGrid select").forEach((el) => {
     const v = (el.value ?? "").trim();
-    el.classList.toggle("is-empty", !v || v === "None");
+    const cell = el.closest(".select-dropdown") || el;
+    cell.classList.toggle("is-empty", !v || v === "None");
   });
 }
 
@@ -2897,13 +2944,24 @@ function updateBusRowVisibility() {
     const show = idx < n;
     const enabled = raw > 0 && show;
 
-    r.busSel.classList.toggle("is-hidden", !show);
-    r.d1Sel.classList.toggle("is-hidden", !show);
-    r.d2Sel.classList.toggle("is-hidden", !show);
+    const busCell = r.busSel.closest(".select-dropdown") || r.busSel;
+    const d1Cell = r.d1Sel.closest(".select-dropdown") || r.d1Sel;
+    const d2Cell = r.d2Sel.closest(".select-dropdown") || r.d2Sel;
+    busCell.classList.toggle("is-hidden", !show);
+    d1Cell.classList.toggle("is-hidden", !show);
+    d2Cell.classList.toggle("is-hidden", !show);
 
     r.busSel.disabled = !enabled;
     r.d1Sel.disabled = !enabled;
     r.d2Sel.disabled = !enabled;
+
+    // Disable custom dropdown triggers when select is disabled (native select is hidden)
+    const busTrigger = busCell.querySelector?.(".select-trigger");
+    const d1Trigger = d1Cell.querySelector?.(".select-trigger");
+    const d2Trigger = d2Cell.querySelector?.(".select-trigger");
+    if (busTrigger) busTrigger.disabled = !enabled;
+    if (d1Trigger) d1Trigger.disabled = !enabled;
+    if (d2Trigger) d2Trigger.disabled = !enabled;
 
     if (!show) {
       r.busSel.value = "None";
@@ -2984,15 +3042,15 @@ function updateWeekDates() {
   ids.forEach((dayId, index) => {
     const date = addDays(state.currentDate, index);
     const th = document.getElementById(dayId);
-    const dateSpan = th?.querySelector?.(".day-date");
+    const dateSpan = th?.querySelector?.(".schedule-grid__day-date");
     if (dateSpan) dateSpan.textContent = `${date.getDate()}`;
 
     const isToday = ymd(date) === todayYmd;
-    th?.classList.toggle("day-today", isToday);
+    th?.classList.toggle("schedule-grid__header-cell--today", isToday);
 
     // Update body cells in this column too
     document.querySelectorAll(`td[data-day-id="${dayId}"]`).forEach((td) => {
-      td.classList.toggle("day-today", isToday);
+      td.classList.toggle("schedule-grid__day-cell--today", isToday);
     });
   });
 
@@ -3146,6 +3204,7 @@ function clearTripInfoCardForNextTrip() {
   setModeNew();
 
   setSelectToPlaceholder("busesNeeded");
+  setSelectToPlaceholder("tripColor");
   setSelectToPlaceholder("itineraryStatus");
   setSelectToPlaceholder("contactStatus");
   setSelectToPlaceholder("paymentStatus");
@@ -3157,8 +3216,8 @@ function clearTripInfoCardForNextTrip() {
   syncBusPanelState();
   refreshBusSelectOptions();
 
-  ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus", "invoiceStatus"].forEach((id) =>
-    updateStatusSelect($(id)),
+  ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus", "invoiceStatus"].forEach(
+    (id) => updateStatusSelect($(id)),
   );
   updateInvoiceNumberVisibility();
 
@@ -3195,8 +3254,10 @@ function renderTripDetailsModalFromData(t, assigns) {
 
   function detailGridItem(label, val, itemClass) {
     const display = val ? escHtml(val) : "—";
-    const wrapClass = itemClass ? `detail-grid-item ${itemClass}` : "detail-grid-item";
-    return `<div class="${wrapClass}"><span class="toggle-pill-grid-label">${label}:</span> <span class="detail-value">${display}</span></div>`;
+    const wrapClass = itemClass
+      ? `trip-details__grid-item ${itemClass}`
+      : "trip-details__grid-item";
+    return `<div class="${wrapClass}"><span class="toggle-pill-grid-label">${label}:</span> <span class="trip-details__value">${display}</span></div>`;
   }
 
   function getDetailStatusClass(fieldId, val) {
@@ -3228,24 +3289,46 @@ function renderTripDetailsModalFromData(t, assigns) {
   function rowStatus(label, val, fieldId, extraClass) {
     const display = val ? escHtml(val) : "—";
     const cls = val ? getDetailStatusClass(fieldId, val) : "";
-    const wrapClass = extraClass ? `detail-grid-item ${extraClass}` : "detail-grid-item";
+    const wrapClass = extraClass
+      ? `trip-details__grid-item ${extraClass}`
+      : "trip-details__grid-item";
     const valueSpan = cls
-      ? `<span class="detail-value ${cls}">${display}</span>`
-      : `<span class="detail-value">${display}</span>`;
+      ? `<span class="trip-details__value ${cls}">${display}</span>`
+      : `<span class="trip-details__value">${display}</span>`;
     return `<div class="${wrapClass}"><span class="toggle-pill-grid-label">${label}:</span> ${valueSpan}</div>`;
   }
 
   function section(title) {
-    return `<div class="detail-section-title toggle-pill-grid-label">${title}</div>`;
+    return `<div class="trip-details__section-title toggle-pill-grid-label">${title}</div>`;
   }
 
-  html += `<div class="detail-meta-grid detail-status-grid">`;
-  html += rowStatus("Itinerary Status", t.itineraryStatus, "itineraryStatus", "detail-hide-mobile");
-  html += rowStatus("Contact Status", t.contactStatus, "contactStatus", "detail-hide-mobile");
-  html += rowStatus("Approval Status", t.paymentStatus, "paymentStatus", "detail-hide-mobile");
-  html += rowStatus("Driver Status", t.driverStatus, "driverStatus", "detail-hide-mobile");
-  html += rowStatus("Invoice Status", t.invoiceStatus, "invoiceStatus", "detail-hide-mobile");
-  html += detailGridItem("Invoice Number", t.invoiceNumber, "detail-hide-mobile");
+  html += `<div class="trip-details__meta-grid detail-status-grid">`;
+  html += rowStatus(
+    "Itinerary Status",
+    t.itineraryStatus,
+    "itineraryStatus",
+    "trip-details__hide-mobile",
+  );
+  html += rowStatus(
+    "Contact Status",
+    t.contactStatus,
+    "contactStatus",
+    "trip-details__hide-mobile",
+  );
+  html += rowStatus(
+    "Approval Status",
+    t.paymentStatus,
+    "paymentStatus",
+    "trip-details__hide-mobile",
+  );
+  html += rowStatus("Driver Status", t.driverStatus, "driverStatus", "trip-details__hide-mobile");
+  html += rowStatus(
+    "Invoice Status",
+    t.invoiceStatus,
+    "invoiceStatus",
+    "trip-details__hide-mobile",
+  );
+  html += detailGridItem("Invoice Number", t.invoiceNumber, "trip-details__hide-mobile");
   html += detailGridItem("Contact", t.contactName);
   html += detailGridItem("Phone", t.phone);
   html += `</div>`;
@@ -3253,7 +3336,7 @@ function renderTripDetailsModalFromData(t, assigns) {
   html += `<div class="detail-divider"></div>`;
 
   if (t.itinerary) {
-    html += `<div class="detail-text pre-wrap detail-itinerary-scroll">${escHtml(t.itinerary)}</div>`;
+    html += `<div class="trip-details__itinerary-scroll pre-wrap">${escHtml(t.itinerary)}</div>`;
   }
 
   dom.tripDetailsBody.innerHTML = html;
@@ -3278,7 +3361,10 @@ async function openTripDetailsModal(tripKey) {
 
     const hasCore =
       cachedTrip &&
-      (cachedTrip.destination || cachedTrip.customer || cachedTrip.departureDate || cachedTrip.arrivalDate);
+      (cachedTrip.destination ||
+        cachedTrip.customer ||
+        cachedTrip.departureDate ||
+        cachedTrip.arrivalDate);
 
     let t = cachedTrip || {};
     let assigns = Array.isArray(cachedAssigns) ? cachedAssigns : [];
@@ -3333,11 +3419,15 @@ function closeTripDetailsModal() {
 async function openTripForEdit(tripKey) {
   if (isMobileOnly()) return openTripDetailsModal(tripKey);
 
-  // Loading Overlay Logic
+  // Loading Overlay Logic (single overlay; message set for trip-edit context)
   const overlay = document.getElementById("loadingOverlay");
-  const bar = overlay?.querySelector(".loading-bar__inner");
+  const bar = overlay?.querySelector(".loading-overlay__bar-inner");
+  const overlayText = document.getElementById("loadingOverlayText");
+  const overlaySub = document.getElementById("loadingOverlaySub");
   if (overlay) overlay.hidden = false;
   if (bar) bar.style.width = "0%";
+  if (overlayText) overlayText.textContent = "Loading Trip…";
+  if (overlaySub) overlaySub.textContent = "Please wait";
 
   dom.saveBtn.disabled = true;
 
@@ -3362,7 +3452,10 @@ async function openTripForEdit(tripKey) {
     const startTime = Date.now();
     if (bar) bar.style.width = "15%";
 
-    const [tripResp, assignResp] = await Promise.all([api.getTrip(tripKey), api.getBusAssignments(tripKey)]);
+    const [tripResp, assignResp] = await Promise.all([
+      api.getTrip(tripKey),
+      api.getBusAssignments(tripKey),
+    ]);
 
     // Force a minimum delay so the user feels the "loading" state (prevents instant flash)
     const elapsed = Date.now() - startTime;
@@ -3396,9 +3489,18 @@ async function openTripForEdit(tripKey) {
     $("tripColor").value = t.tripColor || "";
     setRequirementTogglesFromTrip(t);
 
-    ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus", "invoiceStatus"].forEach((id) =>
-      updateStatusSelect($(id)),
-    );
+    // Sync custom dropdown triggers (values were set above; dispatch change so triggers update)
+    [
+      "itineraryStatus",
+      "contactStatus",
+      "paymentStatus",
+      "driverStatus",
+      "invoiceStatus",
+      "tripColor",
+    ].forEach((id) => {
+      const el = $(id);
+      if (el) el.dispatchEvent(new Event("change", { bubbles: true }));
+    });
     updateInvoiceNumberVisibility();
 
     dom.itineraryField.value = t.itinerary || "";
@@ -3406,6 +3508,7 @@ async function openTripForEdit(tripKey) {
     $("comments").value = t.comments || "";
 
     setBusesNeededAndSync(t.busesNeeded ? String(t.busesNeeded) : "");
+    dom.busesNeeded?.dispatchEvent(new Event("change", { bubbles: true }));
     setModeEdit(String(t.tripKey || tripKey), String(t.tripId || ""));
 
     state.busRows.forEach((r) => {
@@ -3427,6 +3530,11 @@ async function openTripForEdit(tripKey) {
     });
 
     updateBusRowVisibility();
+    state.busRows.forEach((r) => {
+      r.busSel.dispatchEvent(new Event("change", { bubbles: true }));
+      r.d1Sel.dispatchEvent(new Event("change", { bubbles: true }));
+      r.d2Sel.dispatchEvent(new Event("change", { bubbles: true }));
+    });
     syncBusPanelState();
     syncBusSelectEmptyState();
     refreshEmptyStateUI();
@@ -3436,11 +3544,15 @@ async function openTripForEdit(tripKey) {
     // Slight delay to show 100% before hiding
     setTimeout(() => {
       if (overlay) overlay.hidden = true;
+      if (overlayText) overlayText.textContent = "Loading…";
+      if (overlaySub) overlaySub.textContent = "Please wait";
     }, 500);
 
     $("destination")?.focus?.({ preventScroll: true });
   } catch (e) {
     if (overlay) overlay.hidden = true;
+    if (overlayText) overlayText.textContent = "Loading…";
+    if (overlaySub) overlaySub.textContent = "Please wait";
     console.error(e);
     toast("Could not load trip", "danger", 2200);
     alert("Could not open trip for editing.");
@@ -3466,7 +3578,8 @@ function clearVerifyFallback() {
 async function verifyWriteResult() {
   if (!state.pendingWrite?.tripKey) return;
 
-  const { action, tripKey, originalTrips, originalTripByKey, originalAssignments } = state.pendingWrite;
+  const { action, tripKey, originalTrips, originalTripByKey, originalAssignments } =
+    state.pendingWrite;
 
   startProgressCreep({ from: 70, to: 95, label: "Verifying… " });
 
@@ -3520,7 +3633,11 @@ async function verifyWriteResult() {
         // Verification never saw the trip on the server — treat as failure.
         // Roll back optimistic changes so UI matches the last known server state.
         rollbackState();
-        toast("Save could not be verified — changes were rolled back. Please try saving again.", "danger", 3500);
+        toast(
+          "Save could not be verified — changes were rolled back. Please try saving again.",
+          "danger",
+          3500,
+        );
       }
     }
   } catch (e) {
@@ -3528,7 +3645,11 @@ async function verifyWriteResult() {
     // On verification error, always restore previous state so UI does not
     // show trips that may not exist on the server.
     rollbackState();
-    toast("Connection error during verification — schedule restored to the previous state.", "danger", 3000);
+    toast(
+      "Connection error during verification — schedule restored to the previous state.",
+      "danger",
+      3000,
+    );
   } finally {
     stopProgressCreep();
     clearVerifyFallback();
@@ -3558,7 +3679,7 @@ async function verifyWriteResult() {
 // ======================================================
 
 /**
- * Build Legal-landscape print layout by cloning the live week-table.
+ * Build Legal-landscape print layout by cloning the live schedule-grid.
  * Layout: 2 pages, 5 bus rows each, 2 empty note rows below each bus.
  * Trip bars are in the clone; repositionBarsForPrint sets pixel-based left/width.
  */
@@ -3566,7 +3687,7 @@ function buildPrintScheduleTwoPages() {
   const printRoot = document.getElementById("printRoot");
   if (!printRoot) return;
 
-  const weekTable = document.querySelector(".week-table");
+  const weekTable = document.querySelector(".schedule-grid");
   if (!weekTable) return;
 
   const weekTitle = document.getElementById("headerWeek")?.textContent || "Schedule";
@@ -3577,9 +3698,9 @@ function buildPrintScheduleTwoPages() {
     const body = table.querySelector("tbody:not([hidden])");
     if (!body) return;
     const total = Math.round(col.total);
-    body.querySelectorAll(".row-bars").forEach((bars) => {
+    body.querySelectorAll(".schedule-grid__row-bars").forEach((bars) => {
       bars.style.width = `${total}px`;
-      bars.querySelectorAll(".trip-bar").forEach((bar) => {
+      bars.querySelectorAll(".schedule-grid__trip-bar").forEach((bar) => {
         const sidx = Number(bar.dataset.sidx);
         const eidx = Number(bar.dataset.eidx);
         if (!Number.isFinite(sidx) || !Number.isFinite(eidx)) return;
@@ -3622,13 +3743,13 @@ function buildPrintScheduleTwoPages() {
       } else {
         for (let j = 0; j < 2; j++) {
           const notesRow = document.createElement("tr");
-          notesRow.className = "notes-row";
+          notesRow.className = "schedule-grid__row--notes";
           const tdEmpty = document.createElement("td");
-          tdEmpty.className = "bus-id-cell";
+          tdEmpty.className = "schedule-grid__cell schedule-grid__bus-cell";
           notesRow.appendChild(tdEmpty);
           for (let i = 0; i < 7; i++) {
             const td = document.createElement("td");
-            td.className = "day-cell";
+            td.className = "schedule-grid__cell schedule-grid__day-cell";
             notesRow.appendChild(td);
           }
           tr.parentNode.insertBefore(notesRow, tr.nextSibling);
@@ -3646,10 +3767,12 @@ function buildPrintScheduleTwoPages() {
     if (headerClone) {
       headerClone.classList.add("print-header");
       headerClone
-        .querySelectorAll(".nav-controls, .date-input-overlay, input.weekpicker, .weekpicker-trigger-wrap")
+        .querySelectorAll(
+          ".agenda-header__nav-right, .agenda-header__date-left .btn-icon, .weekpicker-trigger-wrap",
+        )
         .forEach((el) => el.remove());
-      const topbarLogo = document.querySelector(".logo-wrap");
-      const headerInner = headerClone.querySelector(".agenda-header-inner");
+      const topbarLogo = document.querySelector(".app-header__logo-wrap");
+      const headerInner = headerClone.querySelector(".agenda-header__inner");
       if (topbarLogo && headerInner) {
         const logoClone = topbarLogo.cloneNode(true);
         logoClone.classList.add("print-header-logo");
@@ -3673,7 +3796,7 @@ function buildPrintScheduleTwoPages() {
   printRoot.appendChild(makeTableForRows(5, 10));
 
   const printCardWidth = 1320;
-  const busColWidth = 50;
+  const busColWidth = 34;
   const effectivePrintW = 1296;
   const borderAllowance = 22;
   const dayColTotal = effectivePrintW - busColWidth - borderAllowance;
@@ -3713,13 +3836,15 @@ function buildPrintScheduleFullLetter() {
       <table class="print-data-table">
         <thead>
           <tr>
-            <th class="col-bus">Bus</th>
+            <th class="schedule-grid__col-bus">Bus</th>
             ${dates
               .map((d, i) => {
                 const dObj = parseYMD(d);
-                const dayStr = dObj ? dObj.toLocaleDateString("en-US", { weekday: "short" }) : dayIds[i];
+                const dayStr = dObj
+                  ? dObj.toLocaleDateString("en-US", { weekday: "short" })
+                  : dayIds[i];
                 const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
-                return `<th class="col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
+                return `<th class="schedule-grid__col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
               })
               .join("")}
           </tr>
@@ -3738,7 +3863,7 @@ function buildPrintScheduleFullLetter() {
     });
 
     html += `<tr>`;
-    html += `<td class="bus-id-cell"><strong>${escHtml(busId)}</strong></td>`;
+    html += `<td class="schedule-grid__bus-cell"><strong>${escHtml(busId)}</strong></td>`;
 
     let skipDays = 0;
     for (let i = 0; i < 7; i++) {
@@ -3839,7 +3964,8 @@ async function loadDriversAndBuses(forceRefresh = false) {
   state.busesList = busesResp?.ok && busesResp.buses ? busesResp.buses : [];
 
   // Save drivers to cache (but not buses)
-  if (state.driversList.length) CACHE.set("cache_drivers", state.driversList, CONFIG.CACHE_TTL_DRIVERS);
+  if (state.driversList.length)
+    CACHE.set("cache_drivers", state.driversList, CONFIG.CACHE_TTL_DRIVERS);
 
   state.busesList = state.busesList
     .map((b) => ({
@@ -3854,7 +3980,9 @@ async function loadDriversAndBuses(forceRefresh = false) {
       ...d,
       driverId: String(d.driverId || "").trim(),
       driverName:
-        d.driverName && String(d.driverName).trim() ? String(d.driverName).trim() : String(d.driverId || "").trim(),
+        d.driverName && String(d.driverName).trim()
+          ? String(d.driverName).trim()
+          : String(d.driverId || "").trim(),
     }))
     .filter((d) => d.driverName);
 
@@ -3962,7 +4090,7 @@ function showCellContextMenu(x, y, busId, dateStr) {
 
 function handleScheduleInteraction(e, isContext) {
   // 1. Check for Trip Bar
-  const tripBar = e.target.closest(".trip-bar");
+  const tripBar = e.target.closest(".schedule-grid__trip-bar");
 
   if (tripBar) {
     if (isContext) e.preventDefault(); // Stop browser menu
@@ -3976,7 +4104,7 @@ function handleScheduleInteraction(e, isContext) {
   }
 
   // 2. Check for Day Cell (Context Menu)
-  const cell = e.target.closest("td.day-cell");
+  const cell = e.target.closest("td.schedule-grid__day-cell");
   if (cell) {
     if (isContext) e.preventDefault(); // Stop browser menu
     e.stopPropagation(); // Prevent immediate close via document listener
@@ -3986,7 +4114,7 @@ function handleScheduleInteraction(e, isContext) {
     if (!tr) return;
 
     let busId = "";
-    const busCell = tr.querySelector(".bus-id-num");
+    const busCell = tr.querySelector(".schedule-grid__bus-num");
     if (busCell) {
       busId = busCell.textContent.trim();
     } else if (tr.classList.contains("waiting-list-row")) {
@@ -4010,7 +4138,7 @@ function handleScheduleInteraction(e, isContext) {
 }
 
 function wireDelegatedBarEvents() {
-  const containers = document.querySelectorAll(".week-table-container");
+  const containers = document.querySelectorAll(".schedule-grid-container");
   if (!containers.length) return;
 
   // Close context menu on any click outside
@@ -4066,6 +4194,7 @@ function wireDelegatedBarEvents() {
       const bus1Input = document.querySelector('select[name="bus1"]');
       if (bus1Input) {
         bus1Input.value = busId;
+        bus1Input.dispatchEvent(new Event("change", { bubbles: true }));
       } else {
         console.warn("Could not find select[name='bus1']");
       }
@@ -4076,6 +4205,9 @@ function wireDelegatedBarEvents() {
         tripDateInput.value = dateStr;
         tripDateInput.dispatchEvent(new Event("change")); // To auto-fill arrival
       }
+
+      // Ensure status fields default to Pending (bus1 and tripDate are set above)
+      maybeApplyPendingDefaults();
     }
   });
 
@@ -4095,7 +4227,7 @@ function wireDelegatedBarEvents() {
     // Let's act like left click -> Open Menu
     container.addEventListener("keydown", (e) => {
       if (e.key !== "Enter" && e.key !== " ") return;
-      const bar = e.target.closest(".trip-bar");
+      const bar = e.target.closest(".schedule-grid__trip-bar");
       if (!bar) return;
 
       e.preventDefault();
@@ -4124,9 +4256,156 @@ function loadPrefs() {
 }
 
 // ======================================================
+// 35.5) GLASS SELECT DROPDOWNS (trip editor status fields + bus grid)
+// ======================================================
+function wrapSelectInGlassDropdown(sel, opts) {
+  const { statusId, rebuildMenuOnOpen, cellClass } = opts || {};
+  const statusIds = new Set([
+    "itineraryStatus",
+    "contactStatus",
+    "paymentStatus",
+    "driverStatus",
+    "invoiceStatus",
+  ]);
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "dropdown select-dropdown" + (cellClass ? " " + cellClass : "");
+  wrapper.dataset.selectName = sel.name || "";
+
+  const trigger = document.createElement("button");
+  trigger.type = "button";
+  trigger.className = "select-trigger";
+  trigger.setAttribute("aria-haspopup", "listbox");
+  trigger.setAttribute("aria-expanded", "false");
+
+  const menu = document.createElement("div");
+  menu.className = "dropdown__menu";
+  menu.setAttribute("role", "listbox");
+  menu.hidden = true;
+
+  function getSelectedText() {
+    const opt = sel.options[sel.selectedIndex];
+    return opt ? opt.textContent.trim() : "";
+  }
+
+  function updateTrigger() {
+    trigger.textContent = getSelectedText();
+    if (statusId && statusIds.has(statusId)) updateStatusSelect(sel);
+    if (cellClass) {
+      const v = (sel.value ?? "").trim();
+      trigger.classList.toggle("is-empty", !v || v === "None");
+    }
+  }
+
+  function populateMenu() {
+    menu.innerHTML = "";
+    Array.from(sel.options).forEach((opt) => {
+      if (opt.disabled && !String(opt.value).trim()) return;
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "dropdown__item";
+      btn.setAttribute("role", "option");
+      btn.dataset.value = opt.value;
+      btn.textContent = opt.textContent.trim();
+      btn.addEventListener("click", () => {
+        sel.value = opt.value;
+        sel.dispatchEvent(new Event("change", { bubbles: true }));
+        updateTrigger();
+        closeMenu();
+      });
+      menu.appendChild(btn);
+    });
+  }
+
+  function closeMenu() {
+    menu.hidden = true;
+    menu.classList.remove("dropdown__menu--up");
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.classList.remove("is-open");
+    document.removeEventListener("click", outsideClick);
+    document.removeEventListener("keydown", handleEscape);
+  }
+
+  function handleEscape(e) {
+    if (e.key === "Escape") closeMenu();
+  }
+
+  function outsideClick(e) {
+    if (!wrapper.contains(e.target)) closeMenu();
+  }
+
+  sel.parentNode.insertBefore(wrapper, sel);
+  wrapper.appendChild(sel);
+  sel.classList.add("select-native");
+
+  if (!rebuildMenuOnOpen) populateMenu();
+
+  trigger.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (menu.hidden) {
+      if (rebuildMenuOnOpen) populateMenu();
+      menu.hidden = false;
+      // Flip menu above trigger if near bottom edge (avoids card resize / page scroll)
+      const triggerRect = trigger.getBoundingClientRect();
+      const menuMaxH = 244; // ~240px max-height + gap
+      const openUpward = triggerRect.bottom + menuMaxH > window.innerHeight;
+      menu.classList.toggle("dropdown__menu--up", openUpward);
+      trigger.setAttribute("aria-expanded", "true");
+      trigger.classList.add("is-open");
+      document.addEventListener("click", outsideClick);
+      document.addEventListener("keydown", handleEscape);
+    } else {
+      closeMenu();
+    }
+  });
+
+  wrapper.appendChild(trigger);
+  wrapper.appendChild(menu);
+
+  sel.addEventListener("change", updateTrigger);
+  updateTrigger();
+}
+
+function initGlassSelects() {
+  const statusIds = new Set([
+    "itineraryStatus",
+    "contactStatus",
+    "paymentStatus",
+    "driverStatus",
+    "invoiceStatus",
+  ]);
+  const ids = [
+    "busesNeeded",
+    "tripColor",
+    "itineraryStatus",
+    "contactStatus",
+    "paymentStatus",
+    "driverStatus",
+    "invoiceStatus",
+  ];
+  ids.forEach((id) => {
+    const sel = $(id);
+    if (!sel || sel.tagName !== "SELECT") return;
+    wrapSelectInGlassDropdown(sel, { statusId: id });
+  });
+
+  // Bus assignment and driver selects (dynamic options, rebuild menu on open)
+  document.querySelectorAll("#busGrid select").forEach((sel) => {
+    wrapSelectInGlassDropdown(sel, { rebuildMenuOnOpen: true, cellClass: "bus-assign__cell" });
+  });
+}
+
+// ======================================================
 // 36) EVENTS
 // ======================================================
 function wireEvents() {
+  initGlassSelects();
+
+  // Re-apply bus row visibility after wrapping (initGlassSelects wraps selects;
+  // updateBusRowVisibility ran in buildBusRowsOnce before wrapping, so wrappers never got is-hidden)
+  updateBusRowVisibility();
+  syncBusPanelState();
+
   // Ensure status fields update to 'Pending' when a bus is selected after date is picked
   // (fix for manual entry case)
   const observeBusGrid = () => {
@@ -4139,11 +4418,13 @@ function wireEvents() {
   };
   // Call once on load
   observeBusGrid();
-  ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus"].forEach((id) => {
-    const el = $(id);
-    updateStatusSelect(el);
-    el.addEventListener("change", () => updateStatusSelect(el));
-  });
+  ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus", "invoiceStatus"].forEach(
+    (id) => {
+      const el = $(id);
+      updateStatusSelect(el);
+      el.addEventListener("change", () => updateStatusSelect(el));
+    },
+  );
 
   // Auto-Refresh
   setInterval(() => {
@@ -4199,11 +4480,13 @@ function wireEvents() {
   dom.driverWeekBody.addEventListener("mousedown", (e) => {
     const td = e.target.closest("td");
     if (!td || !td.dataset.driver || !td.dataset.date) return;
-    if (td.classList.contains("driver-cell-on")) return;
+    if (td.classList.contains("driver-week__cell--on")) return;
 
     state.dragSelection.active = true;
     state.dragSelection.driver = td.dataset.driver;
-    state.dragSelection.mode = td.classList.contains("driver-cell-unavailable") ? "remove" : "add";
+    state.dragSelection.mode = td.classList.contains("driver-week__cell--unavailable")
+      ? "remove"
+      : "add";
     state.dragSelection.dates.clear();
 
     // Toggle first cell immediately
@@ -4216,7 +4499,7 @@ function wireEvents() {
       if (!state.dragSelection.active) return;
       const td = e.target.closest("td");
       if (!td || td.dataset.driver !== state.dragSelection.driver || !td.dataset.date) return;
-      if (td.classList.contains("driver-cell-on")) return;
+      if (td.classList.contains("driver-week__cell--on")) return;
 
       // Don't re-toggle the same cell in one drag pass
       if (state.dragSelection.dates.has(td.dataset.date)) return;
@@ -4251,7 +4534,11 @@ function wireEvents() {
     try {
       const resp = await api.batchUnavailability(driver, dateList, mode);
       if (resp.ok) {
-        toast(mode === "add" ? "Marked as unavailable ✓" : "Marked as available ✓", "success", 1500);
+        toast(
+          mode === "add" ? "Marked as unavailable ✓" : "Marked as available ✓",
+          "success",
+          1500,
+        );
       } else {
         toast("Failed to update status", "danger", 2500);
         refreshWeekData({ silent: true }); // Rollback UI
@@ -4269,10 +4556,10 @@ function wireEvents() {
     const mode = state.dragSelection.mode;
 
     if (mode === "add") {
-      td.className = "driver-cell-unavailable";
+      td.className = "driver-week__cell--unavailable";
       (state.unavailabilityByDriver[driver] ||= {})[date] = true;
     } else {
-      td.className = "driver-cell-off";
+      td.className = "driver-week__cell--off";
       if (state.unavailabilityByDriver[driver]) {
         delete state.unavailabilityByDriver[driver][date];
       }
@@ -4554,9 +4841,12 @@ function wireEvents() {
     // Guard: if buses are needed, require at least one actual bus assignment.
     if (numBuses > 0 && !hasAssignedBus) {
       toast("Select at least one bus for this trip.", "danger", 2500);
-      // Focus first bus select for convenience
-      const firstBusRow = state.busRows[0];
-      firstBusRow?.busSel?.focus?.();
+      // Focus first bus dropdown trigger (visible control; native select is hidden)
+      const firstRow = state.busRows[0];
+      const busTrigger = firstRow?.busSel
+        ?.closest?.(".select-dropdown")
+        ?.querySelector?.(".select-trigger");
+      if (busTrigger && !busTrigger.disabled) busTrigger.focus();
       return;
     }
 
@@ -4655,17 +4945,33 @@ function wireEvents() {
     refreshEmptyStateUI();
     setModeNew();
 
-    // Status dropdowns
-    ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus", "invoiceStatus"].forEach((id) =>
-      updateStatusSelect($(id)),
+    // Reset custom selects to placeholder so triggers sync (form.reset doesn't fire change)
+    setSelectToPlaceholder("busesNeeded");
+    setSelectToPlaceholder("tripColor");
+    ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus", "invoiceStatus"].forEach(
+      setSelectToPlaceholder,
     );
-    updateInvoiceNumberVisibility();
 
-    // Bus panel
     dom.busesNeeded.value = "";
     updateBusRowVisibility();
     syncBusPanelState();
     refreshBusSelectOptions();
+
+    // Reset bus/driver selects and sync triggers
+    state.busRows.forEach((r) => {
+      r.busSel.value = "None";
+      r.d1Sel.value = "None";
+      r.d2Sel.value = "None";
+      r.busSel.dispatchEvent(new Event("change", { bubbles: true }));
+      r.d1Sel.dispatchEvent(new Event("change", { bubbles: true }));
+      r.d2Sel.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    syncBusSelectEmptyState();
+
+    ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus", "invoiceStatus"].forEach(
+      (id) => updateStatusSelect($(id)),
+    );
+    updateInvoiceNumberVisibility();
 
     // Form has just been reset after save/delete; treat as clean.
     state.tripFormDirty = false;
@@ -4732,7 +5038,11 @@ function wireSettingsMenu() {
 
   // Close on click outside
   document.addEventListener("click", (e) => {
-    if (!dom.settingsMenu.hidden && !dom.settingsMenu.contains(e.target) && !dom.settingsBtn.contains(e.target)) {
+    if (
+      !dom.settingsMenu.hidden &&
+      !dom.settingsMenu.contains(e.target) &&
+      !dom.settingsBtn.contains(e.target)
+    ) {
       dom.settingsMenu.hidden = true;
       dom.settingsBtn.setAttribute("aria-expanded", "false");
     }
@@ -4801,7 +5111,7 @@ function wireSettingsMenu() {
 
   // 6. Auto-close whenever ANY dropdown item is clicked inside this menu
   dom.settingsMenu.addEventListener("click", (e) => {
-    if (e.target.closest(".dropdown-item")) {
+    if (e.target.closest(".dropdown__item")) {
       dom.settingsMenu.hidden = true;
       dom.settingsBtn.setAttribute("aria-expanded", "false");
     }
@@ -4828,7 +5138,7 @@ function generateNextDayReport(selectedDate = null) {
     dom.nextDayReportDateInput.value = startYMD;
   }
 
-  let fullHtml = `<div style="padding-bottom: 20px;">`;
+  let fullHtml = `<div class="next-day-report">`;
 
   // Loop 7 days
   for (let i = 0; i < 7; i++) {
@@ -4910,7 +5220,8 @@ function generateNextDayReport(selectedDate = null) {
         if (lastTripToday.arrivalTime) {
           const normedArr = normalizeTime(lastTripToday.arrivalTime);
           if (normedArr) {
-            arrTimeNum = parseInt(normedArr.split(":")[0], 10) + parseInt(normedArr.split(":")[1], 10) / 60;
+            arrTimeNum =
+              parseInt(normedArr.split(":")[0], 10) + parseInt(normedArr.split(":")[1], 10) / 60;
           }
         }
 
@@ -4918,7 +5229,10 @@ function generateNextDayReport(selectedDate = null) {
         if (tomorrowTrip && tomorrowTrip.departureTime) {
           const normedDep = normalizeTime(tomorrowTrip.departureTime);
           if (normedDep) {
-            depTimeNum = 24 + parseInt(normedDep.split(":")[0], 10) + parseInt(normedDep.split(":")[1], 10) / 60;
+            depTimeNum =
+              24 +
+              parseInt(normedDep.split(":")[0], 10) +
+              parseInt(normedDep.split(":")[1], 10) / 60;
           }
         }
         priorityBusesInfo.push({ a: arrTimeNum, d: depTimeNum });
@@ -4980,58 +5294,58 @@ function generateNextDayReport(selectedDate = null) {
           return `${h}:${ms} ${ampm}${dayStr}`;
         };
 
-        shiftDisplay = `<div style="background: var(--card-bg, #1a1a1a); padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid var(--primary-color, #0284c7);">
-        <strong style="display: block; font-size: 1.05rem; margin-bottom: 4px; color: var(--text-color, #fff);">Optimal 8-Hour Maintenance Shift: <span style="color: var(--primary-color, #38bdf8);">${formatTimeNum(bestShift)} - ${formatTimeNum(bestShift + 8)}</span></strong>
-        <span style="font-size: 0.85em; color: var(--text-muted, #9ca3af);">This window guarantees at least 2 hours of available yard time for every priority bus.</span>
+        shiftDisplay = `<div class="next-day-report__shift">
+        <strong class="next-day-report__shift-title">Optimal 8-Hour Maintenance Shift: <span class="next-day-report__shift-title--accent">${formatTimeNum(bestShift)} - ${formatTimeNum(bestShift + 8)}</span></strong>
+        <span class="next-day-report__shift-desc">This window guarantees at least 2 hours of available yard time for every priority bus.</span>
       </div>`;
       } else {
-        shiftDisplay = `<div style="background: var(--card-bg, #1a1a1a); padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid var(--danger-color, #dc2626);">
-        <strong style="display: block; font-size: 1.05rem; margin-bottom: 4px; color: var(--danger-color, #dc2626);">No single 8-hour shift possible</strong>
-        <span style="font-size: 0.85em; color: var(--text-muted, #9ca3af);">Cannot find a single 8-hour window that gives 2+ hours to all priority buses. You may need staggered shifts.</span>
+        shiftDisplay = `<div class="next-day-report__shift next-day-report__shift--danger">
+        <strong class="next-day-report__shift-title next-day-report__shift-title--danger">No single 8-hour shift possible</strong>
+        <span class="next-day-report__shift-desc">Cannot find a single 8-hour window that gives 2+ hours to all priority buses. You may need staggered shifts.</span>
       </div>`;
       }
     } else if (reportData.length > 0) {
-      shiftDisplay = `<div style="background: var(--card-bg, #1a1a1a); padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid #10b981;">
-        <strong style="display: block; font-size: 1.05rem; margin-bottom: 4px; color: #10b981;">All Buses in Yard (Flexible)</strong>
-        <span style="font-size: 0.85em; color: var(--text-muted, #9ca3af);">No priority arrivals. Maintenance shifts can be scheduled anytime.</span>
+      shiftDisplay = `<div class="next-day-report__shift next-day-report__shift--success">
+        <strong class="next-day-report__shift-title next-day-report__shift-title--success">All Buses in Yard (Flexible)</strong>
+        <span class="next-day-report__shift-desc">No priority arrivals. Maintenance shifts can be scheduled anytime.</span>
       </div>`;
     }
 
     // Build HTML for loop iteration
     const dayName = today.toLocaleDateString("en-US", { weekday: "long" });
-    let dayHtml = `<div class="weekly-report-day" style="margin-bottom: 40px; border-bottom: 2px dashed var(--border-color); padding-bottom: 20px;">
-      <h3 style="margin-top: 0; margin-bottom: 12px; color: var(--text-color, #fff); font-size: 1.25rem;">
+    let dayHtml = `<div class="next-day-report__day weekly-report-day">
+      <h3 class="next-day-report__day-title">
         ${dayName} Maintenance Schedule
-        <span style="color: var(--text-muted, #9ca3af); font-size: 0.75em; font-weight: normal; display: block; margin-top: 4px;">
+        <span class="next-day-report__day-subtitle">
           (Handling arrivals from ${formatDateForToast(todayYMD)} for departures on ${formatDateForToast(tomorrowYMD)})
         </span>
       </h3>`;
 
     dayHtml += shiftDisplay;
     if (reportData.length === 0) {
-      dayHtml += `<p style="color: var(--text-muted);">No buses found that depart tomorrow (${tomorrowYMD}).</p>`;
+      dayHtml += `<p class="next-day-report__empty">No buses found that depart tomorrow (${tomorrowYMD}).</p>`;
     } else {
-      dayHtml += `<table class="next-day-report-table" style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+      dayHtml += `<table class="next-day-report__table next-day-report-table">
         <thead>
-          <tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
-            <th style="padding: 8px; color: var(--text-muted);">Bus</th>
-            <th style="padding: 8px; color: var(--text-muted);">Status</th>
-            <th style="padding: 8px; color: var(--text-muted);">Depart Tomorrow</th>
-            <th style="padding: 8px; color: var(--text-muted);">Suggested Window</th>
+          <tr>
+            <th>Bus</th>
+            <th>Status</th>
+            <th>Depart Tomorrow</th>
+            <th>Suggested Window</th>
           </tr>
         </thead>
         <tbody>`;
       reportData.forEach((row) => {
         const priorityLabel =
           row.priority === 1
-            ? `<span style="color: #dc2626; font-weight: bold; font-size: 0.85em; display: inline-block; background: #fef2f2; padding: 2px 6px; border-radius: 4px; border: 1px solid #fecaca;">PRIORITY</span>`
-            : `<span style="color: #16a34a; font-size: 0.85em; display: inline-block; background: #f0fdf4; padding: 2px 6px; border-radius: 4px; border: 1px solid #bbf7d0;">IN YARD</span>`;
+            ? `<span class="next-day-report__badge--priority">PRIORITY</span>`
+            : `<span class="next-day-report__badge--yard">IN YARD</span>`;
 
-        dayHtml += `<tr style="border-bottom: 1px solid var(--row-border, rgba(0,0,0,0.05)); hover: background-color: rgba(0,0,0,0.02);">
-          <td style="padding: 10px 8px;"><strong>${row.busId}</strong><br/>${priorityLabel}</td>
-          <td style="padding: 10px 8px; line-height: 1.3;">${row.priority === 1 ? `Arrives Today: <br/><strong>${row.arrivalTimeToday}</strong>` : `Already in yard`}</td>
-          <td style="padding: 10px 8px;"><strong>${row.departureTimeTomorrow}</strong></td>
-          <td style="padding: 10px 8px; color: var(--primary-color, #0284c7); font-weight: 500;">${row.maintenanceWindow}</td>
+        dayHtml += `<tr>
+          <td><strong>${row.busId}</strong><br/>${priorityLabel}</td>
+          <td>${row.priority === 1 ? `Arrives Today: <br/><strong>${row.arrivalTimeToday}</strong>` : `Already in yard`}</td>
+          <td><strong>${row.departureTimeTomorrow}</strong></td>
+          <td>${row.maintenanceWindow}</td>
         </tr>`;
       });
       dayHtml += `</tbody></table>`;
@@ -5130,7 +5444,7 @@ if (dom.printNextDayReportBtn) {
         }
         
         /* Shift Alert Box */
-        div[style*="#1a1a1a"] {
+        .next-day-report__shift {
           background: #fdfdfd !important;
           border: 1px solid #e0e0e0 !important;
           border-left: 3px solid #0284c7 !important; 
@@ -5140,10 +5454,8 @@ if (dom.printNextDayReportBtn) {
           margin-bottom: 12px !important;
         }
         
-        /* Flexible Shift Alert */
-        div[style*="#10b981"] {
-          border-left-color: #10b981 !important; 
-        }
+        .next-day-report__shift--danger { border-left-color: #dc2626 !important; }
+        .next-day-report__shift--success { border-left-color: #10b981 !important; }
         
         /* Table Styling */
         table { 
@@ -5173,14 +5485,16 @@ if (dom.printNextDayReportBtn) {
           font-weight: 600;
         }
         
-        /* Override dark mode text */
-        strong[style*="#fff"] { color: #111 !important; font-size: 11px !important; }
-        strong[style*="#dc2626"] { color: #b91c1c !important; font-size: 11px !important; }
-        span[style*="#9ca3af"] { color: #444 !important; font-size: 10px !important; display: block; margin-top: 2px;}
-        span[style*="#38bdf8"] { color: #0369a1 !important; }
+        /* Override dark mode / ensure print-friendly text */
+        .next-day-report__shift-title { color: #111 !important; font-size: 11px !important; }
+        .next-day-report__shift-title--accent { color: #0369a1 !important; }
+        .next-day-report__shift-title--danger { color: #b91c1c !important; }
+        .next-day-report__shift-title--success { color: #047857 !important; }
+        .next-day-report__shift-desc { color: #444 !important; font-size: 10px !important; display: block; margin-top: 2px; }
+        .next-day-report__day-subtitle { color: #555 !important; }
         
-        /* Status Badges */
-        td span[style*="border-radius: 4px"] {
+        .next-day-report__badge--priority,
+        .next-day-report__badge--yard {
           background: transparent !important;
           border: none !important;
           padding: 0 !important;
@@ -5251,8 +5565,8 @@ function generateDailyMaintenancePlan(selectedDate = null) {
     titleStr = `${monthNames[startD.getMonth()]} ${startD.getDate()} - ${monthNames[endD.getMonth()]} ${endD.getDate()}, ${endD.getFullYear()}`;
   }
 
-  let fullHtml = `<div class="daily-plan-container" style="font-family: Arial, sans-serif; background:#fff; color:#000; padding:10px;">`;
-  fullHtml += `<h1 style="margin:0 0 15px 0; font-size:20px; font-weight:bold; border-bottom: 2px solid #000; padding-bottom: 5px;">Weekly Maintenance Priority Plan: <span style="font-weight:normal; font-size:18px;">${titleStr}</span></h1>`;
+  let fullHtml = `<div class="daily-plan">`;
+  fullHtml += `<h1 class="daily-plan__title">Weekly Maintenance Priority Plan: <span>${titleStr}</span></h1>`;
 
   for (let i = 0; i < 7; i++) {
     const currentDay = addDays(startD, i);
@@ -5329,37 +5643,44 @@ function generateDailyMaintenancePlan(selectedDate = null) {
       }
     });
 
-    let recommendedShift = nightShiftRequired ? "Night Shift (6:00 PM - 2:00 AM)" : "Morning Shift (8:00 AM - 5:00 PM)";
+    let recommendedShift = nightShiftRequired
+      ? "Night Shift (6:00 PM - 2:00 AM)"
+      : "Morning Shift (8:00 AM - 5:00 PM)";
     let shiftColor = nightShiftRequired ? "#b45309" : "#0e7490";
     if (priority1.length === 0 && priority3.length === 0) {
       recommendedShift = "No Shift Needed";
       shiftColor = "#9ca3af";
     }
 
-    fullHtml += `<div style="margin-bottom: 25px; page-break-inside: avoid;">`;
-    fullHtml += `<h2 style="margin:0 0 8px 0; font-size:16px; background:#e5e7eb; padding:6px 10px; border-left:4px solid #4f46e5;">${dayName} <span style="font-weight:normal; font-size:14px; color:#4b5563;">- ${formattedDate}</span></h2>`;
+    const shiftClass =
+      recommendedShift === "No Shift Needed"
+        ? "daily-plan__shift-summary--none"
+        : nightShiftRequired
+          ? "daily-plan__shift-summary--night"
+          : "daily-plan__shift-summary--morning";
 
-    fullHtml += `<div style="padding-left: 10px; margin-bottom:10px;">`;
-    fullHtml += `  <div style="font-weight:bold; color:${shiftColor};">Recommended Schedule: ${recommendedShift}</div>`;
-    fullHtml += `</div>`;
+    fullHtml += `<div class="daily-plan__day">`;
+    fullHtml += `<h2 class="daily-plan__day-header">${dayName} <span>- ${formattedDate}</span></h2>`;
 
-    fullHtml += `<div style="padding-left: 10px;">`;
-    fullHtml += `<h3 style="margin:5px 0 5px 0; font-size:14px; color:#374151;">Priority:</h3>`;
+    fullHtml += `<div class="daily-plan__shift-summary ${shiftClass}">Recommended Schedule: ${recommendedShift}</div>`;
+
+    fullHtml += `<div class="daily-plan__section">`;
+    fullHtml += `<h3 class="daily-plan__section-title daily-plan__section-title--priority">Priority:</h3>`;
     if (priority1.length > 0) {
       priority1.forEach((b) => {
-        fullHtml += `<div style="font-size:13px; margin-bottom:4px;"><b>Bus ${b.busId}</b> &nbsp;&nbsp;|&nbsp;&nbsp; <span style="color:#ea580c">In: ${b.in}</span> &nbsp;&nbsp;|&nbsp;&nbsp; <span style="color:#dc2626">Out: ${b.out} (Tomorrow)</span></div>`;
+        fullHtml += `<div class="daily-plan__bus-line"><b>Bus ${b.busId}</b> &nbsp;&nbsp;|&nbsp;&nbsp; <span class="daily-plan__in-arriving">In: ${b.in}</span> &nbsp;&nbsp;|&nbsp;&nbsp; <span class="daily-plan__out-tomorrow">Out: ${b.out} (Tomorrow)</span></div>`;
       });
     } else {
-      fullHtml += `<div style="font-size:13px; color:#9ca3af; font-style:italic;">None</div>`;
+      fullHtml += `<div class="daily-plan__bus-line daily-plan__bus-line--muted">None</div>`;
     }
 
-    fullHtml += `<h3 style="margin:10px 0 5px 0; font-size:14px; color:#15803d;">Already in Yard Today:</h3>`;
+    fullHtml += `<h3 class="daily-plan__section-title daily-plan__section-title--yard">Already in Yard Today:</h3>`;
     if (priority3.length > 0) {
       priority3.forEach((b) => {
-        fullHtml += `<div style="font-size:13px; margin-bottom:4px;"><b>Bus ${b.busId}</b> &nbsp;&nbsp;|&nbsp;&nbsp; <span style="color:#ca8a04">In: Yard</span> &nbsp;&nbsp;|&nbsp;&nbsp; <span style="color:#dc2626">Out: ${b.out} (Tomorrow)</span></div>`;
+        fullHtml += `<div class="daily-plan__bus-line"><b>Bus ${b.busId}</b> &nbsp;&nbsp;|&nbsp;&nbsp; <span class="daily-plan__in-yard">In: Yard</span> &nbsp;&nbsp;|&nbsp;&nbsp; <span class="daily-plan__out-tomorrow">Out: ${b.out} (Tomorrow)</span></div>`;
       });
     } else {
-      fullHtml += `<div style="font-size:13px; color:#9ca3af; font-style:italic;">None</div>`;
+      fullHtml += `<div class="daily-plan__bus-line daily-plan__bus-line--muted">None</div>`;
     }
     fullHtml += `</div></div>`;
   }
@@ -5416,7 +5737,7 @@ if (dom.printDailyMaintenancePlanBtn) {
   try {
     const style = document.createElement("style");
     style.textContent = `
-.week-table-container.is-loading-bars .trip-bar { opacity: 0.18; pointer-events: none; }
+.schedule-grid-container.is-loading-bars .schedule-grid__trip-bar { opacity: 0.18; pointer-events: none; }
 `;
     document.head.appendChild(style);
   } catch {}
@@ -5457,7 +5778,7 @@ if (dom.printDailyMaintenancePlanBtn) {
     { passive: true },
   );
 
-  const tableWrap = document.querySelector(".week-table-container");
+  const tableWrap = document.querySelector(".schedule-grid-container");
   if (tableWrap && "ResizeObserver" in window) {
     const ro = new ResizeObserver(() => {
       state.lastColMetrics = null;
@@ -5478,7 +5799,11 @@ if (dom.printDailyMaintenancePlanBtn) {
       await loadDriversAndBuses();
     } catch (e) {
       console.warn("Could not load drivers/buses yet. Using placeholders.", e);
-      state.driversList = [{ driverName: "None" }, { driverName: "Driver A" }, { driverName: "Driver B" }];
+      state.driversList = [
+        { driverName: "None" },
+        { driverName: "Driver A" },
+        { driverName: "Driver B" },
+      ];
       state.busesList = [
         { busId: "218", busName: "Bus 218" },
         { busId: "763", busName: "Bus 763" },

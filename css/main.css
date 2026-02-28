@@ -1,0 +1,38 @@
+/* ==========================================================================
+   MAIN STYLESHEET
+   Entry point for the ITCSS/BEM Architecture
+   ========================================================================== */
+
+/* 1. Tokens & Tools */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+@import "1-tokens/_core.css";
+@import "1-tools/_animations.css";
+
+/* 2. Generic & Elements (The Foundation) */
+@import "2-generic/_reset.css";
+@import "3-elements/_elements.css";
+@import "3-elements/_forms.css";
+
+/* 3. Objects (layout shell, grid, app-layout) */
+@import "4-objects/_objects.css";
+@import "4-objects/_grid.css";
+@import "4-objects/_layout.css";
+
+/* 4. Components (app-header → schedule-nav → agenda-header → ui → cards → buttons → badges → menus → modals → driver-panels → notes → schedule-grid → loading-overlay → toast) */
+@import "5-components/_app-header.css";
+@import "5-components/_schedule-nav.css";
+@import "5-components/_agenda-header.css";
+@import "5-components/_cards.css";
+@import "5-components/_buttons.css";
+@import "5-components/_badges.css";
+@import "5-components/_menus.css";
+@import "5-components/_modals.css";
+@import "5-components/_driver-panels.css";
+@import "5-components/_notes.css";
+@import "5-components/_schedule-grid.css";
+@import "5-components/_loading-overlay.css";
+@import "5-components/_toast.css";
+
+/* 5. Utilities */
+@import "6-utilities/_helpers.css";
+@import "6-utilities/_print.css";

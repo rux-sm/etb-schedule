@@ -1,0 +1,503 @@
+/* ==========================================================================
+   5-COMPONENTS / MODALS
+   Base modal structure and variants (BEM)
+   ========================================================================== */
+
+/* --- Base: wrapper, visibility, backdrop --- */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0 !important;
+}
+
+.modal[hidden] {
+  display: none !important;
+}
+
+.modal::before,
+.modal__backdrop {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  z-index: -1;
+}
+
+/* --- Base: card shell --- */
+.modal__card {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  height: 90vh;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-2);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2);
+  overflow: hidden;
+  animation: modalPopIn 0.3s var(--ease-standard);
+
+  @media (max-width: 899px) {
+    max-width: 100% !important;
+    margin: 0 !important;
+    height: 90vh !important;
+    max-height: 90vh !important;
+
+    /* Trip Details: status grid collapses to 2 columns on mobile */
+    .detail-meta-grid,
+    .trip-details__meta-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .detail-hide-mobile,
+    .trip-details__hide-mobile {
+      display: none !important;
+    }
+
+    @media (orientation: landscape) {
+      height: 90vh !important;
+      max-height: 90vh !important;
+      max-width: 80vw !important;
+    }
+  }
+}
+
+/* --- Base: header, body, footer --- */
+.modal__head {
+  flex-shrink: 0;
+  min-height: var(--bar-height);
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--grid-line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  background: var(--surface-2);
+}
+
+.modal__head .section-title {
+  margin: 0;
+  padding: 0;
+}
+
+.modal__head .form-control {
+  width: auto;
+}
+
+.modal__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: var(--surface-2);
+}
+
+.modal__foot {
+  flex-shrink: 0;
+  padding: var(--space-3);
+  border-top: 1px solid var(--grid-line);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  background: var(--surface-2);
+}
+
+/* --- Variants: Itinerary Modal --- */
+.modal--itinerary .modal__card {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2);
+  max-width: calc(92ch + 2 * var(--space-3) + 2 * var(--space-3));
+}
+
+.modal--itinerary .modal__head,
+.modal--itinerary .modal__foot {
+  font-family: var(--font-sans);
+}
+
+.modal--itinerary .modal__body textarea {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  resize: none;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2);
+  line-height: 1.5;
+  letter-spacing: normal;
+  font-variant-numeric: normal;
+  white-space: pre;
+  color: var(--text-secondary);
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+/* --- Variants: Trip Details Modal --- */
+.modal--trip-details .modal__card {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2);
+  text-align: center;
+  max-width: calc(92ch + 2 * var(--space-3) + 2 * var(--space-3));
+}
+
+.modal--trip-details .modal__head,
+.modal--trip-details .modal__foot {
+  font-family: var(--font-sans);
+}
+
+.modal--trip-details .detail-text.detail-itinerary-scroll,
+.modal--trip-details .trip-details__itinerary-scroll {
+  padding: var(--space-2) var(--space-3);
+}
+
+/* Modal specific inputs */
+#itineraryModalField:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+/* --- Trip Details: content structure (BEM: .trip-details__*) --- */
+/* Wrapper: flex column for status grid + divider + scroll block */
+.trip-details-content,
+.trip-details__content {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-size: var(--font-size-2);
+  color: var(--text);
+}
+
+#nextDayReportBody {
+  overflow-y: auto;
+  padding: 0 var(--space-4) var(--space-4) var(--space-4);
+}
+
+/* Status grid: sans-serif; 4 columns; 16px margin below */
+.detail-meta-grid,
+.trip-details__meta-grid {
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  display: grid;
+  align-items: center;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2) var(--space-3);
+}
+
+/* Each label-value pair */
+.detail-grid-item,
+.trip-details__grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  margin-bottom: var(--space-3);
+  /* 12px */
+}
+
+.detail-value,
+.trip-details__value {
+  font-size: var(--font-size-1);
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.detail-value.status-pending,
+.trip-details__value.status-pending {
+  color: var(--color-status-pending);
+}
+
+.detail-value.status-ok,
+.trip-details__value.status-ok {
+  color: var(--color-status-ok);
+}
+
+.detail-value.status-assigned,
+.trip-details__value.status-assigned {
+  color: var(--color-status-assigned);
+}
+
+.detail-value.status-blue,
+.trip-details__value.status-blue {
+  color: var(--color-status-blue);
+}
+
+.detail-section-title,
+.trip-details__section-title {
+  margin-top: var(--space-2);
+}
+
+/* Scrollable read-only itinerary block (manifest text); same look as Itinerary textarea */
+.detail-text.detail-itinerary-scroll,
+.trip-details__itinerary-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2);
+  white-space: pre;
+  color: var(--text-secondary);
+  background: var(--surface-3);
+  padding: var(--space-3);
+  line-height: 1.5;
+  letter-spacing: normal;
+  font-variant-numeric: normal;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  width: 100%;
+  max-width: 100%;
+
+  @media (max-width: 899px) {
+    min-height: 120px;
+    font-size: 11px;
+  }
+}
+
+/* Focus states handled by global focus rules */
+
+/* --- Next Day Report (generated HTML in #nextDayReportBody) --- */
+.next-day-report {
+  padding-bottom: 20px;
+}
+
+.next-day-report__day {
+  margin-bottom: 40px;
+  border-bottom: 2px dashed var(--border-color, var(--border));
+  padding-bottom: 20px;
+}
+
+.next-day-report__day-title {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: var(--text);
+  font-size: 1.25rem;
+}
+
+.next-day-report__day-subtitle {
+  color: var(--text-muted);
+  font-size: 0.75em;
+  font-weight: normal;
+  display: block;
+  margin-top: 4px;
+}
+
+.next-day-report__shift {
+  background: var(--surface-3);
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  border-left: 4px solid var(--color-primary, #0284c7);
+}
+
+.next-day-report__shift--danger {
+  border-left-color: var(--red, #dc2626);
+}
+
+.next-day-report__shift--success {
+  border-left-color: var(--green, #10b981);
+}
+
+.next-day-report__shift-title {
+  display: block;
+  font-size: 1.05rem;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+
+.next-day-report__shift-title--accent {
+  color: var(--color-primary, #38bdf8);
+}
+
+.next-day-report__shift-title--danger {
+  color: var(--red, #dc2626);
+}
+
+.next-day-report__shift-title--success {
+  color: var(--green, #10b981);
+}
+
+.next-day-report__shift-desc {
+  font-size: 0.85em;
+  color: var(--text-muted);
+}
+
+.next-day-report__empty {
+  color: var(--text-muted);
+}
+
+.next-day-report__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.next-day-report__table thead tr {
+  border-bottom: 2px solid var(--border-color, var(--border));
+  text-align: left;
+}
+
+.next-day-report__table th {
+  padding: 8px;
+  color: var(--text-muted);
+}
+
+.next-day-report__table tbody tr {
+  border-bottom: 1px solid var(--row-border, rgba(0, 0, 0, 0.05));
+}
+
+.next-day-report__table tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.next-day-report__table td {
+  padding: 10px 8px;
+  line-height: 1.3;
+}
+
+.next-day-report__table td:last-child {
+  color: var(--color-primary, #0284c7);
+  font-weight: 500;
+}
+
+.next-day-report__badge--priority {
+  color: #dc2626;
+  font-weight: bold;
+  font-size: 0.85em;
+  display: inline-block;
+  background: #fef2f2;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid #fecaca;
+}
+
+.next-day-report__badge--yard {
+  color: #16a34a;
+  font-size: 0.85em;
+  display: inline-block;
+  background: #f0fdf4;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid #bbf7d0;
+}
+
+/* --- Daily Maintenance Plan (generated HTML in #dailyMaintenancePlanBody) --- */
+.daily-plan {
+  font-family: var(--font-sans), Arial, sans-serif;
+  background: var(--surface-1);
+  color: var(--text);
+  padding: 10px;
+}
+
+.daily-plan__title {
+  margin: 0 0 15px 0;
+  font-size: 20px;
+  font-weight: bold;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 5px;
+}
+
+.daily-plan__title span {
+  font-weight: normal;
+  font-size: 18px;
+}
+
+.daily-plan__day {
+  margin-bottom: 25px;
+  page-break-inside: avoid;
+}
+
+.daily-plan__day-header {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  background: var(--surface-3);
+  padding: 6px 10px;
+  border-left: 4px solid var(--color-primary, #4f46e5);
+}
+
+.daily-plan__day-header span {
+  font-weight: normal;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.daily-plan__shift-summary {
+  padding-left: 10px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.daily-plan__shift-summary--night {
+  color: #b45309;
+}
+
+.daily-plan__shift-summary--morning {
+  color: #0e7490;
+}
+
+.daily-plan__shift-summary--none {
+  color: var(--text-muted);
+}
+
+.daily-plan__section {
+  padding-left: 10px;
+}
+
+.daily-plan__section-title {
+  margin: 5px 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.daily-plan__section-title--priority {
+  color: var(--text-secondary);
+}
+
+.daily-plan__section-title--yard {
+  margin: 10px 0 5px 0;
+  color: #15803d;
+}
+
+.daily-plan__bus-line {
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.daily-plan__bus-line--muted {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.daily-plan__in-arriving {
+  color: #ea580c;
+}
+
+.daily-plan__out-tomorrow {
+  color: #dc2626;
+}
+
+.daily-plan__in-yard {
+  color: #ca8a04;
+}
+
+/* ==========================================================================

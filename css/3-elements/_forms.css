@@ -1,0 +1,274 @@
+/* ==========================================================================
+   3-ELEMENTS / FORMS
+   Unclassed default styles for form inputs, selects, textareas
+   ========================================================================== */
+
+input[type="text"],
+input[type="tel"],
+input[type="date"],
+input[type="time"],
+input[type="number"],
+select,
+textarea {
+  display: block;
+  width: 100%;
+  padding: 0 var(--input-padding-x);
+  height: var(--input-height);
+  border: none;
+  border-radius: var(--input-border-radius);
+  font-size: var(--input-font-size);
+  font-weight: var(--input-font-weight);
+  color: var(--text);
+  background-color: var(--color-input-bg);
+  box-shadow: var(--field-inset);
+  cursor: text;
+  text-align: center;
+  outline: none;
+  transition:
+    border-color 0.12s ease,
+    box-shadow 0.12s ease,
+    background 0.12s ease;
+}
+
+input[type="date"],
+input[type="time"],
+input[type="number"],
+select {
+  cursor: pointer;
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: var(--color-input-border-hover, var(--border-strong));
+}
+
+input[type="date"],
+input[type="time"],
+input[type="number"] {
+  appearance: none;
+  padding: 0 6px;
+  text-align: center;
+}
+
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  padding: 0 16px 0 8px;
+  /* Extra padding on right for the arrow */
+  line-height: var(--input-height);
+  text-align: center;
+  /* Custom white arrow */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  background-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Trip editor & panel selects: glass style to match dropdown/context menus */
+#tripInfoCard select,
+#notesCard select,
+#driverWeekCard select,
+.app-layout__sidebar--right select,
+.app-layout__sidebar--left select {
+  background-color: color-mix(in srgb, var(--surface-1) 30%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+}
+
+textarea {
+  min-height: 76px;
+  padding: 6px;
+  resize: vertical;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--placeholder);
+  opacity: 1;
+}
+
+/* Date/Time pickers */
+::-webkit-calendar-picker-indicator {
+  filter: var(--date-picker-filter);
+  opacity: 0.85;
+  cursor: pointer;
+}
+
+::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+/* --- Forms: grid + legacy layout --- */
+/* --- 1. The Global Form Container --- */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  /* Rigid fractions */
+  width: 100%;
+  /* Fixed width slightly smaller than panel (420px) to allow for padding/gutters */
+  gap: 8px;
+  margin: 16px auto;
+  align-items: start;
+}
+
+/* --- 3. Unified Form Group --- */
+.form-group>label,
+.field-label {
+  display: block;
+  font-size: var(--font-size-1);
+  /* 12px */
+  font-weight: 500;
+  /* Bumped to 500 for better legibility at 12px */
+  color: var(--text-muted);
+
+  /* Increased line-height for descender safety */
+  line-height: 1.25;
+  /* ~15px */
+
+  /* Reduced margin to keep the 16px vertical footprint */
+  margin-bottom: 1px !important;
+
+  letter-spacing: 0.05em;
+}
+
+/* Ensure consistent alignment for all form groups — same spacing as .field-label */
+.form-group>label {
+  display: block;
+  width: 100%;
+  font-size: var(--font-size-1);
+  font-weight: var(--font-weight-regular);
+  color: var(--text-muted);
+  line-height: 1.4;
+  min-height: 1.4em;
+  margin-bottom: 1px !important;
+}
+
+.form-group>input,
+.form-group>select,
+.form-group>textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.col-2 {
+  grid-column: span 2;
+}
+
+.col-4 {
+  grid-column: span 4;
+}
+
+.col-5 {
+  grid-column: span 5;
+}
+
+.col-6 {
+  grid-column: span 6;
+}
+
+.col-8 {
+  grid-column: span 8;
+}
+
+.col-12 {
+  grid-column: span 12;
+}
+
+/* --- 2. Standardized Label Class (matches .form-group > label spacing and weight) --- */
+.field-label {
+  display: block;
+  font-size: var(--font-size-1);
+  font-weight: var(--font-weight-regular);
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin-bottom: 1px !important;
+}
+
+/* --- 4. Standardized Subsections --- */
+.subsection {
+  grid-column: span 12;
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  margin-bottom: calc(1px - 7px) !important;
+  /* -7px effectively */
+}
+
+/* Section label to first content = 4px (match .form-group label-to-field); subsection gap stays 8px */
+.subsection>.field-label {
+  margin-bottom: 1px !important;
+}
+
+.subsection>.toggle-pill-grid {
+  margin-top: 0;
+}
+
+/* We use negative margin to counteract the 8px grid gap, leaving 1px visual space + border */
+#busGrid.bus-assign .field-label {
+  margin-bottom: calc(1px - 7px) !important;
+  /* -7px effectively */
+}
+
+.subsection-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+/* --- 5. Specific grid gaps standardized to 8px (set in each grid below) --- */
+
+.form-actions {
+  display: flex;
+  gap: var(--space-2);
+  padding: 0 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* Container queries for form layouts - responsive within form-grid containers */
+/* Only apply when form-grid container is narrower than 350px (for extremely narrow containers) */
+@container form-grid (max-width: 350px) {
+
+  .col-2,
+  .col-4,
+  .col-5,
+  .col-6,
+  .col-8 {
+    grid-column: span 12;
+  }
+
+  .subsection-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    justify-content: flex-start;
+  }
+}
+
+/* Media query for viewport-based responsive behavior */
+@media (max-width: 800px) {
+
+  .form-grid .col-2,
+  .form-grid .col-4,
+  .form-grid .col-5,
+  .form-grid .col-6,
+  .form-grid .col-8 {
+    grid-column: span 12;
+  }
+
+  .form-grid .subsection-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid .form-actions {
+    justify-content: flex-start;
+  }
+}

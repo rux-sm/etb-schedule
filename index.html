@@ -20,20 +20,20 @@
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
     />
 
-    <link rel="stylesheet" href="styles.css?v=37" />
+    <link rel="stylesheet" href="css/main.css?v=37" />
   </head>
 
   <body>
     <div class="app">
-      <header class="topbar">
+      <header class="app-header">
         <div class="container">
-          <div class="topbar-inner">
-            <div class="topbar-start">
+          <div class="app-header__inner">
+            <div class="app-header__start">
               <!-- 1. Logo -->
-              <div class="logo-wrap">
+              <div class="app-header__logo-wrap">
                 <img
                   src="logo.png"
-                  class="logo-img"
+                  class="app-header__logo-img"
                   alt="Logo"
                   onerror="
                     this.style.display = 'none';
@@ -44,14 +44,26 @@
               </div>
 
               <!-- 2. Header / title text (right of logo) -->
-              <h1 class="heading-1 topbar__title" id="topbarTitle" aria-label="Application title">Trip Schedule</h1>
+              <h1
+                class="heading-1 app-header__title"
+                id="topbarTitle"
+                aria-label="Application title"
+              >
+                Trip Schedule
+              </h1>
             </div>
 
             <!-- END GROUP: Settings & Tools -->
-            <div class="topbar-end">
+            <div class="app-header__end">
               <!-- Hidden buttons that JS might look for (can be cleaned up later, keeping for safety) -->
               <!-- Tools -->
-              <button id="tripInputBtn" class="btn-icon" type="button" title="Trip Editor" aria-label="Trip Editor">
+              <button
+                id="tripInputBtn"
+                class="btn-icon"
+                type="button"
+                title="Trip Editor"
+                aria-label="Trip Editor"
+              >
                 <span class="material-symbols-outlined">add</span>
               </button>
 
@@ -65,20 +77,38 @@
                 <span class="material-symbols-outlined">groups</span>
               </button>
 
-              <button id="notesBtn" class="btn-icon" type="button" title="Weekly Notes" aria-label="Weekly Notes">
+              <button
+                id="notesBtn"
+                class="btn-icon"
+                type="button"
+                title="Weekly Notes"
+                aria-label="Weekly Notes"
+              >
                 <span class="material-symbols-outlined">sticky_note_2</span>
               </button>
 
-              <button id="waitingListBtn" class="btn-icon" type="button" title="Waiting List" aria-label="Waiting List">
+              <button
+                id="waitingListBtn"
+                class="btn-icon"
+                type="button"
+                title="Waiting List"
+                aria-label="Waiting List"
+              >
                 <span class="material-symbols-outlined">low_priority</span>
               </button>
 
               <!-- Settings Dropdown -->
-              <button id="todayBtnMobile" class="btn-icon" type="button" aria-label="Today" title="Today">
+              <button
+                id="todayBtnMobile"
+                class="btn-icon"
+                type="button"
+                aria-label="Today"
+                title="Today"
+              >
                 <span class="material-symbols-outlined">today</span>
               </button>
 
-              <div class="dropdown-wrapper">
+              <div class="dropdown">
                 <button
                   id="settingsBtn"
                   class="btn-icon"
@@ -90,43 +120,43 @@
                 >
                   <span class="material-symbols-outlined">settings</span>
                 </button>
-                <div id="settingsMenu" class="dropdown-menu" hidden>
-                  <button id="refreshBtn2" class="dropdown-item" type="button">
-                    <span class="dropdown-icon material-symbols-outlined">refresh</span>
+                <div id="settingsMenu" class="dropdown__menu" hidden>
+                  <button id="refreshBtn2" class="dropdown__item" type="button">
+                    <span class="dropdown__icon material-symbols-outlined">refresh</span>
                     <span>Refresh Data</span>
                   </button>
 
-                  <hr class="dropdown-divider" />
+                  <hr class="dropdown__divider" />
 
-                  <button id="themeToggle2" class="dropdown-item" type="button">
-                    <span class="dropdown-icon material-symbols-outlined">dark_mode</span>
+                  <button id="themeToggle2" class="dropdown__item" type="button">
+                    <span class="dropdown__icon material-symbols-outlined">dark_mode</span>
                     <span>Toggle Theme</span>
                   </button>
 
-                  <button id="printBtn2" class="dropdown-item" type="button">
-                    <span class="dropdown-icon material-symbols-outlined">print</span>
+                  <button id="printBtn2" class="dropdown__item" type="button">
+                    <span class="dropdown__icon material-symbols-outlined">print</span>
                     <span>Print Schedule (Legal)</span>
                   </button>
 
-                  <button id="printBtn2Full" class="dropdown-item" type="button">
-                    <span class="dropdown-icon material-symbols-outlined">print</span>
+                  <button id="printBtn2Full" class="dropdown__item" type="button">
+                    <span class="dropdown__icon material-symbols-outlined">print</span>
                     <span>Print Full Schedule (Letter)</span>
                   </button>
 
-                  <hr class="dropdown-divider" />
+                  <hr class="dropdown__divider" />
 
-                  <button id="nextDayReportBtn" class="dropdown-item" type="button">
-                    <span class="dropdown-icon material-symbols-outlined">event_upcoming</span>
+                  <button id="nextDayReportBtn" class="dropdown__item" type="button">
+                    <span class="dropdown__icon material-symbols-outlined">event_upcoming</span>
                     <span>Weekly Maintenance</span>
                   </button>
 
-                  <button id="dailyMaintenancePlanBtn" class="dropdown-item" type="button">
-                    <span class="dropdown-icon material-symbols-outlined">handyman</span>
+                  <button id="dailyMaintenancePlanBtn" class="dropdown__item" type="button">
+                    <span class="dropdown__icon material-symbols-outlined">handyman</span>
                     <span>Daily Maintenance Plan</span>
                   </button>
 
-                  <button id="weekStartToggle" class="dropdown-item" type="button">
-                    <span class="dropdown-icon material-symbols-outlined">toggle_off</span>
+                  <button id="weekStartToggle" class="dropdown__item" type="button">
+                    <span class="dropdown__icon material-symbols-outlined">toggle_off</span>
                     <span>Week starts Monday</span>
                   </button>
                 </div>
@@ -138,36 +168,42 @@
 
       <main class="main">
         <div class="container">
-          <div class="layout-panels" id="layoutPanels">
+          <div class="app-layout" id="layoutPanels">
             <!-- START PANEL -->
-            <div class="panel-start panel-collapsed" id="panelStart">
+            <div class="app-layout__sidebar--left app-layout__sidebar--collapsed" id="panelStart">
               <!-- Placeholder for new left panel cards -->
-              <div class="card compact is-hidden" id="leftPanelCard1">
-                <div class="card-header">
+              <div class="card card--compact is-hidden" id="leftPanelCard1">
+                <div class="card__header">
                   <h2 class="section-title">Left Panel Card 1</h2>
                 </div>
-                <div class="card-content">
+                <div class="card__content">
                   <p>Add your content here</p>
                 </div>
               </div>
             </div>
 
             <!-- END PANEL (Trip Editor, Drivers, Notes) -->
-            <div class="panel-end panel-collapsed" id="panelEnd">
+            <div class="app-layout__sidebar--right app-layout__sidebar--collapsed" id="panelEnd">
               <!-- Driver Week Card (hidden by default) -->
-              <div class="card compact is-hidden" id="driverWeekCard">
-                <div class="card-header">
+              <div class="card card--compact is-hidden" id="driverWeekCard">
+                <div class="card__header">
                   <h2 class="section-title">Driver Assignments</h2>
-                  <div class="card-header-actions">
-                    <button type="button" class="btn-close-card" data-card="drivers" aria-label="Close" title="Close">
+                  <div class="card__header-actions">
+                    <button
+                      type="button"
+                      class="btn-close-card"
+                      data-card="drivers"
+                      aria-label="Close"
+                      title="Close"
+                    >
                       <span class="material-symbols-outlined">close</span>
                     </button>
                   </div>
                 </div>
 
-                <div class="card-content">
-                  <div class="driver-week-wrap">
-                    <table class="driver-week-table">
+                <div class="card__content">
+                  <div class="driver-week__wrap">
+                    <table class="driver-week__table">
                       <thead>
                         <tr id="driverWeekHeadRow"></tr>
                       </thead>
@@ -176,31 +212,37 @@
                   </div>
                 </div>
 
-                <div class="card-footer"></div>
+                <div class="card__footer"></div>
               </div>
 
               <!-- Notes Card (hidden by default) -->
-              <div class="card compact is-hidden" id="notesCard">
-                <div class="card-header">
+              <div class="card card--compact is-hidden" id="notesCard">
+                <div class="card__header">
                   <h2 class="section-title">Weekly Notes</h2>
-                  <div class="card-header-actions">
-                    <button type="button" class="btn-close-card" data-card="notes" aria-label="Close" title="Close">
+                  <div class="card__header-actions">
+                    <button
+                      type="button"
+                      class="btn-close-card"
+                      data-card="notes"
+                      aria-label="Close"
+                      title="Close"
+                    >
                       <span class="material-symbols-outlined">close</span>
                     </button>
                   </div>
                 </div>
 
-                <div class="card-content">
-                  <div class="notes-wrap">
+                <div class="card__content">
+                  <div class="notes__wrap">
                     <textarea
                       id="scheduleNotes"
-                      class="notes-textarea"
+                      class="notes__textarea"
                       placeholder="Enter week notes here..."
                     ></textarea>
                   </div>
                 </div>
 
-                <div class="card-footer">
+                <div class="card__footer">
                   <div class="form-actions">
                     <button type="button" class="btn" id="saveNotesBtn">Save Notes</button>
                   </div>
@@ -208,18 +250,27 @@
               </div>
 
               <!-- Trip Info Card -->
-              <div class="card compact is-hidden" id="tripInfoCard">
-                <div class="card-header">
+              <div class="card card--compact is-hidden" id="tripInfoCard">
+                <div class="card__header">
                   <h2 class="section-title">Trip Editor</h2>
-                  <div class="card-header-actions">
-                    <span id="tripIdBadge" class="badge badge-primary trip-id-badge is-hidden"></span>
-                    <button type="button" class="btn-close-card" data-card="trip" aria-label="Close" title="Close">
+                  <div class="card__header-actions">
+                    <span
+                      id="tripIdBadge"
+                      class="badge badge--primary trip-id-badge is-hidden"
+                    ></span>
+                    <button
+                      type="button"
+                      class="btn-close-card"
+                      data-card="trip"
+                      aria-label="Close"
+                      title="Close"
+                    >
                       <span class="material-symbols-outlined">close</span>
                     </button>
                   </div>
                 </div>
 
-                <div class="card-content">
+                <div class="card__content">
                   <form id="tripForm" class="form-grid" target="hidden_iframe" method="POST">
                     <input type="hidden" name="action" id="action" value="create" />
                     <input type="hidden" name="tripKey" id="tripKey" value="" />
@@ -233,7 +284,13 @@
 
                     <div class="form-group col-6">
                       <label for="destination">Destination</label>
-                      <input type="text" id="destination" name="destination" placeholder="" required />
+                      <input
+                        type="text"
+                        id="destination"
+                        name="destination"
+                        placeholder=""
+                        required
+                      />
                     </div>
 
                     <div class="form-group col-6">
@@ -243,12 +300,25 @@
 
                     <div class="form-group col-5">
                       <label for="contactName">Name</label>
-                      <input type="text" id="contactName" name="contactName" placeholder="" required />
+                      <input
+                        type="text"
+                        id="contactName"
+                        name="contactName"
+                        placeholder=""
+                        required
+                      />
                     </div>
 
                     <div class="form-group col-5">
                       <label for="phone">Phone</label>
-                      <input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="" />
+                      <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        autocomplete="tel"
+                        inputmode="tel"
+                        placeholder=""
+                      />
                     </div>
 
                     <div class="form-group col-2">
@@ -279,7 +349,7 @@
                     </div>
 
                     <div class="form-group col-4">
-                      <label for="departureTime">Req Spot Time</label>
+                      <label for="departureTime">Departure Time</label>
                       <input type="time" id="departureTime" name="departureTime" />
                     </div>
 
@@ -384,7 +454,12 @@
 
                         <div class="form-group is-hidden" id="invoiceNumberGroup">
                           <label for="invoiceNumber">Invoice Number</label>
-                          <input type="text" id="invoiceNumber" name="invoiceNumber" placeholder="#" />
+                          <input
+                            type="text"
+                            id="invoiceNumber"
+                            name="invoiceNumber"
+                            placeholder="#"
+                          />
                         </div>
                       </div>
                     </div>
@@ -397,33 +472,78 @@
                     ></textarea>
                     <div class="subsection col-12">
                       <span class="field-label">Requirements</span>
-                      <div class="toggle-pill-grid" role="group" aria-label="Requirements">
-                        <button type="button" class="toggle-pill" id="req56Pass" aria-pressed="false">
+                      <div class="toggle-pill__grid" role="group" aria-label="Requirements">
+                        <button
+                          type="button"
+                          class="toggle-pill"
+                          id="req56Pass"
+                          aria-pressed="false"
+                        >
                           56 Pax
-                          <span class="toggle-pill-icon material-symbols-outlined" aria-hidden="true">tatami_seat</span>
+                          <span
+                            class="toggle-pill__icon material-symbols-outlined"
+                            aria-hidden="true"
+                            >tatami_seat</span
+                          >
                         </button>
-                        <button type="button" class="toggle-pill" id="reqSleeper" aria-pressed="false">
+                        <button
+                          type="button"
+                          class="toggle-pill"
+                          id="reqSleeper"
+                          aria-pressed="false"
+                        >
                           Sleeper
-                          <span class="toggle-pill-icon material-symbols-outlined" aria-hidden="true"
+                          <span
+                            class="toggle-pill__icon material-symbols-outlined"
+                            aria-hidden="true"
                             >airline_seat_flat</span
                           >
                         </button>
                         <button type="button" class="toggle-pill" id="reqLift" aria-pressed="false">
                           Lift
-                          <span class="toggle-pill-icon material-symbols-outlined" aria-hidden="true">accessible</span>
+                          <span
+                            class="toggle-pill__icon material-symbols-outlined"
+                            aria-hidden="true"
+                            >accessible</span
+                          >
                         </button>
-                        <button type="button" class="toggle-pill" id="reqRelief" aria-pressed="false">
-                          Relief<span class="toggle-pill-icon material-symbols-outlined" aria-hidden="true"
+                        <button
+                          type="button"
+                          class="toggle-pill"
+                          id="reqRelief"
+                          aria-pressed="false"
+                        >
+                          Relief<span
+                            class="toggle-pill__icon material-symbols-outlined"
+                            aria-hidden="true"
                             >warning</span
                           >
                         </button>
-                        <button type="button" class="toggle-pill" id="reqCoDriver" aria-pressed="false">
+                        <button
+                          type="button"
+                          class="toggle-pill"
+                          id="reqCoDriver"
+                          aria-pressed="false"
+                        >
                           Co-Driver
-                          <span class="toggle-pill-icon material-symbols-outlined" aria-hidden="true">person_add</span>
+                          <span
+                            class="toggle-pill__icon material-symbols-outlined"
+                            aria-hidden="true"
+                            >person_add</span
+                          >
                         </button>
-                        <button type="button" class="toggle-pill" id="reqHotel" aria-pressed="false">
+                        <button
+                          type="button"
+                          class="toggle-pill"
+                          id="reqHotel"
+                          aria-pressed="false"
+                        >
                           Hotel
-                          <span class="toggle-pill-icon material-symbols-outlined" aria-hidden="true">apartment</span>
+                          <span
+                            class="toggle-pill__icon material-symbols-outlined"
+                            aria-hidden="true"
+                            >apartment</span
+                          >
                         </button>
                       </div>
                     </div>
@@ -434,11 +554,13 @@
                   </form>
                 </div>
 
-                <div class="card-footer">
+                <div class="card__footer">
                   <div class="form-actions">
                     <button type="submit" class="btn" id="saveBtn" form="tripForm">Save</button>
                     <button type="button" class="btn" id="newBtn">Clear</button>
-                    <button type="button" class="btn btn-danger" id="deleteBtn" disabled>Delete</button>
+                    <button type="button" class="btn btn-danger" id="deleteBtn" disabled>
+                      Delete
+                    </button>
                   </div>
                 </div>
 
@@ -452,17 +574,19 @@
             </div>
 
             <!-- MAIN PANEL (Schedule) -->
-            <div class="panel-main">
+            <div class="app-layout__main">
               <div class="card">
                 <!-- Conflicts badge (overlay) -->
                 <div class="schedule-badge-wrap">
-                  <span id="overflowBadge" class="badge badge-error is-hidden"> Conflicts detected </span>
+                  <span id="overflowBadge" class="badge badge--error is-hidden">
+                    Conflicts detected
+                  </span>
                 </div>
 
                 <!-- Agenda header: week date + prev/next navigation -->
                 <div class="agenda-header">
-                  <div class="agenda-header-inner card-header">
-                    <div class="agenda-header-date-left">
+                  <div class="agenda-header__inner card__header">
+                    <div class="agenda-header__date-left">
                       <button
                         id="prevWeekBtn"
                         class="btn-icon"
@@ -472,16 +596,26 @@
                       >
                         <span class="material-symbols-outlined">arrow_back_ios_new</span>
                       </button>
-                      <button id="nextWeekBtn" class="btn-icon" type="button" aria-label="Next Week" title="Next Week">
+                      <button
+                        id="nextWeekBtn"
+                        class="btn-icon"
+                        type="button"
+                        aria-label="Next Week"
+                        title="Next Week"
+                      >
                         <span class="material-symbols-outlined">arrow_forward_ios</span>
                       </button>
                       <div id="dateWrapper" class="date-picker-wrapper">
-                        <h2 class="week-heading">
-                          <span class="week-date" id="headerWeek" aria-label="Active week"></span>
+                        <h2 class="agenda-header__week-heading">
+                          <span
+                            class="agenda-header__week-date"
+                            id="headerWeek"
+                            aria-label="Active week"
+                          ></span>
                         </h2>
                       </div>
                     </div>
-                    <div class="agenda-header-nav-right">
+                    <div class="agenda-header__nav-right">
                       <div class="weekpicker-trigger-wrap">
                         <button
                           id="agendaLeftBtn"
@@ -499,76 +633,82 @@
                           aria-label="Select week"
                         />
                       </div>
-                      <button id="todayBtn" class="btn-icon" type="button" aria-label="Today" title="Today">
+                      <button
+                        id="todayBtn"
+                        class="btn-icon"
+                        type="button"
+                        aria-label="Today"
+                        title="Today"
+                      >
                         <span class="material-symbols-outlined">calendar_today</span>
                       </button>
                     </div>
                   </div>
                 </div>
 
-                <div class="week-table-container">
-                  <table class="week-table">
+                <div class="schedule-grid-container schedule-grid-container--fluid">
+                  <table class="schedule-grid">
                     <colgroup>
-                      <col class="col-bus" />
-                      <col class="col-day" />
-                      <col class="col-day" />
-                      <col class="col-day" />
-                      <col class="col-day" />
-                      <col class="col-day" />
-                      <col class="col-day" />
-                      <col class="col-day" />
+                      <col class="schedule-grid__col-bus" />
+                      <col class="schedule-grid__col-day" />
+                      <col class="schedule-grid__col-day" />
+                      <col class="schedule-grid__col-day" />
+                      <col class="schedule-grid__col-day" />
+                      <col class="schedule-grid__col-day" />
+                      <col class="schedule-grid__col-day" />
+                      <col class="schedule-grid__col-day" />
                     </colgroup>
 
                     <thead>
                       <tr>
-                        <th></th>
+                        <th class="schedule-grid__header-cell"></th>
 
-                        <th id="sun">
-                          <span class="day-label">
-                            <span class="day-date"></span>
-                            <span class="day-name">Sun</span>
+                        <th id="sun" class="schedule-grid__header-cell">
+                          <span class="schedule-grid__day-label">
+                            <span class="schedule-grid__day-date"></span>
+                            <span class="schedule-grid__day-name">Sun</span>
                           </span>
                         </th>
 
-                        <th id="mon">
-                          <span class="day-label">
-                            <span class="day-date"></span>
-                            <span class="day-name">Mon</span>
+                        <th id="mon" class="schedule-grid__header-cell">
+                          <span class="schedule-grid__day-label">
+                            <span class="schedule-grid__day-date"></span>
+                            <span class="schedule-grid__day-name">Mon</span>
                           </span>
                         </th>
 
-                        <th id="tue">
-                          <span class="day-label">
-                            <span class="day-date"></span>
-                            <span class="day-name">Tue</span>
+                        <th id="tue" class="schedule-grid__header-cell">
+                          <span class="schedule-grid__day-label">
+                            <span class="schedule-grid__day-date"></span>
+                            <span class="schedule-grid__day-name">Tue</span>
                           </span>
                         </th>
 
-                        <th id="wed">
-                          <span class="day-label">
-                            <span class="day-date"></span>
-                            <span class="day-name">Wed</span>
+                        <th id="wed" class="schedule-grid__header-cell">
+                          <span class="schedule-grid__day-label">
+                            <span class="schedule-grid__day-date"></span>
+                            <span class="schedule-grid__day-name">Wed</span>
                           </span>
                         </th>
 
-                        <th id="thu">
-                          <span class="day-label">
-                            <span class="day-date"></span>
-                            <span class="day-name">Thu</span>
+                        <th id="thu" class="schedule-grid__header-cell">
+                          <span class="schedule-grid__day-label">
+                            <span class="schedule-grid__day-date"></span>
+                            <span class="schedule-grid__day-name">Thu</span>
                           </span>
                         </th>
 
-                        <th id="fri">
-                          <span class="day-label">
-                            <span class="day-date"></span>
-                            <span class="day-name">Fri</span>
+                        <th id="fri" class="schedule-grid__header-cell">
+                          <span class="schedule-grid__day-label">
+                            <span class="schedule-grid__day-date"></span>
+                            <span class="schedule-grid__day-name">Fri</span>
                           </span>
                         </th>
 
-                        <th id="sat">
-                          <span class="day-label">
-                            <span class="day-date"></span>
-                            <span class="day-name">Sat</span>
+                        <th id="sat" class="schedule-grid__header-cell">
+                          <span class="schedule-grid__day-label">
+                            <span class="schedule-grid__day-date"></span>
+                            <span class="schedule-grid__day-name">Sat</span>
                           </span>
                         </th>
                       </tr>
@@ -582,9 +722,9 @@
                 <div id="conflictPanel" class="card is-hidden mt-4">
                   <div class="card-title">
                     Conflicts
-                    <span class="badge badge-error">Needs attention</span>
+                    <span class="badge badge--error">Needs attention</span>
                   </div>
-                  <div class="card-content">
+                  <div class="card__content">
                     <div id="conflictList" class="help"></div>
                   </div>
                 </div>
@@ -597,16 +737,16 @@
 
     <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay" hidden>
-      <div class="loading-backdrop"></div>
+      <div class="loading-overlay__backdrop"></div>
 
-      <div class="loading-card" role="status" aria-live="polite" aria-atomic="true">
-        <div class="loading-title" id="loadingOverlayText">Loading…</div>
+      <div class="loading-overlay__card" role="status" aria-live="polite" aria-atomic="true">
+        <div class="loading-overlay__title" id="loadingOverlayText">Loading…</div>
 
-        <div class="loading-bar">
-          <div class="loading-bar__inner"></div>
+        <div class="loading-overlay__bar">
+          <div class="loading-overlay__bar-inner"></div>
         </div>
 
-        <div class="loading-sub" id="loadingOverlaySub">Please wait</div>
+        <div class="loading-overlay__sub" id="loadingOverlaySub">Please wait</div>
       </div>
     </div>
 
@@ -625,112 +765,126 @@
       </div>
     </div>
 
-    <!-- Loading Overlay (Trip Edit) -->
-    <div id="loadingOverlay" class="loading-overlay" hidden>
-      <div class="loading-content">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">Loading Trip...</div>
-        <div class="loading-bar">
-          <div class="loading-bar__inner"></div>
-        </div>
-      </div>
-    </div>
-
     <!-- Itinerary Modal -->
-    <div id="itineraryModal" class="modal modal-itinerary" hidden>
-      <div class="modal-backdrop" data-close></div>
+    <div id="itineraryModal" class="modal modal--itinerary" hidden>
+      <div class="modal__backdrop" data-close></div>
 
-      <div class="modal-card" role="dialog" aria-modal="true" aria-label="Trip itinerary">
-        <div class="modal-head">
+      <div class="modal__card" role="dialog" aria-modal="true" aria-label="Trip itinerary">
+        <div class="modal__head">
           <h2 class="section-title">Trip Itinerary</h2>
         </div>
 
-        <div class="modal-body">
+        <div class="modal__body">
           <textarea id="itineraryModalField" placeholder=""></textarea>
         </div>
 
-        <div class="modal-foot">
+        <div class="modal__foot">
           <button id="itineraryCopyBtn" class="btn btn-compact" type="button">Copy</button>
-          <button id="itinerarySaveBtn" class="btn btn-compact" type="button" aria-label="Close">Close</button>
+          <button id="itinerarySaveBtn" class="btn btn-compact" type="button" aria-label="Close">
+            Close
+          </button>
         </div>
       </div>
     </div>
 
     <!-- Trip Details Modal (read-only) -->
-    <div id="tripDetailsModal" class="modal modal-trip-details" hidden>
-      <div class="modal-backdrop" data-close-details></div>
+    <div id="tripDetailsModal" class="modal modal--trip-details" hidden>
+      <div class="modal__backdrop" data-close-details></div>
 
-      <div class="modal-card modal-card-details" role="dialog" aria-modal="true" aria-label="Trip details">
-        <div class="modal-head">
+      <div
+        class="modal__card modal__card--details"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Trip details"
+      >
+        <div class="modal__head">
           <h2 class="section-title">Trip Details</h2>
         </div>
 
-        <div class="modal-body">
-          <div id="tripDetailsBody" class="trip-details-content"></div>
+        <div class="modal__body">
+          <div id="tripDetailsBody" class="trip-details__content"></div>
         </div>
 
-        <div class="modal-foot">
-          <button class="btn btn-compact" type="button" data-close-details aria-label="Close">Close</button>
+        <div class="modal__foot">
+          <button class="btn btn-compact" type="button" data-close-details aria-label="Close">
+            Close
+          </button>
         </div>
       </div>
     </div>
 
     <!-- Next Day Report Modal -->
-    <div id="nextDayReportModal" class="modal modal-trip-details" hidden>
-      <div class="modal-backdrop" id="closeNextDayReportBackdrop"></div>
+    <div id="nextDayReportModal" class="modal modal--trip-details" hidden>
+      <div class="modal__backdrop" id="closeNextDayReportBackdrop"></div>
 
-      <div class="modal-card modal-card-details" role="dialog" aria-modal="true" aria-label="Next Day Report">
-        <div
-          class="modal-head"
-          style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px"
-        >
-          <h2 class="section-title" style="margin: 0">Weekly Maintenance Report</h2>
+      <div
+        class="modal__card modal__card--details"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Next Day Report"
+      >
+        <div class="modal__head">
+          <h2 class="section-title">Weekly Maintenance Report</h2>
           <input
             type="date"
             id="nextDayReportDateInput"
             class="form-control"
-            style="width: auto"
             aria-label="Select Date for Report"
           />
         </div>
 
-        <div class="modal-body">
-          <div id="nextDayReportBody" class="trip-details-content"></div>
+        <div class="modal__body">
+          <div id="nextDayReportBody" class="trip-details__content"></div>
         </div>
 
-        <div class="modal-foot">
+        <div class="modal__foot">
           <button id="printNextDayReportBtn" class="btn btn-compact" type="button">Print</button>
-          <button id="closeNextDayReportBtn" class="btn btn-compact" type="button" aria-label="Close">Close</button>
+          <button
+            id="closeNextDayReportBtn"
+            class="btn btn-compact"
+            type="button"
+            aria-label="Close"
+          >
+            Close
+          </button>
         </div>
       </div>
     </div>
 
     <!-- Daily Maintenance Plan Modal -->
-    <div id="dailyMaintenancePlanModal" class="modal modal-trip-details" hidden>
-      <div class="modal-backdrop" id="closeDailyMaintenancePlanBackdrop"></div>
+    <div id="dailyMaintenancePlanModal" class="modal modal--trip-details" hidden>
+      <div class="modal__backdrop" id="closeDailyMaintenancePlanBackdrop"></div>
 
-      <div class="modal-card modal-card-details" role="dialog" aria-modal="true" aria-label="Daily Maintenance Plan">
-        <div
-          class="modal-head"
-          style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px"
-        >
-          <h2 class="section-title" style="margin: 0">Daily Maintenance Plan</h2>
+      <div
+        class="modal__card modal__card--details"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Daily Maintenance Plan"
+      >
+        <div class="modal__head">
+          <h2 class="section-title">Daily Maintenance Plan</h2>
           <input
             type="date"
             id="dailyMaintenancePlanDateInput"
             class="form-control"
-            style="width: auto"
             aria-label="Select Date for Plan"
           />
         </div>
 
-        <div class="modal-body">
-          <div id="dailyMaintenancePlanBody" class="trip-details-content"></div>
+        <div class="modal__body">
+          <div id="dailyMaintenancePlanBody" class="trip-details__content"></div>
         </div>
 
-        <div class="modal-foot">
-          <button id="printDailyMaintenancePlanBtn" class="btn btn-compact" type="button">Print</button>
-          <button id="closeDailyMaintenancePlanBtn" class="btn btn-compact" type="button" aria-label="Close">
+        <div class="modal__foot">
+          <button id="printDailyMaintenancePlanBtn" class="btn btn-compact" type="button">
+            Print
+          </button>
+          <button
+            id="closeDailyMaintenancePlanBtn"
+            class="btn btn-compact"
+            type="button"
+            aria-label="Close"
+          >
             Close
           </button>
         </div>
@@ -741,12 +895,12 @@
 
     <!-- Context Menu -->
     <div id="tripContextMenu" class="context-menu" hidden>
-      <div class="context-header" id="ctxHeader">Trip Actions</div>
-      <button id="ctxEditBtn" class="context-item">
+      <div class="context-menu__header" id="ctxHeader">Trip Actions</div>
+      <button id="ctxEditBtn" class="context-menu__item">
         <span class="material-symbols-outlined">edit</span>
         <span>Edit Trip</span>
       </button>
-      <button id="ctxViewBtn" class="context-item">
+      <button id="ctxViewBtn" class="context-menu__item">
         <span class="material-symbols-outlined">visibility</span>
         <span>View Details</span>
       </button>
@@ -754,8 +908,8 @@
 
     <!-- Empty Cell Context Menu -->
     <div id="cellContextMenu" class="context-menu" hidden>
-      <div class="context-header">New Entry</div>
-      <button id="ctxNewTripBtn" class="context-item">
+      <div class="context-menu__header">New Entry</div>
+      <button id="ctxNewTripBtn" class="context-menu__item">
         <span class="material-symbols-outlined">add</span>
         <span>New Trip</span>
       </button>
