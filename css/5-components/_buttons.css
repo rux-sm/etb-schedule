@@ -87,27 +87,23 @@ button[aria-disabled="true"],
 }
 
 /* Destructive button (BEM: .btn--danger) */
-.btn-danger,
 .btn--danger {
   color: var(--red);
   background: var(--color-danger-soft);
   border-color: transparent;
 }
 
-.btn-danger:hover,
 .btn--danger:hover {
   background: color-mix(in srgb, var(--red) 22%, transparent);
   border-color: transparent;
 }
 
-.btn-danger:active,
 .btn--danger:active {
   background: color-mix(in srgb, var(--red) 28%, transparent);
   border-color: transparent;
 }
 
 /* Compact button (BEM: .btn--compact) — smaller padding/font for modal footers */
-.btn-compact,
 .btn--compact {
   height: 32px;
   padding: 0 var(--space-2);
@@ -165,7 +161,7 @@ button[aria-disabled="true"],
 }
 
 /* Icon button */
-.btn-icon {
+.btn--icon {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
@@ -179,18 +175,18 @@ button[aria-disabled="true"],
   height: var(--week-picker-height);
 }
 
-.btn-icon:hover {
+.btn--icon:hover {
   box-shadow: none !important;
   background: var(--surface-4) !important;
   color: var(--text);
 }
 
-.btn-icon:active {
+.btn--icon:active {
   box-shadow: none !important;
   background: var(--accent) !important;
 }
 
-.btn-icon:disabled {
+.btn--icon:disabled {
   color: var(--color-text-disabled);
   background: var(--surface-2) !important;
 }

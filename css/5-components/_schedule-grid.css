@@ -20,9 +20,10 @@
 }
 
 .app-layout__main .schedule-grid-container {
-  flex: 1;
+  overflow-x: auto;
   min-height: 0;
-  overflow: auto;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  margin-bottom: var(--space-4);
 }
 
 .app-layout.is-resizing .app-layout__main .schedule-grid-container {
@@ -306,7 +307,8 @@
 }
 
 /* Bus cell highlight: only when hovering bus indicator (not when trip bar overlaps due to sticky) */
-.schedule-grid__row--has-bus-color > .schedule-grid__cell:first-child:has(.schedule-grid__bus-indicator:hover) {
+.schedule-grid__row--has-bus-color
+  > .schedule-grid__cell:first-child:has(.schedule-grid__bus-indicator:hover) {
   background-color: var(--bus-accent-color, var(--surface-1));
 }
 
@@ -499,21 +501,49 @@
   --tripbar-color: var(--red);
 }
 
-.schedule-grid__trip-bar.color-blue { --tripbar-color: var(--blue); }
-.schedule-grid__trip-bar.color-green { --tripbar-color: var(--green); }
-.schedule-grid__trip-bar.color-yellow { --tripbar-color: var(--yellow); }
-.schedule-grid__trip-bar.color-gray { --tripbar-color: var(--gray); }
+.schedule-grid__trip-bar.color-blue {
+  --tripbar-color: var(--blue);
+}
+.schedule-grid__trip-bar.color-green {
+  --tripbar-color: var(--green);
+}
+.schedule-grid__trip-bar.color-yellow {
+  --tripbar-color: var(--yellow);
+}
+.schedule-grid__trip-bar.color-gray {
+  --tripbar-color: var(--gray);
+}
 .schedule-grid__trip-bar.color-violet,
-.schedule-grid__trip-bar.color-purple { --tripbar-color: var(--purple); }
-.schedule-grid__trip-bar.color-pink { --tripbar-color: var(--pink); }
-.schedule-grid__trip-bar.color-orange { --tripbar-color: var(--orange); }
-.schedule-grid__trip-bar.color-teal { --tripbar-color: var(--teal); }
-.schedule-grid__trip-bar.color-cyan { --tripbar-color: var(--cyan); }
-.schedule-grid__trip-bar.color-indigo { --tripbar-color: var(--indigo); }
-.schedule-grid__trip-bar.color-brown { --tripbar-color: var(--brown); }
-.schedule-grid__trip-bar.color-mint { --tripbar-color: var(--mint); }
-.schedule-grid__trip-bar.color-black { --tripbar-color: var(--black); }
-.schedule-grid__trip-bar.color-white { --tripbar-color: var(--white); }
+.schedule-grid__trip-bar.color-purple {
+  --tripbar-color: var(--purple);
+}
+.schedule-grid__trip-bar.color-pink {
+  --tripbar-color: var(--pink);
+}
+.schedule-grid__trip-bar.color-orange {
+  --tripbar-color: var(--orange);
+}
+.schedule-grid__trip-bar.color-teal {
+  --tripbar-color: var(--teal);
+}
+.schedule-grid__trip-bar.color-cyan {
+  --tripbar-color: var(--cyan);
+}
+.schedule-grid__trip-bar.color-indigo {
+  --tripbar-color: var(--indigo);
+}
+.schedule-grid__trip-bar.color-brown {
+  --tripbar-color: var(--brown);
+}
+.schedule-grid__trip-bar.color-mint {
+  --tripbar-color: var(--mint);
+}
+.schedule-grid__trip-bar.color-black {
+  --tripbar-color: var(--black);
+}
+.schedule-grid__trip-bar.color-white {
+  --tripbar-color: var(--white);
+}
 
 .schedule-grid__trip-bar__row {
   display: flex;
@@ -533,13 +563,28 @@
   visibility: hidden;
 }
 
-.schedule-grid__trip-bar__row--1 { grid-row: 1; position: relative; }
-.schedule-grid__trip-bar__row--2 { grid-row: 2; }
-.schedule-grid__trip-bar__row--3 { grid-row: 3; }
-.schedule-grid__trip-bar__row--4 { grid-row: 4; }
-.schedule-grid__trip-bar__row--5 { grid-row: 5; }
-.schedule-grid__trip-bar__row--6 { grid-row: 6; }
-.schedule-grid__trip-bar__row--7 { grid-row: 7; }
+.schedule-grid__trip-bar__row--1 {
+  grid-row: 1;
+  position: relative;
+}
+.schedule-grid__trip-bar__row--2 {
+  grid-row: 2;
+}
+.schedule-grid__trip-bar__row--3 {
+  grid-row: 3;
+}
+.schedule-grid__trip-bar__row--4 {
+  grid-row: 4;
+}
+.schedule-grid__trip-bar__row--5 {
+  grid-row: 5;
+}
+.schedule-grid__trip-bar__row--6 {
+  grid-row: 6;
+}
+.schedule-grid__trip-bar__row--7 {
+  grid-row: 7;
+}
 
 .schedule-grid__trip-bar__title {
   display: block;
@@ -618,9 +663,15 @@
   text-overflow: ellipsis;
 }
 
-.schedule-grid__trip-bar__time--left { justify-content: flex-start !important; }
-.schedule-grid__trip-bar__time--center { justify-content: center !important; }
-.schedule-grid__trip-bar__time--right { justify-content: flex-end !important; }
+.schedule-grid__trip-bar__time--left {
+  justify-content: flex-start !important;
+}
+.schedule-grid__trip-bar__time--center {
+  justify-content: center !important;
+}
+.schedule-grid__trip-bar__time--right {
+  justify-content: flex-end !important;
+}
 
 .schedule-grid__trip-bar__status-row {
   display: flex;
@@ -683,14 +734,28 @@
   display: block;
   font-size: var(--tripbar-icon-size);
   line-height: 1;
-  font-variation-settings: "FILL" 1, "opsz" 20;
+  font-variation-settings:
+    "FILL" 1,
+    "opsz" 20;
 }
 
-.schedule-grid__trip-bar__mini-badge.is-pending { background: var(--color-status-pending); }
-.schedule-grid__trip-bar__mini-badge.is-ok { background: var(--color-status-ok); }
-.schedule-grid__trip-bar__mini-badge.is-blue { background: var(--color-status-blue); }
-.schedule-grid__trip-bar__mini-badge.is-yellow { background: var(--color-status-assigned); }
-.schedule-grid__trip-bar__mini-badge.has-text { width: auto; padding-inline-end: 2px; gap: 0; }
+.schedule-grid__trip-bar__mini-badge.is-pending {
+  background: var(--color-status-pending);
+}
+.schedule-grid__trip-bar__mini-badge.is-ok {
+  background: var(--color-status-ok);
+}
+.schedule-grid__trip-bar__mini-badge.is-blue {
+  background: var(--color-status-blue);
+}
+.schedule-grid__trip-bar__mini-badge.is-yellow {
+  background: var(--color-status-assigned);
+}
+.schedule-grid__trip-bar__mini-badge.has-text {
+  width: auto;
+  padding-inline-end: 2px;
+  gap: 0;
+}
 .schedule-grid__trip-bar__mini-badge .schedule-grid__trip-bar__mini-badge-text {
   font-size: 10px;
   font-weight: 500;
@@ -775,10 +840,22 @@
     border: 1px solid rgba(0, 0, 0, 0.4) !important;
   }
 
-  #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__drivers,
-  #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__contact,
-  #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__status-row,
-  #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__pre-drivers {
+  #printRoot.print-mode-letter-full
+    .print-table
+    .schedule-grid__trip-bar
+    .schedule-grid__trip-bar__drivers,
+  #printRoot.print-mode-letter-full
+    .print-table
+    .schedule-grid__trip-bar
+    .schedule-grid__trip-bar__contact,
+  #printRoot.print-mode-letter-full
+    .print-table
+    .schedule-grid__trip-bar
+    .schedule-grid__trip-bar__status-row,
+  #printRoot.print-mode-letter-full
+    .print-table
+    .schedule-grid__trip-bar
+    .schedule-grid__trip-bar__pre-drivers {
     display: none !important;
   }
 
@@ -829,7 +906,10 @@
     font-size: 8pt !important;
   }
 
-  .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__drivers .schedule-grid__trip-bar__driver,
+  .print-table
+    .schedule-grid__trip-bar
+    .schedule-grid__trip-bar__drivers
+    .schedule-grid__trip-bar__driver,
   .print-table .schedule-grid__trip-bar__pre-drivers {
     font-size: 8pt !important;
   }

@@ -32,9 +32,9 @@
   min-width: 0;
 }
 
-.agenda-header__date-left .btn-icon,
-.agenda-header__nav-right .btn-icon,
-.agenda-header__nav-right .weekpicker-trigger-wrap .btn-icon {
+.agenda-header__date-left .btn--icon,
+.agenda-header__nav-right .btn--icon,
+.agenda-header__nav-right .weekpicker-trigger-wrap .btn--icon {
   width: var(--week-picker-height);
   height: var(--week-picker-height);
 }
@@ -90,7 +90,7 @@
   gap: var(--space-1);
 }
 
-.agenda-header__nav-controls .btn-icon {
+.agenda-header__nav-controls .btn--icon {
   width: var(--week-picker-height);
   height: var(--week-picker-height);
 }

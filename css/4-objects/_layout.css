@@ -137,7 +137,7 @@
     display: none !important;
   }
 
-  #todayBtnMobile {
+  .app-header__btn-mobile {
     display: inline-flex;
   }
 
@@ -182,7 +182,7 @@
     z-index: 10;
   }
 
-  .btn-icon {
+  .btn--icon {
     min-width: 32px;
     width: 32px;
     height: 32px;

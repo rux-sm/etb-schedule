@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; 
@@ -20,7 +23,10 @@
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
     />
 
-    <link rel="stylesheet" href="css/main.css?v=37" />
+    <link
+      rel="stylesheet"
+      href="css/main.css?v=37"
+    />
   </head>
 
   <body>
@@ -40,7 +46,12 @@
                     this.nextElementSibling.style.display = 'inline-flex';
                   "
                 />
-                <div class="logo-placeholder is-hidden" aria-label="Logo placeholder">LOGO</div>
+                <div
+                  class="logo-placeholder is-hidden"
+                  aria-label="Logo placeholder"
+                >
+                  LOGO
+                </div>
               </div>
 
               <!-- 2. Header / title text (right of logo) -->
@@ -59,7 +70,7 @@
               <!-- Tools -->
               <button
                 id="tripInputBtn"
-                class="btn-icon"
+                class="btn--icon app-header__btn"
                 type="button"
                 title="Trip Editor"
                 aria-label="Trip Editor"
@@ -69,7 +80,7 @@
 
               <button
                 id="driversBtn"
-                class="btn-icon"
+                class="btn--icon app-header__btn"
                 type="button"
                 title="Driver Assignments"
                 aria-label="Driver Assignments"
@@ -79,7 +90,7 @@
 
               <button
                 id="notesBtn"
-                class="btn-icon"
+                class="btn--icon app-header__btn"
                 type="button"
                 title="Weekly Notes"
                 aria-label="Weekly Notes"
@@ -89,7 +100,7 @@
 
               <button
                 id="waitingListBtn"
-                class="btn-icon"
+                class="btn--icon app-header__btn"
                 type="button"
                 title="Waiting List"
                 aria-label="Waiting List"
@@ -100,7 +111,7 @@
               <!-- Settings Dropdown -->
               <button
                 id="todayBtnMobile"
-                class="btn-icon"
+                class="btn--icon app-header__btn app-header__btn-mobile"
                 type="button"
                 aria-label="Today"
                 title="Today"
@@ -111,7 +122,7 @@
               <div class="dropdown">
                 <button
                   id="settingsBtn"
-                  class="btn-icon"
+                  class="btn--icon app-header__btn"
                   type="button"
                   aria-haspopup="true"
                   aria-expanded="false"
@@ -120,42 +131,74 @@
                 >
                   <span class="material-symbols-outlined">settings</span>
                 </button>
-                <div id="settingsMenu" class="dropdown__menu" hidden>
-                  <button id="refreshBtn2" class="dropdown__item" type="button">
+                <div
+                  id="settingsMenu"
+                  class="dropdown__menu"
+                  hidden
+                >
+                  <button
+                    id="refreshBtn2"
+                    class="dropdown__item"
+                    type="button"
+                  >
                     <span class="dropdown__icon material-symbols-outlined">refresh</span>
                     <span>Refresh Data</span>
                   </button>
 
                   <hr class="dropdown__divider" />
 
-                  <button id="themeToggle2" class="dropdown__item" type="button">
+                  <button
+                    id="themeToggle2"
+                    class="dropdown__item"
+                    type="button"
+                  >
                     <span class="dropdown__icon material-symbols-outlined">dark_mode</span>
                     <span>Toggle Theme</span>
                   </button>
 
-                  <button id="printBtn2" class="dropdown__item" type="button">
+                  <button
+                    id="printBtn2"
+                    class="dropdown__item"
+                    type="button"
+                  >
                     <span class="dropdown__icon material-symbols-outlined">print</span>
                     <span>Print Schedule (Legal)</span>
                   </button>
 
-                  <button id="printBtn2Full" class="dropdown__item" type="button">
+                  <button
+                    id="printBtn2Full"
+                    class="dropdown__item"
+                    type="button"
+                  >
                     <span class="dropdown__icon material-symbols-outlined">print</span>
                     <span>Print Full Schedule (Letter)</span>
                   </button>
 
                   <hr class="dropdown__divider" />
 
-                  <button id="nextDayReportBtn" class="dropdown__item" type="button">
+                  <button
+                    id="nextDayReportBtn"
+                    class="dropdown__item"
+                    type="button"
+                  >
                     <span class="dropdown__icon material-symbols-outlined">event_upcoming</span>
                     <span>Weekly Maintenance</span>
                   </button>
 
-                  <button id="dailyMaintenancePlanBtn" class="dropdown__item" type="button">
+                  <button
+                    id="dailyMaintenancePlanBtn"
+                    class="dropdown__item"
+                    type="button"
+                  >
                     <span class="dropdown__icon material-symbols-outlined">handyman</span>
                     <span>Daily Maintenance Plan</span>
                   </button>
 
-                  <button id="weekStartToggle" class="dropdown__item" type="button">
+                  <button
+                    id="weekStartToggle"
+                    class="dropdown__item"
+                    type="button"
+                  >
                     <span class="dropdown__icon material-symbols-outlined">toggle_off</span>
                     <span>Week starts Monday</span>
                   </button>
@@ -168,11 +211,20 @@
 
       <main class="main">
         <div class="container">
-          <div class="app-layout" id="layoutPanels">
+          <div
+            class="app-layout"
+            id="layoutPanels"
+          >
             <!-- START PANEL -->
-            <div class="app-layout__sidebar--left app-layout__sidebar--collapsed" id="panelStart">
+            <div
+              class="app-layout__sidebar--left app-layout__sidebar--collapsed"
+              id="panelStart"
+            >
               <!-- Placeholder for new left panel cards -->
-              <div class="card card--compact is-hidden" id="leftPanelCard1">
+              <div
+                class="card card--compact is-hidden"
+                id="leftPanelCard1"
+              >
                 <div class="card__header">
                   <h2 class="section-title">Left Panel Card 1</h2>
                 </div>
@@ -183,9 +235,15 @@
             </div>
 
             <!-- END PANEL (Trip Editor, Drivers, Notes) -->
-            <div class="app-layout__sidebar--right app-layout__sidebar--collapsed" id="panelEnd">
+            <div
+              class="app-layout__sidebar--right app-layout__sidebar--collapsed"
+              id="panelEnd"
+            >
               <!-- Driver Week Card (hidden by default) -->
-              <div class="card card--compact is-hidden" id="driverWeekCard">
+              <div
+                class="card card--compact is-hidden"
+                id="driverWeekCard"
+              >
                 <div class="card__header">
                   <h2 class="section-title">Driver Assignments</h2>
                   <div class="card__header-actions">
@@ -216,7 +274,10 @@
               </div>
 
               <!-- Notes Card (hidden by default) -->
-              <div class="card card--compact is-hidden" id="notesCard">
+              <div
+                class="card card--compact is-hidden"
+                id="notesCard"
+              >
                 <div class="card__header">
                   <h2 class="section-title">Weekly Notes</h2>
                   <div class="card__header-actions">
@@ -244,13 +305,22 @@
 
                 <div class="card__footer">
                   <div class="form-actions">
-                    <button type="button" class="btn" id="saveNotesBtn">Save Notes</button>
+                    <button
+                      type="button"
+                      class="btn"
+                      id="saveNotesBtn"
+                    >
+                      Save Notes
+                    </button>
                   </div>
                 </div>
               </div>
 
               <!-- Trip Info Card -->
-              <div class="card card--compact is-hidden" id="tripInfoCard">
+              <div
+                class="card card--compact is-hidden"
+                id="tripInfoCard"
+              >
                 <div class="card__header">
                   <h2 class="section-title">Trip Editor</h2>
                   <div class="card__header-actions">
@@ -271,16 +341,66 @@
                 </div>
 
                 <div class="card__content">
-                  <form id="tripForm" class="form-grid" target="hidden_iframe" method="POST">
-                    <input type="hidden" name="action" id="action" value="create" />
-                    <input type="hidden" name="tripKey" id="tripKey" value="" />
-                    <input type="hidden" name="tripId" id="tripId" value="" />
-                    <input type="hidden" name="req56Pass" id="req56PassValue" value="false" />
-                    <input type="hidden" name="reqSleeper" id="reqSleeperValue" value="false" />
-                    <input type="hidden" name="reqLift" id="reqLiftValue" value="false" />
-                    <input type="hidden" name="reqRelief" id="reqReliefValue" value="false" />
-                    <input type="hidden" name="reqCoDriver" id="reqCoDriverValue" value="false" />
-                    <input type="hidden" name="reqHotel" id="reqHotelValue" value="false" />
+                  <form
+                    id="tripForm"
+                    class="form-grid"
+                    target="hidden_iframe"
+                    method="POST"
+                  >
+                    <input
+                      type="hidden"
+                      name="action"
+                      id="action"
+                      value="create"
+                    />
+                    <input
+                      type="hidden"
+                      name="tripKey"
+                      id="tripKey"
+                      value=""
+                    />
+                    <input
+                      type="hidden"
+                      name="tripId"
+                      id="tripId"
+                      value=""
+                    />
+                    <input
+                      type="hidden"
+                      name="req56Pass"
+                      id="req56PassValue"
+                      value="false"
+                    />
+                    <input
+                      type="hidden"
+                      name="reqSleeper"
+                      id="reqSleeperValue"
+                      value="false"
+                    />
+                    <input
+                      type="hidden"
+                      name="reqLift"
+                      id="reqLiftValue"
+                      value="false"
+                    />
+                    <input
+                      type="hidden"
+                      name="reqRelief"
+                      id="reqReliefValue"
+                      value="false"
+                    />
+                    <input
+                      type="hidden"
+                      name="reqCoDriver"
+                      id="reqCoDriverValue"
+                      value="false"
+                    />
+                    <input
+                      type="hidden"
+                      name="reqHotel"
+                      id="reqHotelValue"
+                      value="false"
+                    />
 
                     <div class="form-group col-6">
                       <label for="destination">Destination</label>
@@ -295,7 +415,13 @@
 
                     <div class="form-group col-6">
                       <label for="customer">Customer</label>
-                      <input type="text" id="customer" name="customer" placeholder="" required />
+                      <input
+                        type="text"
+                        id="customer"
+                        name="customer"
+                        placeholder=""
+                        required
+                      />
                     </div>
 
                     <div class="form-group col-5">
@@ -323,8 +449,18 @@
 
                     <div class="form-group col-2">
                       <label for="busesNeeded">Buses</label>
-                      <select id="busesNeeded" name="busesNeeded" required>
-                        <option value="" disabled selected>-</option>
+                      <select
+                        id="busesNeeded"
+                        name="busesNeeded"
+                        required
+                      >
+                        <option
+                          value=""
+                          disabled
+                          selected
+                        >
+                          -
+                        </option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -340,38 +476,72 @@
 
                     <div class="form-group col-6">
                       <label for="tripDate">Departure Date</label>
-                      <input type="date" id="tripDate" name="departureDate" required />
+                      <input
+                        type="date"
+                        id="tripDate"
+                        name="departureDate"
+                        required
+                      />
                     </div>
 
                     <div class="form-group col-6">
                       <label for="arrivalDate">Arrival Date</label>
-                      <input type="date" id="arrivalDate" name="arrivalDate" />
+                      <input
+                        type="date"
+                        id="arrivalDate"
+                        name="arrivalDate"
+                      />
                     </div>
 
                     <div class="form-group col-4">
                       <label for="departureTime">Departure Time</label>
-                      <input type="time" id="departureTime" name="departureTime" />
+                      <input
+                        type="time"
+                        id="departureTime"
+                        name="departureTime"
+                      />
                     </div>
 
                     <div class="form-group col-4">
                       <label for="spotTime">Spot Time</label>
-                      <input type="time" id="spotTime" name="spotTime" />
+                      <input
+                        type="time"
+                        id="spotTime"
+                        name="spotTime"
+                      />
                     </div>
 
                     <div class="form-group col-4">
                       <label for="arrivalTime">Arrival Time</label>
-                      <input type="time" id="arrivalTime" name="arrivalTime" />
+                      <input
+                        type="time"
+                        id="arrivalTime"
+                        name="arrivalTime"
+                      />
                     </div>
 
                     <div class="form-group col-8">
                       <label for="notes">Notes</label>
-                      <input type="text" id="notes" name="notes" placeholder="" />
+                      <input
+                        type="text"
+                        id="notes"
+                        name="notes"
+                        placeholder=""
+                      />
                     </div>
 
                     <div class="form-group col-4">
                       <label for="tripColor">Color</label>
-                      <select id="tripColor" name="tripColor">
-                        <option value="" selected>Auto</option>
+                      <select
+                        id="tripColor"
+                        name="tripColor"
+                      >
+                        <option
+                          value=""
+                          selected
+                        >
+                          Auto
+                        </option>
                         <option value="Yellow">Yellow</option>
                         <option value="Orange">Orange</option>
                         <option value="Pink">Pink</option>
@@ -383,7 +553,11 @@
 
                     <div class="form-group col-12">
                       <label for="comments">Comments</label>
-                      <textarea id="comments" name="comments" placeholder=""></textarea>
+                      <textarea
+                        id="comments"
+                        name="comments"
+                        placeholder=""
+                      ></textarea>
                     </div>
 
                     <div class="subsection col-12">
@@ -401,8 +575,16 @@
                               (view)
                             </button>
                           </label>
-                          <select id="itineraryStatus" name="itineraryStatus" required>
-                            <option value="" disabled selected></option>
+                          <select
+                            id="itineraryStatus"
+                            name="itineraryStatus"
+                            required
+                          >
+                            <option
+                              value=""
+                              disabled
+                              selected
+                            ></option>
                             <option value="Pending">Pending</option>
                             <option value="Received">Received</option>
                             <option value="Not Required">Not Required</option>
@@ -411,8 +593,16 @@
 
                         <div class="form-group">
                           <label for="contactStatus">Contact Status</label>
-                          <select id="contactStatus" name="contactStatus" required>
-                            <option value="" disabled selected></option>
+                          <select
+                            id="contactStatus"
+                            name="contactStatus"
+                            required
+                          >
+                            <option
+                              value=""
+                              disabled
+                              selected
+                            ></option>
                             <option value="Pending">Pending</option>
                             <option value="Received">Received</option>
                             <option value="Not Required">Not Required</option>
@@ -421,8 +611,16 @@
 
                         <div class="form-group">
                           <label for="paymentStatus">Approval Status</label>
-                          <select id="paymentStatus" name="paymentStatus" required>
-                            <option value="" disabled selected></option>
+                          <select
+                            id="paymentStatus"
+                            name="paymentStatus"
+                            required
+                          >
+                            <option
+                              value=""
+                              disabled
+                              selected
+                            ></option>
                             <option value="Pending Quote">Pending Quote</option>
                             <option value="Quoted">Quoted</option>
                             <option value="Contract Signed">Contract Signed</option>
@@ -433,8 +631,16 @@
 
                         <div class="form-group">
                           <label for="driverStatus">Driver Status</label>
-                          <select id="driverStatus" name="driverStatus" required>
-                            <option value="" disabled selected></option>
+                          <select
+                            id="driverStatus"
+                            name="driverStatus"
+                            required
+                          >
+                            <option
+                              value=""
+                              disabled
+                              selected
+                            ></option>
                             <option value="Pending">Pending</option>
                             <option value="Assigned">Assigned</option>
                             <option value="Confirmed">Confirmed</option>
@@ -443,8 +649,16 @@
 
                         <div class="form-group">
                           <label for="invoiceStatus">Invoice Status</label>
-                          <select id="invoiceStatus" name="invoiceStatus" required>
-                            <option value="" disabled selected></option>
+                          <select
+                            id="invoiceStatus"
+                            name="invoiceStatus"
+                            required
+                          >
+                            <option
+                              value=""
+                              disabled
+                              selected
+                            ></option>
                             <option value="Pending Invoice">Pending Invoice</option>
                             <option value="Invoiced">Invoiced</option>
                             <option value="Deposit Received">Deposit Received</option>
@@ -452,7 +666,10 @@
                           </select>
                         </div>
 
-                        <div class="form-group is-hidden" id="invoiceNumberGroup">
+                        <div
+                          class="form-group is-hidden"
+                          id="invoiceNumberGroup"
+                        >
                           <label for="invoiceNumber">Invoice Number</label>
                           <input
                             type="text"
@@ -472,7 +689,11 @@
                     ></textarea>
                     <div class="subsection col-12">
                       <span class="field-label">Requirements</span>
-                      <div class="toggle-pill__grid" role="group" aria-label="Requirements">
+                      <div
+                        class="toggle-pill__grid"
+                        role="group"
+                        aria-label="Requirements"
+                      >
                         <button
                           type="button"
                           class="toggle-pill"
@@ -499,7 +720,12 @@
                             >airline_seat_flat</span
                           >
                         </button>
-                        <button type="button" class="toggle-pill" id="reqLift" aria-pressed="false">
+                        <button
+                          type="button"
+                          class="toggle-pill"
+                          id="reqLift"
+                          aria-pressed="false"
+                        >
                           Lift
                           <span
                             class="toggle-pill__icon material-symbols-outlined"
@@ -548,7 +774,10 @@
                       </div>
                     </div>
 
-                    <div class="subsection col-12" id="busPanel">
+                    <div
+                      class="subsection col-12"
+                      id="busPanel"
+                    >
                       <div id="busGrid"></div>
                     </div>
                   </form>
@@ -556,9 +785,27 @@
 
                 <div class="card__footer">
                   <div class="form-actions">
-                    <button type="submit" class="btn" id="saveBtn" form="tripForm">Save</button>
-                    <button type="button" class="btn" id="newBtn">Clear</button>
-                    <button type="button" class="btn btn-danger" id="deleteBtn" disabled>
+                    <button
+                      type="submit"
+                      class="btn"
+                      id="saveBtn"
+                      form="tripForm"
+                    >
+                      Save
+                    </button>
+                    <button
+                      type="button"
+                      class="btn"
+                      id="newBtn"
+                    >
+                      Clear
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn--danger"
+                      id="deleteBtn"
+                      disabled
+                    >
                       Delete
                     </button>
                   </div>
@@ -578,7 +825,10 @@
               <div class="card">
                 <!-- Conflicts badge (overlay) -->
                 <div class="schedule-badge-wrap">
-                  <span id="overflowBadge" class="badge badge--error is-hidden">
+                  <span
+                    id="overflowBadge"
+                    class="badge badge--error is-hidden"
+                  >
                     Conflicts detected
                   </span>
                 </div>
@@ -589,7 +839,7 @@
                     <div class="agenda-header__date-left">
                       <button
                         id="prevWeekBtn"
-                        class="btn-icon"
+                        class="btn--icon"
                         type="button"
                         aria-label="Previous Week"
                         title="Previous Week"
@@ -598,14 +848,17 @@
                       </button>
                       <button
                         id="nextWeekBtn"
-                        class="btn-icon"
+                        class="btn--icon"
                         type="button"
                         aria-label="Next Week"
                         title="Next Week"
                       >
                         <span class="material-symbols-outlined">arrow_forward_ios</span>
                       </button>
-                      <div id="dateWrapper" class="date-picker-wrapper">
+                      <div
+                        id="dateWrapper"
+                        class="date-picker-wrapper"
+                      >
                         <h2 class="agenda-header__week-heading">
                           <span
                             class="agenda-header__week-date"
@@ -619,7 +872,7 @@
                       <div class="weekpicker-trigger-wrap">
                         <button
                           id="agendaLeftBtn"
-                          class="btn-icon"
+                          class="btn--icon"
                           type="button"
                           aria-label="Select week"
                           title="Select week"
@@ -635,7 +888,7 @@
                       </div>
                       <button
                         id="todayBtn"
-                        class="btn-icon"
+                        class="btn--icon"
                         type="button"
                         aria-label="Today"
                         title="Today"
@@ -663,49 +916,70 @@
                       <tr>
                         <th class="schedule-grid__header-cell"></th>
 
-                        <th id="sun" class="schedule-grid__header-cell">
+                        <th
+                          id="sun"
+                          class="schedule-grid__header-cell"
+                        >
                           <span class="schedule-grid__day-label">
                             <span class="schedule-grid__day-date"></span>
                             <span class="schedule-grid__day-name">Sun</span>
                           </span>
                         </th>
 
-                        <th id="mon" class="schedule-grid__header-cell">
+                        <th
+                          id="mon"
+                          class="schedule-grid__header-cell"
+                        >
                           <span class="schedule-grid__day-label">
                             <span class="schedule-grid__day-date"></span>
                             <span class="schedule-grid__day-name">Mon</span>
                           </span>
                         </th>
 
-                        <th id="tue" class="schedule-grid__header-cell">
+                        <th
+                          id="tue"
+                          class="schedule-grid__header-cell"
+                        >
                           <span class="schedule-grid__day-label">
                             <span class="schedule-grid__day-date"></span>
                             <span class="schedule-grid__day-name">Tue</span>
                           </span>
                         </th>
 
-                        <th id="wed" class="schedule-grid__header-cell">
+                        <th
+                          id="wed"
+                          class="schedule-grid__header-cell"
+                        >
                           <span class="schedule-grid__day-label">
                             <span class="schedule-grid__day-date"></span>
                             <span class="schedule-grid__day-name">Wed</span>
                           </span>
                         </th>
 
-                        <th id="thu" class="schedule-grid__header-cell">
+                        <th
+                          id="thu"
+                          class="schedule-grid__header-cell"
+                        >
                           <span class="schedule-grid__day-label">
                             <span class="schedule-grid__day-date"></span>
                             <span class="schedule-grid__day-name">Thu</span>
                           </span>
                         </th>
 
-                        <th id="fri" class="schedule-grid__header-cell">
+                        <th
+                          id="fri"
+                          class="schedule-grid__header-cell"
+                        >
                           <span class="schedule-grid__day-label">
                             <span class="schedule-grid__day-date"></span>
                             <span class="schedule-grid__day-name">Fri</span>
                           </span>
                         </th>
 
-                        <th id="sat" class="schedule-grid__header-cell">
+                        <th
+                          id="sat"
+                          class="schedule-grid__header-cell"
+                        >
                           <span class="schedule-grid__day-label">
                             <span class="schedule-grid__day-date"></span>
                             <span class="schedule-grid__day-name">Sat</span>
@@ -715,17 +989,26 @@
                     </thead>
 
                     <tbody id="agendaBody"></tbody>
-                    <tbody id="waitingBody" hidden></tbody>
+                    <tbody
+                      id="waitingBody"
+                      hidden
+                    ></tbody>
                   </table>
                 </div>
 
-                <div id="conflictPanel" class="card is-hidden mt-4">
+                <div
+                  id="conflictPanel"
+                  class="card is-hidden"
+                >
                   <div class="card-title">
                     Conflicts
                     <span class="badge badge--error">Needs attention</span>
                   </div>
                   <div class="card__content">
-                    <div id="conflictList" class="help"></div>
+                    <div
+                      id="conflictList"
+                      class="help"
+                    ></div>
                   </div>
                 </div>
               </div>
@@ -736,51 +1019,113 @@
     </div>
 
     <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay" hidden>
+    <div
+      id="loadingOverlay"
+      class="loading-overlay"
+      hidden
+    >
       <div class="loading-overlay__backdrop"></div>
 
-      <div class="loading-overlay__card" role="status" aria-live="polite" aria-atomic="true">
-        <div class="loading-overlay__title" id="loadingOverlayText">Loading…</div>
+      <div
+        class="loading-overlay__card"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        <div
+          class="loading-overlay__title"
+          id="loadingOverlayText"
+        >
+          Loading…
+        </div>
 
         <div class="loading-overlay__bar">
           <div class="loading-overlay__bar-inner"></div>
         </div>
 
-        <div class="loading-overlay__sub" id="loadingOverlaySub">Please wait</div>
+        <div
+          class="loading-overlay__sub"
+          id="loadingOverlaySub"
+        >
+          Please wait
+        </div>
       </div>
     </div>
 
     <!-- Toast backdrop (blur + click-blocker) -->
-    <div id="toastBackdrop" class="toast-backdrop" hidden></div>
+    <div
+      id="toastBackdrop"
+      class="toast-backdrop"
+      hidden
+    ></div>
 
     <!-- Global toast -->
-    <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true" hidden>
+    <div
+      id="toast"
+      class="toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    >
       <div class="toast-row">
-        <span class="toast-icon" aria-hidden="true"></span>
+        <span
+          class="toast-icon"
+          aria-hidden="true"
+        ></span>
         <span id="toastText"></span>
       </div>
 
-      <div class="toast-progress" aria-hidden="true">
+      <div
+        class="toast-progress"
+        aria-hidden="true"
+      >
         <div class="toast-progress__inner"></div>
       </div>
     </div>
 
     <!-- Itinerary Modal -->
-    <div id="itineraryModal" class="modal modal--itinerary" hidden>
-      <div class="modal__backdrop" data-close></div>
+    <div
+      id="itineraryModal"
+      class="modal modal--itinerary"
+      hidden
+    >
+      <div
+        class="modal__backdrop"
+        data-close
+      ></div>
 
-      <div class="modal__card" role="dialog" aria-modal="true" aria-label="Trip itinerary">
+      <div
+        class="modal__card"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Trip itinerary"
+      >
         <div class="modal__head">
           <h2 class="section-title">Trip Itinerary</h2>
         </div>
 
         <div class="modal__body">
-          <textarea id="itineraryModalField" placeholder=""></textarea>
+          <textarea
+            id="itineraryModalField"
+            placeholder=""
+          ></textarea>
         </div>
 
         <div class="modal__foot">
-          <button id="itineraryCopyBtn" class="btn btn-compact" type="button">Copy</button>
-          <button id="itinerarySaveBtn" class="btn btn-compact" type="button" aria-label="Close">
+          <button
+            id="itineraryCopyBtn"
+            class="btn btn--compact"
+            type="button"
+          >
+            Copy
+          </button>
+          <button
+            id="itinerarySaveBtn"
+            class="btn btn--compact"
+            type="button"
+            aria-label="Close"
+          >
             Close
           </button>
         </div>
@@ -788,8 +1133,15 @@
     </div>
 
     <!-- Trip Details Modal (read-only) -->
-    <div id="tripDetailsModal" class="modal modal--trip-details" hidden>
-      <div class="modal__backdrop" data-close-details></div>
+    <div
+      id="tripDetailsModal"
+      class="modal modal--trip-details"
+      hidden
+    >
+      <div
+        class="modal__backdrop"
+        data-close-details
+      ></div>
 
       <div
         class="modal__card modal__card--details"
@@ -802,11 +1154,19 @@
         </div>
 
         <div class="modal__body">
-          <div id="tripDetailsBody" class="trip-details__content"></div>
+          <div
+            id="tripDetailsBody"
+            class="trip-details__content"
+          ></div>
         </div>
 
         <div class="modal__foot">
-          <button class="btn btn-compact" type="button" data-close-details aria-label="Close">
+          <button
+            class="btn btn--compact"
+            type="button"
+            data-close-details
+            aria-label="Close"
+          >
             Close
           </button>
         </div>
@@ -814,8 +1174,15 @@
     </div>
 
     <!-- Next Day Report Modal -->
-    <div id="nextDayReportModal" class="modal modal--trip-details" hidden>
-      <div class="modal__backdrop" id="closeNextDayReportBackdrop"></div>
+    <div
+      id="nextDayReportModal"
+      class="modal modal--trip-details"
+      hidden
+    >
+      <div
+        class="modal__backdrop"
+        id="closeNextDayReportBackdrop"
+      ></div>
 
       <div
         class="modal__card modal__card--details"
@@ -834,14 +1201,23 @@
         </div>
 
         <div class="modal__body">
-          <div id="nextDayReportBody" class="trip-details__content"></div>
+          <div
+            id="nextDayReportBody"
+            class="trip-details__content"
+          ></div>
         </div>
 
         <div class="modal__foot">
-          <button id="printNextDayReportBtn" class="btn btn-compact" type="button">Print</button>
+          <button
+            id="printNextDayReportBtn"
+            class="btn btn--compact"
+            type="button"
+          >
+            Print
+          </button>
           <button
             id="closeNextDayReportBtn"
-            class="btn btn-compact"
+            class="btn btn--compact"
             type="button"
             aria-label="Close"
           >
@@ -852,8 +1228,15 @@
     </div>
 
     <!-- Daily Maintenance Plan Modal -->
-    <div id="dailyMaintenancePlanModal" class="modal modal--trip-details" hidden>
-      <div class="modal__backdrop" id="closeDailyMaintenancePlanBackdrop"></div>
+    <div
+      id="dailyMaintenancePlanModal"
+      class="modal modal--trip-details"
+      hidden
+    >
+      <div
+        class="modal__backdrop"
+        id="closeDailyMaintenancePlanBackdrop"
+      ></div>
 
       <div
         class="modal__card modal__card--details"
@@ -872,16 +1255,23 @@
         </div>
 
         <div class="modal__body">
-          <div id="dailyMaintenancePlanBody" class="trip-details__content"></div>
+          <div
+            id="dailyMaintenancePlanBody"
+            class="trip-details__content"
+          ></div>
         </div>
 
         <div class="modal__foot">
-          <button id="printDailyMaintenancePlanBtn" class="btn btn-compact" type="button">
+          <button
+            id="printDailyMaintenancePlanBtn"
+            class="btn btn--compact"
+            type="button"
+          >
             Print
           </button>
           <button
             id="closeDailyMaintenancePlanBtn"
-            class="btn btn-compact"
+            class="btn btn--compact"
             type="button"
             aria-label="Close"
           >
@@ -891,30 +1281,58 @@
       </div>
     </div>
 
-    <div id="printRoot" class="is-hidden"></div>
+    <div
+      id="printRoot"
+      class="is-hidden"
+    ></div>
 
     <!-- Context Menu -->
-    <div id="tripContextMenu" class="context-menu" hidden>
-      <div class="context-menu__header" id="ctxHeader">Trip Actions</div>
-      <button id="ctxEditBtn" class="context-menu__item">
+    <div
+      id="tripContextMenu"
+      class="context-menu"
+      hidden
+    >
+      <div
+        class="context-menu__header"
+        id="ctxHeader"
+      >
+        Trip Actions
+      </div>
+      <button
+        id="ctxEditBtn"
+        class="context-menu__item"
+      >
         <span class="material-symbols-outlined">edit</span>
         <span>Edit Trip</span>
       </button>
-      <button id="ctxViewBtn" class="context-menu__item">
+      <button
+        id="ctxViewBtn"
+        class="context-menu__item"
+      >
         <span class="material-symbols-outlined">visibility</span>
         <span>View Details</span>
       </button>
     </div>
 
     <!-- Empty Cell Context Menu -->
-    <div id="cellContextMenu" class="context-menu" hidden>
+    <div
+      id="cellContextMenu"
+      class="context-menu"
+      hidden
+    >
       <div class="context-menu__header">New Entry</div>
-      <button id="ctxNewTripBtn" class="context-menu__item">
+      <button
+        id="ctxNewTripBtn"
+        class="context-menu__item"
+      >
         <span class="material-symbols-outlined">add</span>
         <span>New Trip</span>
       </button>
     </div>
 
-    <script src="app.js?v=57" defer></script>
+    <script
+      src="app.js?v=57"
+      defer
+    ></script>
   </body>
 </html>

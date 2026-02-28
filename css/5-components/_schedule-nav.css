@@ -32,8 +32,8 @@
   gap: 4px;
 }
 
-.schedule-nav__group .btn-icon,
-.schedule-nav__group .weekpicker-trigger-wrap .btn-icon {
+.schedule-nav__group .btn--icon,
+.schedule-nav__group .weekpicker-trigger-wrap .btn--icon {
   width: var(--week-picker-height);
   height: var(--week-picker-height);
 }

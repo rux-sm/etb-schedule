@@ -13,7 +13,7 @@
   align-items: center;
 }
 
-.app-header > .container {
+.app-header__container {
   height: 100%;
   display: flex;
   align-items: center;
@@ -44,7 +44,7 @@
   min-width: 0;
 }
 
-.app-header__end .btn-icon {
+.app-header__btn {
   width: var(--week-picker-height);
   height: var(--week-picker-height);
   flex-shrink: 0;
@@ -76,6 +76,6 @@
   gap: 6px;
 }
 
-#todayBtnMobile {
+.app-header__btn-mobile {
   display: none;
 }

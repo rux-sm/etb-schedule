@@ -1195,10 +1195,18 @@ function applyWeekStart(isMonday) {
 
   syncWeekStartUI();
 
+  // NORMALIZE ANCHOR: Use a date in the middle of our current 7-day span
+  // to find the start-of-week that covers the same days visually.
+  const middleOfCurrentWeek = addDays(state.currentDate, 3);
+  state.currentDate = startOfWeek(middleOfCurrentWeek);
+
   setHeaderOrder();
   buildAgendaRows();
   scheduleAgendaReflow();
   updateWeekDates();
+
+  // Force driver panel to re-render its headers/days for the new week Start
+  updateDriverWeekIfVisible();
 }
 
 function setHeaderOrder() {
@@ -2561,20 +2569,23 @@ function renderDriverWeekHeader() {
   dom.driverWeekHeadRow.appendChild(thName);
 
   const weekDates = getWeekDates(); // Returns 7 days in correct order
+  // In a Monday-start world, index 5 is Saturday.
+  // In a Sunday-start world, index 6 is Saturday.
+  const dayLabels = state.weekStartsOnMonday
+    ? ["M", "T", "W", "T", "F", "S", "S"]
+    : ["S", "M", "T", "W", "T", "F", "S"];
 
-  const dayLabels = ["S", "M", "T", "W", "T", "F", "S"];
-
-  for (const dStr of weekDates) {
-    // dStr is YYYY-MM-DD
-    // We can parse it to get the day of week, or use the index if we trust standard alignment.
-    // Safer to parse:
-    const dObj = parseYMD(dStr);
-    const dayIdx = dObj.getDay(); // 0=Sun, 1=Mon...
-
+  weekDates.forEach((dStr, i) => {
     const th = document.createElement("th");
-    th.textContent = dayLabels[dayIdx];
+    th.textContent = dayLabels[i];
+
+    // Highlight today in driver week header too
+    if (dStr === ymd(new Date())) {
+      th.classList.add("driver-week__header-cell--today");
+    }
+
     dom.driverWeekHeadRow.appendChild(th);
-  }
+  });
 
   const thCount = document.createElement("th");
   thCount.textContent = "";
@@ -2821,14 +2832,6 @@ function toggleCard(cardType) {
   }
 }
 
-function updateNotesWeekTitle() {
-  if (!dom.notesWeekTitle) return;
-  const start = new Date(state.currentDate);
-  const end = addDays(start, 6);
-  const fmt = (d) => `${CONFIG.MONTHS[d.getMonth()]} ${d.getDate()}`;
-  dom.notesWeekTitle.textContent = `(${fmt(start)} – ${fmt(end)})`;
-}
-
 // Legacy function for backward compatibility (if needed)
 function setSidePanelMode(mode) {
   if (mode === "off") {
@@ -3039,6 +3042,15 @@ function updateWeekDates() {
   const todayYmd = ymd(today);
   const ids = getDayIds();
 
+  // Strip all "today" classes completely first to avoid them getting stuck
+  // when the DOM element order is swapped by the week toggle.
+  document.querySelectorAll(".schedule-grid__day-cell--today").forEach((el) => {
+    el.classList.remove("schedule-grid__day-cell--today");
+  });
+  document.querySelectorAll(".schedule-grid__header-cell--today").forEach((el) => {
+    el.classList.remove("schedule-grid__header-cell--today");
+  });
+
   ids.forEach((dayId, index) => {
     const date = addDays(state.currentDate, index);
     const th = document.getElementById(dayId);
@@ -3057,11 +3069,6 @@ function updateWeekDates() {
   const { start, end } = getWeekRange();
   const key = weekKey(start, end);
   const cached = getCachedWeek(key);
-
-  // Update notes week title if notes panel is visible
-  if (!dom.notesCard?.classList.contains("is-hidden")) {
-    updateNotesWeekTitle();
-  }
 
   if (cached?.ok) {
     applyWeekRespToState(cached);
@@ -3768,7 +3775,7 @@ function buildPrintScheduleTwoPages() {
       headerClone.classList.add("print-header");
       headerClone
         .querySelectorAll(
-          ".agenda-header__nav-right, .agenda-header__date-left .btn-icon, .weekpicker-trigger-wrap",
+          ".agenda-header__nav-right, .agenda-header__date-left .btn--icon, .weekpicker-trigger-wrap",
         )
         .forEach((el) => el.remove());
       const topbarLogo = document.querySelector(".app-header__logo-wrap");
