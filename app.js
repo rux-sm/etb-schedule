@@ -2135,9 +2135,7 @@ function _renderAgendaInner() {
 
         const statusBadgesWrap = document.createElement("div");
         statusBadgesWrap.className = "schedule-grid__trip-bar__status-badges";
-        statusBadgesWrap.append(b$, bI, bC, bD, bInv);
-
-        statusBadgesWrap.append(b$, bI, bC, bD, bInv, barReqIcons);
+        statusBadgesWrap.append(barReqIcons, b$, bI, bC, bD, bInv);
         statusRow.append(statusBadgesWrap);
 
         r5.appendChild(statusRow);
@@ -2232,8 +2230,8 @@ function _renderAgendaInner() {
         const num = String(t.invoiceNumber || "").trim();
         if (bar._bInv._text) bar._bInv._text.textContent = num;
 
-        // only make it "pill style" when we actually have a number to show
-        bar._bInv.classList.toggle("has-text", showInv && !!num);
+        // always show the white text box when invoice icon is visible (even if no number)
+        bar._bInv.classList.toggle("has-text", showInv);
       }
 
       // Requirement icons (left of status badges) from trip req flags

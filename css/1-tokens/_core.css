@@ -173,7 +173,7 @@
     0 4px 14px rgba(0, 0, 0, 0.35);
   --shadow-elevated: 0 4px 20px rgba(0, 0, 0, 0.4);
 
-  --radius-icon: 2px;
+  --radius-icon: 0px;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
@@ -286,7 +286,7 @@
   --tripbar-padding-x: 0px;
   --tripbar-padding-y: 0px;
   --tripbar-row-gap: 0px;
-  --tripbar-gap-inline: 3px; /* Between badges/icons */
+  --tripbar-gap-inline: 2px; /* Between badges/icons */
   --tripbar-gap-drivers: 6px; /* Between driver names */
 
   /* --- Trip Bar Typography (Per-Row) --- */
@@ -323,7 +323,7 @@
   --tripbar-r5-row-height: 18px;
   --tripbar-r5-font-weight: 500;
   --tripbar-r5-line-height: 18px;
-  --tripbar-r5-letter-spacing: 0.02em;
+  --tripbar-r5-letter-spacing: 0;
 
   /* R6: Notes */
   --tripbar-r6-font-size: 0.625rem; /* 10px */
@@ -343,7 +343,7 @@
   --tripbar-icon-size: 18px;
   --tripbar-icon-gutter: 18px; /* fixed 18px gutter for column alignment */
   --tripbar-mini-badge: 18px;
-  --tripbar-badge-radius: 2px;
+  --tripbar-badge-radius: 0;
 
   --tripbar-danger-size: 16px;
   --tripbar-danger-font: 0.6875rem;

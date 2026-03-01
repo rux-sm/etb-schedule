@@ -354,6 +354,10 @@
   text-shadow: none;
 }
 
+[data-theme="light"] .schedule-grid__bus-num {
+  text-shadow: none;
+}
+
 /* Conflict summary panel: overlay in bottom corner of schedule card */
 .schedule-grid__conflict-panel {
   position: absolute;
@@ -676,14 +680,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--tripbar-gap-inline, 4px);
+  gap: var(--tripbar-gap-inline);
   width: 100%;
 }
 
 .schedule-grid__trip-bar__req-icons {
   display: flex;
   align-items: center;
-  gap: var(--tripbar-gap-inline, 4px);
+  gap: var(--tripbar-gap-inline);
   flex-shrink: 0;
 }
 
@@ -709,7 +713,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--tripbar-gap-inline, 0px);
+  gap: var(--tripbar-gap-inline);
   flex: 1;
   min-width: 0;
 }
@@ -754,11 +758,25 @@
   width: auto;
   padding-inline-end: 2px;
   gap: 0;
+  color: #111;
 }
 .schedule-grid__trip-bar__mini-badge .schedule-grid__trip-bar__mini-badge-text {
-  font-size: 10px;
-  font-weight: 500;
-  line-height: var(--tripbar-r5-line-height);
+  font-size: 14px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--red) 90%, black);
+  font-variant-numeric: tabular-nums;
+  width: 50px;
+  min-width: 50px;
+  min-height: 16px;
+  box-sizing: border-box;
+  background: var(--white);
+  border: 1px solid color-mix(in srgb, var(--red) 90%, black);
+  line-height: 14px;
+  letter-spacing: 0.02em;
+  padding: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .schedule-grid__trip-bar__pre-drivers {

@@ -172,6 +172,13 @@
     overflow: visible !important;
   }
 
+  /* Legal print: hide itinerary, contact, driver status icons to make room for others */
+  .print-table .schedule-grid__trip-bar__status-badges > .schedule-grid__trip-bar__mini-badge:nth-child(3),
+  .print-table .schedule-grid__trip-bar__status-badges > .schedule-grid__trip-bar__mini-badge:nth-child(4),
+  .print-table .schedule-grid__trip-bar__status-badges > .schedule-grid__trip-bar__mini-badge:nth-child(5) {
+    display: none !important;
+  }
+
   .print-card {
     background: white;
     width: 100%;
