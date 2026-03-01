@@ -170,27 +170,14 @@
   overflow-y: auto;
 }
 
+/* Layout + dropdown-only overrides. Form-field look (border, shadow, hover, focus) lives in _forms.css */
 .select-trigger {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: var(--input-height);
-  padding: 0 var(--input-padding-x);
-  border: none;
-  border-radius: var(--input-border-radius);
-  font-size: var(--input-font-size);
-  font-weight: var(--input-font-weight);
-  color: var(--text);
-  background-color: var(--color-input-bg);
-  box-shadow: var(--field-inset);
-  cursor: pointer;
   text-align: center;
-  transition: border-color 0.12s ease, box-shadow 0.12s ease;
-}
-
-.select-trigger:hover {
-  border-color: var(--color-input-border-hover, var(--border-strong));
+  border: 2px solid var(--border);
 }
 
 .select-trigger:disabled {
@@ -233,9 +220,10 @@
   border: 1px solid var(--status-color);
 }
 
+/* Match input focus ring exactly */
 .select-trigger.is-open {
   border-color: var(--accent);
-  box-shadow: var(--focus-ring);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);
 }
 
 .select-dropdown .select-native {

@@ -52,26 +52,15 @@ body {
 }
 
 /* ── GLOBAL FOCUS STATES — Centralized keyboard navigation ─────────────── */
-*:focus:not(:focus-visible) {
+
+/* Kill the browser native outline universally for BOTH click and tab —
+   component styles (border-color) handle the focus visual for all elements */
+*:focus {
   outline: none;
 }
 
-/* Default focus-visible for all interactive elements */
+/* Ensure :focus-visible (keyboard tab) also gets no extra outline —
+   the component :focus { border-color } rule already fires for both */
 *:focus-visible {
-  outline: 2px solid var(--focus);
-  outline-offset: 2px;
-}
-
-/* Standardized focus: ring only so buttons and form controls look the same */
-button:focus-visible,
-.btn:focus-visible,
-.icon-chip:focus-visible,
-.theme-toggle:focus-visible,
-.seg__btn:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
   outline: none;
-  border-color: transparent;
-  box-shadow: var(--focus-ring);
 }

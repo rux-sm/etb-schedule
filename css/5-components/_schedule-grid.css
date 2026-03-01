@@ -22,7 +22,7 @@
 .app-layout__main .schedule-grid-container {
   overflow-x: auto;
   min-height: 0;
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  border-radius: 0;
   margin-bottom: var(--space-4);
 }
 
@@ -209,8 +209,7 @@
   z-index: 500;
   pointer-events: none; /* pass through so sticky overlay doesn't steal trip bar hover */
   background: var(--surface-1);
-  font-size: 0.875rem;
-  /* 14px */
+  font-size: 0.875rem; /* 14px */
   font-weight: 500;
   color: var(--text);
 
@@ -242,7 +241,7 @@
 
 /* Day cell today: modifier for column containing today's date (visual styling optional) */
 .schedule-grid__day-cell--today {
-  /* Reserved for future column highlight if needed */
+  background-color: color-mix(in srgb, var(--today-indicator-bg) 5%, transparent);
 }
 
 .schedule-grid__day-cell {

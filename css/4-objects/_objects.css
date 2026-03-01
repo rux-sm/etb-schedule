@@ -11,10 +11,8 @@
   gap: 0;
   align-items: start;
   overflow: visible;
-  flex: 1;
-  /* Take available space in flex container */
-  min-height: 0;
-  /* Critical for flex children to respect parent constraints */
+  flex: 1; /* Take available space in flex container */
+  min-height: 0; /* Critical for flex children to respect parent constraints */
 }
 
 .app-layout__sidebar--right,

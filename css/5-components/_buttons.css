@@ -15,7 +15,7 @@ button,
   height: var(--control-height);
   padding: 0 var(--control-padding-x);
 
-  border: 1px solid transparent;
+  border: 1px solid var(--border);
   border-radius: var(--control-radius);
 
   font-size: var(--font-size-3);
@@ -36,18 +36,31 @@ button,
     transform 0.04s ease;
 }
 
-/* Hover */
-button:hover,
+/* .select-trigger excluded: it's a form field, uses input-style hover (border only) */
+button:hover:not(.select-trigger),
 .btn:hover,
 .icon-chip:hover,
 .theme-toggle:hover,
 .seg__btn:hover {
   background-color: var(--color-button-hover-bg);
+  color: var(--color-button-hover-text);
   border-color: transparent;
 }
 
-/* Active */
-button:active:not(.toggle-pill),
+/* Focus — border-color only, same as form inputs.
+   .select-trigger is excluded: it's a form field and uses the form-level focus rule */
+button:focus:not(.select-trigger),
+.btn:focus,
+.icon-chip:focus,
+.theme-toggle:focus,
+.seg__btn:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);
+  outline: none;
+}
+
+/* Active — .select-trigger excluded: no press-down effect, matches inputs */
+button:active:not(.toggle-pill):not(.select-trigger),
 .btn:active,
 .icon-chip:active,
 .theme-toggle:active,
@@ -282,6 +295,12 @@ label .label-link:active {
 .toggle-pill[aria-pressed="true"] {
   background: var(--accent);
   color: var(--color-on-primary);
+}
+
+/* Focus — border-color only, same as inputs */
+.toggle-pill:focus {
+  outline: none;
+  border-color: var(--color-primary) !important;
 }
 
 /* Card Close Button (Moved from legacy UI components) */

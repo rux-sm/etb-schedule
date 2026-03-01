@@ -185,7 +185,7 @@
 
   --focus: var(--accent);
   --focus-ring-color: color-mix(in srgb, var(--accent) 100%, transparent);
-  --focus-ring: 0 0 0 3px var(--focus-ring-color);
+  --focus-ring: inset 0 0 0 1px var(--focus-ring-color);
 
   /* --- Control & Input Dimensions --- */
   --control-height: 36px;
@@ -199,13 +199,14 @@
   --input-height: 28px;
   --input-padding-x: 6px;
   --input-font-size: 0.875rem; /* 14px */
-  --input-font-weight: var(--font-weight-regular);
-  --input-border-radius: 0;
+  --input-font-weight: var(--font-weight-light);
+  --input-border-radius: 8px;
   --field-inset: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 
   --color-button-bg: var(--surface-3);
   --color-button-text: #e5e5e5;
-  --color-button-hover-bg: #333333;
+  --color-button-hover-bg: var(--accent);
+  --color-button-hover-text: var(--white);
 
   --color-input-bg: var(--surface-3);
   --color-input-border: rgba(255, 255, 255, 0.1);
@@ -219,7 +220,7 @@
   /* --- Layout --- */
   --layout-container-max: 100%;
   --layout-logo-height: 28px;
-  --panel-width: 420px;
+  --panel-width: 400px;
   --card-padding: 16px;
   --bar-height: 40px; /* Headers/footers 40px base */
   --topbar-height: var(--bar-height);
