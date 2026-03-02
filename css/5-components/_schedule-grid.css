@@ -9,7 +9,7 @@
   /* Match table height */
   overflow: auto;
   /* Scroll internally when content exceeds */
-  background: var(--schedule-bg);
+  background: var(--surface-1);
   border-inline-start: none;
 }
 
@@ -23,7 +23,7 @@
   overflow-x: auto;
   min-height: 0;
   border-radius: 0;
-  margin-bottom: var(--space-4);
+  margin-bottom: 0;
 }
 
 .app-layout.is-resizing .app-layout__main .schedule-grid-container {
@@ -43,7 +43,7 @@
   table-layout: fixed;
   border-collapse: separate;
   border-spacing: 0;
-  border-inline-start: 2px solid var(--grid-line);
+  border-inline-start: 1px solid var(--surface-1);
   overflow: auto;
 }
 
@@ -60,18 +60,24 @@
 
 .schedule-grid__header-cell,
 .schedule-grid__cell {
-  border-inline-end: 2px solid var(--grid-line);
-  border-bottom: 2px solid var(--grid-line);
+  border-inline-end: 1px solid var(--grid-line); /* main table border vertical */
+  border-bottom: 1px solid var(--grid-line); /* main table border horizontal */
   border-top: none;
   text-align: center;
   vertical-align: middle;
+}
+
+/* Last row bottom border override */
+.schedule-grid__row:last-child .schedule-grid__cell,
+.schedule-grid__cell--last-row {
+  border-bottom-color: var(--grid-line-last, var(--surface-1));
 }
 
 .schedule-grid__header-cell {
   background: var(--surface-1);
   padding: 0;
   height: var(--day-row-h);
-  border-top: none;
+  border-top: 1px solid var(--grid-line);
   position: sticky;
   top: 0;
   z-index: 2000;
@@ -89,7 +95,7 @@
 .schedule-grid__header-cell:first-child {
   position: sticky;
   inset-inline-start: 0;
-  border-top: none;
+  border-top: 1px solid var(--grid-line);
   z-index: 3000;
   background: var(--surface-1);
 }
@@ -107,19 +113,19 @@
 }
 
 .schedule-grid__day-name {
-  font-size: var(--heading-3-size);
-  color: var(--heading-3-color);
-  font-weight: var(--heading-3-weight);
-  line-height: 1;
-  letter-spacing: var(--heading-3-letter-spacing);
+  font-size: var(--day-header-name-size);
+  color: var(--day-header-name-color);
+  font-weight: var(--day-header-name-weight);
+  line-height: var(--day-header-name-line-height);
+  letter-spacing: var(--day-header-name-letter-spacing);
 }
 
 .schedule-grid__day-date {
-  font-size: var(--heading-3-size);
-  font-weight: 600;
-  color: var(--text);
-  letter-spacing: var(--heading-3-letter-spacing);
-  line-height: 1;
+  font-size: var(--day-header-date-size);
+  font-weight: var(--day-header-date-weight);
+  color: var(--day-header-date-color);
+  letter-spacing: var(--day-header-date-letter-spacing);
+  line-height: var(--day-header-date-line-height);
 }
 
 .schedule-grid__header-cell--today {
@@ -138,8 +144,8 @@
   background: var(--today-indicator-bg);
   border: none;
   color: var(--today-indicator-text);
-  font-weight: var(--today-indicator-weight);
-  line-height: 1;
+  font-weight: var(--day-header-date-weight);
+  line-height: var(--day-header-date-line-height);
   text-shadow:
     0 0 1px rgba(0, 0, 0, 0.9),
     0 1px 2px rgba(0, 0, 0, 0.6);
@@ -211,7 +217,6 @@
   background: var(--surface-1);
   font-size: 0.875rem; /* 14px */
   font-weight: 500;
-  color: var(--text);
 
   min-width: var(--bus-col-w);
   max-width: var(--bus-col-w);
@@ -236,12 +241,12 @@
 /* Ensure the outer right border uses the grid-line color for consistency */
 .schedule-grid__header-cell:last-child,
 .schedule-grid__cell:last-child {
-  border-inline-end: 2px solid var(--grid-line);
+  border-inline-end: 2px solid var(--surface-1);
 }
 
 /* Day cell today: modifier for column containing today's date (visual styling optional) */
 .schedule-grid__day-cell--today {
-  background-color: color-mix(in srgb, var(--today-indicator-bg) 5%, transparent);
+  /* background-color: color-mix(in srgb, var(--today-indicator-bg) 5%, transparent); */
 }
 
 .schedule-grid__day-cell {
@@ -290,15 +295,12 @@
 }
 
 .schedule-grid__bus-num {
-  font-size: var(--font-size-2);
-  font-weight: var(--font-weight-medium);
-  color: var(--text-secondary);
-  letter-spacing: var(--heading-3-letter-spacing);
-  line-height: var(--heading-3-line-height);
-  font-variant-numeric: tabular-nums;
-  text-shadow:
-    0 0 1px rgba(0, 0, 0, 0.9),
-    0 1px 2px rgba(0, 0, 0, 0.6);
+  font-size: var(--bus-num-size);
+  font-weight: var(--bus-num-weight);
+  color: var(--bus-num-color);
+  letter-spacing: var(--bus-num-letter-spacing);
+  line-height: var(--bus-num-line-height);
+  text-shadow: var(--bus-num-text-shadow);
 }
 
 .schedule-grid__row--has-bus-color > .schedule-grid__cell:first-child {
@@ -329,7 +331,7 @@
 .schedule-grid__bus-indicator .schedule-grid__bus-icon--sleeper {
   position: static;
   transform: none;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1;
   margin: 0;
 }
@@ -447,7 +449,7 @@
     0 4px 12px rgba(0, 0, 0, 0.4);
   -webkit-backdrop-filter: blur(24px);
   backdrop-filter: blur(24px);
-  filter: brightness(1.1) saturate(1.2);
+  filter: brightness(var(--tripbar-hover-brightness-to)) saturate(var(--tripbar-hover-saturate-to));
   animation: glow-pulse 0.5s infinite alternate ease-in-out;
 }
 
@@ -761,16 +763,16 @@
   color: #111;
 }
 .schedule-grid__trip-bar__mini-badge .schedule-grid__trip-bar__mini-badge-text {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 500;
   color: color-mix(in srgb, var(--red) 90%, black);
   font-variant-numeric: tabular-nums;
-  width: 50px;
-  min-width: 50px;
+  width: 48px;
+  min-width: 48px;
   min-height: 16px;
   box-sizing: border-box;
   background: var(--white);
-  border: 1px solid color-mix(in srgb, var(--red) 90%, black);
+  border: none;
   line-height: 14px;
   letter-spacing: 0.02em;
   padding: 0 4px;

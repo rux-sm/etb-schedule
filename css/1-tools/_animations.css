@@ -67,14 +67,16 @@
     box-shadow:
       0 0 8px color-mix(in srgb, var(--tripbar-color) 20%, transparent),
       0 2px 8px rgba(0, 0, 0, 0.2);
-    filter: brightness(1.1) saturate(1.1);
+    filter: brightness(var(--tripbar-hover-brightness-from))
+      saturate(var(--tripbar-hover-saturate-from));
   }
 
   to {
     box-shadow:
       0 0 24px color-mix(in srgb, var(--tripbar-color) 60%, transparent),
       0 6px 16px rgba(0, 0, 0, 0.5);
-    filter: brightness(1.3) saturate(1.3);
+    filter: brightness(var(--tripbar-hover-brightness-to))
+      saturate(var(--tripbar-hover-saturate-to));
   }
 }
 

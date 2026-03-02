@@ -43,9 +43,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  /* Match Trip Editor side padding in all viewports */
-  padding-left: var(--card-padding);
-  padding-right: var(--card-padding);
+  /* Matches general sidebar padding from _objects.css */
 }
 
 .notes-wrap,

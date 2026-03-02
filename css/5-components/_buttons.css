@@ -317,7 +317,7 @@ label .label-link:active {
   color: var(--text-muted);
   cursor: pointer;
   opacity: 0.5;
-  margin-right: var(--space-2);
+  margin-right: none;
   /* padding size is 8px */
   transition:
     opacity var(--dur-1) ease,

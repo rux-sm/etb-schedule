@@ -19,7 +19,6 @@ textarea,
   border: 2px solid transparent;
   border-radius: var(--input-border-radius);
   background-color: var(--color-input-bg);
-  box-shadow: var(--field-inset);
 
   font-size: var(--input-font-size);
   font-weight: var(--input-font-weight);
@@ -84,7 +83,7 @@ select.select--centered {
   text-overflow: ellipsis;
   text-align: center;
   border-radius: var(--input-border-radius);
-  border:solid 1px var(--border);
+  border: solid transparent;
 }
 
 /* --- 6. TEXTAREAS --- */
@@ -196,7 +195,7 @@ textarea:focus,
 .form-actions {
   display: flex;
   gap: var(--space-2);
-  padding: 0 6px;
+  padding: 0;
   flex-wrap: wrap;
   align-items: center;
 }

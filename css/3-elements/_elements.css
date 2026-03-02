@@ -31,7 +31,7 @@ h6 {
   line-height: var(--heading-2-line-height) !important;
   letter-spacing: var(--heading-2-letter-spacing);
   color: var(--heading-2-color);
-  padding: 0 16px;
+  padding: 0 0;
 }
 
 input,

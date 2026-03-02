@@ -5,13 +5,14 @@
 
 .card {
   background: var(--surface-2);
-  border-radius: 8px; /* Softer corners */
-  box-shadow: var(--shadow-elevated);
+  border-radius: 24px; /* More premium, rounded corners like the 'Create' button */
+  /* box-shadow: var(--shadow-elevated); */
   border: none !important;
   min-width: 0;
   border-inline-start: none;
   position: relative;
   isolation: isolate;
+  overflow: hidden; /* Ensure content follows rounded corners */
 }
 
 .card--compact,
@@ -70,7 +71,7 @@
   margin-top: 0;
   border-top: 1px solid var(--grid-line);
   background: var(--surface-2);
-  border-radius: 0 0 8px 8px; /* Match card radius if visible */
+  border-radius: 0 0 24px 24px; /* Match card radius if visible */
 }
 
 .card__footer:empty {
