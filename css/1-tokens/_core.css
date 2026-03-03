@@ -146,7 +146,7 @@
   --color-status-pending: var(--red);
   --color-status-ok: var(--green);
   --color-status-assigned: var(--yellow);
-  --color-status-blue: var(--blue);
+  --color-status-blue: var(--cyan);
 
   /* Standardized pattern for status selects - set via class */
   --status-color: var(--gray);

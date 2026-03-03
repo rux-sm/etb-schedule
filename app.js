@@ -130,6 +130,8 @@ const dom = {
   newBtn: $("newBtn"),
 
   itineraryBtn: $("itineraryBtn"),
+  openItineraryPdfBtn: $("openItineraryPdfBtn"),
+  removeItineraryPdfBtn: $("removeItineraryPdfBtn"),
   itineraryModal: $("itineraryModal"),
   itineraryField: $("itinerary"),
   itineraryModalField: $("itineraryModalField"),
@@ -210,11 +212,16 @@ const dom = {
   ctxHeader: $("ctxHeader"),
   ctxEditBtn: $("ctxEditBtn"),
   ctxViewBtn: $("ctxViewBtn"),
+  ctxOpenItineraryPdfBtn: $("ctxOpenItineraryPdfBtn"),
+  ctxAttachItineraryPdfBtn: $("ctxAttachItineraryPdfBtn"),
   ctxCopyBtn: $("ctxCopyBtn"),
 
   // Cell Context Menu
   cellCtxMenu: $("cellContextMenu"),
   ctxNewTripBtn: $("ctxNewTripBtn"),
+
+  // Hidden file input for itinerary PDF upload
+  itineraryPdfInput: $("itineraryPdfInput"),
 };
 
 // ======================================================
@@ -251,6 +258,9 @@ const state = {
   lastColMetrics: null,
 
   pendingConflictJob: null,
+
+  // Pending trip key for itinerary PDF upload
+  pendingItineraryTripKey: null,
 
   // Notes dirty tracking
   notesDirty: false,
@@ -599,6 +609,7 @@ function sanitizeWeekResp(resp) {
         notes: asStr(t?.notes),
         comments: asStr(t?.comments),
         itinerary: asStr(t?.itinerary),
+        itineraryPdfUrl: asStr(t?.itineraryPdfUrl).trim(),
       };
     })
     .filter((t) => t.tripKey);
@@ -969,8 +980,40 @@ function startProgressCreep({ from = 70, to = 95, everyMs = 250, label = "Verify
 }
 
 // ======================================================
-// 13) STATUS SELECT CLASSES
+// 13) STATUS SELECT CLASSES & ICONS
 // ======================================================
+function getStatusIcon(fieldId, statusValue) {
+  const s = String(statusValue || "")
+    .trim()
+    .toLowerCase();
+  if (!s || s === "none") return "";
+
+  if (fieldId === "itineraryStatus") {
+    return "attach_file_off"; // Base icon, overridden by has-pdf logic elsewhere
+  }
+  if (fieldId === "contactStatus") {
+    return "phone_enabled"; // Base icon
+  }
+  if (fieldId === "paymentStatus") {
+    if (s === "contract signed") return "edit_document";
+    if (s === "pending quote" || s === "quoted") return "draft";
+    if (s === "po received") return "request_quote";
+    if (s === "not required") return "scan_delete";
+    return "description";
+  }
+  if (fieldId === "driverStatus") {
+    if (s === "pending") return "sentiment_dissatisfied";
+    if (s === "assigned") return "sentiment_neutral";
+    if (s === "confirmed") return "sentiment_satisfied";
+    if (s === "driver info sent") return "mood";
+    return "person";
+  }
+  if (fieldId === "invoiceStatus") {
+    return "attach_money";
+  }
+  return "";
+}
+
 function updateStatusSelect(el) {
   if (!el) return;
 
@@ -2118,11 +2161,21 @@ function _renderAgendaInner() {
           return b;
         }
 
-        const bI = makeMini("description", true); // Itinerary
+        const bI = makeMini("attach_file_off", true); // Itinerary
+        bI.addEventListener("click", (e) => {
+          if (bI.classList.contains("has-pdf")) {
+            e.stopPropagation();
+            const tk = bar.dataset.tripkey;
+            const trip = state.tripByKey?.[tk];
+            if (trip && trip.itineraryPdfUrl) {
+              window.open(trip.itineraryPdfUrl, "_blank");
+            }
+          }
+        });
         const bC = makeMini("phone_enabled", true); // Contact
-        const b$ = makeMini("request_quote", true); // Payment
+        const b$ = makeMini("description", true); // Payment / Approval
         const bD = makeMini("person", true); // Driver
-        const bInv = makeMini("receipt_long", true); // Invoice
+        const bInv = makeMini("attach_money", true); // Invoice
         const invText = document.createElement("span");
         invText.className = "schedule-grid__trip-bar__mini-badge-text";
         bInv.appendChild(invText);
@@ -2219,6 +2272,41 @@ function _renderAgendaInner() {
       if (bar._b$) setBadge(bar._b$, t.paymentStatus);
       if (bar._bD) setBadge(bar._bD, t.driverStatus);
       if (bar._bInv) setBadge(bar._bInv, t.invoiceStatus);
+
+      // Swap payment status icon based on value
+      if (bar._b$) {
+        const glyph = bar._b$.querySelector(".schedule-grid__trip-bar__badge-glyph");
+        if (glyph) {
+          const iconName = getStatusIcon("paymentStatus", t.paymentStatus);
+          glyph.textContent = iconName || "description";
+        }
+      }
+
+      // Swap itinerary status icon when a PDF URL exists
+      if (bar._bI) {
+        const glyph = bar._bI.querySelector(".schedule-grid__trip-bar__badge-glyph");
+        if (glyph) {
+          if (t.itineraryPdfUrl) {
+            glyph.textContent = "attach_file";
+            bar._bI.classList.add("has-pdf");
+            bar._bI.title = "Open itinerary PDF";
+          } else {
+            glyph.textContent = "attach_file_off";
+            bar._bI.classList.remove("has-pdf");
+            bar._bI.title = "Itinerary status";
+          }
+        }
+      }
+
+      // Swap driver status icon based on value
+      if (bar._bD) {
+        const glyph = bar._bD.querySelector(".schedule-grid__trip-bar__badge-glyph");
+        if (glyph) {
+          const iconName = getStatusIcon("driverStatus", t.driverStatus);
+          glyph.textContent = iconName || "person";
+        }
+      }
+
       if (bar._bInv) {
         const inv = String(t.invoiceStatus || "")
           .trim()
@@ -3508,6 +3596,16 @@ async function openTripForEdit(tripKey) {
     });
     updateInvoiceNumberVisibility();
 
+    if (dom.openItineraryPdfBtn) {
+      if (t.itineraryPdfUrl) {
+        dom.openItineraryPdfBtn.disabled = false;
+        if (dom.removeItineraryPdfBtn) dom.removeItineraryPdfBtn.disabled = false;
+      } else {
+        dom.openItineraryPdfBtn.disabled = true;
+        if (dom.removeItineraryPdfBtn) dom.removeItineraryPdfBtn.disabled = true;
+      }
+    }
+
     dom.itineraryField.value = t.itinerary || "";
     $("notes").value = t.notes || "";
     $("comments").value = t.comments || "";
@@ -4171,6 +4269,110 @@ function wireDelegatedBarEvents() {
     }
   });
 
+  dom.ctxOpenItineraryPdfBtn?.addEventListener("click", () => {
+    if (!activeContextTripKey) return;
+    const trip = state.tripByKey?.[activeContextTripKey];
+    if (!trip || !trip.itineraryPdfUrl) {
+      toast("No itinerary PDF attached for this trip.", "info", 2000);
+      return;
+    }
+    window.open(trip.itineraryPdfUrl, "_blank");
+    closeTripContextMenu();
+  });
+
+  dom.ctxAttachItineraryPdfBtn?.addEventListener("click", () => {
+    if (!activeContextTripKey) return;
+    if (!dom.itineraryPdfInput) {
+      toast("Upload control not available.", "danger", 2000);
+      return;
+    }
+    state.pendingItineraryTripKey = activeContextTripKey;
+    dom.itineraryPdfInput.value = "";
+    dom.itineraryPdfInput.click();
+  });
+
+  dom.itineraryPdfInput?.addEventListener("change", async (e) => {
+    const input = e.target;
+    const file = input.files && input.files[0];
+    const tripKey = state.pendingItineraryTripKey;
+
+    if (!file || !tripKey) {
+      state.pendingItineraryTripKey = null;
+      return;
+    }
+
+    if (file.type !== "application/pdf") {
+      toast("Please select a PDF file.", "danger", 2500);
+      state.pendingItineraryTripKey = null;
+      input.value = "";
+      return;
+    }
+
+    try {
+      // Build URL with action + tripKey in query string
+      const url = new URL(CONFIG.ENDPOINT);
+      url.searchParams.set("action", "uploadItineraryPdf");
+      url.searchParams.set("tripKey", tripKey);
+
+      toast("Uploading itinerary…", "info", 1500);
+
+      // Read file as Base64 Data URL
+      const reader = new FileReader();
+      const base64Url = await new Promise((resolve, reject) => {
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error("Failed to read file"));
+        reader.readAsDataURL(file);
+      });
+
+      // Prepare JSON payload
+      const payload = {
+        filename: file.name,
+        mimeType: file.type,
+        base64Data: base64Url,
+      };
+
+      const resp = await fetch(url.toString(), {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          // Sending as text/plain prevents the browser from sending a CORS preflight OPTIONS request
+          "Content-Type": "text/plain;charset=utf-8",
+        },
+        mode: "cors",
+        credentials: "omit",
+      });
+
+      if (!resp.ok) {
+        throw new Error(`HTTP ${resp.status}`);
+      }
+
+      const json = await resp.json();
+      if (!json.ok) {
+        throw new Error(json.error || "Upload failed");
+      }
+
+      const pdfUrl = json.itineraryPdfUrl || json.url;
+      if (!pdfUrl) {
+        throw new Error("No URL returned from server");
+      }
+
+      const trip = state.tripByKey?.[tripKey];
+      if (trip) {
+        trip.itineraryPdfUrl = pdfUrl;
+        scheduleAgendaReflow();
+      }
+
+      toast("Itinerary PDF uploaded.", "success", 1800);
+    } catch (err) {
+      console.error(err);
+      toast(`Could not upload itinerary PDF: ${err.message || err}`, "danger", 3500);
+    } finally {
+      state.pendingItineraryTripKey = null;
+      input.value = "";
+      closeTripContextMenu();
+    }
+  });
+
   // NEW TRIP BUTTON (Cell Context Menu)
   dom.ctxNewTripBtn?.addEventListener("click", () => {
     if (activeCellContext) {
@@ -4293,8 +4495,35 @@ function wrapSelectInGlassDropdown(sel, opts) {
     return opt ? opt.textContent.trim() : "";
   }
 
+  function getSelectedIcon() {
+    const opt = sel.options[sel.selectedIndex];
+    if (opt && statusId && statusIds.has(statusId)) {
+      return getStatusIcon(statusId, opt.value);
+    }
+    return "";
+  }
+
   function updateTrigger() {
-    trigger.textContent = getSelectedText();
+    trigger.innerHTML = "";
+
+    // Add icon if applicable
+    const iconName = getSelectedIcon();
+    if (iconName) {
+      const iconSpan = document.createElement("span");
+      iconSpan.className = "material-symbols-outlined dropdown-icon is-active";
+      iconSpan.style.marginRight = "8px";
+      iconSpan.style.fontSize = "18px";
+      iconSpan.textContent = iconName;
+      trigger.appendChild(iconSpan);
+    }
+
+    // Add text container to flex grow properly
+    const textSpan = document.createElement("span");
+    textSpan.style.flex = "1";
+    textSpan.style.textAlign = "left";
+    textSpan.textContent = getSelectedText();
+    trigger.appendChild(textSpan);
+
     if (statusId && statusIds.has(statusId)) updateStatusSelect(sel);
     if (cellClass) {
       const v = (sel.value ?? "").trim();
@@ -4311,7 +4540,22 @@ function wrapSelectInGlassDropdown(sel, opts) {
       btn.className = "dropdown__item";
       btn.setAttribute("role", "option");
       btn.dataset.value = opt.value;
-      btn.textContent = opt.textContent.trim();
+
+      const v = String(opt.value).trim();
+      // Add icon if applicable to the dropdown options
+      if (statusId && statusIds.has(statusId) && v) {
+        const itemIconName = getStatusIcon(statusId, v);
+        if (itemIconName) {
+          const iconSpan = document.createElement("span");
+          iconSpan.className = "material-symbols-outlined dropdown-icon";
+          iconSpan.textContent = itemIconName;
+          btn.appendChild(iconSpan);
+        }
+      }
+
+      const textNode = document.createTextNode(opt.textContent.trim());
+      btn.appendChild(textNode);
+
       btn.addEventListener("click", () => {
         sel.value = opt.value;
         sel.dispatchEvent(new Event("change", { bubbles: true }));
@@ -4649,6 +4893,33 @@ function wireEvents() {
   // Old buttons (weekStartSunBtn) removed from DOM
 
   dom.itineraryBtn.addEventListener("click", openItineraryModal);
+  dom.openItineraryPdfBtn?.addEventListener("click", () => {
+    const tripKey = dom.tripKey?.value;
+    if (!tripKey) return;
+    const trip = state.tripByKey?.[tripKey];
+    if (trip && trip.itineraryPdfUrl) {
+      window.open(trip.itineraryPdfUrl, "_blank");
+    }
+  });
+
+  dom.removeItineraryPdfBtn?.addEventListener("click", () => {
+    const tripKey = dom.tripKey?.value;
+    if (!tripKey) return;
+    const trip = state.tripByKey?.[tripKey];
+    if (trip && trip.itineraryPdfUrl) {
+      if (!confirm("Remove this PDF itinerary?")) return;
+
+      trip.itineraryPdfUrl = ""; // Clear from local state
+
+      // Disable buttons immediately to reflect change
+      dom.openItineraryPdfBtn.disabled = true;
+      dom.removeItineraryPdfBtn.disabled = true;
+
+      // Trigger save process
+      state.tripFormDirty = true;
+      dom.saveBtn.click();
+    }
+  });
   dom.itineraryModal.addEventListener("click", (e) => {
     if (e.target.closest("[data-close]")) closeItineraryModal();
   });

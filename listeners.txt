@@ -1,0 +1,86 @@
+38:    if (btn) btn.addEventListener("click", switchTheme);
+43:  document.addEventListener("DOMContentLoaded", initThemeSystem);
+880:window.addEventListener("error", (e) => {
+889:window.addEventListener("unhandledrejection", (e) => {
+1155:      el.addEventListener("input", markDirtyAndSync);
+1156:      el.addEventListener("change", markDirtyAndSync);
+1157:      el.addEventListener("blur", () => syncOne(el));
+1162:      invSel.addEventListener("change", () => {
+1168:    form.addEventListener("reset", () =>
+1827:    el.addEventListener("click", open);
+1828:    el.addEventListener("keydown", (e) => {
+3970:window.addEventListener("afterprint", clearPrintRoot);
+4047:dom.ctxMenu?.addEventListener("mouseleave", closeTripContextMenu);
+4048:dom.cellCtxMenu?.addEventListener("mouseleave", closeCellContextMenu);
+4176:  document.addEventListener("click", (e) => {
+4186:  dom.ctxEditBtn?.addEventListener("click", () => {
+4193:  dom.ctxViewBtn?.addEventListener("click", () => {
+4200:  dom.ctxOpenItineraryPdfBtn?.addEventListener("click", () => {
+4211:  dom.ctxAttachItineraryPdfBtn?.addEventListener("click", () => {
+4222:  dom.itineraryPdfInput?.addEventListener("change", async (e) => {
+4305:  dom.ctxNewTripBtn?.addEventListener("click", () => {
+4351:    container.addEventListener("contextmenu", (e) => handleScheduleInteraction(e, true));
+4354:    container.addEventListener("click", (e) => {
+4363:    container.addEventListener("keydown", (e) => {
+4445:      btn.addEventListener("click", () => {
+4478:  trigger.addEventListener("click", (e) => {
+4490:      document.addEventListener("click", outsideClick);
+4491:      document.addEventListener("keydown", handleEscape);
+4500:  sel.addEventListener("change", updateTrigger);
+4548:    dom.busGrid.addEventListener("change", (e) => {
+4560:      el.addEventListener("change", () => updateStatusSelect(el));
+4571:  dom.prevWeekBtn.addEventListener("click", () => changeWeek(-1));
+4572:  dom.nextWeekBtn.addEventListener("click", () => changeWeek(1));
+4574:  dom.agendaLeftBtn?.addEventListener("click", () => {
+4580:  dom.weekPicker?.addEventListener("change", (e) => {
+4588:  dom.tripInputBtn.addEventListener("click", () => {
+4593:  dom.driversBtn.addEventListener("click", () => {
+4599:  document.addEventListener("click", (e) => {
+4615:  dom.driverWeekBody.addEventListener("mousedown", (e) => {
+4631:  dom.driverWeekBody.addEventListener(
+4647:  window.addEventListener("mouseup", async () => {
+4705:  dom.notesBtn.addEventListener("click", () => {
+4720:  dom.scheduleNotes?.addEventListener("input", () => {
+4724:  dom.saveNotesBtn?.addEventListener("click", async () => {
+4772:  dom.waitingListBtn?.addEventListener("click", () => {
+4781:  dom.itineraryBtn.addEventListener("click", openItineraryModal);
+4782:  dom.itineraryModal.addEventListener("click", (e) => {
+4785:  document.addEventListener("keydown", (e) => {
+4788:  dom.itinerarySaveBtn.addEventListener("click", closeItineraryModal);
+4789:  dom.itineraryCopyBtn.addEventListener("click", async () => {
+4799:  dom.busGrid.addEventListener("change", (e) => {
+4803:  dom.busesNeeded.addEventListener("input", () => {
+4808:  dom.busesNeeded.addEventListener("change", () => {
+4814:  $("tripDate").addEventListener("change", () => {
+4829:  dom.hiddenIframe.addEventListener("load", () => {
+4836:  dom.newBtn.addEventListener("click", () => {
+4849:  dom.deleteBtn.addEventListener("click", () => {
+4906:  dom.tripForm.addEventListener("submit", (e) => {
+5122:  dom.tripDetailsModal?.addEventListener("click", (e) => {
+5126:  document.addEventListener("keydown", (e) => {
+5130:  $("todayBtn")?.addEventListener("click", () => {
+5137:  $("todayBtnMobile")?.addEventListener("click", () => {
+5146:    btn.addEventListener("click", () => {
+5166:  dom.settingsBtn.addEventListener("click", (e) => {
+5175:  document.addEventListener("click", (e) => {
+5187:  dom.todayBtn2?.addEventListener("click", () => {
+5196:  dom.nextDayReportBtn?.addEventListener("click", () => {
+5202:  dom.dailyMaintenancePlanBtn?.addEventListener("click", () => {
+5208:  dom.printBtn2?.addEventListener("click", () => {
+5221:  dom.printBtn2Full?.addEventListener("click", () => {
+5234:  dom.weekStartToggle?.addEventListener("click", () => {
+5240:  dom.refreshBtn2?.addEventListener("click", () => {
+5248:  dom.settingsMenu.addEventListener("click", (e) => {
+5500:  dom.nextDayReportDateInput.addEventListener("change", (e) => {
+5508:  dom.closeNextDayReportBtn.addEventListener("click", () => {
+5513:  dom.closeNextDayReportBackdrop.addEventListener("click", () => {
+5518:  dom.printNextDayReportBtn.addEventListener("click", () => {
+5829:  dom.dailyMaintenancePlanDateInput.addEventListener("change", (e) => {
+5837:  dom.closeDailyMaintenancePlanBtn.addEventListener("click", () => {
+5842:  dom.closeDailyMaintenancePlanBackdrop.addEventListener("click", () => {
+5847:  dom.printDailyMaintenancePlanBtn.addEventListener("click", () => {
+5904:  window.addEventListener(
+5951:  window.addEventListener("error", (e) => {
+5956:  window.addEventListener("unhandledrejection", (e) => {
+6007:window.addEventListener("resize", fitDateTitle);
+6009:window.addEventListener("load", fitDateTitle);

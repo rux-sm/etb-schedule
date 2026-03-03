@@ -532,20 +532,55 @@
                     </div>
 
                     <div class="subsection col-12">
+                      <div
+                        class="form-group col-12"
+                        style="
+                          display: flex;
+                          gap: 16px;
+                          align-items: center;
+                          margin-bottom: 12px;
+                          padding-bottom: 8px;
+                          border-bottom: 1px solid var(--color-border);
+                        "
+                      >
+                        <button
+                          id="itineraryBtn"
+                          type="button"
+                          class="btn btn--secondary"
+                          title="Edit Itinerary Text"
+                          aria-label="Edit Itinerary Text"
+                        >
+                          Trip Info
+                        </button>
+                        <button
+                          id="openItineraryPdfBtn"
+                          type="button"
+                          class="btn btn--secondary"
+                          title="Open PDF"
+                          aria-label="Open PDF"
+                          disabled
+                        >
+                          <span
+                            class="material-symbols-outlined"
+                            style="font-size: 16px; vertical-align: bottom; margin-right: 4px"
+                            >picture_as_pdf</span
+                          >
+                          View PDF
+                        </button>
+                        <button
+                          id="removeItineraryPdfBtn"
+                          type="button"
+                          class="btn btn--danger"
+                          title="Remove PDF"
+                          aria-label="Remove PDF"
+                          disabled
+                        >
+                          Remove PDF
+                        </button>
+                      </div>
                       <div class="status-grid">
                         <div class="form-group">
-                          <label for="itineraryStatus">
-                            Itinerary Status
-                            <button
-                              id="itineraryBtn"
-                              type="button"
-                              class="label-link"
-                              title="Edit Itinerary"
-                              aria-label="Edit Itinerary"
-                            >
-                              (view)
-                            </button>
-                          </label>
+                          <label for="itineraryStatus"> Itinerary Status </label>
                           <select
                             id="itineraryStatus"
                             name="itineraryStatus"
@@ -615,6 +650,7 @@
                             <option value="Pending">Pending</option>
                             <option value="Assigned">Assigned</option>
                             <option value="Confirmed">Confirmed</option>
+                            <option value="Driver Info Sent">Driver Info Sent</option>
                           </select>
                         </div>
 
@@ -1283,7 +1319,28 @@
         <span class="material-symbols-outlined">visibility</span>
         <span>View Details</span>
       </button>
+      <button
+        id="ctxOpenItineraryPdfBtn"
+        class="context-menu__item"
+      >
+        <span class="material-symbols-outlined">picture_as_pdf</span>
+        <span>View Itinerary PDF</span>
+      </button>
+      <button
+        id="ctxAttachItineraryPdfBtn"
+        class="context-menu__item"
+      >
+        <span class="material-symbols-outlined">attach_file</span>
+        <span>Upload Itinerary PDF</span>
+      </button>
     </div>
+
+    <input
+      id="itineraryPdfInput"
+      type="file"
+      accept="application/pdf"
+      style="display: none"
+    />
 
     <!-- Empty Cell Context Menu -->
     <div

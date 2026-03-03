@@ -756,6 +756,17 @@
 .schedule-grid__trip-bar__mini-badge.is-yellow {
   background: var(--color-status-assigned);
 }
+.schedule-grid__trip-bar__mini-badge.has-pdf {
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    transform 0.1s ease,
+    background-color 0.1s ease;
+}
+.schedule-grid__trip-bar__mini-badge.has-pdf:hover {
+  transform: scale(1.15);
+  background-color: rgba(255, 255, 255, 0.2);
+}
 .schedule-grid__trip-bar__mini-badge.has-text {
   width: auto;
   padding-inline-end: 2px;

@@ -123,6 +123,7 @@
   width: 20px;
   flex: 0 0 auto;
   justify-content: center;
+  align-items: center;
   font-size: 1.125rem;
   /* 18px */
   opacity: 0.85;
@@ -130,7 +131,7 @@
 
 .dropdown-icon.is-active,
 .dropdown__icon.is-active {
-  color: var(--accent);
+  color: #fff;
 }
 
 .dropdown-item:hover,
