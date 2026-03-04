@@ -5082,6 +5082,7 @@ function wireEvents() {
     if (dom.action.value === "create" && !dom.tripKey.value) dom.tripKey.value = safeUUID();
 
     $("departureTime").value = normalizeTime($("departureTime").value);
+    $("spotTime").value = normalizeTime($("spotTime").value);
     $("arrivalTime").value = normalizeTime($("arrivalTime").value);
 
     // OPTIMISTIC UPDATE: Save locally immediately
@@ -5136,6 +5137,7 @@ function wireEvents() {
       departureDate: $("tripDate").value,
       arrivalDate: $("arrivalDate").value,
       departureTime: $("departureTime").value,
+      spotTime: $("spotTime").value,
       arrivalTime: $("arrivalTime").value,
       itineraryStatus: $("itineraryStatus").value,
       contactStatus: $("contactStatus").value,
@@ -5254,10 +5256,15 @@ function wireEvents() {
   }
 
   function clearCacheForCurrentView() {
-    const { start, end } = getWeekRange();
-    const cacheKey = "week_" + weekKey(start, end);
-    state.weekCache.delete(cacheKey);
-    CACHE.remove(cacheKey);
+    // For simplicity and to avoid any stale local snapshots after edits,
+    // clear all cached week data (both in-memory and persistent).
+    try {
+      state.weekCache.clear();
+    } catch {}
+
+    try {
+      CACHE.clearAll();
+    } catch {}
   }
 
   dom.tripDetailsModal?.addEventListener("click", (e) => {
