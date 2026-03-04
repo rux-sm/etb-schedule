@@ -60,8 +60,10 @@
 
 .schedule-grid__header-cell,
 .schedule-grid__cell {
-  border-inline-end: 1px solid var(--grid-line); /* main table border vertical */
-  border-bottom: 1px solid var(--grid-line); /* main table border horizontal */
+  border-inline-end: 1px solid var(--grid-line);
+  /* main table border vertical */
+  border-bottom: 1px solid var(--grid-line);
+  /* main table border horizontal */
   border-top: none;
   text-align: center;
   vertical-align: middle;
@@ -169,7 +171,8 @@
   height: 100%;
   pointer-events: none;
   z-index: 5;
-  overflow: hidden; /* Ensure bars never overflow into adjacent rows */
+  overflow: hidden;
+  /* Ensure bars never overflow into adjacent rows */
 }
 
 .schedule-grid__cell {
@@ -213,9 +216,11 @@
   position: sticky;
   inset-inline-start: 0;
   z-index: 500;
-  pointer-events: none; /* pass through so sticky overlay doesn't steal trip bar hover */
+  pointer-events: none;
+  /* pass through so sticky overlay doesn't steal trip bar hover */
   background: var(--surface-1);
-  font-size: 0.875rem; /* 14px */
+  font-size: 0.875rem;
+  /* 14px */
   font-weight: 500;
 
   min-width: var(--bus-col-w);
@@ -224,7 +229,8 @@
   height: var(--schedule-row-height);
   padding: 0 !important;
 
-  overflow: hidden; /* border-inline-end: from general rule — single line, no ::after */
+  overflow: hidden;
+  /* border-inline-end: from general rule — single line, no ::after */
 }
 
 .schedule-grid__header-cell:first-child {
@@ -235,7 +241,8 @@
   min-width: var(--bus-col-w);
   max-width: var(--bus-col-w);
   width: var(--bus-col-w);
-  overflow: hidden; /* border-inline-end: from general rule — single line */
+  overflow: hidden;
+  /* border-inline-end: from general rule — single line */
 }
 
 /* Ensure the outer right border uses the grid-line color for consistency */
@@ -285,7 +292,8 @@
   width: 100%;
   height: 100%;
   position: relative;
-  pointer-events: none; /* pass through; only bus-num and bus-icons capture */
+  pointer-events: none;
+  /* pass through; only bus-num and bus-icons capture */
 }
 
 /* Only number/icons capture hover; rest passes through to trip bars when sticky overlaps */
@@ -303,13 +311,12 @@
   text-shadow: var(--bus-num-text-shadow);
 }
 
-.schedule-grid__row--has-bus-color > .schedule-grid__cell:first-child {
+.schedule-grid__row--has-bus-color>.schedule-grid__cell:first-child {
   transition: background-color 0.15s ease;
 }
 
 /* Bus cell highlight: only when hovering bus indicator (not when trip bar overlaps due to sticky) */
-.schedule-grid__row--has-bus-color
-  > .schedule-grid__cell:first-child:has(.schedule-grid__bus-indicator:hover) {
+.schedule-grid__row--has-bus-color>.schedule-grid__cell:first-child:has(.schedule-grid__bus-indicator:hover) {
   background-color: var(--bus-accent-color, var(--surface-1));
 }
 
@@ -331,7 +338,7 @@
 .schedule-grid__bus-indicator .schedule-grid__bus-icon--sleeper {
   position: static;
   transform: none;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1;
   margin: 0;
 }
@@ -380,7 +387,7 @@
   overflow-y: auto;
 }
 
-.schedule-grid__conflict-panel .conflict-group + .conflict-group {
+.schedule-grid__conflict-panel .conflict-group+.conflict-group {
   margin-top: 14px;
 }
 
@@ -406,27 +413,23 @@
 .schedule-grid__trip-bar {
   display: grid;
   grid-template-rows:
-    var(--tripbar-r1-row-height) var(--tripbar-r2-row-height) var(--tripbar-r3-row-height)
-    var(--tripbar-r4-row-height) var(--tripbar-r5-row-height) var(--tripbar-r6-row-height) var(
-      --tripbar-r7-row-height
-    );
+    var(--tripbar-r1-row-height) var(--tripbar-r2-row-height) var(--tripbar-r3-row-height) var(--tripbar-r4-row-height) var(--tripbar-r5-row-height) var(--tripbar-r6-row-height) var(--tripbar-r7-row-height);
   row-gap: var(--tripbar-row-gap);
   container-type: inline-size;
   align-content: center;
   --text: var(--tripbar-text-color);
   --text-driver: var(--tripbar-text-driver);
   position: absolute;
-  z-index: 501; /* above sticky bus cell (500) so trip bar receives hover when overlapping */
+  z-index: 501;
+  /* above sticky bus cell (500) so trip bar receives hover when overlapping */
   height: var(--tripbar-height);
   box-sizing: border-box;
   padding: var(--tripbar-padding-y) var(--tripbar-padding-x);
   font-variant-numeric: tabular-nums;
   text-shadow: var(--tripbar-text-shadow);
-  background: color-mix(
-    in srgb,
-    var(--tripbar-color) var(--tripbar-bg-mix-percent),
-    var(--tripbar-bg-mix-color)
-  );
+  background: color-mix(in srgb,
+      var(--tripbar-color) var(--tripbar-bg-mix-percent),
+      var(--tripbar-bg-mix-color));
   border: none;
   border-left: 4px solid var(--tripbar-color);
   border-radius: var(--tripbar-radius);
@@ -494,11 +497,9 @@
 .schedule-grid__trip-bar.color-mint,
 .schedule-grid__trip-bar.color-black,
 .schedule-grid__trip-bar.color-white {
-  background: color-mix(
-    in srgb,
-    var(--tripbar-color) var(--tripbar-bg-mix-percent),
-    var(--tripbar-bg-mix-color)
-  );
+  background: color-mix(in srgb,
+      var(--tripbar-color) var(--tripbar-bg-mix-percent),
+      var(--tripbar-bg-mix-color));
 }
 
 .schedule-grid__trip-bar.unconfirmed,
@@ -509,43 +510,56 @@
 .schedule-grid__trip-bar.color-blue {
   --tripbar-color: var(--blue);
 }
+
 .schedule-grid__trip-bar.color-green {
   --tripbar-color: var(--green);
 }
+
 .schedule-grid__trip-bar.color-yellow {
   --tripbar-color: var(--yellow);
 }
+
 .schedule-grid__trip-bar.color-gray {
   --tripbar-color: var(--gray);
 }
+
 .schedule-grid__trip-bar.color-violet,
 .schedule-grid__trip-bar.color-purple {
   --tripbar-color: var(--purple);
 }
+
 .schedule-grid__trip-bar.color-pink {
   --tripbar-color: var(--pink);
 }
+
 .schedule-grid__trip-bar.color-orange {
   --tripbar-color: var(--orange);
 }
+
 .schedule-grid__trip-bar.color-teal {
   --tripbar-color: var(--teal);
 }
+
 .schedule-grid__trip-bar.color-cyan {
   --tripbar-color: var(--cyan);
 }
+
 .schedule-grid__trip-bar.color-indigo {
   --tripbar-color: var(--indigo);
 }
+
 .schedule-grid__trip-bar.color-brown {
   --tripbar-color: var(--brown);
 }
+
 .schedule-grid__trip-bar.color-mint {
   --tripbar-color: var(--mint);
 }
+
 .schedule-grid__trip-bar.color-black {
   --tripbar-color: var(--black);
 }
+
 .schedule-grid__trip-bar.color-white {
   --tripbar-color: var(--white);
 }
@@ -572,21 +586,27 @@
   grid-row: 1;
   position: relative;
 }
+
 .schedule-grid__trip-bar__row--2 {
   grid-row: 2;
 }
+
 .schedule-grid__trip-bar__row--3 {
   grid-row: 3;
 }
+
 .schedule-grid__trip-bar__row--4 {
   grid-row: 4;
 }
+
 .schedule-grid__trip-bar__row--5 {
   grid-row: 5;
 }
+
 .schedule-grid__trip-bar__row--6 {
   grid-row: 6;
 }
+
 .schedule-grid__trip-bar__row--7 {
   grid-row: 7;
 }
@@ -671,9 +691,11 @@
 .schedule-grid__trip-bar__time--left {
   justify-content: flex-start !important;
 }
+
 .schedule-grid__trip-bar__time--center {
   justify-content: center !important;
 }
+
 .schedule-grid__trip-bar__time--right {
   justify-content: flex-end !important;
 }
@@ -697,15 +719,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--tripbar-icon-gutter, 16px);
-  height: var(--tripbar-icon-gutter, 16px);
-  min-width: 16px;
-  min-height: 16px;
+  width: var(--tripbar-mini-badge);
+  height: var(--tripbar-mini-badge);
+  min-width: var(--tripbar-mini-badge);
+  min-height: var(--tripbar-mini-badge);
   font-size: var(--tripbar-icon-size);
   line-height: 1;
   font-weight: normal;
-  color: var(--black);
-  background: var(--orange);
+  color: var(--white);
+  background: transparent;
   border-radius: var(--tripbar-badge-radius);
   box-shadow: none !important;
   text-shadow: none !important;
@@ -726,8 +748,8 @@
   justify-content: center;
   width: var(--tripbar-mini-badge);
   height: var(--tripbar-mini-badge);
-  min-width: 16px;
-  min-height: 16px;
+  min-width: var(--tripbar-mini-badge);
+  min-height: var(--tripbar-mini-badge);
   flex-shrink: 0;
   color: rgba(0 0 0);
   border-radius: var(--tripbar-badge-radius);
@@ -740,22 +762,26 @@
   font-size: var(--tripbar-icon-size);
   line-height: 1;
   font-variation-settings:
-    "FILL" 1,
+    "FILL" 0,
     "opsz" 20;
 }
 
 .schedule-grid__trip-bar__mini-badge.is-pending {
   background: var(--color-status-pending);
 }
+
 .schedule-grid__trip-bar__mini-badge.is-ok {
   background: var(--color-status-ok);
 }
+
 .schedule-grid__trip-bar__mini-badge.is-blue {
   background: var(--color-status-blue);
 }
+
 .schedule-grid__trip-bar__mini-badge.is-yellow {
   background: var(--color-status-assigned);
 }
+
 .schedule-grid__trip-bar__mini-badge.has-pdf {
   cursor: pointer;
   pointer-events: auto;
@@ -763,16 +789,19 @@
     transform 0.1s ease,
     background-color 0.1s ease;
 }
+
 .schedule-grid__trip-bar__mini-badge.has-pdf:hover {
   transform: scale(1.15);
   background-color: rgba(255, 255, 255, 0.2);
 }
+
 .schedule-grid__trip-bar__mini-badge.has-text {
   width: auto;
   padding-inline-end: 2px;
   gap: 0;
   color: #111;
 }
+
 .schedule-grid__trip-bar__mini-badge .schedule-grid__trip-bar__mini-badge-text {
   font-size: 12px;
   font-weight: 500;
@@ -780,7 +809,7 @@
   font-variant-numeric: tabular-nums;
   width: 48px;
   min-width: 48px;
-  min-height: 16px;
+  min-height: var(--tripbar-mini-badge);
   box-sizing: border-box;
   background: var(--white);
   border: none;
@@ -870,22 +899,10 @@
     border: 1px solid rgba(0, 0, 0, 0.4) !important;
   }
 
-  #printRoot.print-mode-letter-full
-    .print-table
-    .schedule-grid__trip-bar
-    .schedule-grid__trip-bar__drivers,
-  #printRoot.print-mode-letter-full
-    .print-table
-    .schedule-grid__trip-bar
-    .schedule-grid__trip-bar__contact,
-  #printRoot.print-mode-letter-full
-    .print-table
-    .schedule-grid__trip-bar
-    .schedule-grid__trip-bar__status-row,
-  #printRoot.print-mode-letter-full
-    .print-table
-    .schedule-grid__trip-bar
-    .schedule-grid__trip-bar__pre-drivers {
+  #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__drivers,
+  #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__contact,
+  #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__status-row,
+  #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__pre-drivers {
     display: none !important;
   }
 
@@ -936,10 +953,7 @@
     font-size: 8pt !important;
   }
 
-  .print-table
-    .schedule-grid__trip-bar
-    .schedule-grid__trip-bar__drivers
-    .schedule-grid__trip-bar__driver,
+  .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__drivers .schedule-grid__trip-bar__driver,
   .print-table .schedule-grid__trip-bar__pre-drivers {
     font-size: 8pt !important;
   }

@@ -17,11 +17,16 @@
     ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
     monospace;
 
-  --font-size-1: 0.75rem; /*     12px */
-  --font-size-2: 0.875rem; /*    14px */
-  --font-size-3: 1rem; /*        16px */
-  --font-size-4: 1.25rem; /*     20px */
-  --font-size-5: 1.5rem; /*      24px */
+  --font-size-1: 0.75rem;
+  /*     12px */
+  --font-size-2: 0.875rem;
+  /*    14px */
+  --font-size-3: 1rem;
+  /*        16px */
+  --font-size-4: 1.25rem;
+  /*     20px */
+  --font-size-5: 1.5rem;
+  /*      24px */
 
   --font-weight-light: 300;
   --font-weight-regular: 400;
@@ -79,36 +84,48 @@
      ========================================================================== */
 
   /* --- Surface Colors & App Backgrounds --- */
-  --app-bg: rgb(28 29 30); /* Level 0: Deepest background */
-  --surface-0: rgb(28 29 30); /* Level 1: Topbar */
-  --surface-1: rgb(13 14 15); /* Level 1: Table */
-  --surface-2: rgb(28 29 30); /* Level 1: Panels */
-  --surface-3: rgb(11 12 13); /* Level 1: Inputs / Controls */
-  --surface-4: rgb(71 72 73); /* Level 1: Hover / Active */
+  --app-bg: rgb(28 29 30);
+  /* Level 0: Deepest background */
+  --surface-0: rgb(28 29 30);
+  /* Level 1: Topbar */
+  --surface-1: rgb(13 14 15);
+  /* Level 1: Table */
+  --surface-2: rgb(28 29 30);
+  /* Level 1: Panels */
+  --surface-3: rgb(11 12 13);
+  /* Level 1: Inputs / Controls */
+  --surface-4: rgb(71 72 73);
+  /* Level 1: Hover / Active */
 
   /* --- Typography & Text Colors --- */
-  --text: rgb(255 255 255); /* Primary text */
-  --text-secondary: rgb(154, 155, 156); /* Secondary labels, subheads */
-  --text-muted: rgba(198 198 198); /* Helper/meta text */
+  --text: rgb(255 255 255);
+  /* Primary text */
+  --text-secondary: rgb(154, 155, 156);
+  /* Secondary labels, subheads */
+  --text-muted: rgba(198 198 198);
+  /* Helper/meta text */
   --placeholder: rgba(255, 255, 255, 0.42);
   --color-text-disabled: rgba(255, 255, 255, 0.32);
 
   /* H1: Topbar (44px height) */
-  --heading-1-size: 1.375rem; /* 22px */
+  --heading-1-size: 1.375rem;
+  /* 22px */
   --heading-1-weight: 400;
   --heading-1-line-height: 1.3;
   --heading-1-letter-spacing: 0.01em;
   --heading-1-color: var(--text-muted);
 
   /* H2: Sidebar/Cards (40px height) */
-  --heading-2-size: 1.25rem; /* 20px */
+  --heading-2-size: 1.25rem;
+  /* 20px */
   --heading-2-weight: 400;
   --heading-2-line-height: 1.25;
   --heading-2-letter-spacing: -0.005em;
   --heading-2-color: var(--text);
 
   /* H3: Table Headers/Section Labels (36px height) */
-  --heading-3-size: 1rem; /* 16px */
+  --heading-3-size: 1rem;
+  /* 16px */
   --heading-3-weight: 500;
   --heading-3-line-height: 1.4;
   --heading-3-letter-spacing: 0.02em;
@@ -154,14 +171,17 @@
   --status-border: var(--status-color);
 
   /* Resource (Personnel & Equipment) */
-  --text-driver: var(--yellow); /* Driver names */
+  --text-driver: var(--yellow);
+  /* Driver names */
   --bus-col-text: var(--text-secondary);
   --bus-lift-color: var(--blue);
   --bus-sleeper-color: var(--white);
 
   /* --- Borders, Shadows & Radii --- */
-  --border: transparent; /* Remove most borders for clean look */
-  --grid-line: rgb(38 39 40); /* Ghost grid for schedule */
+  --border: transparent;
+  /* Remove most borders for clean look */
+  --grid-line: rgb(38 39 40);
+  /* Ghost grid for schedule */
   --border-strong: rgb(61, 59, 59);
   --color-border-subtle: color-mix(in srgb, var(--border) 60%, transparent);
   --color-border-disabled: color-mix(in srgb, var(--border) 55%, transparent);
@@ -199,7 +219,8 @@
 
   --input-height: 28px;
   --input-padding-x: 6px;
-  --input-font-size: 0.875rem; /* 14px */
+  --input-font-size: 0.875rem;
+  /* 14px */
   --input-font-weight: var(--font-weight-light);
   --input-border-radius: 8px;
   --field-inset: inset 0 1px 0 rgba(255, 255, 255, 0.03);
@@ -223,7 +244,8 @@
   --layout-logo-height: 28px;
   --panel-width: 400px;
   --card-padding: 16px;
-  --bar-height: 40px; /* Headers/footers 40px base */
+  --bar-height: 40px;
+  /* Headers/footers 40px base */
   --topbar-height: var(--bar-height);
   --bar-padding-x: var(--card-padding);
   --card-footer-padding-y: 12px;
@@ -231,7 +253,8 @@
   --card-footer-min-height: var(--bar-height);
 
   /* --- Schedule Grid --- */
-  --schedule-row-height: 100px; /* Base row height */
+  --schedule-row-height: 100px;
+  /* Base row height */
   --schedule-bg: rgb(21 22 23);
   --agenda-header-bg: rgb(31 32 33);
   --bus-col-w: 34px;
@@ -275,7 +298,8 @@
   --tripbar-height: 100px;
   --tripbar-border: 0px;
   --tripbar-radius: 0px;
-  --tripbar-gap: 0px; /* Vertical space between lanes */
+  --tripbar-gap: 0px;
+  /* Vertical space between lanes */
   --tripbar-lane-step: 0px;
 
   /* --- Trip Bar Content & Style --- */
@@ -311,75 +335,87 @@
   --tripbar-padding-x: 0px;
   --tripbar-padding-y: 0px;
   --tripbar-row-gap: 0px;
-  --tripbar-gap-inline: 2px; /* Between badges/icons */
-  --tripbar-gap-drivers: 6px; /* Between driver names */
+  --tripbar-gap-inline: 2px;
+  /* Between badges/icons */
+  --tripbar-gap-drivers: 6px;
+  /* Between driver names */
 
   /* --- Trip Bar Typography (Per-Row) --- */
   /* R1: Destination */
-  --tripbar-r1-font-size: 0.75rem; /* 12px */
+  --tripbar-r1-font-size: 0.75rem;
+  /* 12px */
   --tripbar-r1-row-height: 14px;
   --tripbar-r1-font-weight: 600;
   --tripbar-r1-line-height: 14px;
   --tripbar-r1-letter-spacing: 0.02em;
 
   /* R2: Customer */
-  --tripbar-r2-font-size: 0.625rem; /* 10px */
+  --tripbar-r2-font-size: 0.625rem;
+  /* 10px */
   --tripbar-r2-row-height: 12px;
   --tripbar-r2-font-weight: 400;
   --tripbar-r2-line-height: 12px;
   --tripbar-r2-letter-spacing: 0.02em;
 
   /* R3: Contact */
-  --tripbar-r3-font-size: 0.625rem; /* 10px */
+  --tripbar-r3-font-size: 0.625rem;
+  /* 10px */
   --tripbar-r3-row-height: 12px;
   --tripbar-r3-font-weight: 600;
   --tripbar-r3-line-height: 12px;
   --tripbar-r3-letter-spacing: 0.02em;
 
   /* R4: Times */
-  --tripbar-r4-font-size: 0.75rem; /* 12px */
+  --tripbar-r4-font-size: 0.75rem;
+  /* 12px */
   --tripbar-r4-row-height: 14px;
   --tripbar-r4-font-weight: 500;
   --tripbar-r4-line-height: 14px;
   --tripbar-r4-letter-spacing: -0.02em;
 
   /* R5: Status / Icons */
-  --tripbar-r5-font-size: 0.75rem; /* 12px */
+  --tripbar-r5-font-size: 0.75rem;
+  /* 12px */
   --tripbar-r5-row-height: 18px;
   --tripbar-r5-font-weight: 500;
   --tripbar-r5-line-height: 18px;
   --tripbar-r5-letter-spacing: 0;
 
   /* R6: Notes */
-  --tripbar-r6-font-size: 0.625rem; /* 10px */
+  --tripbar-r6-font-size: 0.625rem;
+  /* 10px */
   --tripbar-r6-row-height: 12px;
   --tripbar-r6-font-weight: 400;
   --tripbar-r6-line-height: 12px;
   --tripbar-r6-letter-spacing: 0.02em;
 
   /* R7: Drivers */
-  --tripbar-r7-font-size: 0.75rem; /* 12px */
+  --tripbar-r7-font-size: 0.75rem;
+  /* 12px */
   --tripbar-r7-row-height: 14px;
   --tripbar-r7-font-weight: 600;
   --tripbar-r7-line-height: 14px;
   --tripbar-r7-letter-spacing: 0.02em;
 
   /* --- Icons & Badges --- */
-  --tripbar-icon-size: 16px;
-  --tripbar-icon-gutter: 16px; /* fixed 18px gutter for column alignment */
-  --tripbar-mini-badge: 16px;
+  --tripbar-icon-size: 18px;
+  --tripbar-icon-gutter: 18px;
+  /* fixed 18px gutter for column alignment */
+  --tripbar-mini-badge: 18px;
   --tripbar-badge-radius: 0;
 
   --tripbar-danger-size: 16px;
   --tripbar-danger-font: 0.6875rem;
   --tripbar-danger-offset: 4px;
 
-  --tripbar-arrow-size: 1.125rem; /* 18px */
+  --tripbar-arrow-size: 1.125rem;
+  /* 18px */
   --tripbar-arrow-offset: 4px;
 
   --tripbar-multi-badge-padding: 0px;
   --tripbar-multi-badge-radius: 0px;
-  --tripbar-multi-badge-font-size: 0.625rem; /* 10px */
+  --tripbar-multi-badge-font-size: 0.625rem;
+  /* 10px */
   --tripbar-multi-badge-bg: 100%;
   --tripbar-multi-bus-indent: 0px;
 }
@@ -389,17 +425,24 @@
   color-scheme: light;
 
   /* --- Surface Colors & App Backgrounds --- */
-  --app-bg: rgb(255 255 255); /* Lighter gray app bg */
-  --surface-0: rgb(255 255 255); /* Topbar: Gray-200 (Darker than cards) */
-  --surface-1: rgb(255 255 255); /* Table headers: matching app bg */
-  --surface-2: rgb(255 255 255); /* Cards / Panels */
-  --surface-3: rgb(230 230 230); /* Visible input background */
-  --surface-4: rgb(209 213 219); /* Hover / Active */
+  --app-bg: rgb(255 255 255);
+  /* Lighter gray app bg */
+  --surface-0: rgb(255 255 255);
+  /* Topbar: Gray-200 (Darker than cards) */
+  --surface-1: rgb(255 255 255);
+  /* Table headers: matching app bg */
+  --surface-2: rgb(255 255 255);
+  /* Cards / Panels */
+  --surface-3: rgb(230 230 230);
+  /* Visible input background */
+  --surface-4: rgb(209 213 219);
+  /* Hover / Active */
 
   /* --- Typography & Text Colors --- */
   --text: rgb(0 0 0);
   --text-secondary: rgb(0 0 0);
-  --text-muted: rgb(0 0 0); /* Default muted */
+  --text-muted: rgb(0 0 0);
+  /* Default muted */
   --placeholder: rgba(107, 114, 128, 0.7);
   --color-text-disabled: rgb(156 163 175);
 
@@ -426,14 +469,17 @@
   --text-driver: rgb(17 24 39);
   --bus-col-text: var(--black);
   /* Bus icons — light mode tokens */
-  --icon-bus-lift-light: var(--accent); /* black for accessibility icon in light mode */
-  --icon-bus-sleeper-light: rgb(0 0 0); /* black for sleeper icon in light mode */
+  --icon-bus-lift-light: var(--accent);
+  /* black for accessibility icon in light mode */
+  --icon-bus-sleeper-light: rgb(0 0 0);
+  /* black for sleeper icon in light mode */
   --bus-lift-color: var(--icon-bus-lift-light);
   --bus-sleeper-color: var(--icon-bus-sleeper-light);
 
   /* --- Borders, Shadows & Radii --- */
   --border: rgba(0, 0, 0, 0.15);
-  --grid-line: rgb(154 155 156); /* Light mode grid */
+  --grid-line: rgb(154 155 156);
+  /* Light mode grid */
   --border-strong: rgba(0, 0, 0, 0.3);
   --color-border-subtle: rgba(0, 0, 0, 0.08);
   --color-border-disabled: rgba(0, 0, 0, 0.06);
@@ -478,8 +524,10 @@
   /* --- Trip Bar Content & Style --- */
   --tripbar-bg-mix-color: white;
   --tripbar-bg-mix-percent: 33%;
-  --tripbar-text-color: rgb(0 0 0); /* Near black to match light theme text */
-  --tripbar-text-shadow: none; /* Remove dark shadow in light mode */
+  --tripbar-text-color: rgb(0 0 0);
+  /* Near black to match light theme text */
+  --tripbar-text-shadow: none;
+  /* Remove dark shadow in light mode */
   --tripbar-text-shadow-accent: none;
   --tripbar-text-driver: color-mix(in srgb, var(--yellow), black 100%);
   --tripbar-text-notes: color-mix(in srgb, var(--pink), black 10%);
