@@ -88,11 +88,11 @@
   /* Level 0: Deepest background */
   --surface-0: rgb(28 29 30);
   /* Level 1: Topbar */
-  --surface-1: rgb(13 14 15);
+  --surface-1: rgb(0 0 0);
   /* Level 1: Table */
   --surface-2: rgb(28 29 30);
   /* Level 1: Panels */
-  --surface-3: rgb(11 12 13);
+  --surface-3: rgb(0 0 0);
   /* Level 1: Inputs / Controls */
   --surface-4: rgb(71 72 73);
   /* Level 1: Hover / Active */
