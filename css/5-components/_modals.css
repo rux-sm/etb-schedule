@@ -139,7 +139,7 @@
   line-height: 1.5;
   letter-spacing: normal;
   font-variant-numeric: normal;
-  white-space: pre;
+  white-space: pre-wrap;
   color: var(--text-secondary);
   background: var(--surface-3);
   border: 1px solid var(--border);

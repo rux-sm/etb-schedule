@@ -83,12 +83,12 @@ const CACHE = {
         expiry: Date.now() + ttlMs,
       };
       localStorage.setItem(key, JSON.stringify(payload));
-    } catch {}
+    } catch { }
   },
   remove(key) {
     try {
       localStorage.removeItem(key);
-    } catch {}
+    } catch { }
   },
   clearAll() {
     try {
@@ -100,7 +100,7 @@ const CACHE = {
           localStorage.removeItem(k);
         }
       });
-    } catch {}
+    } catch { }
   },
 };
 
@@ -207,6 +207,13 @@ const dom = {
   printDailyMaintenancePlanBtn: $("printDailyMaintenancePlanBtn"),
   dailyMaintenancePlanDateInput: $("dailyMaintenancePlanDateInput"),
 
+  // Driver Contact Modal
+  driverContactModal: $("driverContactModal"),
+  driverContactBody: $("driverContactBody"),
+  closeDriverContactBtn: $("closeDriverContactBtn"),
+  closeDriverContactBackdrop: $("closeDriverContactBackdrop"),
+  copyDriverContactBtn: $("copyDriverContactBtn"),
+
   // Context Menu
   ctxMenu: $("tripContextMenu"),
   ctxHeader: $("ctxHeader"),
@@ -312,7 +319,7 @@ function clamp(n, min, max) {
 function safeUUID() {
   try {
     return crypto.randomUUID();
-  } catch {}
+  } catch { }
   return `tk_${Date.now()}_${Math.floor(Math.random() * 1e9)}`;
 }
 
@@ -1234,7 +1241,7 @@ function applyWeekStart(isMonday) {
 
   try {
     localStorage.setItem("weekStartMonday", state.weekStartsOnMonday ? "1" : "0");
-  } catch {}
+  } catch { }
 
   syncWeekStartUI();
 
@@ -1436,7 +1443,7 @@ function prefetchAdjacentWeeks() {
 
     // ✅ FIX: Calculate Monday for the adjacent week
     const { notesKey } = getWeekRange(targetDate); // We will update getWeekRange to support a date arg
-    fetchWeekDataCached(start, end, notesKey).catch(() => {});
+    fetchWeekDataCached(start, end, notesKey).catch(() => { });
   }
 }
 
@@ -2300,10 +2307,14 @@ function _renderAgendaInner() {
 
       // Swap driver status icon based on value
       if (bar._bD) {
+        bar._bD.classList.add("has-action");
         const glyph = bar._bD.querySelector(".schedule-grid__trip-bar__badge-glyph");
         if (glyph) {
           const iconName = getStatusIcon("driverStatus", t.driverStatus);
           glyph.textContent = iconName || "person";
+          glyph.dataset.action = "showDriverContact";
+          glyph.dataset.tripkey = t.tripKey;
+          glyph.style.cursor = "pointer";
         }
       }
 
@@ -3507,6 +3518,71 @@ function closeTripDetailsModal() {
 }
 
 // ======================================================
+// DRIVER CONTACT MODAL
+// ======================================================
+
+function openDriverContactModal(tripKey) {
+  const trip = state.tripByKey[tripKey];
+  if (!trip) return;
+
+  state.lastFocusedElement = document.activeElement;
+
+  // Retrieve assignments for the trip
+  const rowA = state.assignmentsByTripKey[tripKey];
+
+  // Format the date properly for human reading
+  const dDate = trip.departureDate ? parseYMD(trip.departureDate) : null;
+  const dDateStr = dDate ?
+    dDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) :
+    "the upcoming date";
+
+  // Get Destination for message
+  const destName = trip.destination || "your destination";
+
+  let text = `Hello,\n\n`;
+  text += `Below is the driver contact information for your trip on ${dDateStr} going to ${destName}:\n\n`;
+
+  if (!rowA || rowA.length === 0) {
+    text += `No drivers assigned yet.\n\n`;
+  } else {
+    // Find Driver objects in driversList to get phones
+    const getDriverObj = (name) => {
+      if (!name) return null;
+      return state.driversList.find(d => String(d.driverName).trim().toLowerCase() === String(name).trim().toLowerCase()) || null;
+    };
+
+    let driverCount = 1;
+    rowA.forEach(assignment => {
+      const busId = (assignment.busId && assignment.busId !== "—") ? assignment.busId : (trip.busId || "None");
+      const d1Name = (assignment.driver1 && assignment.driver1 !== "—") ? assignment.driver1 : "";
+      const d2Name = (assignment.driver2 && assignment.driver2 !== "—") ? assignment.driver2 : "";
+
+      const d1 = getDriverObj(d1Name);
+      const d2 = getDriverObj(d2Name);
+
+      // Driver 1
+      text += `Driver ${driverCount++}:\n`;
+      text += `Name:  ${d1Name || "None"}\n`;
+      text += `Phone: ${d1 ? (d1.phone || "None") : "None"}\n`;
+      text += `Bus:   ${busId}\n\n`;
+
+      // Driver 2 (only if assigned)
+      if (d2Name) {
+        text += `Driver ${driverCount++}:\n`;
+        text += `Name:  ${d2Name}\n`;
+        text += `Phone: ${d2 ? (d2.phone || "None") : "None"}\n`;
+        text += `Bus:   ${busId}\n\n`;
+      }
+    });
+  }
+
+  text += `Thank you!`;
+
+  dom.driverContactBody.value = text;
+  dom.driverContactModal.hidden = false;
+}
+
+// ======================================================
 // 29) TRIP OPEN (DESKTOP EDIT)
 // ======================================================
 async function openTripForEdit(tripKey) {
@@ -3941,15 +4017,15 @@ function buildPrintScheduleFullLetter() {
           <tr>
             <th class="schedule-grid__col-bus">Bus</th>
             ${dates
-              .map((d, i) => {
-                const dObj = parseYMD(d);
-                const dayStr = dObj
-                  ? dObj.toLocaleDateString("en-US", { weekday: "short" })
-                  : dayIds[i];
-                const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
-                return `<th class="schedule-grid__col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
-              })
-              .join("")}
+      .map((d, i) => {
+        const dObj = parseYMD(d);
+        const dayStr = dObj
+          ? dObj.toLocaleDateString("en-US", { weekday: "short" })
+          : dayIds[i];
+        const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
+        return `<th class="schedule-grid__col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
+      })
+      .join("")}
           </tr>
         </thead>
         <tbody>
@@ -4202,6 +4278,13 @@ function handleScheduleInteraction(e, isContext) {
     const tripKey = tripBar.dataset.tripkey;
     if (!tripKey) return;
 
+    // Handle "Driver Status" icon click
+    const driverContactIcon = e.target.closest('[data-action="showDriverContact"]');
+    if (driverContactIcon && !isContext) {
+      openDriverContactModal(tripKey);
+      return;
+    }
+
     showTripContextMenu(e.pageX, e.pageY, tripKey);
     return;
   }
@@ -4422,9 +4505,20 @@ function wireDelegatedBarEvents() {
     // 1. Context Menu (Right Click) - Desktop & Mobile Long Press
     container.addEventListener("contextmenu", (e) => handleScheduleInteraction(e, true));
 
-    // 2. Click (Tap) - Mobile Only
+    // 2. Click (Tap) - Mobile Only and specific icon clicks
     container.addEventListener("click", (e) => {
-      // Only handle Taps on touch devices
+      // Always allow driver contact icon clicks (desktop and mobile)
+      const driverContactIcon = e.target.closest('[data-action="showDriverContact"]');
+      if (driverContactIcon) {
+        e.stopPropagation();
+        const tripBar = driverContactIcon.closest(".schedule-grid__trip-bar");
+        if (tripBar && tripBar.dataset.tripkey) {
+          openDriverContactModal(tripBar.dataset.tripkey);
+        }
+        return;
+      }
+
+      // Only handle Taps on touch devices for the general context menu
       if (isMobileOnly()) {
         handleScheduleInteraction(e, false);
       }
@@ -5260,11 +5354,11 @@ function wireEvents() {
     // clear all cached week data (both in-memory and persistent).
     try {
       state.weekCache.clear();
-    } catch {}
+    } catch { }
 
     try {
       CACHE.clearAll();
-    } catch {}
+    } catch { }
   }
 
   dom.tripDetailsModal?.addEventListener("click", (e) => {
@@ -5991,6 +6085,51 @@ if (dom.closeDailyMaintenancePlanBackdrop) {
     dom.dailyMaintenancePlanModal.hidden = true;
   });
 }
+
+// Driver Contact events
+if (dom.closeDriverContactBtn) {
+  dom.closeDriverContactBtn.addEventListener("click", () => {
+    dom.driverContactModal.hidden = true;
+  });
+}
+if (dom.closeDriverContactBackdrop) {
+  dom.closeDriverContactBackdrop.addEventListener("click", () => {
+    dom.driverContactModal.hidden = true;
+  });
+}
+if (dom.driverContactModal) {
+  document.addEventListener("keydown", (e) => {
+    if (!dom.driverContactModal.hidden && e.key === "Escape") {
+      dom.driverContactModal.hidden = true;
+    }
+  });
+}
+if (dom.copyDriverContactBtn) {
+  dom.copyDriverContactBtn.addEventListener("click", async () => {
+    if (!dom.driverContactBody) return;
+
+    const textToCopy = dom.driverContactBody.value;
+    if (!textToCopy) return;
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(textToCopy);
+        toast("Driver contact info copied!", "success", 2000);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = textToCopy;
+        textarea.style.position = "fixed";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        toast("Driver contact info copied!", "success", 2000);
+      }
+    } catch (err) {
+      console.error("Failed to copy text:", err);
+      toast("Failed to copy. Please manually select and copy.", "danger", 3000);
+    }
+  });
+}
 if (dom.printDailyMaintenancePlanBtn) {
   dom.printDailyMaintenancePlanBtn.addEventListener("click", () => {
     const printWindow = window.open("", "", "height=800,width=800");
@@ -6023,7 +6162,7 @@ if (dom.printDailyMaintenancePlanBtn) {
 .schedule-grid-container.is-loading-bars .schedule-grid__trip-bar { opacity: 0.18; pointer-events: none; }
 `;
     document.head.appendChild(style);
-  } catch {}
+  } catch { }
 
   setSidePanelMode("off");
   enforceDesktopEditing();

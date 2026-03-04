@@ -782,7 +782,8 @@
   background: var(--color-status-assigned);
 }
 
-.schedule-grid__trip-bar__mini-badge.has-pdf {
+.schedule-grid__trip-bar__mini-badge.has-pdf,
+.schedule-grid__trip-bar__mini-badge.has-action {
   cursor: pointer;
   pointer-events: auto;
   transition:
@@ -790,7 +791,8 @@
     background-color 0.1s ease;
 }
 
-.schedule-grid__trip-bar__mini-badge.has-pdf:hover {
+.schedule-grid__trip-bar__mini-badge.has-pdf:hover,
+.schedule-grid__trip-bar__mini-badge.has-action:hover {
   transform: scale(1.15);
   background-color: rgba(255, 255, 255, 0.2);
 }
