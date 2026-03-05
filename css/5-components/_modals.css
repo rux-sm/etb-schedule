@@ -116,15 +116,11 @@
 
 /* --- Variants: Itinerary Modal --- */
 .modal--itinerary .modal__card {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: var(--font-size-2);
   max-width: calc(92ch + 2 * var(--space-3) + 2 * var(--space-3));
 }
 
-.modal--itinerary .modal__head,
-.modal--itinerary .modal__foot {
-  font-family: var(--font-sans);
-}
 
 .modal--itinerary .modal__body textarea {
   flex: 1 1 auto;
@@ -499,5 +495,18 @@
 .daily-plan__in-yard {
   color: #ca8a04;
 }
+
+/* --- Layout Utilities --- */
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 
 /* ==========================================================================

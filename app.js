@@ -111,12 +111,12 @@ const CACHE = {
         expiry: Date.now() + ttlMs,
       };
       localStorage.setItem(key, JSON.stringify(payload));
-    } catch {}
+    } catch { }
   },
   remove(key) {
     try {
       localStorage.removeItem(key);
-    } catch {}
+    } catch { }
   },
   clearAll() {
     try {
@@ -128,7 +128,7 @@ const CACHE = {
           localStorage.removeItem(k);
         }
       });
-    } catch {}
+    } catch { }
   },
 };
 
@@ -238,9 +238,11 @@ const dom = {
   // Driver Contact Modal
   driverContactModal: $("driverContactModal"),
   driverContactBody: $("driverContactBody"),
-  closeDriverContactBtn: $("closeDriverContactBtn"),
+  driverReminderBody: $("driverReminderBody"),
+  closeDriverContactBtn: $("closeDriverContactBtnFooter"),
   closeDriverContactBackdrop: $("closeDriverContactBackdrop"),
   copyDriverContactBtn: $("copyDriverContactBtn"),
+  copyDriverReminderBtn: $("copyDriverReminderBtn"),
 
   // Envelope Modal
   envelopeModal: $("envelopeModal"),
@@ -359,7 +361,7 @@ function clamp(n, min, max) {
 function safeUUID() {
   try {
     return crypto.randomUUID();
-  } catch {}
+  } catch { }
   return `tk_${Date.now()}_${Math.floor(Math.random() * 1e9)}`;
 }
 
@@ -1287,7 +1289,7 @@ function applyWeekStart(isMonday) {
 
   try {
     localStorage.setItem("weekStartMonday", state.weekStartsOnMonday ? "1" : "0");
-  } catch {}
+  } catch { }
 
   syncWeekStartUI();
 
@@ -1489,7 +1491,7 @@ function prefetchAdjacentWeeks() {
 
     // ✅ FIX: Calculate Monday for the adjacent week
     const { notesKey } = getWeekRange(targetDate); // We will update getWeekRange to support a date arg
-    fetchWeekDataCached(start, end, notesKey).catch(() => {});
+    fetchWeekDataCached(start, end, notesKey).catch(() => { });
   }
 }
 
@@ -3576,71 +3578,86 @@ function openDriverContactModal(tripKey) {
   // Retrieve assignments for the trip
   const rowA = state.assignmentsByTripKey[tripKey];
 
-  // Format the date properly for human reading
+  // Helper: get driver object from name
+  const getDriverObj = (name) => {
+    if (!name) return null;
+    return (
+      state.driversList.find(
+        (d) => String(d.driverName).trim().toLowerCase() === String(name).trim().toLowerCase(),
+      ) || null
+    );
+  };
+
+  const isAssigned = (name) => {
+    const n = String(name || "").trim();
+    return n && n.toLowerCase() !== "none";
+  };
+
+  // --- 1. Generate OFFICE/CUSTOMER Message ---
   const dDate = trip.departureDate ? parseYMD(trip.departureDate) : null;
   const dDateStr = dDate
     ? dDate.toLocaleDateString("en-US", {
-        weekday: "long",
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      })
+      weekday: "long", month: "long", day: "numeric", year: "numeric",
+    })
     : "the upcoming date";
-
-  // Get Destination for message
   const destName = trip.destination || "your destination";
 
-  let text = `Hello,\n\n`;
-  text += `Below is the driver contact information for your trip on ${dDateStr} going to ${destName}:\n\n`;
+  let officeText = `Hello,\n\nBelow is the driver contact information for your trip on ${dDateStr} going to ${destName}:\n\n`;
+  const officeBlocks = [];
 
-  if (!rowA || rowA.length === 0) {
-    text += `No drivers assigned yet.\n\n`;
-  } else {
-    const getDriverObj = (name) => {
-      if (!name) return null;
-      return (
-        state.driversList.find(
-          (d) => String(d.driverName).trim().toLowerCase() === String(name).trim().toLowerCase(),
-        ) || null
-      );
-    };
-
-    const isAssigned = (name) => {
-      const n = String(name || "").trim();
-      return n && n.toLowerCase() !== "none";
-    };
-
-    const blocks = [];
+  if (rowA && rowA.length > 0) {
     rowA.forEach((assignment) => {
-      const busId =
-        assignment.busId && assignment.busId !== "—" ? assignment.busId : trip.busId || "None";
+      const busId = assignment.busId && assignment.busId !== "—" ? assignment.busId : trip.busId || "None";
       const d1Name = assignment.driver1 && assignment.driver1 !== "—" ? assignment.driver1 : "";
       const d2Name = assignment.driver2 && assignment.driver2 !== "—" ? assignment.driver2 : "";
 
       if (isAssigned(d1Name)) {
         const d1 = getDriverObj(d1Name);
-        blocks.push(
-          `Name:  ${d1Name}\nPhone: ${d1 ? d1.phone || "None" : "None"}\nBus:   ${busId}`,
-        );
+        officeBlocks.push(`Name:  ${d1Name}\nPhone: ${d1 ? d1.phone || "None" : "None"}\nBus:   ${busId}`);
       }
       if (isAssigned(d2Name)) {
         const d2 = getDriverObj(d2Name);
-        blocks.push(
-          `Name:  ${d2Name}\nPhone: ${d2 ? d2.phone || "None" : "None"}\nBus:   ${busId}`,
-        );
+        officeBlocks.push(`Name:  ${d2Name}\nPhone: ${d2 ? d2.phone || "None" : "None"}\nBus:   ${busId}`);
       }
     });
-
-    if (blocks.length === 0) {
-      text += `No drivers assigned yet.\n\n`;
-    } else {
-      text += blocks.join("\n\n") + "\n\n";
-    }
   }
 
-  text += `Thank you!`;
+  if (officeBlocks.length === 0) {
+    officeText += `No drivers assigned yet.\n\n`;
+  } else {
+    officeText += officeBlocks.join("\n\n") + "\n\n";
+  }
+  officeText += `Thank you!`;
 
-  dom.driverContactBody.value = text;
+  // --- 2. Generate DRIVER REMINDER Message ---
+  let reminderText = "";
+  if (dDate) {
+    const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const isTomorrow = dDate.getFullYear() === tomorrow.getFullYear() &&
+      dDate.getMonth() === tomorrow.getMonth() &&
+      dDate.getDate() === tomorrow.getDate();
+
+    const dateLabel = isTomorrow ? "Tomorrow" : dDate.toLocaleDateString("en-US", { weekday: "long" });
+    const fullDate = dDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+    const spotTime = envFormatTime(trip.spotTime || trip.departureTime || "");
+
+    reminderText = `Reminder for your trip ${dateLabel}, ${fullDate} at ${spotTime}\n\n`;
+
+    if (officeBlocks.length > 0) {
+      reminderText += officeBlocks.join("\n\n");
+    } else {
+      reminderText += "No drivers assigned yet.";
+    }
+  } else {
+    reminderText = "No trip date set.";
+  }
+
+  // Set values and show modal
+  dom.driverContactBody.value = officeText;
+  dom.driverReminderBody.value = reminderText;
   dom.driverContactModal.hidden = false;
 }
 
@@ -3716,7 +3733,7 @@ function createEnvelopePageElement() {
             <div class="env-cell">
               <div style="display:flex;justify-content:space-between;align-items:baseline;width:100%;">
                 <span class="env-label">TRIP DATE</span>
-                <span class="env-label" style="text-align:right;">RETURN</span>
+                <span class="env-label" data-field="returnlabel" style="text-align:right;">RETURN</span>
               </div>
               <div style="display:flex;justify-content:space-between;align-items:center;gap:0.08in;">
                 <span class="env-value" data-field="tripdate" style="width:120px;"></span>
@@ -3724,7 +3741,7 @@ function createEnvelopePageElement() {
                 <span class="env-value" data-field="returndate" style="width:120px;text-align:right;"></span>
               </div>
             </div>
-            <div class="env-cell"><span class="env-label">SPOT TIME</span><span class="env-value" data-field="arrivaltime"></span></div>
+            <div class="env-cell"><span class="env-label">SPOT TIME</span><span class="env-value" data-field="spottime"></span></div>
           </div>
           <div class="env-trip-row env-cols-1">
             <div class="env-cell"><span class="env-label">PICK UP ADDRESS</span><input type="text" class="env-input" data-field="pickup" placeholder=""></div>
@@ -3746,9 +3763,9 @@ function createEnvelopePageElement() {
       </div>
       <div class="env-mini">
         <table>
-          <tr><td>ELD BACKUP USED</td><td>YES / NO</td><td>DIESEL/BLUE DEF</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
+          <tr><td>ELD BACKUP USED</td><td><span class="env-choice">YES</span> <span class="env-choice">NO</span></td><td>DIESEL/BLUE DEF</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
           <tr><td>ELD VERIFIED</td><td>DRIVER / OFFICE</td><td>HOTEL</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
-          <tr><td>CC FOR TRIP</td><td>YES / NO</td><td>REPAIRS</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
+          <tr><td>CC FOR TRIP <span class="material-symbols-outlined env-cc-icon">credit_card</span></td><td><span class="env-choice">YES</span> <span class="env-choice">NO</span></td><td>REPAIRS</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
           <tr><td colspan="2" class="env-mini-td-left">CC RECEIVED BY</td><td>MISCELLANEOUS</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
           <tr><td colspan="2" class="env-mini-td-left">TOTAL TRIP MILES</td><td>TOTAL</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
         </table>
@@ -3800,8 +3817,13 @@ function fillEnvelopePage(pageEl, trip, assignment) {
     if (upperFields.has(field)) {
       val = val.toUpperCase();
     }
-    if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") el.value = val;
-    else el.textContent = val;
+    if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+      el.value = val;
+      el.setAttribute("value", val);
+      if (el.tagName === "TEXTAREA") el.innerHTML = String(val).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    } else {
+      el.textContent = val;
+    }
   };
 
   const notesSrc = (trip.envelopeTripNotes || trip.notes || "").toString();
@@ -3818,7 +3840,8 @@ function fillEnvelopePage(pageEl, trip, assignment) {
   set("codriver", driver2);
   set("tripdate", tripDateStr);
   set("returndate", showReturn ? returnDateStr : "");
-  set("arrivaltime", envFormatTime(trip.arrivalTime || trip.spotTime || trip.departureTime));
+  set("returnlabel", showReturn ? "RETURN" : "");
+  set("spottime", envFormatTime(trip.spotTime || trip.departureTime));
   set("pickup", trip.envelopePickup || "");
   set("destination", trip.destination || "");
   set("contact", trip.envelopeTripContact || trip.contactName || "");
@@ -3928,12 +3951,12 @@ function printEnvelopePages() {
   const edits = getEnvelopeEditsFromVisiblePage();
   const tripForPrint = edits
     ? {
-        ...trip,
-        envelopePickup: edits.pickup,
-        envelopeTripContact: edits.contact,
-        envelopeTripPhone: edits.phone,
-        envelopeTripNotes: edits.notes,
-      }
+      ...trip,
+      envelopePickup: edits.pickup,
+      envelopeTripContact: edits.contact,
+      envelopeTripPhone: edits.phone,
+      envelopeTripNotes: edits.notes,
+    }
     : trip;
 
   // Always print the white style, regardless of screen toggle
@@ -3953,11 +3976,15 @@ function printEnvelopePages() {
   const printDoc = `
 <!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>Trip envelope</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="${cssHref}">
 <style>
   /* Base page setup for envelopes */
   @page {
-    size: 5.5in 8.5in;
+    size: 6in 9in;
     margin: 0;
   }
 
@@ -4634,15 +4661,15 @@ function buildPrintScheduleFullLetter() {
           <tr>
             <th class="schedule-grid__col-bus">Bus</th>
             ${dates
-              .map((d, i) => {
-                const dObj = parseYMD(d);
-                const dayStr = dObj
-                  ? dObj.toLocaleDateString("en-US", { weekday: "short" })
-                  : dayIds[i];
-                const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
-                return `<th class="schedule-grid__col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
-              })
-              .join("")}
+      .map((d, i) => {
+        const dObj = parseYMD(d);
+        const dayStr = dObj
+          ? dObj.toLocaleDateString("en-US", { weekday: "short" })
+          : dayIds[i];
+        const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
+        return `<th class="schedule-grid__col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
+      })
+      .join("")}
           </tr>
         </thead>
         <tbody>
@@ -5983,11 +6010,11 @@ function wireEvents() {
     // clear all cached week data (both in-memory and persistent).
     try {
       state.weekCache.clear();
-    } catch {}
+    } catch { }
 
     try {
       CACHE.clearAll();
-    } catch {}
+    } catch { }
   }
 
   dom.tripDetailsModal?.addEventListener("click", (e) => {
@@ -6735,27 +6762,38 @@ if (dom.driverContactModal) {
 }
 if (dom.copyDriverContactBtn) {
   dom.copyDriverContactBtn.addEventListener("click", async () => {
-    if (!dom.driverContactBody) return;
-
-    const textToCopy = dom.driverContactBody.value;
-    if (!textToCopy) return;
+    const text = dom.driverContactBody.value;
+    if (!text) return;
     try {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(textToCopy);
-        toast("Driver contact info copied!", "success", 2000);
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(text);
+        toast("Office/Customer Info copied!");
       } else {
-        const textarea = document.createElement("textarea");
-        textarea.value = textToCopy;
-        textarea.style.position = "fixed";
-        document.body.appendChild(textarea);
-        textarea.select();
+        dom.driverContactBody.select();
         document.execCommand("copy");
-        document.body.removeChild(textarea);
-        toast("Driver contact info copied!", "success", 2000);
+        toast("Office/Customer Info copied!");
       }
     } catch (err) {
-      console.error("Failed to copy text:", err);
-      toast("Failed to copy. Please manually select and copy.", "danger", 3000);
+      toast("Failed to copy", "danger");
+    }
+  });
+}
+
+if (dom.copyDriverReminderBtn) {
+  dom.copyDriverReminderBtn.addEventListener("click", async () => {
+    const text = dom.driverReminderBody.value;
+    if (!text) return;
+    try {
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(text);
+        toast("Driver Reminder copied!");
+      } else {
+        dom.driverReminderBody.select();
+        document.execCommand("copy");
+        toast("Driver Reminder copied!");
+      }
+    } catch (err) {
+      toast("Failed to copy", "danger");
     }
   });
 }
@@ -6844,7 +6882,7 @@ if (dom.printDailyMaintenancePlanBtn) {
 .schedule-grid-container.is-loading-bars .schedule-grid__trip-bar { opacity: 0.18; pointer-events: none; }
 `;
     document.head.appendChild(style);
-  } catch {}
+  } catch { }
 
   setSidePanelMode("off");
   enforceDesktopEditing();
