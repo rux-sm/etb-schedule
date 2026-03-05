@@ -178,7 +178,7 @@
   justify-content: space-between;
   width: 100%;
   text-align: center;
-  border: 2px solid transparent;
+  border: 1px solid var(--color-input-border);
 }
 
 .select-trigger:disabled {

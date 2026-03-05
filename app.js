@@ -45,6 +45,34 @@ if (document.readyState === "loading") {
   initThemeSystem();
 }
 
+// ── Empty-field class toggle (date/time inputs + default selects) ────
+// Adds/removes .is-empty so CSS can dim unfilled placeholders
+(function initEmptyFieldTracking() {
+  const DATE_TIME = 'input[type="date"], input[type="time"]';
+  const PLACEHOLDER_SELECTS = "#busesNeeded, #tripColor";
+  const ALL = DATE_TIME + ", " + PLACEHOLDER_SELECTS;
+
+  function sync(el) {
+    el.classList.toggle("is-empty", !el.value);
+  }
+  function syncAll() {
+    document.querySelectorAll(ALL).forEach(sync);
+  }
+  document.addEventListener("change", (e) => {
+    if (e.target.matches(ALL)) sync(e.target);
+  });
+  // Run on load and after any programmatic .reset()
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", syncAll);
+  } else {
+    syncAll();
+  }
+  // Re-sync when forms are reset or trip data is loaded
+  document.addEventListener("reset", () => requestAnimationFrame(syncAll));
+  // Expose for manual calls after programmatic value changes
+  window.syncEmptyFields = syncAll;
+})();
+
 // ======================================================
 // 2) CONFIG
 // ======================================================
@@ -83,12 +111,12 @@ const CACHE = {
         expiry: Date.now() + ttlMs,
       };
       localStorage.setItem(key, JSON.stringify(payload));
-    } catch { }
+    } catch {}
   },
   remove(key) {
     try {
       localStorage.removeItem(key);
-    } catch { }
+    } catch {}
   },
   clearAll() {
     try {
@@ -100,7 +128,7 @@ const CACHE = {
           localStorage.removeItem(k);
         }
       });
-    } catch { }
+    } catch {}
   },
 };
 
@@ -214,11 +242,23 @@ const dom = {
   closeDriverContactBackdrop: $("closeDriverContactBackdrop"),
   copyDriverContactBtn: $("copyDriverContactBtn"),
 
+  // Envelope Modal
+  envelopeModal: $("envelopeModal"),
+  envelopeModalPages: $("envelopeModalPages"),
+  envelopeAssignmentSelect: $("envelopeAssignmentSelect"),
+  envelopeSaveBtn: $("envelopeSaveBtn"),
+  envelopePrintBtn: $("envelopePrintBtn"),
+  envelopeYellowBtn: $("envelopeYellowBtn"),
+  envelopeWhiteBtn: $("envelopeWhiteBtn"),
+  closeEnvelopeBtn: $("closeEnvelopeBtn"),
+  closeEnvelopeBackdrop: $("closeEnvelopeBackdrop"),
+
   // Context Menu
   ctxMenu: $("tripContextMenu"),
   ctxHeader: $("ctxHeader"),
   ctxEditBtn: $("ctxEditBtn"),
   ctxViewBtn: $("ctxViewBtn"),
+  ctxEnvelopeBtn: $("ctxEnvelopeBtn"),
   ctxOpenItineraryPdfBtn: $("ctxOpenItineraryPdfBtn"),
   ctxAttachItineraryPdfBtn: $("ctxAttachItineraryPdfBtn"),
   ctxCopyBtn: $("ctxCopyBtn"),
@@ -319,7 +359,7 @@ function clamp(n, min, max) {
 function safeUUID() {
   try {
     return crypto.randomUUID();
-  } catch { }
+  } catch {}
   return `tk_${Date.now()}_${Math.floor(Math.random() * 1e9)}`;
 }
 
@@ -613,10 +653,16 @@ function sanitizeWeekResp(resp) {
         driverStatus: asStr(t?.driverStatus).trim(),
         invoiceStatus: asStr(t?.invoiceStatus).trim(),
         invoiceNumber: asStr(t?.invoiceNumber).trim(),
+        // Core text fields
         notes: asStr(t?.notes),
         comments: asStr(t?.comments),
         itinerary: asStr(t?.itinerary),
         itineraryPdfUrl: asStr(t?.itineraryPdfUrl).trim(),
+        // Envelope-specific fields (optional; may not be present in older data)
+        envelopePickup: asStr(t?.envelopePickup),
+        envelopeTripContact: asStr(t?.envelopeTripContact),
+        envelopeTripPhone: asStr(t?.envelopeTripPhone),
+        envelopeTripNotes: asStr(t?.envelopeTripNotes),
       };
     })
     .filter((t) => t.tripKey);
@@ -1241,7 +1287,7 @@ function applyWeekStart(isMonday) {
 
   try {
     localStorage.setItem("weekStartMonday", state.weekStartsOnMonday ? "1" : "0");
-  } catch { }
+  } catch {}
 
   syncWeekStartUI();
 
@@ -1443,7 +1489,7 @@ function prefetchAdjacentWeeks() {
 
     // ✅ FIX: Calculate Monday for the adjacent week
     const { notesKey } = getWeekRange(targetDate); // We will update getWeekRange to support a date arg
-    fetchWeekDataCached(start, end, notesKey).catch(() => { });
+    fetchWeekDataCached(start, end, notesKey).catch(() => {});
   }
 }
 
@@ -3532,9 +3578,14 @@ function openDriverContactModal(tripKey) {
 
   // Format the date properly for human reading
   const dDate = trip.departureDate ? parseYMD(trip.departureDate) : null;
-  const dDateStr = dDate ?
-    dDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) :
-    "the upcoming date";
+  const dDateStr = dDate
+    ? dDate.toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "the upcoming date";
 
   // Get Destination for message
   const destName = trip.destination || "your destination";
@@ -3545,41 +3596,606 @@ function openDriverContactModal(tripKey) {
   if (!rowA || rowA.length === 0) {
     text += `No drivers assigned yet.\n\n`;
   } else {
-    // Find Driver objects in driversList to get phones
     const getDriverObj = (name) => {
       if (!name) return null;
-      return state.driversList.find(d => String(d.driverName).trim().toLowerCase() === String(name).trim().toLowerCase()) || null;
+      return (
+        state.driversList.find(
+          (d) => String(d.driverName).trim().toLowerCase() === String(name).trim().toLowerCase(),
+        ) || null
+      );
     };
 
-    let driverCount = 1;
-    rowA.forEach(assignment => {
-      const busId = (assignment.busId && assignment.busId !== "—") ? assignment.busId : (trip.busId || "None");
-      const d1Name = (assignment.driver1 && assignment.driver1 !== "—") ? assignment.driver1 : "";
-      const d2Name = (assignment.driver2 && assignment.driver2 !== "—") ? assignment.driver2 : "";
+    const isAssigned = (name) => {
+      const n = String(name || "").trim();
+      return n && n.toLowerCase() !== "none";
+    };
 
-      const d1 = getDriverObj(d1Name);
-      const d2 = getDriverObj(d2Name);
+    const blocks = [];
+    rowA.forEach((assignment) => {
+      const busId =
+        assignment.busId && assignment.busId !== "—" ? assignment.busId : trip.busId || "None";
+      const d1Name = assignment.driver1 && assignment.driver1 !== "—" ? assignment.driver1 : "";
+      const d2Name = assignment.driver2 && assignment.driver2 !== "—" ? assignment.driver2 : "";
 
-      // Driver 1
-      text += `Driver ${driverCount++}:\n`;
-      text += `Name:  ${d1Name || "None"}\n`;
-      text += `Phone: ${d1 ? (d1.phone || "None") : "None"}\n`;
-      text += `Bus:   ${busId}\n\n`;
-
-      // Driver 2 (only if assigned)
-      if (d2Name) {
-        text += `Driver ${driverCount++}:\n`;
-        text += `Name:  ${d2Name}\n`;
-        text += `Phone: ${d2 ? (d2.phone || "None") : "None"}\n`;
-        text += `Bus:   ${busId}\n\n`;
+      if (isAssigned(d1Name)) {
+        const d1 = getDriverObj(d1Name);
+        blocks.push(
+          `Name:  ${d1Name}\nPhone: ${d1 ? d1.phone || "None" : "None"}\nBus:   ${busId}`,
+        );
+      }
+      if (isAssigned(d2Name)) {
+        const d2 = getDriverObj(d2Name);
+        blocks.push(
+          `Name:  ${d2Name}\nPhone: ${d2 ? d2.phone || "None" : "None"}\nBus:   ${busId}`,
+        );
       }
     });
+
+    if (blocks.length === 0) {
+      text += `No drivers assigned yet.\n\n`;
+    } else {
+      text += blocks.join("\n\n") + "\n\n";
+    }
   }
 
   text += `Thank you!`;
 
   dom.driverContactBody.value = text;
   dom.driverContactModal.hidden = false;
+}
+
+// ======================================================
+// TRIP ENVELOPE MODAL (from schedule trip data)
+// ======================================================
+
+const ENVELOPE_BRAND_ADDR =
+  "2801 Zinnia Ave. McAllen TX 78504\n(956) 994-1169 / Fax 994-9491 / Cell 648-9691";
+
+function envFormatDate(ymdStr) {
+  if (!ymdStr) return "";
+  const d = parseYMD(ymdStr);
+  if (!d) return String(ymdStr).slice(0, 10);
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  const yyyy = d.getFullYear();
+  return `${mm}/${dd}/${yyyy}`;
+}
+
+function envFormatWeekday(ymdStr) {
+  if (!ymdStr) return "";
+  const d = parseYMD(ymdStr);
+  if (!d) return "";
+  return d.toLocaleDateString("en-US", { weekday: "long" }).toUpperCase();
+}
+
+function envFormatTime(val) {
+  if (val == null || val === "") return "";
+  const s = String(val).trim();
+  // Already 12-hour (e.g. "7:30 PM") — normalize to "7:30 PM"
+  const match12 = s.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (match12) {
+    const h = parseInt(match12[1], 10);
+    const m = match12[2];
+    const ampm = (match12[3] || "").toUpperCase();
+    return `${h}:${m} ${ampm}`;
+  }
+  // Parse 24-hour or time-only and format as 12-hour (e.g. 7:30 PM)
+  const iso = s.length <= 5 ? s + ":00" : s.replace(" ", "");
+  const d = new Date("1970-01-01T" + iso);
+  if (isNaN(d.getTime())) return s;
+  let h = d.getHours();
+  const m = String(d.getMinutes()).padStart(2, "0");
+  const ampm = h >= 12 ? "PM" : "AM";
+  h = h % 12 || 12;
+  return `${h}:${m} ${ampm}`;
+}
+
+function createEnvelopePageElement() {
+  const page = document.createElement("div");
+  page.className = "envelope-page env-yellow";
+
+  const brandAddr = ENVELOPE_BRAND_ADDR.replace(/\n/g, "<br>");
+  page.innerHTML = `
+    <div class="env-panel">
+      <div class="env-header">
+        <div class="env-day" data-field="day"></div>
+        <div class="env-brand">
+          <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+          <div class="env-addr">${brandAddr}</div>
+        </div>
+      </div>
+      <div class="env-section-title">TRIP INFORMATION</div>
+      <div class="env-trip-contact">
+        <div class="env-trip">
+          <div class="env-trip-row env-cols-3">
+            <div class="env-cell"><span class="env-label">BUS #</span><span class="env-value" data-field="busno"></span></div>
+            <div class="env-cell"><span class="env-label">BUS DRIVER</span><span class="env-value" data-field="driver"></span></div>
+            <div class="env-cell"><span class="env-label">CO-DRIVER</span><span class="env-value" data-field="codriver"></span></div>
+          </div>
+          <div class="env-trip-row env-cols-2">
+            <div class="env-cell">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;width:100%;">
+                <span class="env-label">TRIP DATE</span>
+                <span class="env-label" style="text-align:right;">RETURN</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:0.08in;">
+                <span class="env-value" data-field="tripdate" style="width:120px;"></span>
+                <span style="flex:1 1 auto;"></span>
+                <span class="env-value" data-field="returndate" style="width:120px;text-align:right;"></span>
+              </div>
+            </div>
+            <div class="env-cell"><span class="env-label">SPOT TIME</span><span class="env-value" data-field="arrivaltime"></span></div>
+          </div>
+          <div class="env-trip-row env-cols-1">
+            <div class="env-cell"><span class="env-label">PICK UP ADDRESS</span><input type="text" class="env-input" data-field="pickup" placeholder=""></div>
+          </div>
+          <div class="env-trip-row env-cols-1">
+            <div class="env-cell"><span class="env-label">DESTINATION</span><span class="env-value" data-field="destination"></span></div>
+          </div>
+        </div>
+        <div class="env-grid-row">
+          <div class="env-cell"><span class="env-label">CONTACT</span><input type="text" class="env-input" data-field="contact" placeholder=""></div>
+          <div class="env-cell"><span class="env-label">PHONE</span><input type="text" class="env-input" data-field="phone" placeholder=""></div>
+        </div>
+      </div>
+      <div class="env-odometer-box">
+        <div class="env-grid-row">
+          <div class="env-cell"><span class="env-label">STARTING ODOMETER</span><span class="env-value" data-field="startodo"></span></div>
+          <div class="env-cell"><span class="env-label">ENDING ODOMETER</span><span class="env-value" data-field="endodo"></span></div>
+        </div>
+      </div>
+      <div class="env-mini">
+        <table>
+          <tr><td>ELD BACKUP USED</td><td>YES / NO</td><td>DIESEL/BLUE DEF</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
+          <tr><td>ELD VERIFIED</td><td>DRIVER / OFFICE</td><td>HOTEL</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
+          <tr><td>CC FOR TRIP</td><td>YES / NO</td><td>REPAIRS</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
+          <tr><td colspan="2" class="env-mini-td-left">CC RECEIVED BY</td><td>MISCELLANEOUS</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
+          <tr><td colspan="2" class="env-mini-td-left">TOTAL TRIP MILES</td><td>TOTAL</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
+        </table>
+      </div>
+      <div class="env-footer">
+        <span class="env-label">NOTES</span>
+        <div class="env-notes-lines">
+          <input type="text" class="env-input env-notes-line" data-field="notes1" placeholder="">
+          <input type="text" class="env-input env-notes-line" data-field="notes2" placeholder="">
+          <input type="text" class="env-input env-notes-line" data-field="notes3" placeholder="">
+        </div>
+      </div>
+    </div>
+  `;
+  return page;
+}
+
+function fillEnvelopePage(pageEl, trip, assignment) {
+  if (!pageEl || !trip) return;
+  const busId = assignment ? assignment.busId || trip.busId || "" : trip.busId || "";
+  const driver1 = assignment ? assignment.driver1 || "" : "";
+  const rawDriver2 = assignment ? assignment.driver2 || "" : "";
+  // Treat common \"no co-driver\" markers as empty
+  const driver2 =
+    rawDriver2 && rawDriver2.toString().trim().toLowerCase() !== "none" && rawDriver2 !== "—"
+      ? rawDriver2
+      : "";
+
+  const set = (field, text) => {
+    const el = pageEl.querySelector(`[data-field="${field}"]`);
+    if (!el) return;
+    let val = String(text ?? "").trim();
+    // Uppercase envelope display fields (driver names, trip text, dates, notes)
+    const upperFields = new Set([
+      "day",
+      "busno",
+      "driver",
+      "codriver",
+      "tripdate",
+      "returndate",
+      "arrivaltime",
+      "pickup",
+      "destination",
+      "contact",
+      "notes1",
+      "notes2",
+      "notes3",
+    ]);
+    if (upperFields.has(field)) {
+      val = val.toUpperCase();
+    }
+    if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") el.value = val;
+    else el.textContent = val;
+  };
+
+  const notesSrc = (trip.envelopeTripNotes || trip.notes || "").toString();
+  const notesLines = notesSrc.split("\n");
+
+  const tripDateStr = envFormatDate(trip.departureDate);
+  const returnDateStr = envFormatDate(trip.arrivalDate);
+  const showReturn = !!returnDateStr && (!tripDateStr || returnDateStr !== tripDateStr); // blank if same as trip date
+
+  set("day", envFormatWeekday(trip.departureDate));
+  set("busno", busId);
+  set("driver", driver1);
+  // If there is no real co-driver, field stays blank
+  set("codriver", driver2);
+  set("tripdate", tripDateStr);
+  set("returndate", showReturn ? returnDateStr : "");
+  set("arrivaltime", envFormatTime(trip.arrivalTime || trip.spotTime || trip.departureTime));
+  set("pickup", trip.envelopePickup || "");
+  set("destination", trip.destination || "");
+  set("contact", trip.envelopeTripContact || trip.contactName || "");
+  set("phone", trip.envelopeTripPhone || trip.phone || "");
+  set("startodo", "");
+  set("endodo", "");
+  set("notes1", notesLines[0] || "");
+  set("notes2", notesLines[1] || "");
+  set("notes3", notesLines[2] || "");
+}
+
+let stateEnvelope = { tripKey: null, trip: null, assignments: [], bg: "yellow" };
+
+function openEnvelopeModal(tripKey) {
+  const trip = state.tripByKey?.[tripKey];
+  if (!trip) {
+    toast("Trip not found.", "danger", 2000);
+    return;
+  }
+
+  state.lastFocusedElement = document.activeElement;
+  stateEnvelope.tripKey = tripKey;
+  stateEnvelope.trip = trip;
+  stateEnvelope.bg = "yellow";
+
+  const pagesContainer = dom.envelopeModalPages;
+  if (!pagesContainer) return;
+  pagesContainer.innerHTML = "";
+
+  // Build envelope assignments. For trips with a co-driver, we create
+  // two variants so each driver gets a version where they are BUS DRIVER.
+  const rawAssignments = state.assignmentsByTripKey?.[tripKey] || [];
+  const assignments = [];
+
+  if (rawAssignments.length) {
+    rawAssignments.forEach((a) => {
+      const busId = a.busId || trip.busId || "";
+      const d1 = (a.driver1 || "").toString().trim();
+      const d2Raw = (a.driver2 || "").toString().trim();
+      const hasD2 = d2Raw && d2Raw.toLowerCase() !== "none" && d2Raw !== "—";
+      const d2 = hasD2 ? d2Raw : "";
+
+      // Variant 1: as-is (driver1 primary)
+      assignments.push({ busId, driver1: d1, driver2: d2 });
+
+      // Variant 2: swapped (co-driver primary), only if real co-driver exists
+      if (hasD2) {
+        assignments.push({ busId, driver1: d2, driver2: d1 });
+      }
+    });
+  } else {
+    assignments.push({ busId: trip.busId || "", driver1: "", driver2: "" });
+  }
+
+  // Store the envelope assignments so print/save logic uses the same variants
+  stateEnvelope.assignments = assignments;
+
+  const select = dom.envelopeAssignmentSelect;
+  if (select) {
+    select.innerHTML = "";
+    assignments.forEach((a, i) => {
+      const opt = document.createElement("option");
+      opt.value = String(i);
+      const bus = a.busId || "—";
+      const d1 = a.driver1 || "—";
+      const d2 = a.driver2 ? ` / ${a.driver2}` : "";
+      opt.textContent = `Bus ${bus} — ${d1}${d2}`;
+      select.appendChild(opt);
+    });
+    select.selectedIndex = 0;
+    // Notify glass wrapper so trigger text & menu stay in sync
+    select.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+
+  assignments.forEach((assignment, idx) => {
+    const pageEl = createEnvelopePageElement();
+    pageEl.classList.add(stateEnvelope.bg === "white" ? "env-white" : "env-yellow");
+    fillEnvelopePage(pageEl, trip, assignment);
+    if (assignments.length > 1) pageEl.style.display = idx === 0 ? "block" : "none";
+    pageEl.dataset.index = String(idx);
+    pagesContainer.appendChild(pageEl);
+  });
+
+  if (dom.envelopeYellowBtn)
+    dom.envelopeYellowBtn.classList.toggle("active", stateEnvelope.bg === "yellow");
+  if (dom.envelopeWhiteBtn)
+    dom.envelopeWhiteBtn.classList.toggle("active", stateEnvelope.bg === "white");
+
+  dom.envelopeModal.hidden = false;
+}
+
+function updateEnvelopeModalSelection(index) {
+  const pages = dom.envelopeModalPages?.querySelectorAll(".envelope-page");
+  if (!pages || !pages.length) return;
+  pages.forEach((p, i) => {
+    p.style.display = String(i) === String(index) ? "block" : "none";
+  });
+}
+
+function printEnvelopePages() {
+  const trip = stateEnvelope.trip;
+  const assignments = stateEnvelope.assignments.length
+    ? stateEnvelope.assignments
+    : [{ busId: trip?.busId || "", driver1: "", driver2: "" }];
+  if (!trip || !assignments.length) return;
+
+  const edits = getEnvelopeEditsFromVisiblePage();
+  const tripForPrint = edits
+    ? {
+        ...trip,
+        envelopePickup: edits.pickup,
+        envelopeTripContact: edits.contact,
+        envelopeTripPhone: edits.phone,
+        envelopeTripNotes: edits.notes,
+      }
+    : trip;
+
+  // Always print the white style, regardless of screen toggle
+  const bgClass = "env-white";
+  const pagesHtml = assignments
+    .map((assignment) => {
+      const page = createEnvelopePageElement();
+      page.classList.add(bgClass);
+      fillEnvelopePage(page, tripForPrint, assignment);
+      return page.outerHTML;
+    })
+    .join("");
+
+  const cssLink =
+    document.querySelector('link[href*="main.css"]')?.getAttribute("href") || "css/main.css";
+  const cssHref = new URL(cssLink, window.location.href).href;
+  const printDoc = `
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Trip envelope</title>
+<link rel="stylesheet" href="${cssHref}">
+<style>
+  /* Base page setup for envelopes */
+  @page {
+    size: 5.5in 8.5in;
+    margin: 0;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #000;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  /* Hide modal chrome from the main app; only show the envelope page(s) */
+  .modal--envelope .modal__card--envelope,
+  .envelope-modal__toolbar,
+  .modal__head,
+  .modal__foot,
+  .modal__backdrop {
+    display: none !important;
+  }
+
+  .envelope-modal__body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0;
+  }
+
+  .envelope-page {
+    box-shadow: none !important;
+    margin: 0 auto;
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .envelope-page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  @media print {
+    body {
+      margin: 0 !important;
+      padding: 0 !important;
+      background: #fff !important;
+    }
+
+    .envelope-modal__body {
+      justify-content: center !important;
+      align-items: flex-start !important;
+    }
+
+    .envelope-page {
+      page-break-after: always;
+    }
+
+    .envelope-page:last-child {
+      page-break-after: auto;
+    }
+  }
+</style>
+</head><body class="modal--envelope"><div class="envelope-modal__body">${pagesHtml}</div></body></html>`;
+
+  const win = window.open("", "_blank");
+  if (!win) {
+    toast("Popup blocked. Allow popups to print envelopes.", "danger", 3000);
+    return;
+  }
+  win.document.write(printDoc);
+  win.document.close();
+  win.onload = () => {
+    win.focus();
+    win.print();
+    win.onafterprint = () => win.close();
+  };
+}
+
+function closeEnvelopeModal() {
+  dom.envelopeModal.hidden = true;
+  stateEnvelope.tripKey = null;
+  stateEnvelope.trip = null;
+  stateEnvelope.assignments = [];
+  if (state.lastFocusedElement) {
+    state.lastFocusedElement.focus();
+    state.lastFocusedElement = null;
+  }
+}
+
+/** Get editable values from the currently visible envelope page */
+function getEnvelopeEditsFromVisiblePage() {
+  const pages = dom.envelopeModalPages?.querySelectorAll(".envelope-page");
+  if (!pages?.length) return null;
+  const visible = Array.from(pages).find((p) => p.style.display !== "none") || pages[0];
+  const get = (field) => {
+    const el = visible.querySelector(`[data-field="${field}"]`);
+    return el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")
+      ? el.value
+      : el?.textContent || "";
+  };
+  const notes1 = get("notes1");
+  const notes2 = get("notes2");
+  const notes3 = get("notes3");
+  const notes = [notes1, notes2, notes3].filter(Boolean).join("\n");
+  return {
+    pickup: get("pickup").trim(),
+    contact: get("contact").trim(),
+    phone: get("phone").trim(),
+    notes,
+  };
+}
+
+/** Set main trip form from state (for saving envelope edits via existing submit flow) */
+function setTripFormFromState(tripKey) {
+  const t = state.tripByKey?.[tripKey];
+  const assigns = state.assignmentsByTripKey?.[tripKey] || [];
+  if (!t) return false;
+
+  $("destination").value = t.destination || "";
+  $("customer").value = t.customer || "";
+  $("contactName").value = t.contactName || "";
+  $("phone").value = t.phone || "";
+
+  $("tripDate").value = String(t.departureDate || "").slice(0, 10);
+  $("arrivalDate").value = String(t.arrivalDate || "").slice(0, 10);
+  $("departureTime").value = normalizeTime(t.departureTime) || "";
+  $("spotTime").value = normalizeTime(t.spotTime) || "";
+  $("arrivalTime").value = normalizeTime(t.arrivalTime) || "";
+
+  $("itineraryStatus").value = t.itineraryStatus || "";
+  $("contactStatus").value = t.contactStatus || "";
+  $("paymentStatus").value = t.paymentStatus || "";
+  $("driverStatus").value = t.driverStatus || "";
+  $("invoiceStatus").value = t.invoiceStatus || "";
+  $("invoiceNumber").value = t.invoiceNumber || "";
+  $("tripColor").value = t.tripColor || "";
+  setRequirementTogglesFromTrip(t);
+
+  // Envelope-specific hidden fields
+  if ($("envelopePickup")) $("envelopePickup").value = t.envelopePickup || "";
+  if ($("envelopeTripContact")) $("envelopeTripContact").value = t.envelopeTripContact || "";
+  if ($("envelopeTripPhone")) $("envelopeTripPhone").value = t.envelopeTripPhone || "";
+  if ($("envelopeTripNotes")) $("envelopeTripNotes").value = t.envelopeTripNotes || "";
+
+  [
+    "itineraryStatus",
+    "contactStatus",
+    "paymentStatus",
+    "driverStatus",
+    "invoiceStatus",
+    "tripColor",
+  ].forEach((id) => {
+    const el = $(id);
+    if (el) el.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+  if (typeof updateInvoiceNumberVisibility === "function") updateInvoiceNumberVisibility();
+
+  dom.itineraryField.value = t.itinerary || "";
+  $("notes").value = t.notes || "";
+  $("comments").value = t.comments || "";
+
+  // Envelope-specific hidden fields (when editing in the main Trip Editor)
+  if ($("envelopePickup")) $("envelopePickup").value = t.envelopePickup || "";
+  if ($("envelopeTripContact")) $("envelopeTripContact").value = t.envelopeTripContact || "";
+  if ($("envelopeTripPhone")) $("envelopeTripPhone").value = t.envelopeTripPhone || "";
+  if ($("envelopeTripNotes")) $("envelopeTripNotes").value = t.envelopeTripNotes || "";
+
+  setBusesNeededAndSync(t.busesNeeded ? String(t.busesNeeded) : "");
+  dom.busesNeeded?.dispatchEvent(new Event("change", { bubbles: true }));
+  setModeEdit(String(t.tripKey || tripKey), String(t.tripId || ""));
+
+  state.busRows.forEach((r) => {
+    r.busSel.value = "None";
+    r.d1Sel.value = "None";
+    r.d2Sel.value = "None";
+  });
+  assigns.forEach((a, i) => {
+    const row = state.busRows[i];
+    if (!row) return;
+    if (a.busId) row.busSel.value = String(a.busId);
+    if (a.driver1) row.d1Sel.value = String(a.driver1);
+    if (a.driver2) row.d2Sel.value = String(a.driver2);
+  });
+  updateBusRowVisibility();
+  state.busRows.forEach((r) => {
+    r.busSel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d1Sel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d2Sel.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+  syncBusPanelState();
+  if (typeof syncBusSelectEmptyState === "function") syncBusSelectEmptyState();
+  if (typeof refreshEmptyStateUI === "function") refreshEmptyStateUI();
+  if (typeof syncEmptyFields === "function") syncEmptyFields();
+
+  dom.action.value = "update";
+  dom.tripKey.value = tripKey;
+  return true;
+}
+
+function saveEnvelopeEdits() {
+  const tripKey = stateEnvelope.tripKey;
+  const trip = stateEnvelope.trip;
+  if (!tripKey || !trip) {
+    toast("No trip loaded.", "danger", 2000);
+    return;
+  }
+
+  const edits = getEnvelopeEditsFromVisiblePage();
+  if (!edits) return;
+
+  // Store edits in envelope-specific fields so we don't overwrite quote contact/phone/notes.
+  trip.envelopeTripContact = edits.contact;
+  trip.envelopeTripPhone = edits.phone;
+  trip.envelopePickup = edits.pickup;
+  trip.envelopeTripNotes = edits.notes;
+
+  // Keep hidden form fields in sync so backend can persist these if supported.
+  if ($("envelopeTripContact")) $("envelopeTripContact").value = edits.contact;
+  if ($("envelopeTripPhone")) $("envelopeTripPhone").value = edits.phone;
+  if ($("envelopePickup")) $("envelopePickup").value = edits.pickup;
+  if ($("envelopeTripNotes")) $("envelopeTripNotes").value = edits.notes;
+
+  state.tripByKey[tripKey] = trip;
+
+  if (!setTripFormFromState(tripKey)) {
+    toast("Could not prepare save.", "danger", 2000);
+    return;
+  }
+
+  const pages = dom.envelopeModalPages?.querySelectorAll(".envelope-page");
+  if (pages?.length) {
+    stateEnvelope.assignments.forEach((assignment, i) => {
+      if (pages[i]) fillEnvelopePage(pages[i], trip, assignment);
+    });
+  }
+
+  dom.saveBtn.disabled = false;
+  dom.saveBtn.click();
+  toast("Saving trip…", "info", 1000);
 }
 
 // ======================================================
@@ -3671,6 +4287,7 @@ async function openTripForEdit(tripKey) {
       if (el) el.dispatchEvent(new Event("change", { bubbles: true }));
     });
     updateInvoiceNumberVisibility();
+    if (typeof syncEmptyFields === "function") syncEmptyFields();
 
     if (dom.openItineraryPdfBtn) {
       if (t.itineraryPdfUrl) {
@@ -4017,15 +4634,15 @@ function buildPrintScheduleFullLetter() {
           <tr>
             <th class="schedule-grid__col-bus">Bus</th>
             ${dates
-      .map((d, i) => {
-        const dObj = parseYMD(d);
-        const dayStr = dObj
-          ? dObj.toLocaleDateString("en-US", { weekday: "short" })
-          : dayIds[i];
-        const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
-        return `<th class="schedule-grid__col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
-      })
-      .join("")}
+              .map((d, i) => {
+                const dObj = parseYMD(d);
+                const dayStr = dObj
+                  ? dObj.toLocaleDateString("en-US", { weekday: "short" })
+                  : dayIds[i];
+                const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
+                return `<th class="schedule-grid__col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
+              })
+              .join("")}
           </tr>
         </thead>
         <tbody>
@@ -4352,6 +4969,13 @@ function wireDelegatedBarEvents() {
     }
   });
 
+  dom.ctxEnvelopeBtn?.addEventListener("click", () => {
+    if (activeContextTripKey) {
+      openEnvelopeModal(activeContextTripKey);
+      closeTripContextMenu();
+    }
+  });
+
   dom.ctxOpenItineraryPdfBtn?.addEventListener("click", () => {
     if (!activeContextTripKey) return;
     const trip = state.tripByKey?.[activeContextTripKey];
@@ -4619,10 +5243,9 @@ function wrapSelectInGlassDropdown(sel, opts) {
     trigger.appendChild(textSpan);
 
     if (statusId && statusIds.has(statusId)) updateStatusSelect(sel);
-    if (cellClass) {
-      const v = (sel.value ?? "").trim();
-      trigger.classList.toggle("is-empty", !v || v === "None");
-    }
+    // Toggle placeholder styling for default/empty values
+    const v = (sel.value ?? "").trim();
+    trigger.classList.toggle("is-empty", !v || v === "None");
   }
 
   function populateMenu() {
@@ -5244,6 +5867,11 @@ function wireEvents() {
       itinerary: dom.itineraryField.value,
       notes: $("notes").value,
       comments: $("comments").value,
+      // Envelope-only fields (do not affect quote contact/phone/notes)
+      envelopePickup: $("envelopePickup")?.value || "",
+      envelopeTripContact: $("envelopeTripContact")?.value || "",
+      envelopeTripPhone: $("envelopeTripPhone")?.value || "",
+      envelopeTripNotes: $("envelopeTripNotes")?.value || "",
       req56Pass: $("req56Pass")?.getAttribute("aria-pressed") === "true",
       reqSleeper: $("reqSleeper")?.getAttribute("aria-pressed") === "true",
       reqLift: $("reqLift")?.getAttribute("aria-pressed") === "true",
@@ -5347,6 +5975,7 @@ function wireEvents() {
 
     // Form has just been reset after save/delete; treat as clean.
     state.tripFormDirty = false;
+    if (typeof syncEmptyFields === "function") syncEmptyFields();
   }
 
   function clearCacheForCurrentView() {
@@ -5354,11 +5983,11 @@ function wireEvents() {
     // clear all cached week data (both in-memory and persistent).
     try {
       state.weekCache.clear();
-    } catch { }
+    } catch {}
 
     try {
       CACHE.clearAll();
-    } catch { }
+    } catch {}
   }
 
   dom.tripDetailsModal?.addEventListener("click", (e) => {
@@ -6130,6 +6759,59 @@ if (dom.copyDriverContactBtn) {
     }
   });
 }
+
+// Envelope modal events
+if (dom.closeEnvelopeBtn) {
+  dom.closeEnvelopeBtn.addEventListener("click", closeEnvelopeModal);
+}
+if (dom.closeEnvelopeBackdrop) {
+  dom.closeEnvelopeBackdrop.addEventListener("click", closeEnvelopeModal);
+}
+if (dom.envelopeModal) {
+  document.addEventListener("keydown", (e) => {
+    if (!dom.envelopeModal.hidden && e.key === "Escape") closeEnvelopeModal();
+  });
+}
+if (dom.envelopeAssignmentSelect) {
+  dom.envelopeAssignmentSelect.addEventListener("change", () => {
+    const idx = parseInt(dom.envelopeAssignmentSelect.value, 10);
+    if (!isNaN(idx)) updateEnvelopeModalSelection(idx);
+  });
+}
+if (dom.envelopeSaveBtn) {
+  dom.envelopeSaveBtn.addEventListener("click", saveEnvelopeEdits);
+}
+if (dom.envelopePrintBtn) {
+  dom.envelopePrintBtn.addEventListener("click", printEnvelopePages);
+}
+if (dom.envelopeYellowBtn) {
+  dom.envelopeYellowBtn.addEventListener("click", () => {
+    stateEnvelope.bg = "yellow";
+    dom.envelopeModalPages?.querySelectorAll(".envelope-page").forEach((p) => {
+      p.classList.remove("env-white");
+      p.classList.add("env-yellow");
+    });
+    dom.envelopeYellowBtn?.classList.add("active");
+    dom.envelopeWhiteBtn?.classList.remove("active");
+  });
+}
+if (dom.envelopeWhiteBtn) {
+  dom.envelopeWhiteBtn.addEventListener("click", () => {
+    stateEnvelope.bg = "white";
+    dom.envelopeModalPages?.querySelectorAll(".envelope-page").forEach((p) => {
+      p.classList.remove("env-yellow");
+      p.classList.add("env-white");
+    });
+    dom.envelopeWhiteBtn?.classList.add("active");
+    dom.envelopeYellowBtn?.classList.remove("active");
+  });
+}
+// Wrap envelope Bus / Driver select in the same glass dropdown treatment
+const envSel = document.getElementById("envelopeAssignmentSelect");
+if (envSel && envSel.tagName === "SELECT") {
+  wrapSelectInGlassDropdown(envSel, { rebuildMenuOnOpen: true });
+}
+
 if (dom.printDailyMaintenancePlanBtn) {
   dom.printDailyMaintenancePlanBtn.addEventListener("click", () => {
     const printWindow = window.open("", "", "height=800,width=800");
@@ -6162,7 +6844,7 @@ if (dom.printDailyMaintenancePlanBtn) {
 .schedule-grid-container.is-loading-bars .schedule-grid__trip-bar { opacity: 0.18; pointer-events: none; }
 `;
     document.head.appendChild(style);
-  } catch { }
+  } catch {}
 
   setSidePanelMode("off");
   enforceDesktopEditing();

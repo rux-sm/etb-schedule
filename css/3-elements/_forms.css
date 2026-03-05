@@ -16,7 +16,7 @@ textarea,
   height: var(--input-height);
   padding: 0 var(--input-padding-x);
 
-  border: 2px solid transparent;
+  border: 1px solid var(--color-input-border);
   border-radius: var(--input-border-radius);
   background-color: var(--color-input-bg);
 
@@ -133,6 +133,17 @@ textarea:focus,
   opacity: 1;
 }
 
+/* Unfilled date/time fields and default selects: dim placeholder text */
+input[type="date"].is-empty:not(:focus)::-webkit-datetime-edit,
+input[type="time"].is-empty:not(:focus)::-webkit-datetime-edit {
+  color: var(--placeholder);
+}
+
+select.is-empty:not(:focus),
+.select-trigger.is-empty {
+  color: var(--placeholder);
+}
+
 /* --- 10. LABELS --- */
 .form-group > label,
 .field-label {
@@ -192,12 +203,23 @@ textarea:focus,
   gap: var(--space-2);
 }
 
+.card__footer {
+  padding: 12px 16px;
+  background: transparent;
+  border-top: 1px solid var(--border-subtle);
+}
+
 .form-actions {
   display: flex;
-  gap: var(--space-2);
+  gap: 10px;
   padding: 0;
-  flex-wrap: wrap;
-  align-items: center;
+  width: 100%;
+}
+
+.form-actions > .btn {
+  flex: 1;
+  min-width: 80px;
+  justify-content: center;
 }
 
 @container form-grid (max-width: 350px) {

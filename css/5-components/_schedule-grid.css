@@ -311,12 +311,13 @@
   text-shadow: var(--bus-num-text-shadow);
 }
 
-.schedule-grid__row--has-bus-color>.schedule-grid__cell:first-child {
+.schedule-grid__row--has-bus-color > .schedule-grid__cell:first-child {
   transition: background-color 0.15s ease;
 }
 
 /* Bus cell highlight: only when hovering bus indicator (not when trip bar overlaps due to sticky) */
-.schedule-grid__row--has-bus-color>.schedule-grid__cell:first-child:has(.schedule-grid__bus-indicator:hover) {
+.schedule-grid__row--has-bus-color
+  > .schedule-grid__cell:first-child:has(.schedule-grid__bus-indicator:hover) {
   background-color: var(--bus-accent-color, var(--surface-1));
 }
 
@@ -387,7 +388,7 @@
   overflow-y: auto;
 }
 
-.schedule-grid__conflict-panel .conflict-group+.conflict-group {
+.schedule-grid__conflict-panel .conflict-group + .conflict-group {
   margin-top: 14px;
 }
 
@@ -413,7 +414,10 @@
 .schedule-grid__trip-bar {
   display: grid;
   grid-template-rows:
-    var(--tripbar-r1-row-height) var(--tripbar-r2-row-height) var(--tripbar-r3-row-height) var(--tripbar-r4-row-height) var(--tripbar-r5-row-height) var(--tripbar-r6-row-height) var(--tripbar-r7-row-height);
+    var(--tripbar-r1-row-height) var(--tripbar-r2-row-height) var(--tripbar-r3-row-height)
+    var(--tripbar-r4-row-height) var(--tripbar-r5-row-height) var(--tripbar-r6-row-height) var(
+      --tripbar-r7-row-height
+    );
   row-gap: var(--tripbar-row-gap);
   container-type: inline-size;
   align-content: center;
@@ -427,14 +431,10 @@
   padding: var(--tripbar-padding-y) var(--tripbar-padding-x);
   font-variant-numeric: tabular-nums;
   text-shadow: var(--tripbar-text-shadow);
-  background: color-mix(in srgb,
-      var(--tripbar-color) var(--tripbar-bg-mix-percent),
-      var(--tripbar-bg-mix-color));
-  border: none;
-  border-left: 4px solid var(--tripbar-color);
+
   border-radius: var(--tripbar-radius);
-  -webkit-backdrop-filter: blur(var(--tripbar-blur));
-  backdrop-filter: blur(var(--tripbar-blur));
+  -webkit-backdrop-filter: blur(var(--tripbar-blur)) saturate(180%);
+  backdrop-filter: blur(var(--tripbar-blur)) saturate(180%);
   overflow: hidden;
   cursor: pointer;
   pointer-events: auto;
@@ -443,17 +443,38 @@
     box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
     transform 0.1s ease;
   will-change: filter, box-shadow, transform;
+  background:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0)),
+    color-mix(
+      in srgb,
+      var(--tripbar-color) var(--tripbar-bg-mix-percent),
+      var(--tripbar-bg-mix-color)
+    );
+
+  /* 2. Add an "inner glow" or top highlight */
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+
+  /* 3. Soften the edge */
+  border: 1px solid color-mix(in srgb, var(--tripbar-color) 30%, transparent);
+  border-left: 4px solid var(--tripbar-color);
 }
 
 .schedule-grid__trip-bar:hover {
   z-index: 600;
+  /* Lift the card with a cleaner shadow */
   box-shadow:
-    0 0 16px color-mix(in srgb, var(--tripbar-color) 35%, transparent),
-    0 4px 12px rgba(0, 0, 0, 0.4);
-  -webkit-backdrop-filter: blur(24px);
-  backdrop-filter: blur(24px);
+    0 8px 20px -4px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+
+  /* Brighten proportionally — preserves text contrast unlike background-color mix */
   filter: brightness(var(--tripbar-hover-brightness-to)) saturate(var(--tripbar-hover-saturate-to));
-  animation: glow-pulse 0.5s infinite alternate ease-in-out;
+
+  /* Deepen the glass blur on hover for a "focused" feel */
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  backdrop-filter: blur(24px) saturate(200%);
+
+  animation: none;
+  transform: translateY(-1px) scale(1.01);
 }
 
 .schedule-grid__trip-bar:active {
@@ -478,90 +499,60 @@
   color: var(--color-danger);
   background: var(--color-danger-soft);
   border-radius: 999px;
+  box-shadow: 0 0 6px rgba(255, 59, 48, 0.5);
 }
 
-.schedule-grid__trip-bar.unconfirmed,
-.schedule-grid__trip-bar.color-red,
-.schedule-grid__trip-bar.color-blue,
-.schedule-grid__trip-bar.color-green,
-.schedule-grid__trip-bar.color-yellow,
-.schedule-grid__trip-bar.color-gray,
-.schedule-grid__trip-bar.color-violet,
-.schedule-grid__trip-bar.color-purple,
-.schedule-grid__trip-bar.color-pink,
-.schedule-grid__trip-bar.color-orange,
-.schedule-grid__trip-bar.color-teal,
-.schedule-grid__trip-bar.color-cyan,
-.schedule-grid__trip-bar.color-indigo,
-.schedule-grid__trip-bar.color-brown,
-.schedule-grid__trip-bar.color-mint,
-.schedule-grid__trip-bar.color-black,
-.schedule-grid__trip-bar.color-white {
-  background: color-mix(in srgb,
-      var(--tripbar-color) var(--tripbar-bg-mix-percent),
-      var(--tripbar-bg-mix-color));
-}
-
-.schedule-grid__trip-bar.unconfirmed,
-.schedule-grid__trip-bar.color-red {
-  --tripbar-color: var(--red);
-}
-
-.schedule-grid__trip-bar.color-blue {
-  --tripbar-color: var(--blue);
-}
-
-.schedule-grid__trip-bar.color-green {
-  --tripbar-color: var(--green);
-}
-
-.schedule-grid__trip-bar.color-yellow {
-  --tripbar-color: var(--yellow);
-}
-
-.schedule-grid__trip-bar.color-gray {
-  --tripbar-color: var(--gray);
-}
-
-.schedule-grid__trip-bar.color-violet,
-.schedule-grid__trip-bar.color-purple {
-  --tripbar-color: var(--purple);
-}
-
-.schedule-grid__trip-bar.color-pink {
-  --tripbar-color: var(--pink);
-}
-
-.schedule-grid__trip-bar.color-orange {
-  --tripbar-color: var(--orange);
-}
-
-.schedule-grid__trip-bar.color-teal {
-  --tripbar-color: var(--teal);
-}
-
-.schedule-grid__trip-bar.color-cyan {
-  --tripbar-color: var(--cyan);
-}
-
-.schedule-grid__trip-bar.color-indigo {
-  --tripbar-color: var(--indigo);
-}
-
-.schedule-grid__trip-bar.color-brown {
-  --tripbar-color: var(--brown);
-}
-
-.schedule-grid__trip-bar.color-mint {
-  --tripbar-color: var(--mint);
-}
-
-.schedule-grid__trip-bar.color-black {
-  --tripbar-color: var(--black);
-}
-
-.schedule-grid__trip-bar.color-white {
-  --tripbar-color: var(--white);
+/* Color variants — only override the accent variable;
+   the base rule's glass gradient + color-mix background
+   automatically picks up the new --tripbar-color. */
+.schedule-grid__trip-bar {
+  &.unconfirmed,
+  &.color-red {
+    --tripbar-color: var(--red);
+  }
+  &.color-blue {
+    --tripbar-color: var(--blue);
+  }
+  &.color-green {
+    --tripbar-color: var(--green);
+  }
+  &.color-yellow {
+    --tripbar-color: var(--yellow);
+  }
+  &.color-gray {
+    --tripbar-color: var(--gray);
+  }
+  &.color-violet,
+  &.color-purple {
+    --tripbar-color: var(--purple);
+  }
+  &.color-pink {
+    --tripbar-color: var(--pink);
+  }
+  &.color-orange {
+    --tripbar-color: var(--orange);
+  }
+  &.color-teal {
+    --tripbar-color: var(--teal);
+  }
+  &.color-cyan {
+    --tripbar-color: var(--cyan);
+  }
+  &.color-indigo {
+    --tripbar-color: var(--indigo);
+  }
+  &.color-brown {
+    --tripbar-color: var(--brown);
+  }
+  &.color-mint {
+    --tripbar-color: var(--mint);
+  }
+  &.color-black {
+    --tripbar-color: var(--black);
+  }
+  &.color-white {
+    --tripbar-color: var(--white);
+  }
 }
 
 .schedule-grid__trip-bar__row {
@@ -901,10 +892,22 @@
     border: 1px solid rgba(0, 0, 0, 0.4) !important;
   }
 
-  #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__drivers,
-  #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__contact,
-  #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__status-row,
-  #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__pre-drivers {
+  #printRoot.print-mode-letter-full
+    .print-table
+    .schedule-grid__trip-bar
+    .schedule-grid__trip-bar__drivers,
+  #printRoot.print-mode-letter-full
+    .print-table
+    .schedule-grid__trip-bar
+    .schedule-grid__trip-bar__contact,
+  #printRoot.print-mode-letter-full
+    .print-table
+    .schedule-grid__trip-bar
+    .schedule-grid__trip-bar__status-row,
+  #printRoot.print-mode-letter-full
+    .print-table
+    .schedule-grid__trip-bar
+    .schedule-grid__trip-bar__pre-drivers {
     display: none !important;
   }
 
@@ -955,7 +958,10 @@
     font-size: 8pt !important;
   }
 
-  .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__drivers .schedule-grid__trip-bar__driver,
+  .print-table
+    .schedule-grid__trip-bar
+    .schedule-grid__trip-bar__drivers
+    .schedule-grid__trip-bar__driver,
   .print-table .schedule-grid__trip-bar__pre-drivers {
     font-size: 8pt !important;
   }

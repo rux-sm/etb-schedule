@@ -41,7 +41,7 @@
   /* But don't exceed viewport */
 
   padding: 0 12px 12px 12px;
-  margin: 4px 0 12px 0;
+  margin: 12px 0 12px 0;
   border-radius: var(--radius-xl);
   background: var(--surface-1);
   display: flex;

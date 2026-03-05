@@ -1,0 +1,361 @@
+/* ==========================================================================
+   5-COMPONENTS / ENVELOPE MODAL
+   Printable trip envelope (A5-style) — matches Escamilla envelope layout
+   ========================================================================== */
+
+/* Envelope modal: wider card, scrollable body */
+.modal--envelope .modal__card--envelope {
+  max-width: 680px;
+}
+
+.envelope-modal__body {
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.envelope-modal__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.envelope-modal__label {
+  font-size: var(--font-size-2);
+  font-weight: var(--font-weight-semibold);
+}
+
+.envelope-modal__select {
+  min-width: 180px;
+  max-width: 260px;
+  /* Let global select styles (_forms.css) handle border/bg/glass effect */
+}
+
+.envelope-modal__actions {
+  display: flex;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.envelope-modal__actions > .btn {
+  flex: 1;
+  justify-content: center;
+}
+
+.envelope-modal__pages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+/* ----- Envelope page (print artifact) ----- */
+.envelope-page {
+  --env-ink: #111;
+  --env-rule: #222;
+  --env-pad: 0.16in;
+  --env-panel-pad: 0.1in;
+  --env-label-size: 0.105in;
+  --env-tiny-size: 0.096in;
+  --env-border: 1px;
+  --env-pickup: #e0442e;
+  --env-exp-row-h: 0.34in;
+  --env-section-gap: 0.06in;
+  --env-underline: 1px dotted rgba(0, 0, 0, 0.35);
+
+  color: #111;
+  width: 5.8in;
+  min-height: 8.1in;
+  padding: var(--env-pad);
+  background: #e9cd86;
+  background-image:
+    radial-gradient(rgba(0, 0, 0, 0.035) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0));
+  background-size:
+    6px 6px,
+    100% 100%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.envelope-page.env-white {
+  background: #fff;
+  background-image: none;
+}
+
+.envelope-page .env-panel {
+  width: 100%;
+  min-height: 7.5in;
+  padding: var(--env-panel-pad);
+  padding-top: calc(var(--env-panel-pad) + 0.25in);
+  padding-bottom: var(--env-panel-pad);
+  display: flex;
+  flex-direction: column;
+  gap: var(--env-section-gap);
+}
+
+.envelope-page .env-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.04in;
+  margin-bottom: 0.06in;
+}
+
+.envelope-page .env-day {
+  display: block;
+  margin: 0 auto;
+  font-family: var(--font-sans);
+  font-weight: 900;
+  font-size: 0.46in;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--env-ink);
+}
+
+.envelope-page .env-brand img {
+  height: 0.42in;
+}
+
+.envelope-page .env-brand .env-addr {
+  font-family: var(--font-sans);
+  font-size: 0.11in;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--env-ink);
+}
+
+.envelope-page .env-section-title {
+  text-align: center;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  font-size: 0.18in;
+  color: var(--env-ink);
+}
+
+.envelope-page .env-label,
+.envelope-page .env-tiny {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--env-ink);
+}
+
+.envelope-page .env-label {
+  font-size: var(--env-label-size);
+  letter-spacing: 0.12em;
+}
+
+.envelope-page .env-tiny {
+  font-size: var(--env-tiny-size);
+  letter-spacing: 0.07em;
+  opacity: 0.9;
+}
+
+.envelope-page .env-value,
+.envelope-page .env-input {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.14in;
+  min-height: 0.17in;
+  color: var(--env-ink);
+}
+
+.envelope-page .env-input {
+  display: block;
+  width: 100%;
+  border: none;
+  border-bottom: var(--env-underline);
+  background: transparent;
+  padding: 0 0.02in;
+  outline: none;
+}
+
+.envelope-page .env-input::placeholder {
+  color: rgba(0, 0, 0, 0.35);
+}
+
+.envelope-page .env-trip {
+  border: none;
+}
+
+.envelope-page .env-trip-row {
+  display: grid;
+  border-top: var(--env-border) solid var(--env-rule);
+}
+
+.envelope-page .env-trip-row:first-child {
+  border-top: none;
+}
+
+.envelope-page .env-cols-3 {
+  grid-template-columns: 0.9fr 1.25fr 1.1fr;
+}
+
+.envelope-page .env-cols-2 {
+  grid-template-columns: 1.25fr 1fr;
+}
+
+.envelope-page .env-cols-1 {
+  grid-template-columns: 1fr;
+}
+
+.envelope-page .env-cell {
+  padding: 0.045in 0.08in;
+  border-left: var(--env-border) solid var(--env-rule);
+  display: flex;
+  flex-direction: column;
+  gap: 0.03in;
+}
+
+.envelope-page .env-cell:first-child {
+  border-left: none;
+}
+
+.envelope-page .env-pickup-tag {
+  background: var(--env-pickup);
+  padding: 0.035in 0.055in;
+  font-family: var(--font-sans);
+  font-weight: 900;
+  font-size: var(--env-label-size);
+  letter-spacing: 0.08em;
+  color: #111;
+}
+
+.envelope-page .env-trip-contact {
+  border: var(--env-border) solid var(--env-rule);
+}
+
+.envelope-page .env-grid-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: var(--env-border) solid var(--env-rule);
+}
+
+.envelope-page .env-grid-row:first-child {
+  border-top: none;
+}
+
+.envelope-page .env-odometer-box {
+  border: var(--env-border) solid var(--env-rule);
+  margin-top: 0;
+}
+
+.envelope-page .env-mini table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-family: var(--font-sans);
+  border: var(--env-border) solid var(--env-rule);
+  font-size: 0.12in;
+}
+
+.envelope-page .env-mini tr {
+  height: var(--env-exp-row-h);
+}
+
+.envelope-page .env-mini td {
+  border: var(--env-border) solid var(--env-rule);
+  padding: 0.022in 0.07in;
+  vertical-align: middle;
+  line-height: 1.05;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.envelope-page .env-mini-td-left {
+  text-align: left !important;
+}
+
+.envelope-page .money {
+  display: flex;
+  align-items: center;
+  gap: 0.06in;
+  width: 100%;
+}
+
+.envelope-page .money .dollar {
+  font-weight: 900;
+}
+
+.envelope-page .money .amount-space {
+  flex: 1;
+  height: 0.16in;
+}
+
+.envelope-page .env-footer {
+  margin-top: 0.02in;
+}
+
+.envelope-page .env-notes-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.03in;
+  margin-top: 0.02in;
+}
+
+.envelope-page .env-notes-line {
+  font-family: var(--font-sans);
+  font-size: 0.13in;
+  font-weight: 700;
+  min-height: 0.16in;
+  border: none;
+  border-bottom: var(--env-underline);
+  padding: 0 0.02in;
+  color: var(--env-ink);
+}
+
+/* Print: hide toolbar, show only envelope pages */
+@media print {
+  .envelope-modal__toolbar,
+  .modal__head,
+  .modal__foot,
+  .modal__backdrop {
+    display: none !important;
+  }
+
+  .modal--envelope {
+    position: static !important;
+    background: #fff !important;
+  }
+
+  .modal--envelope .modal__card--envelope {
+    max-width: none !important;
+    box-shadow: none !important;
+    height: auto !important;
+  }
+
+  .envelope-modal__body {
+    overflow: visible !important;
+  }
+
+  .envelope-page {
+    box-shadow: none !important;
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .envelope-page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  .envelope-page.env-yellow {
+    background: #e9cd86 !important;
+    background-image:
+      radial-gradient(rgba(0, 0, 0, 0.035) 1px, transparent 1px),
+      linear-gradient(0deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0)) !important;
+  }
+
+  .envelope-page.env-white {
+    background: #fff !important;
+    background-image: none !important;
+  }
+}
