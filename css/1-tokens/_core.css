@@ -543,7 +543,7 @@
   --tripbar-text-shadow: none;
   /* Remove dark shadow in light mode */
   --tripbar-text-shadow-accent: none;
-  --tripbar-text-driver: color-mix(in srgb, var(--yellow), black 100%);
+  --tripbar-text-driver: var(--yellow);
   --tripbar-text-notes: color-mix(in srgb, var(--pink), black 10%);
 
   /* --- Trip Bar Animation --- */

@@ -244,7 +244,12 @@ const dom = {
   copyDriverContactBtn: $("copyDriverContactBtn"),
   copyDriverReminderBtn: $("copyDriverReminderBtn"),
 
-  // Envelope Modal
+  // Envelope Modal & Overrides
+  envelopeBtn: $("envelopeBtn"),
+  envelopeOverridesSection: $("envelopeOverridesSection"),
+  envelopeNote1: $("envelopeNote1"),
+  envelopeNote2: $("envelopeNote2"),
+  envelopeNote3: $("envelopeNote3"),
   envelopeModal: $("envelopeModal"),
   envelopeModalPages: $("envelopeModalPages"),
   envelopeAssignmentSelect: $("envelopeAssignmentSelect"),
@@ -3744,15 +3749,15 @@ function createEnvelopePageElement() {
             <div class="env-cell"><span class="env-label">SPOT TIME</span><span class="env-value" data-field="spottime"></span></div>
           </div>
           <div class="env-trip-row env-cols-1">
-            <div class="env-cell"><span class="env-label">PICK UP ADDRESS</span><input type="text" class="env-input" data-field="pickup" placeholder=""></div>
+            <div class="env-cell"><span class="env-label">PICK UP ADDRESS</span><span class="env-value" data-field="pickup"></span></div>
           </div>
           <div class="env-trip-row env-cols-1">
             <div class="env-cell"><span class="env-label">DESTINATION</span><span class="env-value" data-field="destination"></span></div>
           </div>
         </div>
         <div class="env-grid-row">
-          <div class="env-cell"><span class="env-label">CONTACT</span><input type="text" class="env-input" data-field="contact" placeholder=""></div>
-          <div class="env-cell"><span class="env-label">PHONE</span><input type="text" class="env-input" data-field="phone" placeholder=""></div>
+          <div class="env-cell"><span class="env-label">CONTACT</span><span class="env-value" data-field="contact"></span></div>
+          <div class="env-cell"><span class="env-label">PHONE</span><span class="env-value" data-field="phone"></span></div>
         </div>
       </div>
       <div class="env-odometer-box">
@@ -3773,9 +3778,9 @@ function createEnvelopePageElement() {
       <div class="env-footer">
         <span class="env-label">NOTES</span>
         <div class="env-notes-lines">
-          <input type="text" class="env-input env-notes-line" data-field="notes1" placeholder="">
-          <input type="text" class="env-input env-notes-line" data-field="notes2" placeholder="">
-          <input type="text" class="env-input env-notes-line" data-field="notes3" placeholder="">
+          <span class="env-value env-notes-line" data-field="notes1"></span>
+          <span class="env-value env-notes-line" data-field="notes2"></span>
+          <span class="env-value env-notes-line" data-field="notes3"></span>
         </div>
       </div>
     </div>
@@ -3826,7 +3831,7 @@ function fillEnvelopePage(pageEl, trip, assignment) {
     }
   };
 
-  const notesSrc = (trip.envelopeTripNotes || trip.notes || "").toString();
+  const notesSrc = (trip.envelopeTripNotes || "").toString();
   const notesLines = notesSrc.split("\n");
 
   const tripDateStr = envFormatDate(trip.departureDate);
@@ -3844,8 +3849,8 @@ function fillEnvelopePage(pageEl, trip, assignment) {
   set("spottime", envFormatTime(trip.spotTime || trip.departureTime));
   set("pickup", trip.envelopePickup || "");
   set("destination", trip.destination || "");
-  set("contact", trip.envelopeTripContact || trip.contactName || "");
-  set("phone", trip.envelopeTripPhone || trip.phone || "");
+  set("contact", trip.envelopeTripContact || "");
+  set("phone", trip.envelopeTripPhone || "");
   set("startodo", "");
   set("endodo", "");
   set("notes1", notesLines[0] || "");
@@ -3856,10 +3861,34 @@ function fillEnvelopePage(pageEl, trip, assignment) {
 let stateEnvelope = { tripKey: null, trip: null, assignments: [], bg: "yellow" };
 
 function openEnvelopeModal(tripKey) {
-  const trip = state.tripByKey?.[tripKey];
+  let trip = state.tripByKey?.[tripKey];
   if (!trip) {
     toast("Trip not found.", "danger", 2000);
     return;
+  }
+
+  // If the envelope is opened for the trip currently being edited,
+  // merge the unsaved form values so the envelope preview is accurate.
+  if (dom.action?.value === "update" && dom.tripKey?.value === tripKey) {
+    const unsavedNotes1 = $("envelopeNote1")?.value || "";
+    const unsavedNotes2 = $("envelopeNote2")?.value || "";
+    const unsavedNotes3 = $("envelopeNote3")?.value || "";
+    const combinedNotes = [unsavedNotes1, unsavedNotes2, unsavedNotes3].filter(Boolean).join("\n");
+
+    trip = {
+      ...trip,
+      destination: $("destination")?.value || trip.destination,
+      departureDate: $("tripDate")?.value || trip.departureDate,
+      spotTime: $("spotTime")?.value || trip.spotTime,
+      departureTime: $("departureTime")?.value || trip.departureTime,
+      arrivalDate: $("arrivalDate")?.value || trip.arrivalDate,
+      contactName: $("contactName")?.value || trip.contactName,
+      phone: $("phone")?.value || trip.phone,
+      envelopePickup: $("envelopePickup") ? $("envelopePickup").value : (trip.envelopePickup || ""),
+      envelopeTripContact: $("envelopeTripContact") ? $("envelopeTripContact").value : (trip.envelopeTripContact || ""),
+      envelopeTripPhone: $("envelopeTripPhone") ? $("envelopeTripPhone").value : (trip.envelopeTripPhone || ""),
+      envelopeTripNotes: combinedNotes !== undefined ? combinedNotes : (trip.envelopeTripNotes || ""),
+    };
   }
 
   state.lastFocusedElement = document.activeElement;
@@ -4073,28 +4102,7 @@ function closeEnvelopeModal() {
   }
 }
 
-/** Get editable values from the currently visible envelope page */
-function getEnvelopeEditsFromVisiblePage() {
-  const pages = dom.envelopeModalPages?.querySelectorAll(".envelope-page");
-  if (!pages?.length) return null;
-  const visible = Array.from(pages).find((p) => p.style.display !== "none") || pages[0];
-  const get = (field) => {
-    const el = visible.querySelector(`[data-field="${field}"]`);
-    return el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")
-      ? el.value
-      : el?.textContent || "";
-  };
-  const notes1 = get("notes1");
-  const notes2 = get("notes2");
-  const notes3 = get("notes3");
-  const notes = [notes1, notes2, notes3].filter(Boolean).join("\n");
-  return {
-    pickup: get("pickup").trim(),
-    contact: get("contact").trim(),
-    phone: get("phone").trim(),
-    notes,
-  };
-}
+/** Removed editable envelope functions */
 
 /** Set main trip form from state (for saving envelope edits via existing submit flow) */
 function setTripFormFromState(tripKey) {
@@ -4122,11 +4130,17 @@ function setTripFormFromState(tripKey) {
   $("tripColor").value = t.tripColor || "";
   setRequirementTogglesFromTrip(t);
 
-  // Envelope-specific hidden fields
+  // Envelope-specific fields (when editing in the main Trip Editor)
   if ($("envelopePickup")) $("envelopePickup").value = t.envelopePickup || "";
   if ($("envelopeTripContact")) $("envelopeTripContact").value = t.envelopeTripContact || "";
   if ($("envelopeTripPhone")) $("envelopeTripPhone").value = t.envelopeTripPhone || "";
-  if ($("envelopeTripNotes")) $("envelopeTripNotes").value = t.envelopeTripNotes || "";
+
+  const notesStr = t.envelopeTripNotes || "";
+  const notesLines = notesStr.split("\n");
+  if ($("envelopeNote1")) $("envelopeNote1").value = notesLines[0] || "";
+  if ($("envelopeNote2")) $("envelopeNote2").value = notesLines[1] || "";
+  if ($("envelopeNote3")) $("envelopeNote3").value = notesLines[2] || "";
+  if ($("envelopeTripNotes")) $("envelopeTripNotes").value = notesStr;
 
   [
     "itineraryStatus",
@@ -4144,12 +4158,6 @@ function setTripFormFromState(tripKey) {
   dom.itineraryField.value = t.itinerary || "";
   $("notes").value = t.notes || "";
   $("comments").value = t.comments || "";
-
-  // Envelope-specific hidden fields (when editing in the main Trip Editor)
-  if ($("envelopePickup")) $("envelopePickup").value = t.envelopePickup || "";
-  if ($("envelopeTripContact")) $("envelopeTripContact").value = t.envelopeTripContact || "";
-  if ($("envelopeTripPhone")) $("envelopeTripPhone").value = t.envelopeTripPhone || "";
-  if ($("envelopeTripNotes")) $("envelopeTripNotes").value = t.envelopeTripNotes || "";
 
   setBusesNeededAndSync(t.busesNeeded ? String(t.busesNeeded) : "");
   dom.busesNeeded?.dispatchEvent(new Event("change", { bubbles: true }));
@@ -4183,47 +4191,7 @@ function setTripFormFromState(tripKey) {
   return true;
 }
 
-function saveEnvelopeEdits() {
-  const tripKey = stateEnvelope.tripKey;
-  const trip = stateEnvelope.trip;
-  if (!tripKey || !trip) {
-    toast("No trip loaded.", "danger", 2000);
-    return;
-  }
-
-  const edits = getEnvelopeEditsFromVisiblePage();
-  if (!edits) return;
-
-  // Store edits in envelope-specific fields so we don't overwrite quote contact/phone/notes.
-  trip.envelopeTripContact = edits.contact;
-  trip.envelopeTripPhone = edits.phone;
-  trip.envelopePickup = edits.pickup;
-  trip.envelopeTripNotes = edits.notes;
-
-  // Keep hidden form fields in sync so backend can persist these if supported.
-  if ($("envelopeTripContact")) $("envelopeTripContact").value = edits.contact;
-  if ($("envelopeTripPhone")) $("envelopeTripPhone").value = edits.phone;
-  if ($("envelopePickup")) $("envelopePickup").value = edits.pickup;
-  if ($("envelopeTripNotes")) $("envelopeTripNotes").value = edits.notes;
-
-  state.tripByKey[tripKey] = trip;
-
-  if (!setTripFormFromState(tripKey)) {
-    toast("Could not prepare save.", "danger", 2000);
-    return;
-  }
-
-  const pages = dom.envelopeModalPages?.querySelectorAll(".envelope-page");
-  if (pages?.length) {
-    stateEnvelope.assignments.forEach((assignment, i) => {
-      if (pages[i]) fillEnvelopePage(pages[i], trip, assignment);
-    });
-  }
-
-  dom.saveBtn.disabled = false;
-  dom.saveBtn.click();
-  toast("Saving trip…", "info", 1000);
-}
+// Removed saveEnvelopeEdits
 
 // ======================================================
 // 29) TRIP OPEN (DESKTOP EDIT)
@@ -4329,6 +4297,18 @@ async function openTripForEdit(tripKey) {
     dom.itineraryField.value = t.itinerary || "";
     $("notes").value = t.notes || "";
     $("comments").value = t.comments || "";
+
+    // Envelope-specific fields (when opening trip in the main Trip Editor)
+    if ($("envelopePickup")) $("envelopePickup").value = t.envelopePickup || "";
+    if ($("envelopeTripContact")) $("envelopeTripContact").value = t.envelopeTripContact || "";
+    if ($("envelopeTripPhone")) $("envelopeTripPhone").value = t.envelopeTripPhone || "";
+
+    const notesStr = t.envelopeTripNotes || "";
+    const notesLines = notesStr.split("\n");
+    if ($("envelopeNote1")) $("envelopeNote1").value = notesLines[0] || "";
+    if ($("envelopeNote2")) $("envelopeNote2").value = notesLines[1] || "";
+    if ($("envelopeNote3")) $("envelopeNote3").value = notesLines[2] || "";
+    if ($("envelopeTripNotes")) $("envelopeTripNotes").value = notesStr;
 
     setBusesNeededAndSync(t.busesNeeded ? String(t.busesNeeded) : "");
     dom.busesNeeded?.dispatchEvent(new Event("change", { bubbles: true }));
@@ -5637,6 +5617,12 @@ function wireEvents() {
   // Old buttons (weekStartSunBtn) removed from DOM
 
   dom.itineraryBtn.addEventListener("click", openItineraryModal);
+
+  dom.envelopeBtn?.addEventListener("click", () => {
+    if (dom.envelopeOverridesSection) {
+      dom.envelopeOverridesSection.classList.toggle("is-hidden");
+    }
+  });
   dom.openItineraryPdfBtn?.addEventListener("click", () => {
     const tripKey = dom.tripKey?.value;
     if (!tripKey) return;
@@ -5828,6 +5814,15 @@ function wireEvents() {
     $("departureTime").value = normalizeTime($("departureTime").value);
     $("spotTime").value = normalizeTime($("spotTime").value);
     $("arrivalTime").value = normalizeTime($("arrivalTime").value);
+
+    // Combine the 3 envelope notes into the hidden envelopeTripNotes field
+    const n1 = $("envelopeNote1")?.value || "";
+    const n2 = $("envelopeNote2")?.value || "";
+    const n3 = $("envelopeNote3")?.value || "";
+    if ($("envelopeTripNotes")) {
+      // Join all 3 lines exactly as-is so blank middle lines are preserved
+      $("envelopeTripNotes").value = [n1, n2, n3].join("\n");
+    }
 
     // OPTIMISTIC UPDATE: Save locally immediately
     const action = dom.action.value;
@@ -6816,9 +6811,7 @@ if (dom.envelopeAssignmentSelect) {
     if (!isNaN(idx)) updateEnvelopeModalSelection(idx);
   });
 }
-if (dom.envelopeSaveBtn) {
-  dom.envelopeSaveBtn.addEventListener("click", saveEnvelopeEdits);
-}
+// Removed envelopeSaveBtn event listener
 if (dom.envelopePrintBtn) {
   dom.envelopePrintBtn.addEventListener("click", printEnvelopePages);
 }
