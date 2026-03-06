@@ -189,35 +189,7 @@ button[aria-disabled="true"],
 }
 
 /* Icon button */
-.btn--icon {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-  color: var(--text-secondary);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--control-radius-icon) !important;
-  width: var(--week-picker-height);
-  height: var(--week-picker-height);
-}
-
-.btn--icon:hover {
-  box-shadow: none !important;
-  background: var(--surface-4) !important;
-  color: var(--text);
-}
-
-.btn--icon:active {
-  box-shadow: none !important;
-  background: var(--accent) !important;
-}
-
-.btn--icon:disabled {
-  color: var(--color-text-disabled);
-  background: var(--surface-2) !important;
-}
+/* Icon button - styling moved to .icon-btn in _icons.css */
 
 /* Inline label link - subtle text link within labels */
 label .label-link {

@@ -50,22 +50,21 @@
   --space-8: 48px;
 
   /* --- Color Palette --- */
-  --blue: rgb(0 136 255);
-  --teal: rgb(0 195 208);
-  --green: rgb(52 199 89);
-  --purple: rgb(175 82 222);
-  --red: rgb(255 56 60);
-  --orange: rgb(255 141 40);
-  --yellow: rgb(255 204 0);
-  --pink: rgb(242 60 181);
-  --mint: rgb(0 200 179);
-  --cyan: rgb(0 192 232);
-  --indigo: rgb(97 85 245);
-  --brown: rgb(172 127 94);
-  --gray: rgb(158 158 158);
-  --black: rgb(0 0 0);
-  --white: rgb(255 255 255);
-
+  --blue: #2196F3;
+  --teal: #26A69A;
+  --green: #4CAF50;
+  --purple: #7E57C2;
+  --red: #F44336;
+  --orange: #FF9800;
+  --yellow: #FFC107;
+  --pink: #EC407A;
+  --mint: #689F38;
+  --cyan: #0097A7;
+  --indigo: #303F9F;
+  --brown: #5D4037;
+  --gray: #616161;
+  --black: #000000;
+  --white: #FFFFFF;
   /* --- Z-index --- */
   --z-base: 0;
   --z-sticky: 100;
@@ -88,7 +87,7 @@
   /* Level 0: Deepest background */
   --surface-0: rgb(41 42 43);
   /* Level 1: Topbar */
-  --surface-1: rgb(10 11 12);
+  --surface-1: rgb(0 0 0);
   /* Level 1: Table */
   --surface-2: rgb(28 29 30);
   /* Level 1: Panels */
@@ -186,10 +185,8 @@
   --color-border-subtle: color-mix(in srgb, var(--border) 60%, transparent);
   --color-border-disabled: color-mix(in srgb, var(--border) 55%, transparent);
 
-  --shadow-1:
-    0 1px 0 rgba(255, 255, 255, 0.03), 0 8px 24px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-2:
-    0 1px 0 rgba(255, 255, 255, 0.04), 0 14px 40px rgba(0, 0, 0, 0.55),
+  --shadow-1: 0 1px 0 rgba(255, 255, 255, 0.03), 0 8px 24px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-2: 0 1px 0 rgba(255, 255, 255, 0.04), 0 14px 40px rgba(0, 0, 0, 0.55),
     0 4px 14px rgba(0, 0, 0, 0.35);
   --shadow-elevated: 0 4px 20px rgba(0, 0, 0, 0.4);
 
@@ -305,7 +302,8 @@
   --tripbar-height: 100px;
   --tripbar-border: 0px;
   --tripbar-radius: 0px;
-  --tripbar-gap: 0px; /* Vertical space between lanes */
+  --tripbar-gap: 0px;
+  /* Vertical space between lanes */
   --tripbar-lane-step: 0px;
 
   /* --- Trip Bar Content & Style --- */
@@ -383,10 +381,10 @@
   --tripbar-r5-letter-spacing: 0;
 
   /* R6: Notes */
-  --tripbar-r6-font-size: 0.6875rem;
-  /* 11px */
+  --tripbar-r6-font-size: 0.625rem;
+  /*10px*/
   --tripbar-r6-row-height: 12px;
-  --tripbar-r6-font-weight: 400;
+  --tripbar-r6-font-weight: 300;
   --tripbar-r6-line-height: 12px;
   --tripbar-r6-letter-spacing: 0.02em;
 
@@ -419,6 +417,27 @@
   /* 10px */
   --tripbar-multi-badge-bg: 100%;
   --tripbar-multi-bus-indent: 0px;
+
+  /* --- Icon Tokens (used by _icons.css) --- */
+  --icon-bus-size: 18px;
+  --icon-bus-fill: 1;
+  --icon-bus-opsz: 20;
+
+  --icon-tripbar-size: var(--tripbar-icon-size);
+  /* 14px */
+  --icon-tripbar-fill: 1;
+  --icon-tripbar-opsz: 20;
+
+  --icon-status-size: var(--tripbar-mini-badge);
+  /* 14px */
+
+  --icon-arrow-size: var(--tripbar-arrow-size);
+  /* 1.125rem / 18px */
+  --icon-arrow-offset: var(--tripbar-arrow-offset);
+  /* 4px */
+
+  --icon-btn-size: var(--week-picker-height);
+  /* 32px */
 }
 
 /* Light theme — improved contrast & field visibility (inputs pop, clearer borders) */
@@ -476,7 +495,7 @@
   /* black for sleeper icon in light mode */
   --bus-sleeper-color: var(--black);
   --bus-lift-color: var(--icon-bus-lift-light);
-  
+
   /* Bus Icons Control */
   --bus-icon-variation: "FILL" 1, "opsz" 20;
 
@@ -490,10 +509,8 @@
 
   --card-header-border: rgba(0, 0, 0, 0.08);
 
-  --shadow-1:
-    0 1px 0 rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.06);
-  --shadow-2:
-    0 1px 0 rgba(0, 0, 0, 0.06), 0 10px 32px rgba(0, 0, 0, 0.14), 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-1: 0 1px 0 rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.06);
+  --shadow-2: 0 1px 0 rgba(0, 0, 0, 0.06), 0 10px 32px rgba(0, 0, 0, 0.14), 0 4px 12px rgba(0, 0, 0, 0.1);
   --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.5);
 
   /* --- Overlay & Focus --- */
@@ -533,7 +550,7 @@
   --today-indicator-text: var(--white);
 
   /* --- Trip Bar Content & Style --- */
-  --tripbar-bg-mix-color: black ;
+  --tripbar-bg-mix-color: black;
   --tripbar-bg-mix-percent: 50%;
   --tripbar-text-shadow: none;
   /* Remove dark shadow in light mode */

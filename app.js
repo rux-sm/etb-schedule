@@ -1637,7 +1637,7 @@ function buildAgendaRows() {
     if (liftSet.has(busKey)) {
       const icon = document.createElement("span");
       icon.className =
-        "schedule-grid__bus-icon schedule-grid__bus-icon--lift material-symbols-outlined";
+        "schedule-grid__bus-icon icon-bus icon-bus--lift material-symbols-outlined";
       icon.textContent = "accessible";
       icon.title = "Wheelchair lift equipped";
       icon.setAttribute("aria-label", "Wheelchair lift equipped");
@@ -1647,7 +1647,7 @@ function buildAgendaRows() {
     if (sleeperSet.has(busKey)) {
       const icon = document.createElement("span");
       icon.className =
-        "schedule-grid__bus-icon schedule-grid__bus-icon--sleeper material-symbols-outlined";
+        "schedule-grid__bus-icon icon-bus icon-bus--sleeper material-symbols-outlined";
       icon.textContent = "airline_seat_flat";
       icon.title = "Sleeper bus";
       icon.setAttribute("aria-label", "Sleeper bus");
@@ -2208,11 +2208,11 @@ function _renderAgendaInner() {
 
         function makeMini(content, isIcon = false) {
           const b = document.createElement("span");
-          b.className = "schedule-grid__trip-bar__mini-badge";
+          b.className = "schedule-grid__trip-bar__mini-badge icon-status";
           const g = document.createElement("span");
           if (isIcon) {
             g.className =
-              "schedule-grid__trip-bar__badge-glyph material-symbols-outlined schedule-grid__trip-bar__badge-icon";
+              "schedule-grid__trip-bar__badge-glyph icon-badge-glyph material-symbols-outlined schedule-grid__trip-bar__badge-icon";
           } else {
             g.className = "schedule-grid__trip-bar__badge-glyph";
           }
@@ -2237,7 +2237,7 @@ function _renderAgendaInner() {
         const bD = makeMini("person", true); // Driver
         const bInv = makeMini("attach_money", true); // Invoice
         const invText = document.createElement("span");
-        invText.className = "schedule-grid__trip-bar__mini-badge-text";
+        invText.className = "schedule-grid__trip-bar__mini-badge-text icon-invoice-text";
         bInv.appendChild(invText);
         bInv._text = invText;
 
@@ -2400,7 +2400,7 @@ function _renderAgendaInner() {
         reqSpec.forEach(({ key, icon }) => {
           if (!truthyRequirement(t[key])) return;
           const span = document.createElement("span");
-          span.className = "schedule-grid__trip-bar__req-icon material-symbols-outlined";
+          span.className = "schedule-grid__trip-bar__req-icon icon-req material-symbols-outlined";
           span.textContent = icon;
           span.setAttribute("aria-hidden", "true");
           bar._reqIcons.appendChild(span);
@@ -2409,6 +2409,9 @@ function _renderAgendaInner() {
 
       bar.classList.toggle("cont-left", continuesLeft);
       bar.classList.toggle("cont-right", continuesRight);
+
+
+
 
       const pay = String(t.paymentStatus || "").toLowerCase();
       // Red unconfirmed if "Pending Quote" or "Quoted" (or legacy "pending")
