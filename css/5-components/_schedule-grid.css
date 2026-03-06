@@ -251,10 +251,7 @@
   border-inline-end: 2px solid var(--surface-1);
 }
 
-/* Day cell today: modifier for column containing today's date (visual styling optional) */
-.schedule-grid__day-cell--today {
-  /* background-color: color-mix(in srgb, var(--today-indicator-bg) 5%, transparent); */
-}
+
 
 .schedule-grid__day-cell {
   cursor: pointer;
@@ -341,6 +338,7 @@
   font-size: 18px;
   line-height: 1;
   margin: 0;
+  font-variation-settings: var(--bus-icon-variation);
 }
 
 .schedule-grid__bus-indicator .schedule-grid__bus-icon--lift {
@@ -368,15 +366,12 @@
 }
 
 [data-theme="light"] .schedule-grid__trip-bar__driver {
-  text-shadow:
-    0 1px 1px rgba(0, 0, 0, 1),
-    0 0 3px rgba(0, 0, 0, 0.9) !important;
   color: var(--tripbar-text-driver);
 }
 
-[data-theme="light"] .schedule-grid__trip-bar__req-icon {
+/* [data-theme="light"] .schedule-grid__trip-bar__req-icon {
   color: #000;
-}
+} */
 
 /* Conflict summary panel: overlay in bottom corner of schedule card */
 .schedule-grid__conflict-panel {
@@ -428,8 +423,6 @@
   row-gap: var(--tripbar-row-gap);
   container-type: inline-size;
   align-content: center;
-  --text: var(--tripbar-text-color);
-  --text-driver: var(--tripbar-text-driver);
   position: absolute;
   z-index: 501;
   /* above sticky bus cell (500) so trip bar receives hover when overlapping */
@@ -440,8 +433,6 @@
   text-shadow: var(--tripbar-text-shadow);
 
   border-radius: var(--tripbar-radius);
-  -webkit-backdrop-filter: blur(var(--tripbar-blur)) saturate(180%);
-  backdrop-filter: blur(var(--tripbar-blur)) saturate(180%);
   overflow: hidden;
   cursor: pointer;
   pointer-events: auto;
@@ -450,36 +441,11 @@
     box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
     transform 0.1s ease;
   will-change: filter, box-shadow, transform;
-  background:
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0)),
-    color-mix(in srgb,
-      var(--tripbar-color) var(--tripbar-bg-mix-percent),
-      var(--tripbar-bg-mix-color));
-
-  /* 2. Add an "inner glow" or top highlight */
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+  background: color-mix(in srgb, var(--tripbar-color) var(--tripbar-bg-mix-percent), transparent);
 
   /* 3. Soften the edge */
   border: 1px solid color-mix(in srgb, var(--tripbar-color) 30%, transparent);
   border-left: 4px solid var(--tripbar-color);
-}
-
-.schedule-grid__trip-bar:hover {
-  z-index: 600;
-  /* Lift the card with a cleaner shadow */
-  box-shadow:
-    0 8px 20px -4px rgba(0, 0, 0, 0.3),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.15);
-
-  /* Brighten proportionally — preserves text contrast unlike background-color mix */
-  filter: brightness(var(--tripbar-hover-brightness-to)) saturate(var(--tripbar-hover-saturate-to));
-
-  /* Deepen the glass blur on hover for a "focused" feel */
-  -webkit-backdrop-filter: blur(24px) saturate(200%);
-  backdrop-filter: blur(24px) saturate(200%);
-
-  animation: none;
-  transform: translateY(-1px) scale(1.01);
 }
 
 .schedule-grid__trip-bar:active {
@@ -511,6 +477,19 @@
    the base rule's glass gradient + color-mix background
    automatically picks up the new --tripbar-color. */
 .schedule-grid__trip-bar {
+  --tripbar-r1-color: var(--tripbar-color);
+  --tripbar-r2-color: var(--tripbar-color);
+  --tripbar-r3-color: var(--tripbar-color);
+  --tripbar-r4-color: var(--tripbar-color);
+  --tripbar-r5-color: var(--tripbar-color);
+  --tripbar-r6-color: color-mix(in srgb, var(--white) 75%, transparent);
+  --tripbar-r7-color: var(--white);
+
+  --tripbar-badge-text-color: color-mix(in srgb, var(--red) 75%, white);
+  --tripbar-badge-text-bg: color-mix(in srgb, var(--white) 50%, transparent);
+  --tripbar-status-pending-bg: color-mix(in srgb, var(--color-status-pending) 50%, transparent);
+  --tripbar-status-pending-color: color-mix(in srgb, var(--color-status-pending) 25%, black);
+  --tripbar-status-ok-bg: color-mix(in srgb, var(--color-status-ok) 0%, transparent);
 
   &.unconfirmed,
   &.color-red {
@@ -633,7 +612,8 @@
   line-height: var(--tripbar-r1-line-height);
   letter-spacing: var(--tripbar-r1-letter-spacing);
   text-transform: uppercase;
-  color: var(--text);
+  color: var(--tripbar-r1-color);
+  text-shadow: 0 1px 2px rgb(0, 0, 0);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -648,9 +628,8 @@
   transform: translateY(-50%);
   font-size: var(--tripbar-multi-badge-font-size);
   font-weight: 500;
-  color: color-mix(in srgb, var(--text) 100%, transparent);
-  border-radius: var(--tripbar-multi-badge-radius);
-  background-color: color-mix(in srgb, var(--white) 10%, transparent);
+  color: var(--tripbar-color);
+  text-shadow: 0 1px 2px rgb(0, 0, 0);
   width: 22px;
   height: 14px;
   display: flex;
@@ -667,8 +646,9 @@
   font-weight: var(--tripbar-r2-font-weight);
   line-height: var(--tripbar-r2-line-height);
   letter-spacing: var(--tripbar-r2-letter-spacing);
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--text) 100%, transparent);
+  text-transform: capitalize;
+  color: var(--tripbar-r2-color);
+  text-shadow: 0 1px 2px rgb(0, 0, 0);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -684,8 +664,9 @@
   font-weight: var(--tripbar-r4-font-weight);
   line-height: var(--tripbar-r4-line-height);
   letter-spacing: var(--tripbar-r4-letter-spacing);
+  text-shadow: 0 1px 2px rgb(0, 0, 0);
   text-transform: uppercase;
-  color: var(--tripbar-text-driver);
+  color: var(--tripbar-r4-color);
   white-space: nowrap;
 }
 
@@ -699,12 +680,7 @@
   text-overflow: ellipsis;
 }
 
-[data-theme="light"] .schedule-grid__trip-bar__time {
-  text-shadow:
-    0 1px 1px rgba(0, 0, 0, 1),
-    0 0 3px rgba(0, 0, 0, 0.9) !important;
-  color: var(--tripbar-text-driver);
-}
+
 
 .schedule-grid__trip-bar__time--left {
   justify-content: flex-start !important;
@@ -733,7 +709,7 @@
   flex-shrink: 0;
 }
 
-.schedule-grid__trip-bar__req-icon {
+.schedule-grid__trip-bar__req-icon { /*REQ ICON*/
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -743,12 +719,12 @@
   min-height: var(--tripbar-mini-badge);
   font-size: var(--tripbar-icon-size);
   line-height: 1;
-  font-weight: normal;
-  color: var(--white);
+  font-weight: var(--tripbar-icon-weight);
+  font-variation-settings: var(--tripbar-icon-variation);
+  color: color-mix(in srgb, var(--white) 75%, white);
+  text-shadow: 0 1px 2px rgb(0, 0, 0);
   background: transparent;
   border-radius: var(--tripbar-badge-radius);
-  box-shadow: none !important;
-  text-shadow: none !important;
 }
 
 .schedule-grid__trip-bar__status-badges {
@@ -760,7 +736,7 @@
   min-width: 0;
 }
 
-.schedule-grid__trip-bar__mini-badge {
+.schedule-grid__trip-bar__mini-badge { /*MINI BADGE*/
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -769,49 +745,50 @@
   min-width: var(--tripbar-mini-badge);
   min-height: var(--tripbar-mini-badge);
   flex-shrink: 0;
-  color: rgba(0 0 0);
+  color: var(--tripbar-r5-color);
   border-radius: var(--tripbar-badge-radius);
-  box-shadow: none !important;
-  text-shadow: none !important;
+  text-shadow: 0 1px 2px rgb(0, 0, 0);
 }
 
 .schedule-grid__trip-bar__badge-icon {
   display: block;
   font-size: var(--tripbar-icon-size);
   line-height: 1;
-  font-variation-settings:
-    "FILL" 0,
-    "opsz" 20;
+  font-variation-settings: var(--tripbar-icon-variation);
 }
 
 .schedule-grid__trip-bar__mini-badge.is-pending {
-  background: var(--color-status-pending);
+  background: transparent;
+  color: var(--red);
 }
 
 .schedule-grid__trip-bar__mini-badge.is-ok {
-  background: var(--color-status-ok);
+ background: transparent;
+  color: var(--tripbar-color);
 }
 
+
 .schedule-grid__trip-bar__mini-badge.is-blue {
-  background: var(--color-status-blue);
+  background: transparent;
+  color: var(--blue);
 }
 
 .schedule-grid__trip-bar__mini-badge.is-yellow {
-  background: var(--color-status-assigned);
+  background: transparent;
+  color: var(--yellow);
 }
+
 
 .schedule-grid__trip-bar__mini-badge.has-pdf,
 .schedule-grid__trip-bar__mini-badge.has-action {
   cursor: pointer;
   pointer-events: auto;
-  transition:
-    transform 0.1s ease,
-    background-color 0.1s ease;
 }
 
 .schedule-grid__trip-bar__mini-badge.has-pdf:hover,
 .schedule-grid__trip-bar__mini-badge.has-action:hover {
   transform: scale(1.15);
+  color: var(--text);
   background-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -819,21 +796,22 @@
   width: auto;
   padding-inline-end: 2px;
   gap: 0;
-  color: #111;
+  color: var(--tripbar-color);
 }
 
-.schedule-grid__trip-bar__mini-badge .schedule-grid__trip-bar__mini-badge-text {
+.schedule-grid__trip-bar__mini-badge .schedule-grid__trip-bar__mini-badge-text { /*MINI BADGE TEXT INVOICE #*/
   font-size: 12px;
-  font-weight: 500;
-  color: color-mix(in srgb, var(--red) 90%, black);
-  font-variant-numeric: tabular-nums;
-  width: 48px;
+  font-weight: 400;
+  color: var(--tripbar-badge-text-color);
+  font-family: var(--font-mono);
+  width: auto;
   min-width: 48px;
   min-height: var(--tripbar-mini-badge);
   box-sizing: border-box;
-  background: var(--white);
+  background: transparent;
   border: none;
   line-height: 14px;
+  text-shadow: 0 1px 2px rgb(0, 0, 0);
   letter-spacing: 0.02em;
   padding: 0 4px;
   display: inline-flex;
@@ -847,9 +825,9 @@
   line-height: var(--tripbar-r6-line-height);
   letter-spacing: var(--tripbar-r6-letter-spacing);
   text-transform: uppercase;
-  color: var(--tripbar-text-notes);
+  color: var(--tripbar-r6-color);
+  text-shadow: 0 1px 2px rgb(0, 0, 0);
   font-family: var(--font-mono);
-  text-shadow: var(--tripbar-text-shadow-accent);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -863,16 +841,14 @@
 }
 
 .schedule-grid__trip-bar__driver {
-  font-size: calc(var(--tripbar-r7-font-size) + 1px);
-  font-weight: 700;
+  font-size: var(--tripbar-r7-font-size);
+  font-weight: var(--tripbar-r7-font-weight);
   line-height: var(--tripbar-r7-line-height);
-  letter-spacing: 0.5px;
+  letter-spacing: var(--tripbar-r7-letter-spacing);
   justify-content: center;
   text-transform: uppercase;
-  color: var(--tripbar-text-driver);
-  text-shadow:
-    0 1px 2px rgba(0, 0, 0, 1),
-    0 0 4px rgba(0, 0, 0, 0.8);
+  color: var(--tripbar-r7-color);
+  text-shadow: 0 1px 2px rgb(0, 0, 0);
   min-width: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -891,7 +867,7 @@
   inset-inline-start: var(--tripbar-arrow-offset);
   top: 48%;
   transform: translateY(-50%);
-  content: "keyboard_double_arrow_left";
+  content: "line_start_arrow";
   font-family: "Material Symbols Outlined";
   font-size: var(--tripbar-arrow-size);
   animation: arrow-left-bounce 0.75s infinite ease-in-out;
@@ -908,7 +884,7 @@
   inset-inline-end: var(--tripbar-arrow-offset);
   top: 48%;
   transform: translateY(-50%);
-  content: "keyboard_double_arrow_right";
+  content: "line_end_arrow";
   font-family: "Material Symbols Outlined";
   font-size: var(--tripbar-arrow-size);
   animation: arrow-right-bounce 0.75s infinite ease-in-out;

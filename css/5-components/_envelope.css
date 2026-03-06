@@ -49,7 +49,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: var(--space-4);
+  flex: 1;
 }
 
 /* ----- Envelope page (print artifact) ----- */
@@ -174,8 +176,8 @@
 .envelope-page .env-input {
   display: block;
   width: 100%;
-  appearance: none;
   -webkit-appearance: none;
+  appearance: none;
   border: none;
   border-radius: 0;
   box-shadow: none;

@@ -88,7 +88,7 @@
   /* Level 0: Deepest background */
   --surface-0: rgb(41 42 43);
   /* Level 1: Topbar */
-  --surface-1: rgb(0 0 0);
+  --surface-1: rgb(10 11 12);
   /* Level 1: Table */
   --surface-2: rgb(28 29 30);
   /* Level 1: Panels */
@@ -162,8 +162,8 @@
 
   --color-status-pending: var(--red);
   --color-status-ok: var(--green);
-  --color-status-assigned: var(--yellow);
-  --color-status-blue: var(--cyan);
+  --color-status-assigned: var(--blue);
+  --color-status-blue: var(--blue);
 
   /* Standardized pattern for status selects - set via class */
   --status-color: var(--gray);
@@ -305,19 +305,13 @@
   --tripbar-height: 100px;
   --tripbar-border: 0px;
   --tripbar-radius: 0px;
-  --tripbar-gap: 0px;
-  /* Vertical space between lanes */
+  --tripbar-gap: 0px; /* Vertical space between lanes */
   --tripbar-lane-step: 0px;
 
   /* --- Trip Bar Content & Style --- */
-  --tripbar-bg-mix-color: black;
-  --tripbar-bg-mix-percent: 45%;
-  --tripbar-text-color: rgb(255 255 255);
-  --tripbar-text-shadow: 0 0 1px rgba(0, 0, 0, 0.9), 0 1px 2px rgba(0, 0, 0, 0.6);
-  --tripbar-text-shadow-accent: var(--tripbar-text-shadow);
-  --tripbar-text-driver: var(--yellow);
-  --tripbar-text-notes: color-mix(in srgb, var(--pink), white 55%);
-
+  --tripbar-bg-mix-percent: 25%;
+  --tripbar-text-shadow: none;
+  --tripbar-text-shadow-accent: none;
   --tripbar-color: var(--blue);
   --tripbar-bg-mix: 33%;
   --tripbar-blur: 20px;
@@ -341,7 +335,7 @@
 
   --tripbar-padding-x: 0px;
   --tripbar-padding-y: 0px;
-  --tripbar-row-gap: 0px;
+  --tripbar-row-gap: 1px;
   --tripbar-gap-inline: 2px;
   /* Between badges/icons */
   --tripbar-gap-drivers: 6px;
@@ -357,40 +351,40 @@
   --tripbar-r1-letter-spacing: 0.02em;
 
   /* R2: Customer */
-  --tripbar-r2-font-size: 0.625rem;
-  /* 10px */
+  --tripbar-r2-font-size: 0.6875rem;
+  /* 11px */
   --tripbar-r2-row-height: 12px;
   --tripbar-r2-font-weight: 400;
   --tripbar-r2-line-height: 12px;
   --tripbar-r2-letter-spacing: 0.02em;
 
   /* R3: Contact */
-  --tripbar-r3-font-size: 0.625rem;
-  /* 10px */
-  --tripbar-r3-row-height: 12px;
-  --tripbar-r3-font-weight: 600;
-  --tripbar-r3-line-height: 12px;
+  --tripbar-r3-font-size: 0.6875rem;
+  /* 11px */
+  --tripbar-r3-row-height: 13px;
+  --tripbar-r3-font-weight: 400;
+  --tripbar-r3-line-height: 13px;
   --tripbar-r3-letter-spacing: 0.02em;
 
   /* R4: Times */
-  --tripbar-r4-font-size: 0.75rem;
-  /* 12px */
-  --tripbar-r4-row-height: 14px;
-  --tripbar-r4-font-weight: 500;
-  --tripbar-r4-line-height: 14px;
+  --tripbar-r4-font-size: 0.6875rem;
+  /* 11px */
+  --tripbar-r4-row-height: 13px;
+  --tripbar-r4-font-weight: 600;
+  --tripbar-r4-line-height: 13px;
   --tripbar-r4-letter-spacing: -0.02em;
 
   /* R5: Status / Icons */
   --tripbar-r5-font-size: 0.75rem;
   /* 12px */
-  --tripbar-r5-row-height: 18px;
-  --tripbar-r5-font-weight: 500;
-  --tripbar-r5-line-height: 18px;
+  --tripbar-r5-row-height: 14px;
+  --tripbar-r5-font-weight: 400;
+  --tripbar-r5-line-height: 14px;
   --tripbar-r5-letter-spacing: 0;
 
   /* R6: Notes */
-  --tripbar-r6-font-size: 0.625rem;
-  /* 10px */
+  --tripbar-r6-font-size: 0.6875rem;
+  /* 11px */
   --tripbar-r6-row-height: 12px;
   --tripbar-r6-font-weight: 400;
   --tripbar-r6-line-height: 12px;
@@ -405,12 +399,12 @@
   --tripbar-r7-letter-spacing: 0.02em;
 
   /* --- Icons & Badges --- */
-  --tripbar-icon-size: 18px;
-  --tripbar-icon-gutter: 18px;
-  /* fixed 18px gutter for column alignment */
-  --tripbar-mini-badge: 18px;
+  --tripbar-icon-size: 14px;
+  --tripbar-icon-gutter: 14px;
+  /* fixed 14px gutter for column alignment */
+  --tripbar-icon-variation: "FILL" 1, "opsz" 20;
+  --tripbar-mini-badge: 14px;
   --tripbar-badge-radius: 0;
-
   --tripbar-danger-size: 16px;
   --tripbar-danger-font: 0.6875rem;
   --tripbar-danger-offset: 4px;
@@ -473,15 +467,18 @@
   --color-primary-border: color-mix(in srgb, var(--accent) 50%, transparent);
 
   /* Resource (Personnel & Equipment) */
-  --text-driver: rgb(17 24 39);
+
   --bus-col-text: var(--black);
   /* Bus icons — light mode tokens */
   --icon-bus-lift-light: var(--accent);
   /* black for accessibility icon in light mode */
   --icon-bus-sleeper-light: rgb(0 0 0);
   /* black for sleeper icon in light mode */
+  --bus-sleeper-color: var(--black);
   --bus-lift-color: var(--icon-bus-lift-light);
-  --bus-sleeper-color: var(--icon-bus-sleeper-light);
+  
+  /* Bus Icons Control */
+  --bus-icon-variation: "FILL" 1, "opsz" 20;
 
   /* --- Borders, Shadows & Radii --- */
   --border: rgba(0, 0, 0, 0.15);
@@ -536,15 +533,11 @@
   --today-indicator-text: var(--white);
 
   /* --- Trip Bar Content & Style --- */
-  --tripbar-bg-mix-color: white;
-  --tripbar-bg-mix-percent: 33%;
-  --tripbar-text-color: rgb(0 0 0);
-  /* Near black to match light theme text */
+  --tripbar-bg-mix-color: black ;
+  --tripbar-bg-mix-percent: 50%;
   --tripbar-text-shadow: none;
   /* Remove dark shadow in light mode */
   --tripbar-text-shadow-accent: none;
-  --tripbar-text-driver: var(--yellow);
-  --tripbar-text-notes: color-mix(in srgb, var(--pink), black 10%);
 
   /* --- Trip Bar Animation --- */
   --tripbar-hover-brightness-from: 1.05;
