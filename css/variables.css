@@ -1,0 +1,346 @@
+:root {
+  color-scheme: dark;
+
+  /* ==========================================================================
+   * 1. COLOR PALETTE
+   * IBM Carbon Gray scale + semantic hues (single source of truth)
+   * ========================================================================== */
+
+  /* --- Semantic Hues (Dark Mode — Carbon Tone 50) --- */
+  --blue: #4589ff; /* Blue 50  */
+  --red: #fa4d56; /* Red 50   */
+  --purple: #a56eff; /* Purple 50 */
+  --yellow: #f1c21b; /* Yellow 30 */
+  --teal: #009d9a; /* Teal 50  */
+  --orange: #ff832b; /* Orange 40 */
+  --pink: #ee5396; /* Magenta 50 */
+  --green: #24a148; /* Green 50 */
+
+  /* --- Alert Colors (IBM Carbon) --- */
+  --alert-red: #da1e28;
+  --alert-green: #24a148;
+  --alert-orange: #ff832b;
+  --alert-yellow: #f1c21b;
+
+  /* --- Grays (IBM Carbon) --- */
+  --black: #000000;
+  --gray-100: #161616;
+  --gray-90: #262626;
+  --gray-80: #393939;
+  --gray-70: #525252;
+  --gray-60: #6f6f6f;
+  --gray-50: #8d8d8d;
+  --gray-40: #a8a8a8;
+  --gray-30: #c6c6c6;
+  --gray-20: #e0e0e0;
+  --gray-10: #f4f4f4;
+  --white: #ffffff;
+
+  /* ==========================================================================
+   * 2. THEME TOKENS — Surfaces, Text, Borders
+   * Semantic layer over the palette for dark mode
+   * ========================================================================== */
+
+  --app-bg: #262626; /* Gray 100: behind everything */
+  --surface-0: #262626; /* Top header bar */
+  --surface-1: #161616; /* Gray 90: main schedule grid */
+  --surface-2: #262626; /* Gray 80: side panels */
+  --surface-3: #393939; /* Gray 70: popovers, dropdowns */
+  --surface-4: #525252; /* Gray 60: hover states on elevated surfaces */
+
+  --text: #f4f4f4; /* Gray 10: primary text */
+  --text-secondary: #c6c6c6; /* Gray 30: secondary info */
+  --text-muted: #a8a8a8; /* Gray 40: placeholder / subtle icons */
+  --placeholder: #a8a8a8; /* Gray 40 */
+  --color-text-disabled: #8d8d8d; /* Gray 50 */
+
+  --border: #393939; /* Gray 80: standard borders / dividers */
+  --grid-line: #393939; /* Gray 80: calendar grid lines */
+  --border-strong: #525252; /* Gray 70: active input outlines */
+
+  /* ==========================================================================
+   * 3. STATUS & STATE
+   * Functional color assignments for semantics
+   * ========================================================================== */
+
+  --accent: var(--blue);
+  --color-primary: var(--blue);
+  --color-primary-hover: color-mix(in srgb, var(--blue) 88%, black);
+  --color-primary-active: color-mix(in srgb, var(--blue) 76%, black);
+  --color-on-primary: var(--white);
+  --color-danger: var(--red);
+  --color-conflict-accent: var(--red);
+  --color-conflict-bg: color-mix(in srgb, var(--red) 25%, transparent);
+  --color-status-pending: var(--red);
+  --color-status-ok: var(--green);
+  --color-status-assigned: var(--yellow);
+  --color-status-blue: var(--blue);
+
+  /* ==========================================================================
+   * 4. TYPOGRAPHY
+   * Font stacks + type scale
+   * ========================================================================== */
+
+  --font-sans:
+    "IBM Plex Sans", -apple-system, "Google Sans", BlinkMacSystemFont, "Inter", "Segoe UI",
+    system-ui, "Helvetica Neue", Arial, sans-serif;
+  --font-mono:
+    "IBM Plex Mono", "Google Sans Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+
+  --heading-1-size: 1rem;
+  --heading-1-weight: 600;
+  --heading-1-line-height: 1.3;
+  --heading-1-letter-spacing: 0;
+  --heading-1-color: var(--text);
+
+  --heading-2-size: 1.25rem;
+  --heading-2-weight: 700;
+  --heading-2-line-height: 1.25;
+  --heading-2-letter-spacing: -0.005em;
+  --heading-2-color: rgb(255 255 255);
+
+  /* ==========================================================================
+   * 5. SPACING & LAYOUT
+   * Sizing, gaps, widths, structural dimensions
+   * ========================================================================== */
+
+  --layout-container-max: 100%;
+  --panel-width: 400px;
+  --card-padding: 16px;
+  --card-footer-padding-y: 12px;
+  --card-footer-padding-x: 16px;
+  --card-footer-min-height: 40px;
+  --bar-height: 40px;
+  --topbar-height: 45px;
+  --schedule-row-height: 100px;
+  --bus-col-w: 34px;
+  --week-picker-height: 32px;
+  --day-row-h: 34px;
+
+  /* Day Header */
+  --day-header-date-color: rgb(255 255 255);
+  --day-header-date-size: 1rem;
+  --day-header-date-weight: 600;
+  --day-header-date-letter-spacing: 0.02em;
+  --day-header-date-line-height: 1;
+  --day-header-name-color: rgb(175 175 175);
+  --day-header-name-size: 0.875rem;
+  --day-header-name-weight: 500;
+  --day-header-name-letter-spacing: 0.02em;
+  --day-header-name-line-height: 1;
+
+  /* Today Indicator */
+  --today-indicator-bg: var(--accent);
+  --today-indicator-text: var(--white);
+
+  /* Bus Column */
+  --bus-num-color: rgb(175 175 175);
+  --bus-num-size: 0.875rem;
+  --bus-num-weight: 600;
+  --bus-num-letter-spacing: 0.02em;
+  --bus-num-line-height: 1;
+  --bus-lift-color: var(--blue);
+  --bus-sleeper-color: var(--text);
+  --bus-col-text: rgb(175 175 175);
+
+  /* ==========================================================================
+   * 6. ELEVATION & EFFECTS
+   * Shadows, overlays, text-shadows
+   * ========================================================================== */
+
+  --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --elevation-hover: 0 10px 20px rgba(0, 0, 0, 0.4), 0 6px 6px rgba(0, 0, 0, 0.5);
+  --text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  --date-picker-filter: none;
+  --agenda-header-bg: rgb(31 32 33);
+
+  /* ==========================================================================
+   * 7. INTERACTIVE
+   * Buttons, inputs, focus, overlays
+   * ========================================================================== */
+
+  --overlay-hover: rgba(0, 0, 0, 0.05);
+  --overlay-active: rgba(0, 0, 0, 0.1);
+  --focus-ring-color: #4589ff;
+  --focus-ring: inset 0 0 0 2px #4589ff;
+
+  --control-height: 30px;
+  --control-height-icon: 28px;
+  --control-padding-x: 16px;
+  --control-radius: 8px;
+  --control-radius-icon: 8px;
+  --input-height: 30px;
+  --input-padding-x: 6px;
+  --input-font-size: 0.875rem;
+  --input-font-weight: 300;
+  --input-border-radius: 0px;
+
+  --color-button-bg: hsl(240 1.6% 23.9%);
+  --color-button-text: rgb(255 255 255);
+  --color-button-hover-brightness: 1.25;
+  --color-button-primary-bg: var(--accent);
+  --color-button-primary-text: #ffffff;
+  --color-button-primary-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  --color-button-primary-hover-brightness: 1.15;
+  --color-input-bg: #393939;
+  --color-input-border: #393939;
+  --color-input-border-hover: #262626;
+
+  /* ==========================================================================
+   * 8. COMPONENT — Trip Bar
+   * All trip-bar geometry, typography, and icons
+   * ========================================================================== */
+
+  --tripbar-height: 100px;
+  --tripbar-radius: 0px;
+  --tripbar-lane-step: 0px;
+  --tripbar-bg-mix-percent: 15%;
+  --tripbar-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+
+  --tripbar-color: var(--blue);
+  --tripbar-hover-brightness-from: 1.05;
+  --tripbar-hover-brightness-to: 1.15;
+  --tripbar-hover-saturate-from: 1;
+  --tripbar-hover-saturate-to: 1.25;
+
+  /* Insets & Spacing */
+  --tripbar-inset: 0px;
+  --tripbar-inset-left: 0px;
+  --tripbar-inset-right: 1px;
+  --tripbar-inset-top: 0px;
+  --tripbar-inset-bottom: 0px;
+  --tripbar-padding-x: 0px;
+  --tripbar-padding-y: 0px;
+  --tripbar-row-gap: 1px;
+  --tripbar-gap-inline: 2px;
+  --tripbar-gap-drivers: 6px;
+
+  /* Row 1: Destination */
+  --tripbar-r1-font-size: 0.75rem;
+  --tripbar-r1-row-height: 14px;
+  --tripbar-r1-font-weight: 600;
+  --tripbar-r1-line-height: 14px;
+  --tripbar-r1-letter-spacing: 0.02em;
+  /* Row 2: Customer */
+  --tripbar-r2-font-size: 0.6875rem;
+  --tripbar-r2-row-height: 12px;
+  --tripbar-r2-font-weight: 500;
+  --tripbar-r2-line-height: 12px;
+  --tripbar-r2-letter-spacing: 0.02em;
+  /* Row 3: Contact */
+  --tripbar-r3-row-height: 13px;
+  /* Row 4: Time */
+  --tripbar-r4-font-size: 0.6875rem;
+  --tripbar-r4-row-height: 13px;
+  --tripbar-r4-font-weight: 500;
+  --tripbar-r4-line-height: 13px;
+  --tripbar-r4-letter-spacing: -0.02em;
+  /* Row 5: Status Icons */
+  --tripbar-r5-row-height: 14px;
+  /* Row 6: Notes */
+  --tripbar-r6-font-size: 0.625rem;
+  --tripbar-r6-row-height: 12px;
+  --tripbar-r6-font-weight: 500;
+  --tripbar-r6-line-height: 12px;
+  --tripbar-r6-letter-spacing: 0.02em;
+  /* Row 7: Drivers */
+  --tripbar-r7-font-size: 0.75rem;
+  --tripbar-r7-row-height: 14px;
+  --tripbar-r7-font-weight: 600;
+  --tripbar-r7-line-height: 14px;
+  --tripbar-r7-letter-spacing: 0.02em;
+
+  /* Icons */
+  --tripbar-icon-size: 14px;
+  --tripbar-mini-badge: 14px;
+  --tripbar-badge-radius: 0;
+  --tripbar-danger-size: 16px;
+  --tripbar-danger-font: 0.6875rem;
+  --tripbar-danger-offset: 4px;
+  --tripbar-arrow-size: 1.125rem;
+  --tripbar-arrow-offset: 4px;
+  --tripbar-multi-badge-font-size: 0.625rem;
+  --tripbar-multi-bus-indent: 0px;
+  --icon-bus-size: 18px;
+  --icon-bus-fill: 1;
+  --icon-bus-opsz: 20;
+  --icon-tripbar-size: 14px;
+  --icon-tripbar-fill: 1;
+  --icon-tripbar-opsz: 20;
+  --icon-status-size: 14px;
+  --icon-arrow-size: 1.125rem;
+  --icon-arrow-offset: 4px;
+  --icon-btn-size: 32px;
+  --icon-bus-lift-light: #2196f3;
+
+  /* ==========================================================================
+   * 9. Z-INDEX
+   * Layering stack
+   * ========================================================================== */
+
+  --z-dropdown: 1000;
+  --z-modal: 10100;
+}
+
+/* ==========================================================================
+ * LIGHT THEME OVERRIDES
+ * ========================================================================== */
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* --- 1. Palette (Light — Carbon Tone 70) --- */
+  --blue: #0043ce;
+  --red: #a2191f;
+  --purple: #6929c4;
+  --yellow: #ff832b;
+  --teal: #005d5d;
+  --orange: #ff832b;
+  --pink: #9f1853;
+  --green: #0e6027;
+
+  /* --- 2. Theme Tokens --- */
+  --app-bg: #f8f9fa;
+  --surface-0: #f1f3f4;
+  --surface-1: #ffffff;
+  --surface-2: #ffffff;
+  --surface-3: #e8eaed;
+  --surface-4: rgb(209 213 219);
+
+  --text: #212121;
+  --text-secondary: #525252; /* Carbon Gray 70 (was pure black) */
+  --text-muted: #8d8d8d; /* Carbon Gray 50 (was pure black) */
+  --placeholder: rgba(107, 114, 128, 0.7);
+  --color-text-disabled: rgb(156 163 175);
+
+  --border: rgba(0, 0, 0, 0.12);
+  --grid-line: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.2);
+
+  /* --- 6. Elevation & Effects --- */
+  --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --elevation-hover: 0 4px 6px rgba(0, 0, 0, 0.06), 0 8px 16px rgba(0, 0, 0, 0.12);
+  --text-shadow: none;
+  --date-picker-filter: none;
+  --agenda-header-bg: rgb(231 232 233);
+
+  /* --- 7. Interactive --- */
+  --overlay-hover: rgba(0, 0, 0, 0.05);
+  --overlay-active: rgba(0, 0, 0, 0.1);
+  --focus-ring-color: color-mix(in srgb, #2196f3 50%, transparent);
+  --color-button-bg: #e0e0e0; /* Carbon Gray 20 (was dark HSL) */
+  --color-button-text: #161616; /* Carbon Gray 100 (readable on light bg) */
+  --color-button-hover-brightness: 0.95;
+  --color-button-primary-bg: #2196f3;
+  --color-button-primary-text: #ffffff;
+  --color-button-primary-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  --color-button-primary-hover-brightness: 0.9;
+  --color-input-bg: rgb(230 230 230);
+  --color-input-border: rgba(0, 0, 0, 0.2);
+  --color-input-border-hover: rgba(0, 0, 0, 0.28);
+
+  /* --- 5. Layout --- */
+  --today-indicator-bg: var(--accent);
+  --today-indicator-text: #ffffff;
+  --tripbar-bg-mix-percent: 25%;
+}

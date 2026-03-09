@@ -1,0 +1,978 @@
+/* ==========================================================================
+   5-COMPONENTS / BUTTONS & CONTROLS
+   Buttons, chips, toggles, segmented controls
+   ========================================================================== */
+
+button,
+.btn,
+.icon-chip,
+.theme-toggle,
+.seg__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  height: var(--control-height);
+  padding: 0 var(--control-padding-x);
+
+  border: none;
+  border-radius: var(--control-radius);
+
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+
+  color: var(--color-button-text);
+  background-color: var(--color-button-bg);
+
+  cursor: pointer;
+
+  transition:
+    filter 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.08s ease,
+    background-color 0.15s ease;
+}
+
+/* .select-trigger excluded: it's a form field, uses input-style hover (border only) */
+button:hover:not(.select-trigger),
+.btn:hover,
+.icon-chip:hover,
+.theme-toggle:hover,
+.seg__btn:hover {
+  filter: brightness(var(--color-button-hover-brightness));
+}
+
+/* Focus — accent ring */
+button:focus:not(.select-trigger),
+.btn:focus,
+.icon-chip:focus,
+.theme-toggle:focus,
+.seg__btn:focus {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);
+  outline: none;
+}
+
+/* Active — scale press */
+button:active:not(.toggle-pill):not(.select-trigger),
+.btn:active,
+.icon-chip:active,
+.theme-toggle:active,
+.seg__btn:active {
+  transform: scale(0.97);
+  outline: none !important;
+}
+
+/* Disabled */
+button:disabled,
+.btn:disabled,
+.icon-chip:disabled,
+.theme-toggle:disabled,
+.seg__btn:disabled,
+button[aria-disabled="true"],
+.btn[aria-disabled="true"],
+.icon-chip[aria-disabled="true"],
+.theme-toggle[aria-disabled="true"],
+.seg__btn[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: none;
+  box-shadow: none;
+  transform: none;
+}
+
+/* ── Primary filled button (Save) ──────────────────────────────────── */
+.btn--primary {
+  background: var(--color-button-primary-bg);
+  color: var(--color-button-primary-text);
+  box-shadow: var(--color-button-primary-shadow);
+  font-weight: 400;
+}
+
+.btn--primary:hover {
+  filter: brightness(var(--color-button-primary-hover-brightness));
+}
+
+.btn--primary:active {
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+}
+
+/* ── Secondary button (Trip Info, View PDF) ────────────────────────── */
+.btn--secondary {
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.btn--secondary:hover {
+  background: var(--overlay-hover);
+  color: var(--text);
+  filter: none;
+}
+
+/* Optional: remove default button styles in Safari/Firefox */
+:where(button, .btn, .theme-toggle, .seg__btn) {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Destructive button (BEM: .btn--danger) */
+.btn--danger {
+  color: #f44336;
+  background: var(--color-danger-soft);
+}
+
+.btn--danger:hover {
+  filter: brightness(1.2);
+}
+
+.btn--danger:active {
+  filter: brightness(1.3);
+}
+
+/* Compact button (BEM: .btn--compact) — smaller padding/font for modal footers */
+.btn--compact {
+  height: 32px;
+  padding: 0 8px;
+  font-size: 0.875rem;
+}
+
+/* Toggle Buttons (aria-pressed) */
+:where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn) {
+  border: none;
+  background-color: var(--color-button-bg);
+  color: var(--color-button-text);
+}
+
+:where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn):hover {
+  filter: brightness(var(--color-button-hover-brightness));
+}
+
+:where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn)[aria-pressed="true"] {
+  background-color: var(--color-primary) !important;
+  border-color: transparent !important;
+  color: var(--accent) !important;
+}
+
+:where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn)[aria-pressed="true"]:hover {
+  background-color: var(--color-primary-hover);
+}
+
+:where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn)[aria-pressed="true"]:active {
+  background-color: var(--color-primary-active);
+}
+
+/* Segmented controls */
+.seg {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 2px;
+  border-radius: var(--control-radius);
+  border: none;
+  background: var(--color-button-bg);
+  height: var(--control-height-icon);
+}
+
+.seg__btn {
+  border: 0;
+  background: transparent;
+  height: calc(var(--control-height-icon) - 4px);
+  padding: 0 8px;
+}
+
+.seg__btn[aria-pressed="true"] {
+  background: var(--color-primary);
+  border: none;
+  color: var(--color-on-primary);
+}
+
+/* Icon button */
+/* Icon button - styling moved to .icon-btn in _icons.css */
+
+/* Inline label link - subtle text link within labels */
+label .label-link {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-inline-start: 6px;
+  color: var(--accent);
+  font-size: inherit;
+  font-weight: 400;
+  text-decoration: none;
+  cursor: pointer;
+  vertical-align: baseline;
+  line-height: 1.4;
+  display: inline;
+  height: auto;
+}
+
+label .label-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+label .label-link:active {
+  color: var(--accent);
+  opacity: 0.8;
+}
+
+.bus-icons {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  z-index: 5;
+}
+
+/* Toggle pill group (BEM: .toggle-pill__grid, .toggle-pill__label) */
+.toggle-pill-grid,
+.toggle-pill__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.toggle-pill-grid-label,
+.toggle-pill__label {
+  grid-column: 1 / -1;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+  /* Tighter gap from label to first row than between pill rows */
+  margin-bottom: calc(4px - 8px);
+}
+
+/* Toggle pill — ghost/outline when off, solid fill when on (block: .toggle-pill, element: .toggle-pill__icon) */
+.toggle-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  padding: 6px 14px;
+  line-height: 1;
+  border-radius: var(--control-radius);
+  border: 1px solid var(--color-input-border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.toggle-pill:hover {
+  border-color: var(--text-secondary);
+  color: var(--text);
+}
+
+.toggle-pill-icon,
+.toggle-pill__icon {
+  font-size: 1rem;
+  opacity: 0.6;
+  transition: opacity 160ms ease;
+}
+
+.toggle-pill[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--color-on-primary);
+  border-color: transparent;
+  font-weight: 500;
+}
+
+.toggle-pill[aria-pressed="true"] .toggle-pill__icon {
+  opacity: 1;
+}
+
+/* Focus — border-color only, same as inputs */
+.toggle-pill:focus {
+  outline: none;
+  border-color: var(--color-primary) !important;
+}
+
+/* Card Close Button (Moved from legacy UI components) */
+.btn-close-card {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: var(--surface-container-high);
+  color: var(--text-muted);
+  cursor: pointer;
+  opacity: 0.5;
+  margin-right: none;
+  /* padding size is 8px */
+  transition:
+    opacity 160ms ease,
+    background 160ms ease;
+}
+
+.btn-close-card:hover {
+  opacity: 1;
+  background: var(--surface-container-lowest);
+}
+
+.btn-close-card:active {
+  transform: none;
+}
+
+.btn-close-card .material-symbols-outlined {
+  font-size: 1.125rem;
+  /* 18px */
+}
+/* ==========================================================================
+   5-COMPONENTS / BADGES
+   Small status indicators and counters
+   ========================================================================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 10px 0 10px;
+  font-size: var(--input-font-size);
+  /* 16px */
+  font-weight: 400;
+  border-radius: 8px;
+  height: 24px;
+  line-height: normal;
+  letter-spacing: 0.02em;
+  vertical-align: middle;
+}
+
+/* BEM: .badge--primary, .badge--error */
+.badge-primary,
+.badge--primary {
+  background: color-mix(in srgb, var(--accent) 33%, transparent);
+  color: var(--text);
+  border: 1px solid var(--accent);
+  vertical-align: middle;
+}
+
+.badge-error,
+.badge--error {
+  background: color-mix(in srgb, var(--color-danger) 33%, transparent);
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+}
+/* ==========================================================================
+   5-COMPONENTS / ICONS
+   Reusable icon classes for Material Symbols across all contexts.
+   Each class sets font-variation-settings, font-size, and layout.
+   ========================================================================== */
+
+/* ── 1. Bus Column Icons (lift & sleeper) ─────────────────── */
+.icon-bus {
+  font-size: var(--icon-bus-size, 18px);
+  line-height: 1;
+  font-variation-settings:
+    "FILL" var(--icon-bus-fill, 1),
+    "opsz" var(--icon-bus-opsz, 20);
+}
+
+.icon-bus--lift {
+  color: var(--bus-lift-color);
+  text-shadow: var(--text-shadow);
+}
+
+.icon-bus--sleeper {
+  color: var(--bus-sleeper-color);
+  text-shadow: var(--text-shadow);
+}
+
+[data-theme="light"] .icon-bus--lift,
+[data-theme="light"] .icon-bus--sleeper {
+  text-shadow: var(--text-shadow);
+}
+
+/* ── 2. Trip Bar Req Icons ────────────────────────────────── */
+.icon-req {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tripbar-mini-badge);
+  height: var(--tripbar-mini-badge);
+  min-width: var(--tripbar-mini-badge);
+  min-height: var(--tripbar-mini-badge);
+  font-size: var(--icon-tripbar-size, 14px);
+  line-height: 1;
+  font-variation-settings:
+    "FILL" var(--icon-tripbar-fill, 1),
+    "opsz" var(--icon-tripbar-opsz, 20);
+  color: color-mix(in srgb, var(--text) 100%, white);
+  text-shadow: var(--text-shadow);
+  background: transparent;
+  border-radius: var(--tripbar-badge-radius);
+}
+
+/* ── 3. Status Mini-Badge (container) ─────────────────────── */
+.icon-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--icon-status-size, 14px);
+  height: var(--icon-status-size, 14px);
+  min-width: var(--icon-status-size, 14px);
+  min-height: var(--icon-status-size, 14px);
+  flex-shrink: 0;
+  border-radius: var(--tripbar-badge-radius);
+  text-shadow: var(--text-shadow);
+}
+
+/* ── 4. Badge Glyph (icon inside a status badge) ──────────── */
+.icon-badge-glyph {
+  display: block;
+  font-size: var(--icon-tripbar-size, 14px);
+  line-height: 1;
+  font-variation-settings:
+    "FILL" var(--icon-tripbar-fill, 1),
+    "opsz" var(--icon-tripbar-opsz, 20);
+}
+
+/* ── 5. Invoice Badge Text ────────────────────────────────── */
+.icon-invoice-text {
+  font-size: 12px;
+  font-weight: 400;
+  font-family: var(--font-mono);
+  line-height: 14px;
+  letter-spacing: 0.02em;
+  text-shadow: var(--text-shadow);
+  width: auto;
+  min-width: 48px;
+  min-height: var(--tripbar-mini-badge);
+  padding: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  box-sizing: border-box;
+}
+
+/* ── 6. Continuation Arrow (trip bar extends past week) ────── */
+.icon-arrow,
+.schedule-grid__trip-bar.cont-left::before,
+.schedule-grid__trip-bar.cont-right::after {
+  font-family: "Material Symbols Outlined";
+  font-size: var(--icon-arrow-size, 1.125rem);
+  font-variation-settings:
+    "FILL" var(--icon-tripbar-fill, 1),
+    "opsz" var(--icon-tripbar-opsz, 20);
+  line-height: 1;
+  position: absolute;
+  top: 48%;
+  color: color-mix(in srgb, var(--yellow) 100%, white);
+  transform: translateY(-50%);
+  text-shadow: var(--text-shadow);
+}
+
+.icon-arrow--left,
+.schedule-grid__trip-bar.cont-left::before {
+  inset-inline-start: var(--icon-arrow-offset, 4px);
+  animation: arrow-left-bounce 0.75s infinite ease-in-out;
+}
+
+.icon-arrow--right,
+.schedule-grid__trip-bar.cont-right::after {
+  inset-inline-end: var(--icon-arrow-offset, 4px);
+  animation: arrow-right-bounce 0.75s infinite ease-in-out;
+}
+
+/* ── 7. Header Icon Button ────────────────────────────────── */
+.icon-btn {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--control-radius-icon) !important;
+  width: var(--icon-btn-size, var(--week-picker-height));
+  height: var(--icon-btn-size, var(--week-picker-height));
+  cursor: pointer;
+  transition:
+    filter 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.icon-btn:hover {
+  box-shadow: none !important;
+  background: var(--surface-container-highest) !important;
+  color: var(--text);
+}
+
+.icon-btn:active {
+  box-shadow: none !important;
+  background: var(--accent) !important;
+}
+
+.icon-btn:disabled {
+  color: var(--color-text-disabled);
+  background: var(--surface-container-high) !important;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+/* ==========================================================================
+   5-COMPONENTS / MENUS
+   Dropdown menus and context menus (BEM: .dropdown__*, .context-menu__*)
+   ========================================================================== */
+
+.dropdown-wrapper,
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu,
+.dropdown__menu,
+.context-menu {
+  position: absolute;
+  z-index: var(--z-dropdown);
+  min-width: 200px;
+  padding: 4px;
+
+  background: color-mix(in srgb, var(--surface-container) 20%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border) 30%, transparent);
+
+  border-radius: 12px;
+  box-shadow:
+    0 0 0 0.5px color-mix(in srgb, white 15%, transparent) inset,
+    0 1px 0 rgba(0, 0, 0, 0.06),
+    0 10px 32px rgba(0, 0, 0, 0.14),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+
+  -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(105%);
+  backdrop-filter: blur(20px) saturate(180%) brightness(105%);
+
+  overflow: hidden;
+  animation: menuPopIn 120ms ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dropdown-menu,
+.dropdown__menu {
+  top: calc(100% + 4px);
+  inset-inline-end: 0;
+}
+
+/* Open upward when near bottom edge (avoids card resize) */
+.dropdown__menu.dropdown__menu--up {
+  top: auto;
+  bottom: calc(100% + 4px);
+}
+
+.context-menu {
+  top: 0;
+  inset-inline-start: 0;
+}
+
+.dropdown-menu[hidden],
+.dropdown__menu[hidden],
+.context-menu[hidden] {
+  display: none;
+}
+
+.context-header,
+.context-menu__header {
+  padding: 8px 12px;
+  font-size: 0.6875rem;
+  /* 11px */
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  color: var(--text-muted);
+  opacity: 0.85;
+
+  text-align: start;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  margin-bottom: 4px;
+}
+
+.dropdown-divider,
+.dropdown__divider {
+  border: 0;
+  height: 1px;
+  margin: 6px 6px;
+  background: color-mix(in srgb, var(--border) 70%, transparent);
+}
+
+.dropdown-item,
+.dropdown__item,
+.context-item,
+.context-menu__item {
+  display: flex;
+  align-items: center;
+  /* Already centers vertically */
+  justify-content: flex-start;
+  gap: 8px;
+
+  width: 100%;
+  padding: 10px 12px;
+  /* Increased vertical padding for better centering */
+  height: 28px;
+  /* Ensure consistent height for centering */
+
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text);
+
+  text-align: start;
+  cursor: pointer;
+
+  transition:
+    background 120ms ease,
+    transform 120ms ease;
+}
+
+.dropdown-icon,
+.dropdown__icon,
+.context-item .material-symbols-outlined,
+.context-menu__item .material-symbols-outlined {
+  display: inline-flex;
+  width: 20px;
+  flex: 0 0 auto;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.125rem;
+  /* 18px */
+  opacity: 0.85;
+}
+
+.dropdown-icon.is-active,
+.dropdown__icon.is-active {
+  color: #fff;
+}
+
+.dropdown-item:hover,
+.dropdown__item:hover,
+.context-item:hover,
+.context-menu__item:hover {
+  background: var(--overlay-hover);
+}
+
+.dropdown-item:active,
+.dropdown__item:active,
+.context-item:active,
+.context-menu__item:active {
+  transform: translateY(1px);
+  background: var(--overlay-active);
+}
+
+/* ==========================================================================
+   CUSTOM SELECT DROPDOWN (glass effect for trip editor status fields)
+   Uses same glass styling as dropdown__menu
+   ========================================================================== */
+.select-dropdown {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.select-dropdown .dropdown__menu {
+  inset-inline-start: 0;
+  inset-inline-end: 0;
+  min-width: 100%;
+}
+
+/* Bus grid: limit dropdown height to avoid page scroll */
+#busGrid .select-dropdown .dropdown__menu {
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+/* Layout + dropdown-only overrides. Form-field look (border, shadow, hover, focus) lives in _forms.css */
+.select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  text-align: center;
+  border: 1px solid var(--color-input-border);
+}
+
+.select-trigger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.select-trigger::after {
+  content: "";
+  width: 14px;
+  height: 14px;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+/* Status colors on trigger (Directly semantic) */
+.select-trigger.status-pending {
+  background-color: color-mix(in srgb, var(--color-status-pending) 60%, transparent);
+  border-color: var(--color-status-pending);
+}
+
+.select-trigger.status-ok {
+  background-color: color-mix(in srgb, var(--color-status-ok) 60%, transparent);
+  border-color: var(--color-status-ok);
+}
+
+.select-trigger.status-assigned {
+  background-color: color-mix(in srgb, var(--color-status-assigned) 60%, transparent);
+  border-color: var(--color-status-assigned);
+}
+
+.select-trigger.status-blue {
+  background-color: color-mix(in srgb, var(--color-status-blue) 60%, transparent);
+  border-color: var(--color-status-blue);
+}
+
+/* Status colors inside dropown options */
+.dropdown-icon.status-pending {
+  color: var(--color-status-pending);
+}
+.dropdown-icon.status-ok {
+  color: var(--color-status-ok);
+}
+.dropdown-icon.status-assigned {
+  color: var(--color-status-assigned);
+}
+.dropdown-icon.status-blue {
+  color: var(--color-status-blue);
+}
+
+/* Match input focus ring exactly */
+.select-trigger.is-open {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.select-dropdown .select-native {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+/* ==========================================================================
+   5-COMPONENTS / LOADING OVERLAY
+   BEM: .loading-overlay (block), .loading-overlay__backdrop, .loading-overlay__card, etc.
+   ========================================================================== */
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(0, 0, 0, 0.4);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.loading-overlay[hidden] {
+  display: none;
+}
+
+.loading-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+}
+
+.loading-overlay__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 240px;
+  position: relative;
+  z-index: 1;
+}
+
+.loading-overlay__title {
+  font-weight: 500;
+  color: var(--text);
+  font-size: 0.875rem;
+}
+
+.loading-overlay__bar {
+  width: 100%;
+  height: 4px;
+  background: var(--surface-container-lowest);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.loading-overlay__bar-inner {
+  height: 100%;
+  width: 0%;
+  background: var(--color-primary);
+  transition: width 0.3s ease;
+}
+
+.loading-overlay__sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+/* ==========================================================================
+   5-COMPONENTS / TOAST
+   ========================================================================== */
+
+.toast[hidden] {
+  display: none;
+}
+
+.toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 99999;
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface-container-high);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.06),
+    0 10px 32px rgba(0, 0, 0, 0.14),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: min(90vw, 420px);
+  font-size: 0.8125rem;
+  /* 13px */
+  font-weight: 650;
+  color: var(--text);
+}
+
+.toast-progress {
+  display: none;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.toast[data-variant="loading"] .toast-progress {
+  display: block;
+}
+
+.toast-progress__inner {
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background: var(--color-primary);
+  transition: width 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+/* ==========================================================================
+   5-COMPONENTS / CARDS
+   Base card component and its internal elements (BEM)
+   ========================================================================== */
+
+.card {
+  background: var(--surface-container-high);
+  border-radius: 24px; /* More premium, rounded corners like the 'Create' button */
+  /* box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.5); */
+  border: none !important;
+  min-width: 0;
+  border-inline-start: none;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden; /* Ensure content follows rounded corners */
+}
+
+.card--compact,
+.card.compact {
+  padding: 0;
+}
+
+/* --- Internal Elements --- */
+
+.card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 0;
+  height: 40px;
+  width: 100%;
+  flex-shrink: 0;
+  border-bottom: none;
+}
+
+.card__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card__content {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  box-sizing: border-box;
+}
+
+/* Card scroll container */
+.card__content--scrollable {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Optional card footer */
+.card__footer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-height: var(--card-footer-min-height);
+  padding: var(--card-footer-padding-y) var(--card-footer-padding-x);
+  margin-top: 0;
+  border-top: 1px solid var(--border);
+  background: var(--surface-container-high);
+  border-radius: 0 0 24px 24px; /* Match card radius if visible */
+}
+
+.card__footer:empty {
+  min-height: 0;
+  padding: 4px;
+  border-top: none;
+}

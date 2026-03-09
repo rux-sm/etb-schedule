@@ -111,12 +111,12 @@ const CACHE = {
         expiry: Date.now() + ttlMs,
       };
       localStorage.setItem(key, JSON.stringify(payload));
-    } catch { }
+    } catch {}
   },
   remove(key) {
     try {
       localStorage.removeItem(key);
-    } catch { }
+    } catch {}
   },
   clearAll() {
     try {
@@ -128,7 +128,7 @@ const CACHE = {
           localStorage.removeItem(k);
         }
       });
-    } catch { }
+    } catch {}
   },
 };
 
@@ -203,8 +203,25 @@ const dom = {
   driversBtn: $("driversBtn"),
   notesBtn: $("notesBtn"),
   waitingListBtn: $("waitingListBtn"),
+  quoteBtn: $("quoteBtn"),
   waitingBody: $("waitingBody"),
   waitingCard: $("waitingCard"),
+
+  // Quote Calculator
+  quoteCard: $("quoteCard"),
+  quoteLDRate: $("quoteLDRate"),
+  quoteDeadMiles: $("quoteDeadMiles"),
+  quoteTripType: $("quoteTripType"),
+  quoteReliefDriver: $("quoteReliefDriver"),
+  quoteHalfDay: $("quoteHalfDay"),
+  quoteDaysContainer: $("quoteDaysContainer"),
+  quoteAddDayBtn: $("quoteAddDayBtn"),
+  quoteDaysBreakdown: $("quoteDaysBreakdown"),
+  quoteMileageCost: $("quoteMileageCost"),
+  quoteDriver1Pay: $("quoteDriver1Pay"),
+  quoteDriver2Row: $("quoteDriver2Row"),
+  quoteDriver2Pay: $("quoteDriver2Pay"),
+  quoteFinalTotal: $("quoteFinalTotal"),
 
   // Settings Menu
   settingsBtn: $("settingsBtn"),
@@ -366,7 +383,7 @@ function clamp(n, min, max) {
 function safeUUID() {
   try {
     return crypto.randomUUID();
-  } catch { }
+  } catch {}
   return `tk_${Date.now()}_${Math.floor(Math.random() * 1e9)}`;
 }
 
@@ -1294,7 +1311,7 @@ function applyWeekStart(isMonday) {
 
   try {
     localStorage.setItem("weekStartMonday", state.weekStartsOnMonday ? "1" : "0");
-  } catch { }
+  } catch {}
 
   syncWeekStartUI();
 
@@ -1496,7 +1513,7 @@ function prefetchAdjacentWeeks() {
 
     // ✅ FIX: Calculate Monday for the adjacent week
     const { notesKey } = getWeekRange(targetDate); // We will update getWeekRange to support a date arg
-    fetchWeekDataCached(start, end, notesKey).catch(() => { });
+    fetchWeekDataCached(start, end, notesKey).catch(() => {});
   }
 }
 
@@ -1636,8 +1653,7 @@ function buildAgendaRows() {
     const busKey = String(busId ?? "").trim();
     if (liftSet.has(busKey)) {
       const icon = document.createElement("span");
-      icon.className =
-        "schedule-grid__bus-icon icon-bus icon-bus--lift material-symbols-outlined";
+      icon.className = "schedule-grid__bus-icon icon-bus icon-bus--lift material-symbols-outlined";
       icon.textContent = "accessible";
       icon.title = "Wheelchair lift equipped";
       icon.setAttribute("aria-label", "Wheelchair lift equipped");
@@ -2410,9 +2426,6 @@ function _renderAgendaInner() {
       bar.classList.toggle("cont-left", continuesLeft);
       bar.classList.toggle("cont-right", continuesRight);
 
-
-
-
       const pay = String(t.paymentStatus || "").toLowerCase();
       // Red unconfirmed if "Pending Quote" or "Quoted" (or legacy "pending")
       const isUnconfirmed = pay === "pending quote" || pay === "quoted" || pay === "pending";
@@ -2427,11 +2440,19 @@ function _renderAgendaInner() {
 
       // Color Override
       bar.classList.remove(
-        "color-green",
+        "color-blue",
+        "color-red",
+        "color-orange",
         "color-yellow",
-        "color-gray",
-        "color-violet",
+        "color-green",
+        "color-teal",
+        "color-purple",
         "color-pink",
+        "color-indigo",
+        "color-mint",
+        "color-brown",
+        "color-gray",
+        "color-violet", // Keep for legacy cleanup
       );
       const tripColor = String(t.tripColor || "")
         .trim()
@@ -2850,6 +2871,7 @@ const CARD_CONFIG = {
   trip: { card: dom.tripInfoCard, btn: dom.tripInputBtn },
   drivers: { card: dom.driverWeekCard, btn: dom.driversBtn },
   notes: { card: dom.notesCard, btn: dom.notesBtn },
+  quote: { card: dom.quoteCard, btn: dom.quoteBtn },
 };
 
 function getCardPanel(cardType) {
@@ -3605,8 +3627,11 @@ function openDriverContactModal(tripKey) {
   const dDate = trip.departureDate ? parseYMD(trip.departureDate) : null;
   const dDateStr = dDate
     ? dDate.toLocaleDateString("en-US", {
-      weekday: "long", month: "long", day: "numeric", year: "numeric",
-    })
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
     : "the upcoming date";
   const destName = trip.destination || "your destination";
 
@@ -3615,17 +3640,22 @@ function openDriverContactModal(tripKey) {
 
   if (rowA && rowA.length > 0) {
     rowA.forEach((assignment) => {
-      const busId = assignment.busId && assignment.busId !== "—" ? assignment.busId : trip.busId || "None";
+      const busId =
+        assignment.busId && assignment.busId !== "—" ? assignment.busId : trip.busId || "None";
       const d1Name = assignment.driver1 && assignment.driver1 !== "—" ? assignment.driver1 : "";
       const d2Name = assignment.driver2 && assignment.driver2 !== "—" ? assignment.driver2 : "";
 
       if (isAssigned(d1Name)) {
         const d1 = getDriverObj(d1Name);
-        officeBlocks.push(`Name:  ${d1Name}\nPhone: ${d1 ? d1.phone || "None" : "None"}\nBus:   ${busId}`);
+        officeBlocks.push(
+          `Name:  ${d1Name}\nPhone: ${d1 ? d1.phone || "None" : "None"}\nBus:   ${busId}`,
+        );
       }
       if (isAssigned(d2Name)) {
         const d2 = getDriverObj(d2Name);
-        officeBlocks.push(`Name:  ${d2Name}\nPhone: ${d2 ? d2.phone || "None" : "None"}\nBus:   ${busId}`);
+        officeBlocks.push(
+          `Name:  ${d2Name}\nPhone: ${d2 ? d2.phone || "None" : "None"}\nBus:   ${busId}`,
+        );
       }
     });
   }
@@ -3644,12 +3674,19 @@ function openDriverContactModal(tripKey) {
     const tomorrow = new Date(now);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    const isTomorrow = dDate.getFullYear() === tomorrow.getFullYear() &&
+    const isTomorrow =
+      dDate.getFullYear() === tomorrow.getFullYear() &&
       dDate.getMonth() === tomorrow.getMonth() &&
       dDate.getDate() === tomorrow.getDate();
 
-    const dateLabel = isTomorrow ? "Tomorrow" : dDate.toLocaleDateString("en-US", { weekday: "long" });
-    const fullDate = dDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+    const dateLabel = isTomorrow
+      ? "Tomorrow"
+      : dDate.toLocaleDateString("en-US", { weekday: "long" });
+    const fullDate = dDate.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
     const spotTime = envFormatTime(trip.spotTime || trip.departureTime || "");
 
     reminderText = `Reminder for your trip ${dateLabel}, ${fullDate} at ${spotTime}\n\n`;
@@ -3828,7 +3865,11 @@ function fillEnvelopePage(pageEl, trip, assignment) {
     if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
       el.value = val;
       el.setAttribute("value", val);
-      if (el.tagName === "TEXTAREA") el.innerHTML = String(val).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      if (el.tagName === "TEXTAREA")
+        el.innerHTML = String(val)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
     } else {
       el.textContent = val;
     }
@@ -3887,10 +3928,14 @@ function openEnvelopeModal(tripKey) {
       arrivalDate: $("arrivalDate")?.value || trip.arrivalDate,
       contactName: $("contactName")?.value || trip.contactName,
       phone: $("phone")?.value || trip.phone,
-      envelopePickup: $("envelopePickup") ? $("envelopePickup").value : (trip.envelopePickup || ""),
-      envelopeTripContact: $("envelopeTripContact") ? $("envelopeTripContact").value : (trip.envelopeTripContact || ""),
-      envelopeTripPhone: $("envelopeTripPhone") ? $("envelopeTripPhone").value : (trip.envelopeTripPhone || ""),
-      envelopeTripNotes: combinedNotes !== undefined ? combinedNotes : (trip.envelopeTripNotes || ""),
+      envelopePickup: $("envelopePickup") ? $("envelopePickup").value : trip.envelopePickup || "",
+      envelopeTripContact: $("envelopeTripContact")
+        ? $("envelopeTripContact").value
+        : trip.envelopeTripContact || "",
+      envelopeTripPhone: $("envelopeTripPhone")
+        ? $("envelopeTripPhone").value
+        : trip.envelopeTripPhone || "",
+      envelopeTripNotes: combinedNotes !== undefined ? combinedNotes : trip.envelopeTripNotes || "",
     };
   }
 
@@ -3980,16 +4025,7 @@ function printEnvelopePages() {
     : [{ busId: trip?.busId || "", driver1: "", driver2: "" }];
   if (!trip || !assignments.length) return;
 
-  const edits = getEnvelopeEditsFromVisiblePage();
-  const tripForPrint = edits
-    ? {
-      ...trip,
-      envelopePickup: edits.pickup,
-      envelopeTripContact: edits.contact,
-      envelopeTripPhone: edits.phone,
-      envelopeTripNotes: edits.notes,
-    }
-    : trip;
+  const tripForPrint = trip;
 
   // Always print the white style, regardless of screen toggle
   const bgClass = "env-white";
@@ -4644,15 +4680,15 @@ function buildPrintScheduleFullLetter() {
           <tr>
             <th class="schedule-grid__col-bus">Bus</th>
             ${dates
-      .map((d, i) => {
-        const dObj = parseYMD(d);
-        const dayStr = dObj
-          ? dObj.toLocaleDateString("en-US", { weekday: "short" })
-          : dayIds[i];
-        const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
-        return `<th class="schedule-grid__col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
-      })
-      .join("")}
+              .map((d, i) => {
+                const dObj = parseYMD(d);
+                const dayStr = dObj
+                  ? dObj.toLocaleDateString("en-US", { weekday: "short" })
+                  : dayIds[i];
+                const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
+                return `<th class="schedule-grid__col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
+              })
+              .join("")}
           </tr>
         </thead>
         <tbody>
@@ -5231,8 +5267,33 @@ function wrapSelectInGlassDropdown(sel, opts) {
     return "";
   }
 
+  function getStatusColorClass(id, v) {
+    if (!v) return "";
+    let addClass = "";
+    if (id === "driverStatus") {
+      if (v === "pending") addClass = "status-pending";
+      else if (v === "assigned") addClass = "status-assigned";
+      else if (v === "confirmed") addClass = "status-ok";
+      else addClass = "status-ok";
+    } else if (id === "paymentStatus") {
+      if (v === "pending quote") addClass = "status-pending";
+      else if (v === "quoted") addClass = "status-assigned";
+      else addClass = "status-ok";
+    } else if (id === "invoiceStatus") {
+      if (v === "pending invoice") addClass = "status-pending";
+      else if (v === "invoiced") addClass = "status-assigned";
+      else if (v === "deposit received") addClass = "status-blue";
+      else if (v === "paid in full") addClass = "status-ok";
+    } else {
+      addClass = v === "pending" ? "status-pending" : "status-ok";
+    }
+    return addClass;
+  }
+
   function updateTrigger() {
     trigger.innerHTML = "";
+    const v = (sel.value ?? "").trim();
+    const lcValue = v.toLowerCase();
 
     // Add icon if applicable
     const iconName = getSelectedIcon();
@@ -5241,6 +5302,12 @@ function wrapSelectInGlassDropdown(sel, opts) {
       iconSpan.className = "material-symbols-outlined dropdown-icon is-active";
       iconSpan.style.marginRight = "8px";
       iconSpan.style.fontSize = "18px";
+
+      const colorClass = getStatusColorClass(statusId, lcValue);
+      if (colorClass) {
+        iconSpan.classList.add(colorClass);
+      }
+
       iconSpan.textContent = iconName;
       trigger.appendChild(iconSpan);
     }
@@ -5254,7 +5321,6 @@ function wrapSelectInGlassDropdown(sel, opts) {
 
     if (statusId && statusIds.has(statusId)) updateStatusSelect(sel);
     // Toggle placeholder styling for default/empty values
-    const v = (sel.value ?? "").trim();
     trigger.classList.toggle("is-empty", !v || v === "None");
   }
 
@@ -5269,12 +5335,19 @@ function wrapSelectInGlassDropdown(sel, opts) {
       btn.dataset.value = opt.value;
 
       const v = String(opt.value).trim();
+      const lcValue = v.toLowerCase();
       // Add icon if applicable to the dropdown options
       if (statusId && statusIds.has(statusId) && v) {
-        const itemIconName = getStatusIcon(statusId, v);
+        const itemIconName = getStatusIcon(statusId, lcValue);
         if (itemIconName) {
           const iconSpan = document.createElement("span");
           iconSpan.className = "material-symbols-outlined dropdown-icon";
+
+          const colorClass = getStatusColorClass(statusId, lcValue);
+          if (colorClass) {
+            iconSpan.classList.add(colorClass);
+          }
+
           iconSpan.textContent = itemIconName;
           btn.appendChild(iconSpan);
         }
@@ -5372,10 +5445,149 @@ function initGlassSelects() {
 }
 
 // ======================================================
+// 35B) QUOTE CALCULATOR LOGIC
+// ======================================================
+function createQuoteDayRow() {
+  const row = document.createElement("div");
+  row.className = "quote-calculator__day-row";
+
+  const dayCount = dom.quoteDaysContainer.children.length + 1;
+  row.innerHTML = `
+    <span class="quote-calculator__day-label">Day <span class="quote-day-num">${dayCount}</span></span>
+    <input type="number" class="quote-calculator__input quote-calculator__day-input" placeholder="Miles" min="0" />
+    <button type="button" class="quote-calculator__day-remove" title="Remove Day">
+      <span class="material-symbols-outlined" style="font-size: 16px;">close</span>
+    </button>
+  `;
+
+  const input = row.querySelector(".quote-calculator__day-input");
+  input.addEventListener("input", calculateQuote);
+
+  const removeBtn = row.querySelector(".quote-calculator__day-remove");
+  removeBtn.addEventListener("click", () => {
+    row.remove();
+    updateQuoteDayLabels();
+    calculateQuote();
+  });
+
+  dom.quoteDaysContainer.appendChild(row);
+  calculateQuote();
+}
+
+function updateQuoteDayLabels() {
+  const rows = Array.from(dom.quoteDaysContainer.children);
+  rows.forEach((row, idx) => {
+    const numSpan = row.querySelector(".quote-day-num");
+    if (numSpan) numSpan.textContent = idx + 1;
+  });
+}
+
+function calculateQuote() {
+  const ldRate = parseFloat(dom.quoteLDRate.value) || 4.5;
+  const deadMiles = parseFloat(dom.quoteDeadMiles.value) || 0;
+  const isLDTrip = dom.quoteTripType.checked;
+  const hasReliefDriver = dom.quoteReliefDriver.checked;
+  const hasHalfDay = dom.quoteHalfDay.checked;
+
+  const dayInputs = dom.quoteDaysContainer.querySelectorAll(".quote-calculator__day-input");
+  const totDays = dayInputs.length;
+
+  if (totDays === 0) {
+    dom.quoteTotalDriverPay.textContent = "$0";
+    dom.quoteFinalTotal.textContent = "$0";
+    return;
+  }
+
+  let totRevMiles = 0;
+  let totalDriverPay = 0;
+
+  const dailyBase = isLDTrip ? 260 : 250;
+  const mealAllowance = 20;
+
+  dayInputs.forEach((input) => {
+    const miles = parseFloat(input.value) || 0;
+    totRevMiles += miles;
+
+    // Driver pay for this day
+    let payForDay = Math.max(dailyBase, miles * 0.6) + mealAllowance;
+    totalDriverPay += payForDay;
+  });
+
+  if (hasReliefDriver) {
+    totalDriverPay *= 2;
+  }
+
+  // Trip Quote Formula
+  const earnedDays = Math.floor(totRevMiles / 430);
+  const extraDays = Math.max(0, totDays - earnedDays);
+
+  const mileageSubtotal = totRevMiles * ldRate;
+  const extraDaysSubtotal = extraDays * 950;
+
+  let totalQuote = mileageSubtotal + extraDaysSubtotal + deadMiles * 0.6;
+
+  if (hasHalfDay) {
+    totalQuote += 475; // 50% of Extra Day Rate ($950)
+  }
+
+  // Constraint: If Total Quote < (Total Calendar Days * 1,400), default to Daily Minimum total
+  const minimumBaseCost = totDays * 1400;
+  if (totalQuote < minimumBaseCost) {
+    totalQuote = minimumBaseCost;
+  }
+
+  // Calculate fields for display
+  const mileageCost = totalQuote;
+  const driver1Pay = hasReliefDriver ? totalDriverPay / 2 : totalDriverPay;
+  const driver2Pay = hasReliefDriver ? driver1Pay : 0;
+  const finalQuote = mileageCost + driver1Pay + driver2Pay;
+
+  // Update DOM
+  dom.quoteDaysBreakdown.textContent = `${earnedDays}/${extraDays}`;
+  dom.quoteMileageCost.textContent =
+    "$" +
+    mileageCost.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  dom.quoteDriver1Pay.textContent =
+    "$" +
+    driver1Pay.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  if (hasReliefDriver) {
+    dom.quoteDriver2Row.classList.remove("is-hidden");
+    dom.quoteDriver2Pay.textContent =
+      "$" +
+      driver2Pay.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  } else {
+    dom.quoteDriver2Row.classList.add("is-hidden");
+  }
+
+  dom.quoteFinalTotal.textContent =
+    "$" +
+    finalQuote.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function initQuoteCalculator() {
+  if (!dom.quoteAddDayBtn) return;
+  dom.quoteAddDayBtn.addEventListener("click", createQuoteDayRow);
+
+  // Listen to toolbar inputs
+  dom.quoteLDRate.addEventListener("change", calculateQuote);
+  dom.quoteDeadMiles.addEventListener("input", calculateQuote);
+  dom.quoteTripType.addEventListener("change", calculateQuote);
+  dom.quoteReliefDriver.addEventListener("change", calculateQuote);
+  dom.quoteHalfDay.addEventListener("change", calculateQuote);
+
+  // Initialize with 1 day row
+  if (dom.quoteDaysContainer.children.length === 0) {
+    createQuoteDayRow();
+  }
+}
+
+// ======================================================
 // 36) EVENTS
 // ======================================================
 function wireEvents() {
   initGlassSelects();
+  initQuoteCalculator();
 
   // Re-apply bus row visibility after wrapping (initGlassSelects wraps selects;
   // updateBusRowVisibility ran in buildBusRowsOnce before wrapping, so wrappers never got is-hidden)
@@ -5434,6 +5646,11 @@ function wireEvents() {
   dom.driversBtn.addEventListener("click", () => {
     if (isMobileOnly()) return;
     toggleCard("drivers");
+  });
+
+  dom.quoteBtn.addEventListener("click", () => {
+    if (isMobileOnly()) return;
+    toggleCard("quote");
   });
 
   // Close-card buttons (×) inside card headers
@@ -6008,11 +6225,11 @@ function wireEvents() {
     // clear all cached week data (both in-memory and persistent).
     try {
       state.weekCache.clear();
-    } catch { }
+    } catch {}
 
     try {
       CACHE.clearAll();
-    } catch { }
+    } catch {}
   }
 
   dom.tripDetailsModal?.addEventListener("click", (e) => {
@@ -6878,7 +7095,7 @@ if (dom.printDailyMaintenancePlanBtn) {
 .schedule-grid-container.is-loading-bars .schedule-grid__trip-bar { opacity: 0.18; pointer-events: none; }
 `;
     document.head.appendChild(style);
-  } catch { }
+  } catch {}
 
   setSidePanelMode("off");
   enforceDesktopEditing();

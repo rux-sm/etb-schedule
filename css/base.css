@@ -1,0 +1,1207 @@
+/* ==========================================================================
+   2-GENERIC / RESET
+   Browser resets, box-sizing, custom scrollbars
+   ========================================================================== */
+
+/* ── SCROLLBARS — Overlay style (hide gutter/track) ────────────────────── */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--surface-container-highest);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--accent);
+  border: 1px solid transparent;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ── BASE & RESET ──────────────────────────────────────────────────────── */
+/* Antialiasing & legibility: smooth fonts, better kerning/ligatures */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  overscroll-behavior: none;
+  touch-action: manipulation;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── GLOBAL FOCUS STATES — Centralized keyboard navigation ─────────────── */
+
+/* Kill the browser native outline universally for BOTH click and tab —
+   component styles (border-color) handle the focus visual for all elements */
+*:focus {
+  outline: none;
+}
+
+/* Ensure :focus-visible (keyboard tab) also gets no extra outline —
+   the component :focus { border-color } rule already fires for both */
+*:focus-visible {
+  outline: none;
+}
+/* ==========================================================================
+   3-ELEMENTS / TYPOGRAPHY & BASE HTML
+   Unclassed HTML elements (body, h1-h6, inputs)
+   ========================================================================== */
+
+body {
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  background: var(--surface);
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 400;
+}
+
+/* Base section title (used in cards, modals, headers) */
+.section-title {
+  font-family: var(--font-sans);
+  font-size: var(--heading-2-size);
+  font-weight: var(--heading-2-weight);
+  line-height: var(--heading-2-line-height) !important;
+  letter-spacing: var(--heading-2-letter-spacing);
+  color: var(--heading-2-color);
+  padding: 0 0;
+}
+
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family: var(--font-sans);
+}
+
+/* ── ICONS — Material Symbols ──────────────────────────────────────────── */
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 1.375rem;
+  /* 22px, matches heading-2-size */
+  line-height: 1;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  vertical-align: middle;
+}
+/* ==========================================================================
+   1-TOOLS / ANIMATIONS
+   Global @keyframes and generic animation classes
+   ========================================================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-down,
+.waiting-list-row {
+  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes modalPopIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes menuPopIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ── Trip Bar specific animations (migrating to generic if reusable) ────── */
+
+@keyframes glow-pulse {
+  from {
+    box-shadow:
+      0 0 8px color-mix(in srgb, var(--tripbar-color) 20%, transparent),
+      0 2px 8px rgba(0, 0, 0, 0.2);
+    filter: brightness(var(--tripbar-hover-brightness-from))
+      saturate(var(--tripbar-hover-saturate-from));
+  }
+
+  to {
+    box-shadow:
+      0 0 24px color-mix(in srgb, var(--tripbar-color) 60%, transparent),
+      0 6px 16px rgba(0, 0, 0, 0.5);
+    filter: brightness(var(--tripbar-hover-brightness-to))
+      saturate(var(--tripbar-hover-saturate-to));
+  }
+}
+
+@keyframes wiggle {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-1deg);
+  }
+
+  50% {
+    transform: rotate(1deg);
+  }
+
+  75% {
+    transform: rotate(-0.5deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.02);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes jello {
+  0%,
+  11.1%,
+  100% {
+    transform: none;
+  }
+
+  22.2% {
+    transform: skewX(-1.5deg) skewY(-1.5deg);
+  }
+
+  33.3% {
+    transform: skewX(1deg) skewY(1deg);
+  }
+
+  44.4% {
+    transform: skewX(-0.5deg) skewY(-0.5deg);
+  }
+
+  55.5% {
+    transform: skewX(0.25deg) skewY(0.25deg);
+  }
+
+  66.6% {
+    transform: skewX(-0.1deg) skewY(-0.1deg);
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.04);
+  }
+
+  100% {
+    transform: scale(1.01);
+  }
+}
+
+@keyframes today-pulse {
+  from {
+    box-shadow:
+      0 0 0 0 color-mix(in srgb, var(--accent) 40%, transparent),
+      0 0 4px color-mix(in srgb, var(--accent) 20%, transparent);
+    background: color-mix(in srgb, var(--accent) 100%, transparent);
+    filter: brightness(1) saturate(1);
+  }
+
+  to {
+    box-shadow:
+      0 0 0 6px color-mix(in srgb, var(--accent) 0%, transparent),
+      0 0 16px color-mix(in srgb, var(--accent) 80%, transparent);
+    background: var(--accent);
+    filter: brightness(1.3) saturate(1.3);
+  }
+}
+
+@keyframes arrow-left-bounce {
+  0%,
+  100% {
+    transform: translate(0, -50%);
+  }
+
+  50% {
+    transform: translate(-3px, -50%);
+  }
+}
+
+@keyframes arrow-right-bounce {
+  0%,
+  100% {
+    transform: translate(0, -50%);
+  }
+
+  50% {
+    transform: translate(3px, -50%);
+  }
+}
+/* ==========================================================================
+   6-UTILITIES / HELPERS
+   Single-purpose utility classes (e.g. .hidden, .text-center)
+   ========================================================================== */
+
+.hidden,
+.is-hidden {
+  display: none !important;
+}
+
+.is-visible {
+  display: block !important;
+}
+
+.is-flex-visible {
+  display: flex !important;
+}
+
+.is-invisible {
+  visibility: hidden !important;
+}
+
+.block {
+  display: block;
+}
+
+.flex {
+  display: flex;
+}
+
+.grid {
+  display: grid;
+}
+
+.mt-0 {
+  margin-top: 0;
+}
+
+.mt-1 {
+  margin-top: 4px;
+}
+
+.mt-2 {
+  margin-top: 8px;
+}
+
+.mt-3 {
+  margin-top: 12px;
+}
+
+.mt-4 {
+  margin-top: 16px;
+}
+
+.p-0 {
+  padding: 0;
+}
+
+.p-2 {
+  padding: 8px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: end;
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+/* ==========================================================================
+   17) PRINT
+   ========================================================================== */
+/* Letter full: 100px body rows (98px bars + 2px); 32px header; table forced to 1400px for scale coupling */
+
+#printRoot.print-mode-letter-full .print-table thead th {
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+}
+
+#printRoot.print-mode-letter-full .print-table tbody td {
+  height: var(--schedule-row-height) !important;
+  min-height: var(--schedule-row-height) !important;
+  max-height: var(--schedule-row-height) !important;
+}
+
+@media print {
+  @page {
+    /* Legal landscape: 14in × 8.5in — tighter margins to fill width */
+    size: legal landscape;
+    margin: 0.25in;
+  }
+
+  /* Remove default padding/margin so content fits with Safari/Chrome print defaults */
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100%;
+    height: 100%;
+
+    /* Force light-mode variables so dark mode doesn't leak into the white printout */
+    --border: rgba(0, 0, 0, 0.15) !important;
+    --border-strong: rgba(0, 0, 0, 0.3) !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 10pt;
+  }
+
+  /* Letter full: 100px body rows; 32px header; lock table width to JS math */
+  #printRoot.print-mode-letter-full {
+    --schedule-row-height: 100px !important;
+    --tripbar-inset: 0px;
+    --tripbar-inset-left: 0px;
+    --tripbar-inset-right: 0px;
+  }
+
+  #printRoot.print-mode-letter-full .print-table {
+    width: 1400px !important;
+    min-width: 1400px !important;
+    table-layout: fixed !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-table thead th {
+    height: 28px !important;
+    padding: 0 !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-table tbody td {
+    height: var(--schedule-row-height) !important;
+    min-height: var(--schedule-row-height) !important;
+    max-height: var(--schedule-row-height) !important;
+    padding: 0 !important;
+  }
+
+  #printRoot.print-mode-letter-full .schedule-grid__day-date {
+    font-size: 10pt !important;
+  }
+
+  #printRoot.print-mode-letter-full .schedule-grid__day-name {
+    font-size: 9pt !important;
+  }
+
+  /* Remove "today" highlight colors for print */
+  .schedule-grid__header-cell--today {
+    background: transparent !important;
+    border-top: none !important;
+  }
+
+  .schedule-grid__header-cell--today .schedule-grid__day-date {
+    background: transparent !important;
+    color: inherit !important;
+    width: auto !important;
+    height: auto !important;
+    text-shadow: none !important;
+    animation: none !important;
+    font-weight: normal !important;
+  }
+
+  .app,
+  .app-header,
+  .theme-toggle,
+  .context-menu,
+  .modal,
+  .loading-overlay,
+  #toast,
+  #toastBackdrop {
+    display: none !important;
+  }
+
+  #printRoot {
+    display: block !important;
+    visibility: visible !important;
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .print-page {
+    page-break-after: always;
+    padding: 0.1in;
+    box-sizing: border-box;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .print-page:last-child {
+    page-break-after: auto;
+  }
+
+  /* Force Letter Landscape content area (10in @ 96dpi = 960px) — prevents 2nd page overflow */
+  #printRoot.print-mode-letter-full .print-page {
+    width: 960px !important;
+    height: 720px !important;
+    overflow: visible !important;
+    /* FIX: Prevents the bottom edge from being clipped */
+    page-break-after: avoid !important;
+    padding: 2mm !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Letter full: scale 1400px agenda to fit; anchor to top left to avoid browser clipping bugs */
+  #printRoot.print-mode-letter-full .print-card {
+    position: relative !important;
+    /* FIX: Removed absolute positioning */
+    top: 0 !important;
+    left: 0 !important;
+    /* FIX: Removed 50% offset */
+    width: 1400px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box;
+    transform: scale(var(--print-scale, 1)) !important;
+    /* FIX: Removed translateX(-50%) */
+    transform-origin: top left !important;
+    /* FIX: Anchors safely to the corner */
+  }
+
+  /* Fix for trip bar clipping in legal print grid */
+  .schedule-grid__row-bars {
+    overflow: visible !important;
+  }
+
+  #printRoot .print-table .schedule-grid__row-bars {
+    position: absolute !important;
+    overflow: visible !important;
+    z-index: 10 !important;
+  }
+
+  #printRoot .print-table td.week-start-cell {
+    overflow: visible !important;
+    position: relative !important;
+  }
+
+  #printRoot .print-table .schedule-grid__trip-bar {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    overflow: visible !important;
+  }
+
+  /* Legal print: hide itinerary, contact, driver status icons to make room for others */
+  .print-table
+    .schedule-grid__trip-bar__status-badges
+    > .schedule-grid__trip-bar__mini-badge:nth-child(3),
+  .print-table
+    .schedule-grid__trip-bar__status-badges
+    > .schedule-grid__trip-bar__mini-badge:nth-child(4),
+  .print-table
+    .schedule-grid__trip-bar__status-badges
+    > .schedule-grid__trip-bar__mini-badge:nth-child(5) {
+    display: none !important;
+  }
+
+  .print-card {
+    background: white;
+    width: 100%;
+    transform: scale(var(--print-scale, 1));
+    transform-origin: top left;
+  }
+
+  /* Print header: schedule-style header (cloned agenda-header) */
+  .print-header {
+    background: white !important;
+    height: auto !important;
+    min-height: 24px !important;
+    margin-bottom: 6px !important;
+    padding: 0 !important;
+    justify-content: flex-start !important;
+  }
+
+  .print-header .agenda-header__inner {
+    margin: 0 !important;
+    min-height: 0 !important;
+  }
+
+  .print-header-logo {
+    flex-shrink: 0;
+    margin-inline-end: 10px;
+    display: flex !important;
+  }
+
+  .print-header-logo .app-header__logo-img {
+    height: 24px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .print-header .agenda-header__week-heading {
+    color: #333 !important;
+    font-size: 14pt !important;
+    line-height: 1.2 !important;
+  }
+
+  .print-header .agenda-header__week-date .wk-month,
+  .print-header .agenda-header__week-date .wk-month-end {
+    color: #111 !important;
+  }
+
+  .print-header .agenda-header__week-date .wk-dates {
+    color: #444 !important;
+  }
+
+  .print-header .agenda-header__week-date .wk-year {
+    color: #0066cc !important;
+  }
+
+  .print-title {
+    font-size: 16pt;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: start;
+    border-bottom: none;
+    padding-bottom: 5px;
+    color: #333;
+  }
+
+  .print-table {
+    width: 100% !important;
+    min-width: 100% !important;
+    /* card content: 1320 - 20 padding */
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    table-layout: fixed !important;
+    border: none !important;
+    border-inline-start: none !important;
+    /* Main outer left/top borders for the entire grid */
+    border-top: 1px solid var(--border) !important;
+    border-left: 1px solid var(--border) !important;
+  }
+
+  /* Letter full: force 1400px so column metrics and scale are tightly coupled; 52px bus matches JS colMetrics */
+  #printRoot.print-mode-letter-full .print-table {
+    width: 1400px !important;
+    min-width: 1400px !important;
+    max-width: 1400px !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    table-layout: fixed !important;
+    box-sizing: border-box !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-table .schedule-grid__col-bus {
+    width: 52px !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-table .schedule-grid__col-day,
+  #printRoot.print-mode-letter-full .print-table col.schedule-grid__col-day {
+    width: calc((1400px - 52px) / 7) !important;
+  }
+
+  .print-table .schedule-grid__col-bus {
+    width: var(--bus-col-w) !important;
+  }
+
+  .print-table .schedule-grid__col-day,
+  .print-table col.schedule-grid__col-day {
+    width: calc((100% - var(--bus-col-w)) / 7) !important;
+    /* 7 equal day columns */
+  }
+
+  /* Disable sticky positioning to prevent background from covering collapsed borders */
+  .print-table .schedule-grid__header-cell,
+  .print-table .schedule-grid__cell:first-child,
+  .print-table .schedule-grid__bus-cell {
+    position: static !important;
+    z-index: auto !important;
+  }
+
+  .print-table tbody tr:not(.schedule-grid__row--notes) {
+    page-break-inside: avoid;
+  }
+
+  .print-table td.week-start-cell {
+    padding: 0 !important;
+  }
+
+  .print-table th {
+    background-color: #f8f9fa !important;
+  }
+
+  .print-table td {
+    /* Only apply right and bottom borders to avoid doubling up interior lines */
+    border-top: none !important;
+    border-left: none !important;
+    border-inline-start: none !important;
+    border-inline-end: none !important;
+    border-right: 1px solid var(--border) !important;
+    border-bottom: 1px solid var(--border) !important;
+    box-sizing: border-box !important;
+    padding: 2px !important;
+    font-size: 9pt !important;
+    position: relative;
+    height: 90px !important;
+    vertical-align: top;
+  }
+
+  .print-table thead th {
+    border-top: none !important;
+    border-left: none !important;
+    border-inline-start: none !important;
+    border-inline-end: none !important;
+    border-right: 1px solid var(--border) !important;
+    border-bottom: 1px solid var(--border) !important;
+    box-sizing: border-box !important;
+    padding: 2px !important;
+    font-size: 9pt !important;
+    position: relative;
+    height: var(--day-row-h) !important;
+    vertical-align: top;
+  }
+
+  .print-table tbody tr.schedule-grid__row--notes td,
+  .print-table tbody tr.schedule-grid__row--notes {
+    height: 16px !important;
+    min-height: 16px !important;
+    max-height: 16px !important;
+  }
+
+  /* Letter full: same proportions as 1400px agenda (row height from theme), scale handles fit */
+  #printRoot.print-mode-letter-full .print-header {
+    height: 40px !important;
+    max-height: 40px !important;
+    overflow: hidden !important;
+    margin-bottom: 6px !important;
+    padding: 0 !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-header .agenda-header__week-heading {
+    font-size: 14pt !important;
+    line-height: 1.2 !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-header-logo .app-header__logo-img {
+    height: 24px !important;
+  }
+
+  /* Letter: 28px header to give more room to data rows; 100px body rows for 98px trip bars */
+  #printRoot.print-mode-letter-full .print-table thead th {
+    height: 28px !important;
+    padding: 0 !important;
+    font-size: inherit !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-table tbody td {
+    height: 100px !important;
+    min-height: 100px !important;
+    max-height: 100px !important;
+    padding: 0 !important;
+    font-size: inherit !important;
+  }
+
+  /* Trip bars: sharper corners for print */
+
+  /* Print-specific trip bar overrides in css/5-components/_schedule-grid.css */
+}
+
+/* ==========================================================================
+   18) PRINT (FULL LETTER LAYOUT - NEW TABULAR VERSION)
+   ========================================================================== */
+@media print {
+  .print-page-letter {
+    width: 100%;
+    page-break-after: always;
+  }
+
+  .print-page-letter:last-child {
+    page-break-after: auto;
+  }
+
+  /* When using print-mode-letter-full, the page is Letter Landscape */
+  #printRoot.print-mode-letter-full {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-header {
+    height: 40px !important;
+    max-height: 40px !important;
+    overflow: hidden !important;
+    margin-bottom: 5px !important;
+    padding-bottom: 0 !important;
+    border-bottom: 2px solid #ccc;
+    display: flex;
+    align-items: center;
+  }
+
+  #printRoot.print-mode-letter-full .print-title {
+    font-size: 16pt !important;
+    font-weight: bold;
+    color: black;
+    margin: 0;
+    line-height: 40px !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-data-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    table-layout: fixed !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-data-table th,
+  #printRoot.print-mode-letter-full .print-data-table td {
+    border: 1px solid #ccc !important;
+    padding: 6px !important;
+    font-size: 9pt !important;
+    vertical-align: top !important;
+    color: black !important;
+    background: white !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-data-table th {
+    background-color: #f8f9fa !important;
+    font-weight: bold !important;
+    text-align: center !important;
+    height: 24px !important;
+    max-height: 24px !important;
+    padding: 2px 4px !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-data-table .schedule-grid__col-bus {
+    width: 60px !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-data-table th:first-child {
+    font-size: 8pt !important;
+    padding: 2px !important;
+  }
+
+  #printRoot.print-mode-letter-full .print-data-table tbody tr {
+    page-break-inside: avoid !important;
+  }
+
+  #printRoot.print-mode-letter-full .schedule-grid__bus-cell strong {
+    font-size: 11pt !important;
+  }
+
+  #printRoot.print-mode-letter-full .trip-cell {
+    background-color: white !important;
+  }
+
+  #printRoot.print-mode-letter-full .trip-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  #printRoot.print-mode-letter-full .trip-dest-cust {
+    font-size: 9.5pt;
+  }
+
+  #printRoot.print-mode-letter-full .trip-times,
+  #printRoot.print-mode-letter-full .trip-drivers,
+  #printRoot.print-mode-letter-full .trip-notes {
+    font-size: 9pt;
+  }
+}
+/* ==========================================================================
+   3-ELEMENTS / FORMS
+   Base styles for all interactive form fields:
+   native inputs, selects, textareas, and custom .select-trigger buttons
+   ========================================================================== */
+
+/* --- 1. SHARED BASE — all field types share these styles --- */
+input,
+select,
+textarea,
+.select-trigger {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+
+  height: var(--input-height);
+  padding: 0 var(--input-padding-x);
+
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--input-border-radius);
+  background-color: var(--color-input-bg);
+
+  font-size: var(--input-font-size);
+  font-weight: var(--input-font-weight);
+  color: var(--text);
+  text-align: left;
+
+  outline: none;
+  cursor: pointer;
+
+  transition:
+    border-color 0.12s ease,
+    box-shadow 0.12s ease,
+    background 0.12s ease;
+}
+
+/* --- 2. PLAIN TEXT INPUTS — override cursor only --- */
+input[type="text"],
+input[type="tel"] {
+  cursor: text;
+}
+
+/* --- 3. DATE / TIME / NUMBER — remove native chrome --- */
+input[type="date"],
+input[type="time"],
+input[type="number"] {
+  appearance: none;
+}
+
+/* --- 4. NATIVE SELECT DROPDOWNS --- */
+select {
+  padding: 0 var(--input-padding-x);
+  appearance: none;
+  -webkit-appearance: none;
+
+  /* Hint OS-level popup to render dark (affects Tab+Enter keyboard dropdown) */
+  color-scheme: dark;
+
+  /* Custom chevron arrow */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 14px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+select.select--centered {
+  text-align: center;
+  padding-left: 32px;
+}
+
+/* --- 5. CUSTOM DROPDOWN BUTTONS (.select-trigger) --- */
+/* These are <button> elements that visually behave as dropdowns.
+   The shared base gives them the same border/bg/font as inputs.
+   NOTE: the chevron icon is part of the button's inner HTML — no background-image needed here. */
+.select-trigger {
+  padding: 0 var(--input-padding-x);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  border-radius: var(--input-border-radius);
+  border: solid transparent;
+}
+
+/* --- 6. TEXTAREAS --- */
+textarea {
+  min-height: var(--input-height);
+  height: auto;
+  padding: 8px var(--input-padding-x);
+  resize: vertical;
+  line-height: 1.4;
+  cursor: text;
+}
+
+/* --- 7. PLACEHOLDER & HOVER --- */
+input::placeholder,
+textarea::placeholder {
+  color: var(--placeholder);
+  opacity: 1;
+}
+
+input:hover,
+select:hover,
+textarea:hover,
+.select-trigger:hover {
+  border-color: var(--color-input-border-hover, var(--border-strong));
+}
+
+/* --- 8. FOCUS — unified for ALL field types --- */
+/* Single rule covers: text inputs, date/time, native selects,
+   textareas, and custom .select-trigger dropdown buttons */
+input:focus,
+select:focus,
+textarea:focus,
+.select-trigger:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);
+  outline: none;
+}
+
+/* --- 9. DATE/TIME PICKER ICON --- */
+::-webkit-calendar-picker-indicator {
+  filter: var(--date-picker-filter);
+  opacity: 0.85;
+  cursor: pointer;
+}
+
+::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+/* Unfilled date/time fields and default selects: dim placeholder text */
+input[type="date"].is-empty:not(:focus)::-webkit-datetime-edit,
+input[type="time"].is-empty:not(:focus)::-webkit-datetime-edit {
+  color: var(--placeholder);
+}
+
+select.is-empty:not(:focus),
+.select-trigger.is-empty {
+  color: var(--placeholder);
+}
+
+/* --- 10. LABELS --- */
+.form-group > label,
+.field-label {
+  display: block;
+  width: 100%;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  line-height: 1.5;
+  padding-left: 4px;
+  margin-bottom: 4px;
+  letter-spacing: 0.05em;
+}
+
+/* --- 11. FORM GRID LAYOUT --- */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  width: 100%;
+  gap: 8px;
+  margin: 16px auto;
+  align-items: start;
+}
+
+.col-2 {
+  grid-column: span 2;
+}
+.col-4 {
+  grid-column: span 4;
+}
+.col-5 {
+  grid-column: span 5;
+}
+.col-6 {
+  grid-column: span 6;
+}
+.col-8 {
+  grid-column: span 8;
+}
+.col-12 {
+  grid-column: span 12;
+}
+
+.subsection {
+  grid-column: span 12;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.subsection-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.card__footer {
+  padding: 12px 16px;
+  background: transparent;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  padding: 0;
+  width: 100%;
+}
+
+.form-actions > .btn {
+  flex: 1;
+  min-width: 80px;
+  justify-content: center;
+}
+
+@container form-grid (max-width: 350px) {
+  .col-2,
+  .col-4,
+  .col-5,
+  .col-6,
+  .col-8 {
+    grid-column: span 12;
+  }
+  .subsection-grid {
+    grid-template-columns: 1fr;
+  }
+  .form-actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 800px) {
+  .form-grid .col-2,
+  .form-grid .col-4,
+  .form-grid .col-5,
+  .form-grid .col-6,
+  .form-grid .col-8 {
+    grid-column: span 12;
+  }
+  .form-grid .subsection-grid {
+    grid-template-columns: 1fr;
+  }
+  .form-grid .form-actions {
+    justify-content: flex-start;
+  }
+}
+
+/* --- 12. COMPONENT OVERRIDES — glass style for panel selects --- */
+
+/* Trip editor & sidebar selects: glass background to match context menus */
+#tripInfoCard select,
+#notesCard select,
+#driverWeekCard select,
+.app-layout__sidebar--right select,
+.app-layout__sidebar--left select,
+.dropdown_item {
+  background-color: color-mix(in srgb, var(--surface-container) 30%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+}
+
+/* Legacy bus-assign grid label spacing fix */
+#busGrid.bus-assign .field-label {
+  margin-bottom: calc(1px - 7px);
+}

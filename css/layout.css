@@ -1,0 +1,682 @@
+/* ==========================================================================
+   4-OBJECTS / LAYOUT
+   Structural wrappers, grid systems, no cosmetics
+   ========================================================================== */
+/* Layout shell (.app, .main, .container) lives in _layout.css; this file defines .app-layout* (BEM) for post–Patch 7. */
+
+/* --- LAYOUT PANELS (Sidebars & Main Schedule Area) --- */
+.app-layout {
+  display: grid;
+  grid-template-columns: var(--panel-width) 1fr var(--panel-width);
+  gap: 0;
+  align-items: start;
+  overflow: visible;
+  flex: 1; /* Take available space in flex container */
+  min-height: 0; /* Critical for flex children to respect parent constraints */
+}
+
+.app-layout__sidebar--right,
+.app-layout__sidebar--left,
+.app-layout__main {
+  min-width: 0;
+}
+
+/* Margin below center schedule card only */
+.app-layout__main {
+  padding-bottom: 24px;
+}
+
+/* Sidebar symmetry: identical background for both panels (padding on .card-content only) */
+.app-layout__sidebar--left:not(.app-layout__sidebar--collapsed),
+.app-layout__sidebar--right:not(.app-layout__sidebar--collapsed) {
+  background: var(--surface-2);
+  padding: 0;
+  margin: 0;
+  /* box-shadow removed for flat UI */
+}
+
+.app-layout__main > .card {
+  height: auto;
+  /* Match table height, don't stretch */
+  max-height: 100%;
+  /* But don't exceed viewport */
+
+  padding: 0 12px 12px 12px;
+  margin: 12px 0 12px 0;
+  border-radius: 0px;
+  background: var(--surface-1);
+  display: flex;
+  flex-direction: column;
+
+  overflow: visible;
+  /* border: 1px solid var(--border); */
+  /* Let table container handle scrolling */
+}
+
+.app-layout--collapsed {
+  grid-template-columns: 1fr;
+}
+
+.app-layout--start-collapsed {
+  grid-template-columns: 0 1fr var(--panel-width);
+}
+
+.app-layout--end-collapsed {
+  grid-template-columns: var(--panel-width) 1fr 0;
+}
+
+.app-layout--sides-collapsed {
+  grid-template-columns: 0 1fr 0;
+}
+
+/* Mobile: let the schedule table fit the screen instead of forcing 1150px */
+@media (max-width: 899px) {
+  .schedule-grid {
+    min-width: 100%;
+  }
+
+  /* Ensure the main card reaches the edges for a full-screen mobile look */
+  .app-layout__main > .card {
+    margin: 0 !important;
+    padding: 0 !important;
+    /* Remove the 18px padding */
+    width: 100% !important;
+    border-radius: 0;
+  }
+
+  .app {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .main {
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+
+    /* Portrait: Home bar protection at bottom */
+    @media (orientation: portrait) {
+      padding-bottom: env(safe-area-inset-bottom, 20px);
+    }
+
+    /* Landscape: Notch protection on sides + Home bar bottom */
+    @media (orientation: landscape) {
+      padding-left: env(safe-area-inset-left, 0);
+      padding-right: env(safe-area-inset-right, 0);
+      padding-bottom: env(safe-area-inset-bottom, 12px);
+    }
+  }
+
+  .container {
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Scheduler layout — single column on mobile */
+  .app-layout {
+    grid-template-columns: 1fr;
+  }
+
+  #layoutPanels {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .app-layout__sidebar--right {
+    display: none;
+    flex: 0 0 auto;
+    max-height: 45vh;
+    overflow-y: auto;
+    width: 100%;
+  }
+
+  .app-layout__sidebar--right.is-active {
+    display: block;
+  }
+
+  .app-layout__main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    order: 2;
+    width: 100%;
+    min-height: 0;
+  }
+
+  .app-layout__main > .card {
+    flex: 0 1 auto;
+    height: auto;
+    width: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .app-layout__main .schedule-grid-container,
+  .schedule-grid-container {
+    flex: 0 1 auto;
+    display: block;
+    overflow: auto;
+  }
+}
+
+@media (min-width: 900px) {
+  #layoutPanels {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    flex: 1;
+    overflow: visible;
+    min-height: 0;
+    gap: 12px;
+    /* Increased gutter */
+  }
+
+  .app-layout__main {
+    flex: 1;
+    order: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+    align-items: stretch;
+    /* Stretch card to full width */
+  }
+
+  .app-layout__main > .card {
+    height: auto;
+    /* Match table height, don't stretch */
+    max-height: 100%;
+    /* But don't exceed viewport */
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+    /* Let table container handle scrolling */
+  }
+
+  .app-layout__main .schedule-grid-container {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+  }
+
+  /* Suppress horizontal scrollbar flash during panel transition */
+  .app-layout.is-resizing .app-layout__main .schedule-grid-container {
+    overflow-x: hidden;
+  }
+
+  .app-layout__sidebar--left,
+  .app-layout__sidebar--right {
+    width: var(--panel-width);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    /* Increased gutter */
+    border-right: none;
+    /* Remove border */
+    transition:
+      width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.2s ease,
+      margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: visible;
+    white-space: nowrap;
+  }
+
+  .app-layout__sidebar--left {
+    order: 0;
+  }
+
+  .app-layout__sidebar--right {
+    order: 2;
+    border-right: none;
+    border-left: none;
+    /* Remove border */
+  }
+
+  .app-layout__sidebar--left.app-layout__sidebar--collapsed,
+  .app-layout__sidebar--right.app-layout__sidebar--collapsed {
+    width: 0 !important;
+    opacity: 0;
+    margin: 0 !important;
+    pointer-events: none;
+  }
+
+  .app-layout__sidebar--left > .card,
+  .app-layout__sidebar--right > .card {
+    min-width: 100%;
+    width: 100%;
+    height: 700px;
+  }
+
+  .app-layout__sidebar--left > .card:not(.is-hidden),
+  .app-layout__sidebar--right > .card:not(.is-hidden) {
+    flex: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+  }
+
+  .app-layout__sidebar--left > .card:not(.is-hidden) .card__header,
+  .app-layout__sidebar--left > .card:not(.is-hidden) .card__content,
+  .app-layout__sidebar--left > .card:not(.is-hidden) .card__footer {
+    padding-left: 24px;
+    padding-right: 12px;
+  }
+
+  .app-layout__sidebar--left > .card:not(.is-hidden) .card__content {
+    flex: auto;
+    overflow-y: auto;
+    min-height: 0;
+  }
+
+  .app-layout__sidebar--right > .card:not(.is-hidden) .card__header,
+  .app-layout__sidebar--right > .card:not(.is-hidden) .card__content,
+  .app-layout__sidebar--right > .card:not(.is-hidden) .card__footer {
+    padding-left: 12px;
+    padding-right: 24px;
+  }
+
+  .app-layout__sidebar--right > .card:not(.is-hidden) .card__content {
+    flex: auto;
+    overflow-y: auto;
+    min-height: 0;
+  }
+
+  .app-layout__main {
+    position: relative;
+    z-index: 1;
+  }
+
+  .app-layout__main > .card {
+    box-shadow: none;
+  }
+
+  [data-theme="light"] .app-layout__main > .card {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.5);
+  }
+
+  .app-layout__sidebar--right.is-hidden {
+    display: none;
+  }
+
+  .app-layout--collapsed .app-layout__main {
+    width: 100%;
+    flex: 1;
+  }
+}
+/* ==========================================================================
+   4-OBJECTS / GRID
+   Responsive form layout grid and column system
+   (BEM refactor of .form-grid and .col-*)
+   ========================================================================== */
+
+/* --- 1. The Global Form Container --- */
+.form-layout {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  /* Rigid fractions */
+  width: 100%;
+  /* Fixed width slightly smaller than panel (420px) to allow for padding/gutters */
+  gap: 8px;
+  margin: 16px auto;
+  align-items: start;
+  container-type: inline-size;
+  container-name: form-layout;
+}
+
+/* --- 2. Unified Form Group Wrapper --- */
+.form-layout__group > label,
+.form-layout__label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  line-height: 1.25;
+  margin-bottom: 1px !important;
+  letter-spacing: 0.05em;
+  width: 100%;
+  min-height: 1.4em;
+}
+
+.form-layout__group > input,
+.form-layout__group > select,
+.form-layout__group > textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* --- 3. Column Spans --- */
+.form-layout__col-2 {
+  grid-column: span 2;
+}
+.form-layout__col-4 {
+  grid-column: span 4;
+}
+.form-layout__col-5 {
+  grid-column: span 5;
+}
+.form-layout__col-6 {
+  grid-column: span 6;
+}
+.form-layout__col-8 {
+  grid-column: span 8;
+}
+.form-layout__col-12 {
+  grid-column: span 12;
+}
+
+/* --- 4. Subsections --- */
+.form-layout__subsection {
+  grid-column: span 12;
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  margin-bottom: calc(1px - 7px) !important;
+}
+
+.form-layout__subsection > .form-layout__label {
+  margin-bottom: 1px !important;
+}
+
+.form-layout__subsection > .toggle-pill-grid {
+  margin-top: 0;
+}
+
+/* We use negative margin to counteract the 8px grid gap, leaving 1px visual space + border */
+#busGrid.bus-assign .form-layout__label {
+  margin-bottom: calc(1px - 7px) !important;
+}
+
+.form-layout__subsection-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+/* --- 5. Actions Row --- */
+.form-layout__actions {
+  display: flex;
+  gap: 8px;
+  padding: 0 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ==========================================================================
+   Container & Media Queries for Grid Responsiveness
+   ========================================================================== */
+
+/* Container query for extremely narrow form layouts */
+@container form-layout (max-width: 350px) {
+  .form-layout__col-2,
+  .form-layout__col-4,
+  .form-layout__col-5,
+  .form-layout__col-6,
+  .form-layout__col-8 {
+    grid-column: span 12;
+  }
+
+  .form-layout__subsection-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-layout__actions {
+    justify-content: flex-start;
+  }
+}
+
+/* Viewport-based responsive behavior */
+@media (max-width: 800px) {
+  .form-layout .form-layout__col-2,
+  .form-layout .form-layout__col-4,
+  .form-layout .form-layout__col-5,
+  .form-layout .form-layout__col-6,
+  .form-layout .form-layout__col-8 {
+    grid-column: span 12;
+  }
+
+  .form-layout .form-layout__subsection-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-layout .form-layout__actions {
+    justify-content: flex-start;
+  }
+}
+/* ==========================================================================
+   4-OBJECTS / LAYOUT
+   App shell (.app, .main, .container), shared .heading-1; BEM in _objects.css, _app-header.css.
+   ========================================================================== */
+.app {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
+  width: 100%;
+  background: var(--app-bg);
+  overflow: hidden;
+}
+
+.main {
+  padding: 0 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  /* Prevent main from scrolling */
+  flex: 1;
+  /* Take available space */
+}
+
+.container {
+  max-width: var(--layout-container-max);
+  margin: 0 auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: visible;
+  /* Allow dropdowns to display outside container */
+}
+
+/* Page-level title: shared style (app header, agenda week) */
+.heading-1 {
+  font-family: var(--font-sans);
+  font-size: var(--heading-1-size);
+  font-weight: var(--heading-1-weight);
+  color: var(--heading-1-color);
+  line-height: var(--heading-1-line-height);
+  margin: 0;
+  letter-spacing: var(--heading-1-letter-spacing);
+  white-space: nowrap;
+}
+
+/* App header (top bar) BEM in css/5-components/_app-header.css */
+
+.week-picker-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  cursor: pointer;
+  height: var(--week-picker-height);
+  padding: 0 var(--control-padding-x);
+  border-radius: var(--control-radius-icon);
+  transition: background-color 160ms ease;
+  position: relative;
+}
+
+.week-picker-trigger:hover {
+  background-color: var(--surface-4);
+  color: var(--text);
+}
+
+.week-picker-trigger .date-input-overlay {
+  inset-inline-start: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Control groups */
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#todayBtnMobile {
+  display: none;
+}
+
+/* Panel layout: .app-layout* defined in _objects.css */
+
+/* Mobile layout */
+@media (max-width: 899px) {
+  .app {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .main {
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+
+    /* Portrait: Home bar protection at bottom */
+    @media (orientation: portrait) {
+      padding-bottom: env(safe-area-inset-bottom, 20px);
+    }
+
+    /* Landscape: Notch protection on sides + Home bar bottom */
+    @media (orientation: landscape) {
+      padding-left: env(safe-area-inset-left, 0);
+      padding-right: env(safe-area-inset-right, 0);
+      padding-bottom: env(safe-area-inset-bottom, 12px);
+    }
+  }
+
+  .container {
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .schedule-grid {
+    min-width: 100%;
+  }
+
+  .schedule-grid th:not(:first-child),
+  .schedule-grid td:not(:first-child) {
+    min-width: 180px;
+  }
+
+  /* Hide desktop-only toolbar buttons */
+  #notesBtn,
+  #waitingListBtn,
+  #themeToggle,
+  #todayBtn,
+  #tripInputBtn,
+  #driversBtn,
+  #printBtn,
+  #refreshBtn,
+  .week-start {
+    display: none !important;
+  }
+
+  .app-header__btn-mobile {
+    display: inline-flex;
+  }
+
+  .app-header__inner {
+    padding: 0 16px !important;
+    /* Increase from space-2 to space-4 */
+  }
+
+  .app-header__logo-wrap {
+    display: none !important;
+  }
+
+  .app-header__start {
+    display: flex !important;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .status-grid {
+    grid-template-columns: 1fr;
+    /* Stack them to prevent horizontal squishing */
+    gap: 12px;
+  }
+
+  .app-header__end {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-inline-start: auto;
+    flex-shrink: 0;
+  }
+
+  .nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin: 0 !important;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 10;
+  }
+
+  .btn--icon {
+    min-width: 32px;
+    width: 32px;
+    height: 32px;
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Fix 4: Sticky Header alignment */
+
+  /* Scheduler layout — single column on mobile (app-layout in _objects.css) */
+
+  .dropdown-menu,
+  .dropdown__menu {
+    inset-inline-end: -10px;
+    min-width: 180px;
+  }
+}
+
+@media (max-width: 899px) {
+  .app-layout__main .card__content,
+  .card .card__content {
+    padding: 0;
+  }
+}
+
+/* ==========================================================================
+   Agenda header (date + prev/next week above week table)
+   ========================================================================== */
+
+/* Agenda header in css/5-components/_agenda-header.css */
+
+/* ==========================================================================
+/* ==========================================================================
+   10) WEEK TABLE
+   ========================================================================== */
+
+/* Week table and day label styles in css/5-components/_schedule-grid.css */
+
+/* Week table styles in css/5-components/_schedule-grid.css */
+
+/* Trip bar styles in css/5-components/_schedule-grid.css */
+
+/* ==========================================================================
