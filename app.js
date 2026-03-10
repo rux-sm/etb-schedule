@@ -111,12 +111,12 @@ const CACHE = {
         expiry: Date.now() + ttlMs,
       };
       localStorage.setItem(key, JSON.stringify(payload));
-    } catch {}
+    } catch { }
   },
   remove(key) {
     try {
       localStorage.removeItem(key);
-    } catch {}
+    } catch { }
   },
   clearAll() {
     try {
@@ -128,7 +128,7 @@ const CACHE = {
           localStorage.removeItem(k);
         }
       });
-    } catch {}
+    } catch { }
   },
 };
 
@@ -383,7 +383,7 @@ function clamp(n, min, max) {
 function safeUUID() {
   try {
     return crypto.randomUUID();
-  } catch {}
+  } catch { }
   return `tk_${Date.now()}_${Math.floor(Math.random() * 1e9)}`;
 }
 
@@ -1311,7 +1311,7 @@ function applyWeekStart(isMonday) {
 
   try {
     localStorage.setItem("weekStartMonday", state.weekStartsOnMonday ? "1" : "0");
-  } catch {}
+  } catch { }
 
   syncWeekStartUI();
 
@@ -1513,7 +1513,7 @@ function prefetchAdjacentWeeks() {
 
     // ✅ FIX: Calculate Monday for the adjacent week
     const { notesKey } = getWeekRange(targetDate); // We will update getWeekRange to support a date arg
-    fetchWeekDataCached(start, end, notesKey).catch(() => {});
+    fetchWeekDataCached(start, end, notesKey).catch(() => { });
   }
 }
 
@@ -1972,7 +1972,7 @@ function renderAgenda() {
       dom.agendaBody.innerHTML = `
         <tr><td colspan="8" class="schedule-error__cell">
           <div class="schedule-error__message">Failed to render schedule</div>
-          <button onclick="location.reload()" class="btn">Reload Page</button>
+          <button onclick="location.reload()" class="btn btn--primary">Reload Page</button>
         </td></tr>
       `;
     }
@@ -3169,15 +3169,15 @@ function buildBusRowsOnce() {
   dom.busGrid.className = "bus-assign";
 
   const h1 = document.createElement("div");
-  h1.className = "field-label";
+  h1.className = "bus-assign__head";
   h1.textContent = "Bus";
 
   const h2 = document.createElement("div");
-  h2.className = "field-label";
+  h2.className = "bus-assign__head";
   h2.textContent = "Driver 1";
 
   const h3 = document.createElement("div");
-  h3.className = "field-label";
+  h3.className = "bus-assign__head";
   h3.textContent = "Driver 2";
 
   dom.busGrid.append(h1, h2, h3);
@@ -3627,11 +3627,11 @@ function openDriverContactModal(tripKey) {
   const dDate = trip.departureDate ? parseYMD(trip.departureDate) : null;
   const dDateStr = dDate
     ? dDate.toLocaleDateString("en-US", {
-        weekday: "long",
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      })
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    })
     : "the upcoming date";
   const destName = trip.destination || "your destination";
 
@@ -4680,15 +4680,15 @@ function buildPrintScheduleFullLetter() {
           <tr>
             <th class="schedule-grid__col-bus">Bus</th>
             ${dates
-              .map((d, i) => {
-                const dObj = parseYMD(d);
-                const dayStr = dObj
-                  ? dObj.toLocaleDateString("en-US", { weekday: "short" })
-                  : dayIds[i];
-                const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
-                return `<th class="schedule-grid__col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
-              })
-              .join("")}
+      .map((d, i) => {
+        const dObj = parseYMD(d);
+        const dayStr = dObj
+          ? dObj.toLocaleDateString("en-US", { weekday: "short" })
+          : dayIds[i];
+        const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
+        return `<th class="schedule-grid__col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
+      })
+      .join("")}
           </tr>
         </thead>
         <tbody>
@@ -6225,11 +6225,11 @@ function wireEvents() {
     // clear all cached week data (both in-memory and persistent).
     try {
       state.weekCache.clear();
-    } catch {}
+    } catch { }
 
     try {
       CACHE.clearAll();
-    } catch {}
+    } catch { }
   }
 
   dom.tripDetailsModal?.addEventListener("click", (e) => {
@@ -7095,7 +7095,7 @@ if (dom.printDailyMaintenancePlanBtn) {
 .schedule-grid-container.is-loading-bars .schedule-grid__trip-bar { opacity: 0.18; pointer-events: none; }
 `;
     document.head.appendChild(style);
-  } catch {}
+  } catch { }
 
   setSidePanelMode("off");
   enforceDesktopEditing();

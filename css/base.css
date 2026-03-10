@@ -70,6 +70,7 @@ body {
 *:focus-visible {
   outline: none;
 }
+
 /* ==========================================================================
    3-ELEMENTS / TYPOGRAPHY & BASE HTML
    Unclassed HTML elements (body, h1-h6, inputs)
@@ -142,6 +143,7 @@ samp {
   -webkit-font-smoothing: antialiased;
   vertical-align: middle;
 }
+
 /* ==========================================================================
    1-TOOLS / ANIMATIONS
    Global @keyframes and generic animation classes
@@ -211,16 +213,14 @@ samp {
     box-shadow:
       0 0 8px color-mix(in srgb, var(--tripbar-color) 20%, transparent),
       0 2px 8px rgba(0, 0, 0, 0.2);
-    filter: brightness(var(--tripbar-hover-brightness-from))
-      saturate(var(--tripbar-hover-saturate-from));
+    filter: brightness(var(--tripbar-hover-brightness-from)) saturate(var(--tripbar-hover-saturate-from));
   }
 
   to {
     box-shadow:
       0 0 24px color-mix(in srgb, var(--tripbar-color) 60%, transparent),
       0 6px 16px rgba(0, 0, 0, 0.5);
-    filter: brightness(var(--tripbar-hover-brightness-to))
-      saturate(var(--tripbar-hover-saturate-to));
+    filter: brightness(var(--tripbar-hover-brightness-to)) saturate(var(--tripbar-hover-saturate-to));
   }
 }
 
@@ -261,6 +261,7 @@ samp {
 }
 
 @keyframes jello {
+
   0%,
   11.1%,
   100% {
@@ -321,6 +322,7 @@ samp {
 }
 
 @keyframes arrow-left-bounce {
+
   0%,
   100% {
     transform: translate(0, -50%);
@@ -332,6 +334,7 @@ samp {
 }
 
 @keyframes arrow-right-bounce {
+
   0%,
   100% {
     transform: translate(0, -50%);
@@ -341,6 +344,7 @@ samp {
     transform: translate(3px, -50%);
   }
 }
+
 /* ==========================================================================
    6-UTILITIES / HELPERS
    Single-purpose utility classes (e.g. .hidden, .text-center)
@@ -430,6 +434,7 @@ samp {
 .absolute {
   position: absolute;
 }
+
 /* ==========================================================================
    17) PRINT
    ========================================================================== */
@@ -609,15 +614,9 @@ samp {
   }
 
   /* Legal print: hide itinerary, contact, driver status icons to make room for others */
-  .print-table
-    .schedule-grid__trip-bar__status-badges
-    > .schedule-grid__trip-bar__mini-badge:nth-child(3),
-  .print-table
-    .schedule-grid__trip-bar__status-badges
-    > .schedule-grid__trip-bar__mini-badge:nth-child(4),
-  .print-table
-    .schedule-grid__trip-bar__status-badges
-    > .schedule-grid__trip-bar__mini-badge:nth-child(5) {
+  .print-table .schedule-grid__trip-bar__status-badges>.schedule-grid__trip-bar__mini-badge:nth-child(3),
+  .print-table .schedule-grid__trip-bar__status-badges>.schedule-grid__trip-bar__mini-badge:nth-child(4),
+  .print-table .schedule-grid__trip-bar__status-badges>.schedule-grid__trip-bar__mini-badge:nth-child(5) {
     display: none !important;
   }
 
@@ -930,6 +929,7 @@ samp {
     font-size: 9pt;
   }
 }
+
 /* ==========================================================================
    3-ELEMENTS / FORMS
    Base styles for all interactive form fields:
@@ -981,7 +981,7 @@ input[type="number"] {
 
 /* --- 4. NATIVE SELECT DROPDOWNS --- */
 select {
-  padding: 0 var(--input-padding-x);
+  padding: 0 24px 0 var(--input-padding-x);
   appearance: none;
   -webkit-appearance: none;
 
@@ -1009,7 +1009,7 @@ select.select--centered {
    The shared base gives them the same border/bg/font as inputs.
    NOTE: the chevron icon is part of the button's inner HTML — no background-image needed here. */
 .select-trigger {
-  padding: 0 var(--input-padding-x);
+  padding: 0 8px 0 var(--input-padding-x);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1077,7 +1077,7 @@ select.is-empty:not(:focus),
 }
 
 /* --- 10. LABELS --- */
-.form-group > label,
+.form-group>label,
 .field-label {
   display: block;
   width: 100%;
@@ -1103,18 +1103,23 @@ select.is-empty:not(:focus),
 .col-2 {
   grid-column: span 2;
 }
+
 .col-4 {
   grid-column: span 4;
 }
+
 .col-5 {
   grid-column: span 5;
 }
+
 .col-6 {
   grid-column: span 6;
 }
+
 .col-8 {
   grid-column: span 8;
 }
+
 .col-12 {
   grid-column: span 12;
 }
@@ -1143,18 +1148,19 @@ select.is-empty:not(:focus),
 
 .form-actions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   padding: 0;
   width: 100%;
 }
 
-.form-actions > .btn {
+.form-actions>.btn {
   flex: 1;
   min-width: 80px;
   justify-content: center;
 }
 
 @container form-grid (max-width: 350px) {
+
   .col-2,
   .col-4,
   .col-5,
@@ -1162,15 +1168,18 @@ select.is-empty:not(:focus),
   .col-8 {
     grid-column: span 12;
   }
+
   .subsection-grid {
     grid-template-columns: 1fr;
   }
+
   .form-actions {
     justify-content: flex-start;
   }
 }
 
-@media (max-width: 800px) {
+@media (max-width: 600px) {
+
   .form-grid .col-2,
   .form-grid .col-4,
   .form-grid .col-5,
@@ -1178,9 +1187,11 @@ select.is-empty:not(:focus),
   .form-grid .col-8 {
     grid-column: span 12;
   }
+
   .form-grid .subsection-grid {
     grid-template-columns: 1fr;
   }
+
   .form-grid .form-actions {
     justify-content: flex-start;
   }
@@ -1202,6 +1213,7 @@ select.is-empty:not(:focus),
 }
 
 /* Legacy bus-assign grid label spacing fix */
-#busGrid.bus-assign .field-label {
+#busGrid.bus-assign .field-label,
+#busGrid.bus-assign .bus-assign__head {
   margin-bottom: calc(1px - 7px);
 }

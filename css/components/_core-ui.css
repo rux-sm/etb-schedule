@@ -13,11 +13,17 @@ button,
   justify-content: center;
 
   height: var(--control-height);
-  padding: 0 var(--control-padding-x);
+  min-width: 80px;
+  /* Standard button minimum width */
+  padding: 0 calc(var(--control-padding-x) * 1.5);
+  /* Wider padding */
 
-  border: none;
-  border-radius: var(--control-radius);
+  border: 1px solid transparent;
+  /* Reserved for focus/structure */
+  border-radius: 0;
+  /* IBM Onyx sharp corners */
 
+  font-family: var(--font-sans);
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1;
@@ -30,39 +36,46 @@ button,
   cursor: pointer;
 
   transition:
-    filter 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.08s ease,
-    background-color 0.15s ease;
+    background-color 0.15s cubic-bezier(0.2, 0, 0.38, 0.9),
+    border-color 0.15s cubic-bezier(0.2, 0, 0.38, 0.9),
+    color 0.15s cubic-bezier(0.2, 0, 0.38, 0.9),
+    box-shadow 0.15s cubic-bezier(0.2, 0, 0.38, 0.9);
 }
 
-/* .select-trigger excluded: it's a form field, uses input-style hover (border only) */
-button:hover:not(.select-trigger),
+/* Base button hover */
+button:hover:not(.select-trigger):not(.cds-header__action):not(.btn--icon-pagination):not(
+    .btn--toolbar
+  ),
 .btn:hover,
 .icon-chip:hover,
 .theme-toggle:hover,
 .seg__btn:hover {
-  filter: brightness(var(--color-button-hover-brightness));
+  background-color: var(--color-button-hover-bg);
 }
 
-/* Focus — accent ring */
-button:focus:not(.select-trigger),
+/* Focus — IBM standard inner box-shadow ring */
+button:focus:not(.select-trigger):not(.cds-header__action):not(.btn--icon-pagination):not(
+    .btn--toolbar
+  ),
 .btn:focus,
 .icon-chip:focus,
 .theme-toggle:focus,
 .seg__btn:focus {
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);
-  outline: none;
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
 }
 
-/* Active — scale press */
-button:active:not(.toggle-pill):not(.select-trigger),
+/* Active — pressed state */
+button:active:not(.toggle-pill):not(.select-trigger):not(.cds-header__action):not(
+    .btn--icon-pagination
+  ):not(.btn--toolbar),
 .btn:active,
 .icon-chip:active,
 .theme-toggle:active,
 .seg__btn:active {
-  transform: scale(0.97);
-  outline: none !important;
+  background-color: var(--surface-active);
+  transform: scale(0.99);
+  /* Minimal scale down */
 }
 
 /* Disabled */
@@ -76,40 +89,63 @@ button[aria-disabled="true"],
 .icon-chip[aria-disabled="true"],
 .theme-toggle[aria-disabled="true"],
 .seg__btn[aria-disabled="true"] {
-  opacity: 0.45;
+  background-color: var(--surface-3);
+  color: var(--text-muted);
+  border-color: transparent;
   cursor: not-allowed;
   pointer-events: none;
-  filter: none;
-  box-shadow: none;
-  transform: none;
 }
 
-/* ── Primary filled button (Save) ──────────────────────────────────── */
-.btn--primary {
-  background: var(--color-button-primary-bg);
-  color: var(--color-button-primary-text);
-  box-shadow: var(--color-button-primary-shadow);
+/* ── Icons Inside Buttons ────────────────────────────────────── */
+.btn .material-symbols-outlined {
+  font-size: 1.125rem;
+  /* 18px */
   font-weight: 400;
+  margin-right: 6px;
+}
+
+.btn .material-symbols-outlined.icon--trailing {
+  margin-right: 0;
+  margin-left: 6px;
+}
+
+/* ── Primary filled button (Save, Action) ──────────────────────────── */
+.btn--primary {
+  background-color: var(--accent);
+  color: var(--color-on-primary);
+  border: 1px solid transparent;
+  box-shadow: none;
 }
 
 .btn--primary:hover {
-  filter: brightness(var(--color-button-primary-hover-brightness));
+  background-color: color-mix(in srgb, var(--accent) 85%, black);
+  filter: none;
 }
 
 .btn--primary:active {
-  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  background-color: color-mix(in srgb, var(--accent) 70%, black);
 }
 
-/* ── Secondary button (Trip Info, View PDF) ────────────────────────── */
+.btn--primary:focus {
+  outline: 2px solid white;
+  outline-offset: -4px;
+}
+
+/* ── Secondary button (Outlined / Structural) ──────────────────────── */
 .btn--secondary {
-  background: transparent;
-  color: var(--text-muted);
+  background-color: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
 }
 
 .btn--secondary:hover {
-  background: var(--overlay-hover);
-  color: var(--text);
-  filter: none;
+  background-color: var(--accent);
+  color: var(--color-on-primary);
+}
+
+.btn--secondary:active {
+  background-color: color-mix(in srgb, var(--accent) 85%, black);
+  border-color: color-mix(in srgb, var(--accent) 85%, black);
 }
 
 /* Optional: remove default button styles in Safari/Firefox */
@@ -120,49 +156,44 @@ button[aria-disabled="true"],
 
 /* Destructive button (BEM: .btn--danger) */
 .btn--danger {
-  color: #f44336;
-  background: var(--color-danger-soft);
+  background-color: #da1e28;
+  color: white;
+  /* IBM standard internal red 60 */
+  border: 1px solid transparent;
 }
 
 .btn--danger:hover {
-  filter: brightness(1.2);
+  background-color: color-mix(in srgb, #da1e28 85%, black);
+  color: white;
 }
 
 .btn--danger:active {
-  filter: brightness(1.3);
+  background-color: #a2191f;
+  /* IBM Red 70 */
+  border-color: transparent;
+}
+
+.btn--danger:focus {
+  outline: 2px solid white;
+  outline-offset: -4px;
+}
+
+.btn--danger:disabled,
+.btn--danger[aria-disabled="true"] {
+  background-color: transparent !important;
+  color: var(--text-muted) !important;
+  border-color: var(--border) !important;
 }
 
 /* Compact button (BEM: .btn--compact) — smaller padding/font for modal footers */
 .btn--compact {
   height: 32px;
-  padding: 0 8px;
+  padding: 0 12px;
   font-size: 0.875rem;
 }
 
 /* Toggle Buttons (aria-pressed) */
-:where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn) {
-  border: none;
-  background-color: var(--color-button-bg);
-  color: var(--color-button-text);
-}
-
-:where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn):hover {
-  filter: brightness(var(--color-button-hover-brightness));
-}
-
-:where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn)[aria-pressed="true"] {
-  background-color: var(--color-primary) !important;
-  border-color: transparent !important;
-  color: var(--accent) !important;
-}
-
-:where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn)[aria-pressed="true"]:hover {
-  background-color: var(--color-primary-hover);
-}
-
-:where(#tripInputBtn, #driversBtn, #waitingListBtn, #notesBtn)[aria-pressed="true"]:active {
-  background-color: var(--color-primary-active);
-}
+/* Header icon buttons now styled by .btn-icon-header in _schedule.css */
 
 /* Segmented controls */
 .seg {
@@ -261,7 +292,7 @@ label .label-link:active {
   font-weight: 400;
   padding: 6px 14px;
   line-height: 1;
-  border-radius: var(--control-radius);
+  border-radius: 0;
   border: 1px solid var(--color-input-border);
   background: transparent;
   color: var(--text-muted);
@@ -281,7 +312,11 @@ label .label-link:active {
 
 .toggle-pill-icon,
 .toggle-pill__icon {
-  font-size: 1rem;
+  font-size: 1.125rem;
+  /* 18px */
+  font-weight: 400;
+  margin-right: 6px;
+  /* Icon leading for consistency */
   opacity: 0.6;
   transition: opacity 160ms ease;
 }
@@ -290,7 +325,6 @@ label .label-link:active {
   background: var(--accent);
   color: var(--color-on-primary);
   border-color: transparent;
-  font-weight: 500;
 }
 
 .toggle-pill[aria-pressed="true"] .toggle-pill__icon {
@@ -337,6 +371,7 @@ label .label-link:active {
   font-size: 1.125rem;
   /* 18px */
 }
+
 /* ==========================================================================
    5-COMPONENTS / BADGES
    Small status indicators and counters
@@ -372,6 +407,7 @@ label .label-link:active {
   color: var(--color-danger);
   border: 1px solid var(--color-danger);
 }
+
 /* ==========================================================================
    5-COMPONENTS / ICONS
    Reusable icon classes for Material Symbols across all contexts.
@@ -508,6 +544,7 @@ label .label-link:active {
   border-radius: var(--control-radius-icon) !important;
   width: var(--icon-btn-size, var(--week-picker-height));
   height: var(--icon-btn-size, var(--week-picker-height));
+  min-width: 0 !important;
   cursor: pointer;
   transition:
     filter 0.15s ease,
@@ -531,6 +568,7 @@ label .label-link:active {
   cursor: not-allowed;
   pointer-events: none;
 }
+
 /* ==========================================================================
    5-COMPONENTS / MENUS
    Dropdown menus and context menus (BEM: .dropdown__*, .context-menu__*)
@@ -712,6 +750,7 @@ label .label-link:active {
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  min-width: 0;
   text-align: center;
   border: 1px solid var(--color-input-border);
 }
@@ -756,12 +795,15 @@ label .label-link:active {
 .dropdown-icon.status-pending {
   color: var(--color-status-pending);
 }
+
 .dropdown-icon.status-ok {
   color: var(--color-status-ok);
 }
+
 .dropdown-icon.status-assigned {
   color: var(--color-status-assigned);
 }
+
 .dropdown-icon.status-blue {
   color: var(--color-status-blue);
 }
@@ -780,6 +822,7 @@ label .label-link:active {
   height: 0;
   overflow: hidden;
 }
+
 /* ==========================================================================
    5-COMPONENTS / LOADING OVERLAY
    BEM: .loading-overlay (block), .loading-overlay__backdrop, .loading-overlay__card, etc.
@@ -843,6 +886,7 @@ label .label-link:active {
   color: var(--text-muted);
   font-weight: 400;
 }
+
 /* ==========================================================================
    5-COMPONENTS / TOAST
    ========================================================================== */
@@ -894,6 +938,7 @@ label .label-link:active {
   background: var(--color-primary);
   transition: width 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
+
 /* ==========================================================================
    5-COMPONENTS / CARDS
    Base card component and its internal elements (BEM)
@@ -901,14 +946,16 @@ label .label-link:active {
 
 .card {
   background: var(--surface-container-high);
-  border-radius: 24px; /* More premium, rounded corners like the 'Create' button */
+  border-radius: 24px;
+  /* More premium, rounded corners like the 'Create' button */
   /* box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.5); */
   border: none !important;
   min-width: 0;
   border-inline-start: none;
   position: relative;
   isolation: isolate;
-  overflow: hidden; /* Ensure content follows rounded corners */
+  overflow: hidden;
+  /* Ensure content follows rounded corners */
 }
 
 .card--compact,
@@ -968,7 +1015,8 @@ label .label-link:active {
   margin-top: 0;
   border-top: 1px solid var(--border);
   background: var(--surface-container-high);
-  border-radius: 0 0 24px 24px; /* Match card radius if visible */
+  border-radius: 0 0 24px 24px;
+  /* Match card radius if visible */
 }
 
 .card__footer:empty {

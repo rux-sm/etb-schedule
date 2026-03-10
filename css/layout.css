@@ -11,8 +11,10 @@
   gap: 0;
   align-items: start;
   overflow: visible;
-  flex: 1; /* Take available space in flex container */
-  min-height: 0; /* Critical for flex children to respect parent constraints */
+  flex: 1;
+  /* Take available space in flex container */
+  min-height: 0;
+  /* Critical for flex children to respect parent constraints */
 }
 
 .app-layout__sidebar--right,
@@ -35,7 +37,9 @@
   /* box-shadow removed for flat UI */
 }
 
-.app-layout__main > .card {
+
+
+.app-layout__main>.card {
   height: auto;
   /* Match table height, don't stretch */
   max-height: 100%;
@@ -76,7 +80,7 @@
   }
 
   /* Ensure the main card reaches the edges for a full-screen mobile look */
-  .app-layout__main > .card {
+  .app-layout__main>.card {
     margin: 0 !important;
     padding: 0 !important;
     /* Remove the 18px padding */
@@ -147,7 +151,7 @@
     min-height: 0;
   }
 
-  .app-layout__main > .card {
+  .app-layout__main>.card {
     flex: 0 1 auto;
     height: auto;
     width: 100%;
@@ -187,7 +191,7 @@
     /* Stretch card to full width */
   }
 
-  .app-layout__main > .card {
+  .app-layout__main>.card {
     height: auto;
     /* Match table height, don't stretch */
     max-height: 100%;
@@ -231,13 +235,13 @@
 
   .app-layout__sidebar--left {
     order: 0;
+    border-right: 1px solid var(--border);
   }
 
   .app-layout__sidebar--right {
     order: 2;
     border-right: none;
-    border-left: none;
-    /* Remove border */
+    border-left: 1px solid var(--border);
   }
 
   .app-layout__sidebar--left.app-layout__sidebar--collapsed,
@@ -248,42 +252,42 @@
     pointer-events: none;
   }
 
-  .app-layout__sidebar--left > .card,
-  .app-layout__sidebar--right > .card {
+  .app-layout__sidebar--left>.card,
+  .app-layout__sidebar--right>.card {
     min-width: 100%;
     width: 100%;
     height: 700px;
   }
 
-  .app-layout__sidebar--left > .card:not(.is-hidden),
-  .app-layout__sidebar--right > .card:not(.is-hidden) {
+  .app-layout__sidebar--left>.card:not(.is-hidden),
+  .app-layout__sidebar--right>.card:not(.is-hidden) {
     flex: auto;
     display: flex;
     flex-direction: column;
     overflow: visible;
   }
 
-  .app-layout__sidebar--left > .card:not(.is-hidden) .card__header,
-  .app-layout__sidebar--left > .card:not(.is-hidden) .card__content,
-  .app-layout__sidebar--left > .card:not(.is-hidden) .card__footer {
-    padding-left: 24px;
+  .app-layout__sidebar--left>.card:not(.is-hidden) .card__header,
+  .app-layout__sidebar--left>.card:not(.is-hidden) .card__content,
+  .app-layout__sidebar--left>.card:not(.is-hidden) .card__footer {
+    padding-left: 12px;
     padding-right: 12px;
   }
 
-  .app-layout__sidebar--left > .card:not(.is-hidden) .card__content {
+  .app-layout__sidebar--left>.card:not(.is-hidden) .card__content {
     flex: auto;
     overflow-y: auto;
     min-height: 0;
   }
 
-  .app-layout__sidebar--right > .card:not(.is-hidden) .card__header,
-  .app-layout__sidebar--right > .card:not(.is-hidden) .card__content,
-  .app-layout__sidebar--right > .card:not(.is-hidden) .card__footer {
+  .app-layout__sidebar--right>.card:not(.is-hidden) .card__header,
+  .app-layout__sidebar--right>.card:not(.is-hidden) .card__content,
+  .app-layout__sidebar--right>.card:not(.is-hidden) .card__footer {
     padding-left: 12px;
-    padding-right: 24px;
+    padding-right: 12px;
   }
 
-  .app-layout__sidebar--right > .card:not(.is-hidden) .card__content {
+  .app-layout__sidebar--right>.card:not(.is-hidden) .card__content {
     flex: auto;
     overflow-y: auto;
     min-height: 0;
@@ -294,11 +298,11 @@
     z-index: 1;
   }
 
-  .app-layout__main > .card {
+  .app-layout__main>.card {
     box-shadow: none;
   }
 
-  [data-theme="light"] .app-layout__main > .card {
+  [data-theme="light"] .app-layout__main>.card {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.5);
   }
 
@@ -311,6 +315,7 @@
     flex: 1;
   }
 }
+
 /* ==========================================================================
    4-OBJECTS / GRID
    Responsive form layout grid and column system
@@ -332,7 +337,7 @@
 }
 
 /* --- 2. Unified Form Group Wrapper --- */
-.form-layout__group > label,
+.form-layout__group>label,
 .form-layout__label {
   display: block;
   font-size: 0.75rem;
@@ -345,9 +350,9 @@
   min-height: 1.4em;
 }
 
-.form-layout__group > input,
-.form-layout__group > select,
-.form-layout__group > textarea {
+.form-layout__group>input,
+.form-layout__group>select,
+.form-layout__group>textarea {
   width: 100%;
   box-sizing: border-box;
 }
@@ -356,18 +361,23 @@
 .form-layout__col-2 {
   grid-column: span 2;
 }
+
 .form-layout__col-4 {
   grid-column: span 4;
 }
+
 .form-layout__col-5 {
   grid-column: span 5;
 }
+
 .form-layout__col-6 {
   grid-column: span 6;
 }
+
 .form-layout__col-8 {
   grid-column: span 8;
 }
+
 .form-layout__col-12 {
   grid-column: span 12;
 }
@@ -383,11 +393,11 @@
   margin-bottom: calc(1px - 7px) !important;
 }
 
-.form-layout__subsection > .form-layout__label {
+.form-layout__subsection>.form-layout__label {
   margin-bottom: 1px !important;
 }
 
-.form-layout__subsection > .toggle-pill-grid {
+.form-layout__subsection>.toggle-pill-grid {
   margin-top: 0;
 }
 
@@ -417,6 +427,7 @@
 
 /* Container query for extremely narrow form layouts */
 @container form-layout (max-width: 350px) {
+
   .form-layout__col-2,
   .form-layout__col-4,
   .form-layout__col-5,
@@ -436,6 +447,7 @@
 
 /* Viewport-based responsive behavior */
 @media (max-width: 800px) {
+
   .form-layout .form-layout__col-2,
   .form-layout .form-layout__col-4,
   .form-layout .form-layout__col-5,
@@ -452,6 +464,7 @@
     justify-content: flex-start;
   }
 }
+
 /* ==========================================================================
    4-OBJECTS / LAYOUT
    App shell (.app, .main, .container), shared .heading-1; BEM in _objects.css, _app-header.css.
@@ -656,6 +669,7 @@
 }
 
 @media (max-width: 899px) {
+
   .app-layout__main .card__content,
   .card .card__content {
     padding: 0;

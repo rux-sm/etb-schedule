@@ -1,84 +1,130 @@
 /* ==========================================================================
-   5-COMPONENTS / APP HEADER
-   The main application top navigation bar (formerly .topbar)
+   APP HEADER - CARBON UI SHELL (48px)
    ========================================================================== */
 
-.app-header {
+.cds-header {
   position: sticky;
-  background: var(--surface-0);
-  min-height: var(--topbar-height);
+  top: 0;
   z-index: 1000;
-  border-bottom: 1px solid var(--border); /* Remove border, rely on surface diff */
-  display: flex;
-  align-items: center;
-}
-
-.app-header__container {
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
-
-.app-header__inner {
+  height: 48px;
+  width: 100%;
+  background-color: var(--gray-100);
+  border-bottom: 1px solid var(--gray-80);
+  
+  /* Critical Layout: Spreads Branding and Actions to the edges */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
   padding: 0;
-  height: 100%;
-  min-height: var(--week-picker-height);
 }
 
-.app-header__start {
+/* --- Branding Layout --- */
+.cds-header__branding {
   display: flex;
   align-items: center;
-  margin-left: 12px;
-  gap: 12px;
-}
-
-.app-header__end {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-right: 12px;
-  min-width: 0;
-}
-
-.app-header__btn {
-  width: var(--week-picker-height);
-  height: var(--week-picker-height);
-  flex-shrink: 0;
-}
-
-.app-header__logo-wrap {
-  display: flex;
-  align-items: center;
+  padding-left: 16px;
   height: 100%;
 }
 
-.app-header__logo-img {
+.cds-header__logo-container {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  position: relative;
+  padding-right: 12px;
+}
+
+/* The Carbon Vertical Divider */
+.cds-header__logo-container::after {
+  content: "";
+  width: 1px;
+  height: 20px;
+  background: var(--gray-80);
+  position: absolute;
+  right: 0;
+}
+
+.cds-header__logo {
   height: 22px;
   width: auto;
-  object-fit: contain;
 }
 
-.app-header__title {
+/* --- Typography --- */
+.cds-header__title {
+  margin-left: 12px;
+  font-size: 20px;
   line-height: 1;
-  padding: 0;
+  color: var(--text);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: flex;
+  gap: 4px;
 }
 
-.app-header__nav-controls {
+.cds-header__title--prefix { font-weight: 400; }
+.cds-header__title--product { font-weight: 600; }
+
+/* --- Global Actions (Tiled) --- */
+.cds-header__actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  height: 100%;
 }
 
-.app-header__btn-mobile {
-  display: none;
+/* ── Header Action Button (Carbon .cds--header__action) ─────────────────
+   Uses `all: unset` to completely sever inheritance from the global
+   `button {}` ruleset in _core-ui.css. Re-declares only what UI Shell needs.
+   ──────────────────────────────────────────────────────────────────────── */
+.cds-header__action {
+  all: unset; 
+
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 48px;
+  height: 48px;
+  min-width: 48px;         
+  padding: 0;              
+
+  /* THE CARBON WAY: Reserve the space with transparent borders */
+  border: 1px solid transparent; /* Standard accessibility border */
+  border-bottom: 3px solid transparent; /* Reserves space for the active indicator */
+
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color 110ms;
 }
+
+/* Hover — Carbon Gray 80 */
+.cds-header__action:hover {
+  background-color: var(--gray-80);
+}
+
+/* Active press — one step brighter */
+.cds-header__action:active {
+  background-color: var(--gray-60);
+}
+
+/* Accessibility Focus Ring (Restored) */
+.cds-header__action:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: -2px; /* Keeps outline tightly inside the 48px box */
+}
+
+/* Panel-is-open indicator — The Carbon Way */
+.cds-header__action[aria-pressed="true"] {
+  background-color: var(--gray-90);
+  border-bottom-color: var(--accent); /* Swaps transparent for Blue */
+}
+
+/* Header icon formatting — matched to 24px */
+.cds-header__action .material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" -200, "opsz" 24;
+  font-size: 24px; 
+}
+
 /* ==========================================================================
    5-COMPONENTS / SCHEDULE NAV 
    The top navigation above the schedule grid (Agenda Header)
@@ -176,54 +222,98 @@
   height: 40px;
   margin: 0 2px;
 }
+
 /* ==========================================================================
    5-COMPONENTS / AGENDA HEADER
    The top control bar of the schedule grid containing date and pagination
    ========================================================================== */
 
+/* --- The Toolbar Container --- */
 .agenda-header {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--surface-1);
+  /* 4px top/bottom keeps it sleek (40px total height), 16px sides aligns it */
+  padding: 4px 0px; 
+  background-color: var(--black);
   border-bottom: none;
+  width: 100%;
   flex-shrink: 0;
-  height: auto;
-  margin: 0 12px;
 }
-
+}
 .agenda-header__inner {
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background: transparent;
   width: 100%;
-  gap: 16px;
-  flex-wrap: nowrap;
 }
 
+/* --- Left / Right containers --- */
 .agenda-header__date-left {
   flex: 0 1 auto;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 4px;
+  gap: 4px; /* Perfect tight gap for the arrow buttons */
   min-width: 0;
-}
-
-.agenda-header__date-left .btn--icon,
-.agenda-header__nav-right .btn--icon,
-.agenda-header__nav-right .weekpicker-trigger-wrap .btn--icon {
-  width: var(--week-picker-height);
-  height: var(--week-picker-height);
 }
 
 .agenda-header__nav-right {
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
+}
+
+/* --- 32×32 Icon Pagination Arrows --- */
+.btn--icon-pagination {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+  border-radius: 0;
+
+  cursor: pointer;
+  color: var(--text);
+  transition: background-color 0.2s;
+}
+
+.btn--icon-pagination:hover {
+  background-color: var(--gray-90);
+}
+
+/* --- 32px Ghost Text Toolbar Buttons --- */
+.btn--toolbar {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  height: 32px;
+  min-width: 80px;
+  padding-inline: 16px;
+  border-radius: 0;
+
+  background-color: transparent;
+  border: 1px solid var(--gray-90);
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn--toolbar:hover {
+  background-color: var(--gray-90);
+}
+
+.btn--toolbar .material-symbols-outlined {
+  font-size: 18px;
 }
 
 .agenda-header__icon-group {
@@ -239,6 +329,7 @@
   flex: 1;
   align-items: center;
   justify-content: center;
+  margin-left: 12px; /* Creates a clear visual break between controls and data */
 }
 
 .weekpicker-trigger-wrap {
@@ -256,77 +347,52 @@
   pointer-events: none;
 }
 
-/* Typography and headings */
-.agenda-header__inline-nav {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-left: 8px;
-}
-
-.agenda-header__nav-controls {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.agenda-header__nav-controls .btn--icon {
-  width: var(--week-picker-height);
-  height: var(--week-picker-height);
-}
-
+/* --- Typography and headings --- */
 .agenda-header__week-heading {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  justify-content: space-between;
-  white-space: nowrap;
-  height: var(--bar-height);
-  line-height: var(--bar-height);
   margin: 0;
+  /* The parent .agenda-header__date-left is a flexbox, 
+     so it will perfectly center this h2 automatically! */
 }
 
+/* Treat the entire date as one unified line of natural text */
+.agenda-header__week-date {
+  font-size: 18px;
+  line-height: normal; /* Removes the strict 1px wrap */
+  white-space: nowrap;
+  
+  /* The Optical Nudge: Pulls the text up by 1.5 pixels 
+     to perfectly align the center of the capital letters 
+     with the center of the arrow icons */
+  display: inline-block;
+  transform: translateY(-1.5px); 
+}
+/* Specific text colors and weights - Let spans just be text! */
 .agenda-header__week-date .wk-month,
 .agenda-header__week-date .wk-month-end {
-  font-weight: 700;
-  font-size: var(--heading-2-size);
-  letter-spacing: var(--heading-2-letter-spacing);
-  color: var(--accent);
-  line-height: var(--bar-height);
-  height: var(--bar-height);
+  font-weight: 600; 
+  color: var(--accent); 
   text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-right: 4px;
 }
 
 .agenda-header__week-date .wk-dates {
   font-weight: 400;
-  font-size: var(--heading-2-size);
-  letter-spacing: var(--heading-2-letter-spacing);
   color: var(--text);
-  margin-inline-start: 2px;
-  line-height: var(--bar-height);
-  height: var(--bar-height);
-}
-
-.agenda-header__week-date .wk-year {
-  font-weight: 700;
-  font-size: var(--heading-2-size);
-  letter-spacing: var(--heading-2-letter-spacing);
-  height: var(--bar-height);
-  line-height: var(--bar-height);
-  color: var(--text-muted);
-  margin-inline-start: 2px;
+  margin-right: 4px;
 }
 
 .agenda-header__week-date .wk-sep {
-  color: #616161;
-  font-size: var(--heading-1-size);
-  font-weight: var(--heading-1-weight);
-  letter-spacing: var(--heading-1-letter-spacing);
-  line-height: var(--bar-height);
-  height: var(--bar-height);
-  margin: 0 2px;
+  color: var(--text);
+  font-weight: 400;
+  margin-right: 4px;
 }
+
+.agenda-header__week-date .wk-year {
+  font-weight: 600;
+  color: var(--text);
+}
+
 /* ==========================================================================
    5-COMPONENTS / SCHEDULE GRID
    The core grid containing bus rows and day columns
@@ -372,23 +438,28 @@
 
 /* Outer Boundaries */
 .schedule-grid {
-  border-inline-start: 1px solid var(--border); /* Left boundary */
+  border-inline-start: 1px solid var(--border);
+  /* Left boundary */
 }
 
 .schedule-grid__header-cell {
-  border-top: 1px solid var(--border); /* Top boundary */
+  border-top: 1px solid var(--border);
+  /* Top boundary */
 }
 
 .schedule-grid__header-cell:last-child,
 .schedule-grid__cell:last-child {
-  border-inline-end: 1px solid var(--border); /* Right boundary */
+  border-inline-end: 1px solid var(--border);
+  /* Right boundary */
 }
 
 /* Inner Gridlines */
 .schedule-grid__header-cell,
 .schedule-grid__cell {
-  border-inline-end: 1px solid var(--border); /* Vertical tracking lines */
-  border-bottom: 1px solid var(--border); /* Horizontal tracking lines */
+  border-inline-end: 1px solid var(--border);
+  /* Vertical tracking lines */
+  border-bottom: 1px solid var(--border);
+  /* Horizontal tracking lines */
 }
 
 /* ==========================================================================
@@ -430,7 +501,8 @@
   background-color: var(--surface-1) !important;
   border-top: 1px solid var(--border);
   color: var(--text-muted);
-  font-size: 0.6875rem; /* 11px */
+  font-size: 0.6875rem;
+  /* 11px */
 }
 
 .waiting-list-row .schedule-grid__bus-indicator .material-symbols-outlined {
@@ -771,7 +843,7 @@
   box-shadow: var(--elevation-1);
 
   /* 3. Soften the edge */
-  border: 1px solid color-mix(in srgb, var(--tripbar-color) 30%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tripbar-color) 35%, transparent);
   border-left: 4px solid var(--tripbar-color);
 }
 
@@ -813,10 +885,12 @@
   --tripbar-r1-color: var(--tripbar-color);
   --tripbar-r2-color: var(--tripbar-color);
   --tripbar-r3-color: var(--tripbar-color);
-  --tripbar-r4-color: var(--yellow); /* Bright Neon Lemon */
+  --tripbar-r4-color: var(--yellow);
+  /* Bright Neon Lemon */
   --tripbar-r5-color: var(--tripbar-color);
-  --tripbar-r6-color: var(--red); /* Bright Coral */
-  --tripbar-r7-color: var(--text) ;
+  --tripbar-r6-color: var(--red);
+  /* Bright Coral */
+  --tripbar-r7-color: var(--text);
 
   --tripbar-badge-text-color: color-mix(in srgb, var(--red) 80%, white);
   --tripbar-badge-text-bg: color-mix(in srgb, #FFFFFF 50%, transparent);
@@ -826,12 +900,12 @@
 
   &.unconfirmed {
     --tripbar-color: var(--tripbar-unconfirmed-color, var(--red));
-    
+
   }
 
   &.color-green {
     --tripbar-color: var(--green);
-    
+
   }
 
   &.color-yellow {
@@ -844,7 +918,7 @@
 
   &.color-purple {
     --tripbar-color: var(--purple);
-   
+
   }
 
   &.color-pink {
@@ -1230,6 +1304,7 @@
     print-color-adjust: exact !important;
   }
 }
+
 /* ==========================================================================
    13) DRIVER / STATUS PANELS
    BEM: .driver-week (block), .driver-week__wrap, .driver-week__table, .driver-week__cell--on, etc.
@@ -1314,7 +1389,7 @@
 /* --- 4. Status Grid Optimization --- */
 .status-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1fr) !important;
   gap: 8px;
   width: 100%;
 }
@@ -1328,14 +1403,16 @@
 
 #busGrid.bus-assign {
   display: grid;
-  grid-template-columns: 70px 1fr 1fr;
+  grid-template-columns: 80px 1fr 1fr;
   column-gap: 8px;
-  row-gap: 8px;
+  row-gap: 4px;
+  /* Tighter vertical spacing for better alignment */
 }
 
 /* Standardized status pattern - apply colors directly from semantic tokens */
 select[class*="status-"] {
-  border: 1px solid var(--border); /* Neutral fallback border */
+  border: 1px solid var(--border);
+  /* Neutral fallback border */
 }
 
 select.status-pending {
@@ -1359,11 +1436,7 @@ select.status-confirmed {
   border-color: var(--color-status-blue);
 }
 
-#busGrid.bus-assign {
-  display: grid;
-  grid-template-columns: 70px 1fr 1fr;
-  gap: 8px;
-}
+/* Consolidate bus grid definition */
 
 .bus-assign__head {
   font-size: 0.75rem;

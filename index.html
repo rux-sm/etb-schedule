@@ -32,7 +32,7 @@
       crossorigin
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Inter:wght@400;600;700;800;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Inter:wght@400;600;700;800;900&display=swap"
       rel="stylesheet"
     />
 
@@ -44,189 +44,143 @@
 
   <body>
     <div class="app">
-      <header class="app-header">
-        <div class="container">
-          <div class="app-header__inner">
-            <div class="app-header__start">
-              <!-- 1. Logo -->
-              <div class="app-header__logo-wrap">
-                <img
-                  src="logo.png"
-                  class="app-header__logo-img"
-                  alt="Logo"
-                  onerror="
-                    this.style.display = 'none';
-                    this.nextElementSibling.style.display = 'inline-flex';
-                  "
-                />
-                <div
-                  class="logo-placeholder is-hidden"
-                  aria-label="Logo placeholder"
-                >
-                  LOGO
-                </div>
-              </div>
+      <header class="cds-header">
+        <div class="cds-header__branding">
+          <div class="cds-header__logo-container">
+            <img
+              src="logo.png"
+              class="cds-header__logo"
+              alt="Escamilla Tour Buses"
+            />
+          </div>
+          <h1
+            class="cds-header__title"
+            id="topbarTitle"
+          >
+            <span class="cds-header__title--prefix">Trip Schedule</span>
+          </h1>
+        </div>
 
-              <!-- 2. Header / title text (right of logo) -->
-              <h1
-                class="heading-1 app-header__title"
-                id="topbarTitle"
-                aria-label="Application title"
-              >
-                Trip Schedule
-              </h1>
-            </div>
-
-            <!-- END GROUP: Settings & Tools -->
-            <div class="app-header__end">
-              <!-- Hidden buttons that JS might look for (can be cleaned up later, keeping for safety) -->
-              <!-- Tools -->
+        <div class="cds-header__actions">
+          <button
+            id="tripInputBtn"
+            class="cds-header__action"
+            title="Trip Editor"
+          >
+            <span class="material-symbols-outlined">add</span>
+          </button>
+          <button
+            id="driversBtn"
+            class="cds-header__action"
+            title="Driver Assignments"
+          >
+            <span class="material-symbols-outlined">groups</span>
+          </button>
+          <button
+            id="notesBtn"
+            class="cds-header__action"
+            title="Weekly Notes"
+          >
+            <span class="material-symbols-outlined">sticky_note_2</span>
+          </button>
+          <button
+            id="waitingListBtn"
+            class="cds-header__action"
+            title="Waiting List"
+          >
+            <span class="material-symbols-outlined">low_priority</span>
+          </button>
+          <button
+            id="quoteBtn"
+            class="cds-header__action"
+            title="Quote Calculator"
+          >
+            <span class="material-symbols-outlined">calculate</span>
+          </button>
+          <button
+            id="todayBtnMobile"
+            class="cds-header__action cds-header__action--mobile"
+            title="Today"
+            aria-label="Today"
+            style="display: none"
+          >
+            <span class="material-symbols-outlined">today</span>
+          </button>
+          <div class="dropdown">
+            <button
+              id="settingsBtn"
+              class="cds-header__action"
+              type="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+              title="Settings"
+              aria-label="Settings"
+            >
+              <span class="material-symbols-outlined">settings</span>
+            </button>
+            <div
+              id="settingsMenu"
+              class="dropdown__menu"
+              hidden
+            >
               <button
-                id="tripInputBtn"
-                class="btn--icon icon-btn app-header__btn"
+                id="refreshBtn2"
+                class="dropdown__item"
                 type="button"
-                title="Trip Editor"
-                aria-label="Trip Editor"
               >
-                <span class="material-symbols-outlined">add</span>
+                <span class="dropdown__icon material-symbols-outlined">refresh</span>
+                <span>Refresh Data</span>
               </button>
-
+              <hr class="dropdown__divider" />
               <button
-                id="driversBtn"
-                class="btn--icon icon-btn app-header__btn"
+                id="themeToggle2"
+                class="dropdown__item"
                 type="button"
-                title="Driver Assignments"
-                aria-label="Driver Assignments"
               >
-                <span class="material-symbols-outlined">groups</span>
+                <span class="dropdown__icon material-symbols-outlined">dark_mode</span>
+                <span>Toggle Theme</span>
               </button>
-
               <button
-                id="notesBtn"
-                class="btn--icon icon-btn app-header__btn"
+                id="printBtn2"
+                class="dropdown__item"
                 type="button"
-                title="Weekly Notes"
-                aria-label="Weekly Notes"
               >
-                <span class="material-symbols-outlined">sticky_note_2</span>
+                <span class="dropdown__icon material-symbols-outlined">print</span>
+                <span>Print Schedule (Legal)</span>
               </button>
-
               <button
-                id="waitingListBtn"
-                class="btn--icon icon-btn app-header__btn"
+                id="printBtn2Full"
+                class="dropdown__item"
                 type="button"
-                title="Waiting List"
-                aria-label="Waiting List"
               >
-                <span class="material-symbols-outlined">low_priority</span>
+                <span class="dropdown__icon material-symbols-outlined">print</span>
+                <span>Print Full Schedule (Letter)</span>
               </button>
-
+              <hr class="dropdown__divider" />
               <button
-                id="quoteBtn"
-                class="btn--icon icon-btn app-header__btn"
+                id="nextDayReportBtn"
+                class="dropdown__item"
                 type="button"
-                title="Quote Calculator"
-                aria-label="Quote Calculator"
               >
-                <span class="material-symbols-outlined">calculate</span>
+                <span class="dropdown__icon material-symbols-outlined">event_upcoming</span>
+                <span>Weekly Maintenance</span>
               </button>
-
-              <!-- Settings Dropdown -->
               <button
-                id="todayBtnMobile"
-                class="btn--icon icon-btn app-header__btn app-header__btn-mobile"
+                id="dailyMaintenancePlanBtn"
+                class="dropdown__item"
                 type="button"
-                aria-label="Today"
-                title="Today"
               >
-                <span class="material-symbols-outlined">today</span>
+                <span class="dropdown__icon material-symbols-outlined">handyman</span>
+                <span>Daily Maintenance Plan</span>
               </button>
-
-              <div class="dropdown">
-                <button
-                  id="settingsBtn"
-                  class="btn--icon icon-btn app-header__btn"
-                  type="button"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                  title="Settings"
-                  aria-label="Settings"
-                >
-                  <span class="material-symbols-outlined">settings</span>
-                </button>
-                <div
-                  id="settingsMenu"
-                  class="dropdown__menu"
-                  hidden
-                >
-                  <button
-                    id="refreshBtn2"
-                    class="dropdown__item"
-                    type="button"
-                  >
-                    <span class="dropdown__icon material-symbols-outlined">refresh</span>
-                    <span>Refresh Data</span>
-                  </button>
-
-                  <hr class="dropdown__divider" />
-
-                  <button
-                    id="themeToggle2"
-                    class="dropdown__item"
-                    type="button"
-                  >
-                    <span class="dropdown__icon material-symbols-outlined">dark_mode</span>
-                    <span>Toggle Theme</span>
-                  </button>
-
-                  <button
-                    id="printBtn2"
-                    class="dropdown__item"
-                    type="button"
-                  >
-                    <span class="dropdown__icon material-symbols-outlined">print</span>
-                    <span>Print Schedule (Legal)</span>
-                  </button>
-
-                  <button
-                    id="printBtn2Full"
-                    class="dropdown__item"
-                    type="button"
-                  >
-                    <span class="dropdown__icon material-symbols-outlined">print</span>
-                    <span>Print Full Schedule (Letter)</span>
-                  </button>
-
-                  <hr class="dropdown__divider" />
-
-                  <button
-                    id="nextDayReportBtn"
-                    class="dropdown__item"
-                    type="button"
-                  >
-                    <span class="dropdown__icon material-symbols-outlined">event_upcoming</span>
-                    <span>Weekly Maintenance</span>
-                  </button>
-
-                  <button
-                    id="dailyMaintenancePlanBtn"
-                    class="dropdown__item"
-                    type="button"
-                  >
-                    <span class="dropdown__icon material-symbols-outlined">handyman</span>
-                    <span>Daily Maintenance Plan</span>
-                  </button>
-
-                  <button
-                    id="weekStartToggle"
-                    class="dropdown__item"
-                    type="button"
-                  >
-                    <span class="dropdown__icon material-symbols-outlined">toggle_off</span>
-                    <span>Week starts Monday</span>
-                  </button>
-                </div>
-              </div>
+              <button
+                id="weekStartToggle"
+                class="dropdown__item"
+                type="button"
+              >
+                <span class="dropdown__icon material-symbols-outlined">toggle_off</span>
+                <span>Week starts Monday</span>
+              </button>
             </div>
           </div>
         </div>
@@ -789,11 +743,7 @@
                           title="Edit Itinerary Text"
                           aria-label="Edit Itinerary Text"
                         >
-                          <span
-                            class="material-symbols-outlined"
-                            style="font-size: 16px; vertical-align: bottom; margin-right: 4px"
-                            >info</span
-                          >
+                          <span class="material-symbols-outlined">info</span>
                           Trip Info
                         </button>
                         <button
@@ -803,11 +753,7 @@
                           title="Envelope Overrides"
                           aria-label="Envelope Overrides"
                         >
-                          <span
-                            class="material-symbols-outlined"
-                            style="font-size: 16px; vertical-align: bottom; margin-right: 4px"
-                            >mail</span
-                          >
+                          <span class="material-symbols-outlined">mail</span>
                           Envelope
                         </button>
                         <button
@@ -818,26 +764,18 @@
                           aria-label="Open PDF"
                           disabled
                         >
-                          <span
-                            class="material-symbols-outlined"
-                            style="font-size: 16px; vertical-align: bottom; margin-right: 4px"
-                            >picture_as_pdf</span
-                          >
+                          <span class="material-symbols-outlined">picture_as_pdf</span>
                           View PDF
                         </button>
                         <button
                           id="removeItineraryPdfBtn"
                           type="button"
-                          class="btn btn--danger btn--outline"
+                          class="btn btn--danger"
                           title="Remove PDF"
                           aria-label="Remove PDF"
                           disabled
                         >
-                          <span
-                            class="material-symbols-outlined"
-                            style="font-size: 16px; vertical-align: bottom; margin-right: 4px"
-                            >picture_as_pdf</span
-                          >
+                          <span class="material-symbols-outlined">picture_as_pdf</span>
                           Delete PDF
                         </button>
                       </div>
@@ -1039,12 +977,12 @@
                           id="req56Pass"
                           aria-pressed="false"
                         >
-                          56 Pax
                           <span
                             class="toggle-pill__icon material-symbols-outlined"
                             aria-hidden="true"
                             >tatami_seat</span
                           >
+                          56 Pax
                         </button>
                         <button
                           type="button"
@@ -1052,12 +990,12 @@
                           id="reqSleeper"
                           aria-pressed="false"
                         >
-                          Sleeper
                           <span
                             class="toggle-pill__icon material-symbols-outlined"
                             aria-hidden="true"
                             >airline_seat_flat</span
                           >
+                          Sleeper
                         </button>
                         <button
                           type="button"
@@ -1065,12 +1003,12 @@
                           id="reqLift"
                           aria-pressed="false"
                         >
-                          Lift
                           <span
                             class="toggle-pill__icon material-symbols-outlined"
                             aria-hidden="true"
                             >accessible</span
                           >
+                          Lift
                         </button>
                         <button
                           type="button"
@@ -1078,11 +1016,12 @@
                           id="reqRelief"
                           aria-pressed="false"
                         >
-                          Relief<span
+                          <span
                             class="toggle-pill__icon material-symbols-outlined"
                             aria-hidden="true"
                             >warning</span
                           >
+                          Relief
                         </button>
                         <button
                           type="button"
@@ -1090,12 +1029,12 @@
                           id="reqCoDriver"
                           aria-pressed="false"
                         >
-                          Co-Driver
                           <span
                             class="toggle-pill__icon material-symbols-outlined"
                             aria-hidden="true"
                             >person_add</span
                           >
+                          Co-Driver
                         </button>
                         <button
                           type="button"
@@ -1103,12 +1042,12 @@
                           id="reqHotel"
                           aria-pressed="false"
                         >
-                          Hotel
                           <span
                             class="toggle-pill__icon material-symbols-outlined"
                             aria-hidden="true"
                             >apartment</span
                           >
+                          Hotel
                         </button>
                       </div>
                     </div>
@@ -1134,7 +1073,7 @@
                     </button>
                     <button
                       type="button"
-                      class="btn"
+                      class="btn btn--secondary"
                       id="newBtn"
                     >
                       Clear
@@ -1178,7 +1117,7 @@
                     <div class="agenda-header__date-left">
                       <button
                         id="prevWeekBtn"
-                        class="btn--icon icon-btn"
+                        class="btn--icon-pagination"
                         type="button"
                         aria-label="Previous Week"
                         title="Previous Week"
@@ -1187,7 +1126,7 @@
                       </button>
                       <button
                         id="nextWeekBtn"
-                        class="btn--icon icon-btn"
+                        class="btn--icon-pagination"
                         type="button"
                         aria-label="Next Week"
                         title="Next Week"
@@ -1211,12 +1150,13 @@
                       <div class="weekpicker-trigger-wrap">
                         <button
                           id="agendaLeftBtn"
-                          class="btn--icon icon-btn"
+                          class="btn--toolbar"
                           type="button"
                           aria-label="Select week"
                           title="Select week"
                         >
                           <span class="material-symbols-outlined">calendar_month</span>
+                          Week
                         </button>
                         <input
                           type="date"
@@ -1227,12 +1167,13 @@
                       </div>
                       <button
                         id="todayBtn"
-                        class="btn--icon icon-btn"
+                        class="btn--toolbar"
                         type="button"
                         aria-label="Today"
                         title="Today"
                       >
                         <span class="material-symbols-outlined">calendar_today</span>
+                        Today
                       </button>
                     </div>
                   </div>
@@ -1454,7 +1395,7 @@
         <div class="modal__foot">
           <button
             id="itineraryCopyBtn"
-            class="btn btn--compact"
+            class="btn btn--primary btn--compact"
             type="button"
           >
             Copy
@@ -1549,7 +1490,7 @@
         <div class="modal__foot">
           <button
             id="printNextDayReportBtn"
-            class="btn btn--compact"
+            class="btn btn--primary btn--compact"
             type="button"
           >
             Print
@@ -1603,7 +1544,7 @@
         <div class="modal__foot">
           <button
             id="printDailyMaintenancePlanBtn"
-            class="btn btn--compact"
+            class="btn btn--primary btn--compact"
             type="button"
           >
             Print
@@ -1654,7 +1595,7 @@
               <label class="envelope-modal__label">Driver Contact Information</label>
               <button
                 id="copyDriverContactBtn"
-                class="btn btn--compact btn--secondary"
+                class="btn btn--primary btn--compact"
                 type="button"
               >
                 Copy Driver Contact Info
@@ -1678,7 +1619,7 @@
               <label class="envelope-modal__label">Trip Reminder</label>
               <button
                 id="copyDriverReminderBtn"
-                class="btn btn--compact btn--secondary"
+                class="btn btn--primary btn--compact"
                 type="button"
               >
                 Copy Trip Reminder
@@ -1773,7 +1714,7 @@
             </button>
             <button
               id="envelopePrintBtn"
-              class="btn btn--compact"
+              class="btn btn--primary btn--compact"
               type="button"
             >
               Print
