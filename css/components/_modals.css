@@ -563,7 +563,7 @@
   width: 100%;
 }
 
-.envelope-modal__actions>.btn {
+.envelope-modal__actions > .btn {
   flex: 1;
   justify-content: center;
 }
@@ -914,7 +914,6 @@
 
 /* Print: hide toolbar, show only envelope pages */
 @media print {
-
   .envelope-modal__toolbar,
   .modal__head,
   .modal__foot,
@@ -1068,8 +1067,6 @@
   margin-bottom: 24px;
 }
 
-
-
 .quote-calculator .form-group {
   display: flex;
   flex-direction: column;
@@ -1087,7 +1084,6 @@
 .quote-calculator__select:focus {
   border-color: var(--primary-color);
 }
-
 
 .quote-calculator__days {
   display: flex;
@@ -1125,7 +1121,9 @@
   color: #a3a3a3;
   cursor: pointer;
   flex-shrink: 0;
-  transition: color 0.15s, background 0.15s;
+  transition:
+    color 0.15s,
+    background 0.15s;
 }
 
 .quote-calculator__day-remove:hover {
@@ -1211,11 +1209,11 @@
   border-radius: 50%;
 }
 
-.quote-calculator input:checked+.toggle-slider {
+.quote-calculator input:checked + .toggle-slider {
   background-color: var(--primary-color);
 }
 
-.quote-calculator input:checked+.toggle-slider:before {
+.quote-calculator input:checked + .toggle-slider:before {
   transform: translateX(14px);
 }
 
@@ -1297,16 +1295,16 @@
   padding: 0 !important;
   background: var(--gray-100);
   border-top: none;
+  margin-top: auto;
 }
 
 .quote-summary__header-container {
-  border-top: 1px solid var(--gray-100);
-  /* subtle dark gray border above */
   padding: 16px 16px 8px;
+  text-align: left;
 }
 
 .quote-summary__header {
-  color: #ffffff;
+  color: var(--white);
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.2px;
@@ -1324,47 +1322,55 @@
 .quote-summary__label {
   font-size: 13px;
   text-transform: none !important;
-  color: #c6c6c6;
-  /* secondary muted text color */
+  color: var(--gray-30);
 }
 
 .quote-summary__value {
   font-size: 13px;
   font-weight: 400;
-  color: #ffffff;
-  /* pure white, high contrast */
+  color: var(--white);
   text-align: right;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
-.quote-summary__row--discount {
-  color: #ff8389;
+/* Days breakdown sub-values */
+.quote-summary__value-main {
+  font-weight: 600;
 }
 
+.quote-summary__value-sub {
+  color: var(--gray-40);
+  font-size: 11px;
+  font-weight: 400;
+}
+
+/* Discount row (green = savings) */
 .quote-summary__row--discount .quote-summary__label,
 .quote-summary__row--discount .quote-summary__value {
-  color: #ff8389;
+  color: var(--green);
 }
 
+/* Total row */
 .quote-summary__row--primary {
   margin-top: 8px;
-  padding: 16px;
+  padding: 16px 16px 24px 16px;
   background: var(--gray-100);
-  /* slightly lighter background than #525252 */
   border-bottom: none;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--grid-line);
 }
 
 .quote-summary__row--primary .quote-summary__label {
   font-size: 15px;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--white);
 }
 
 .quote-summary__row--primary .quote-summary__value {
   font-size: 24px;
-  /* significantly larger */
   font-weight: 700;
-  color: #ffffff;
+  color: var(--white);
 }
 
 /* ── Trip Editor: form actions grid ──────────────────────────────── */
@@ -1423,8 +1429,6 @@
 
 /* ── Trip Editor UI Refactoring ────────────────────────────────────── */
 
-
-
 /* Updated label styling for Trip Editor */
 #tripForm label,
 .trip-editor__req-label {
@@ -1474,7 +1478,9 @@
   font-size: 13px;
   font-weight: 400;
   cursor: pointer;
-  transition: background-color 0.2s, background-color 0.2s;
+  transition:
+    background-color 0.2s,
+    background-color 0.2s;
 }
 
 .trip-editor__cluster-btn .material-symbols-outlined {
@@ -1538,7 +1544,9 @@
   border-radius: 0;
   cursor: pointer;
   border: none;
-  transition: filter 0.2s, background-color 0.2s;
+  transition:
+    filter 0.2s,
+    background-color 0.2s;
 }
 
 .trip-editor__action-btn:disabled {
