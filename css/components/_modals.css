@@ -563,7 +563,7 @@
   width: 100%;
 }
 
-.envelope-modal__actions>.btn {
+.envelope-modal__actions > .btn {
   flex: 1;
   justify-content: center;
 }
@@ -744,9 +744,9 @@
   display: flex;
   flex-direction: column;
   gap: 0in;
-  height: 0.40in;
-  min-height: 0.40in;
-  max-height: 0.40in;
+  height: 0.4in;
+  min-height: 0.4in;
+  max-height: 0.4in;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -808,9 +808,9 @@
 }
 
 .envelope-page .env-mini.env-mini-standard tr {
-  height: 0.40in;
-  min-height: 0.40in;
-  max-height: 0.40in;
+  height: 0.4in;
+  min-height: 0.4in;
+  max-height: 0.4in;
 }
 
 .envelope-page .env-mini td {
@@ -914,7 +914,6 @@
 
 /* Print: hide toolbar, show only envelope pages */
 @media print {
-
   .envelope-modal__toolbar,
   .modal__head,
   .modal__foot,
@@ -1227,10 +1226,237 @@
   border-radius: 50%;
 }
 
-.quote-calculator input:checked+.toggle-slider {
+.quote-calculator input:checked + .toggle-slider {
   background-color: var(--primary-color);
 }
 
-.quote-calculator input:checked+.toggle-slider:before {
+.quote-calculator input:checked + .toggle-slider:before {
   transform: translateX(14px);
+}
+
+/* ── Quote Calculator: toolbar toggle items ──────────────────────── */
+.quote-calculator__toggle-item {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  padding-top: 4px;
+  flex: 1 1 45%;
+}
+
+.quote-calculator__toggle-item--full {
+  flex: 1 1 100%;
+}
+
+.quote-calculator__toggle-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ── Quote Calculator: toolbar flex half-width items ─────────────── */
+.quote-calculator__toolbar-half {
+  flex: 1 1 45%;
+}
+
+/* ── Quote Calculator: Add Day button ────────────────────────────── */
+.quote-calculator__add-day-btn {
+  width: 100%;
+  margin-top: var(--space-2);
+  border-color: #2e2e2e;
+  color: #ffffff;
+}
+
+.quote-calculator__add-day-btn .material-symbols-outlined {
+  font-size: 16px;
+  margin-right: 4px;
+}
+
+/* ── Quote Calculator: Dynamic day rows ──────────────────────────── */
+.quote-calculator__day-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.quote-calculator__day-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  min-width: 42px;
+  flex-shrink: 0;
+}
+
+.quote-calculator__day-input {
+  flex: 1;
+}
+
+.quote-calculator__day-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    color 0.15s,
+    background 0.15s;
+}
+
+.quote-calculator__day-remove:hover {
+  color: var(--status-red);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.quote-calculator__input-group {
+  display: flex;
+  gap: 4px;
+}
+
+.quote-calculator__select-mini {
+  background: var(--surface-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-size: 13px;
+  padding: 0 4px;
+  outline: none;
+  cursor: pointer;
+  height: 32px;
+}
+
+.quote-calculator__select-mini:focus {
+  border-color: var(--primary-light);
+}
+
+/* ── Quote Summary ───────────────────────────────────────────────── */
+.quote-calculator__summary {
+  padding: 0 !important;
+  background: #525252;
+  border-top: none;
+}
+
+.quote-summary__header-container {
+  border-top: 1px solid #393939; /* subtle dark gray border above */
+  padding: 16px 16px 8px;
+}
+
+.quote-summary__header {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.quote-summary__row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 16px;
+  border-bottom: 1px solid #4d4d4d;
+}
+
+.quote-summary__label {
+  font-size: 13px;
+  text-transform: none !important;
+  color: #c6c6c6; /* secondary muted text color */
+}
+
+.quote-summary__value {
+  font-size: 13px;
+  font-weight: 400;
+  color: #ffffff; /* pure white, high contrast */
+  text-align: right;
+}
+
+.quote-summary__row--discount {
+  color: #ff8389;
+}
+
+.quote-summary__row--discount .quote-summary__label,
+.quote-summary__row--discount .quote-summary__value {
+  color: #ff8389;
+}
+
+.quote-summary__row--primary {
+  margin-top: 8px;
+  padding: 16px;
+  background: #636363; /* slightly lighter background than #525252 */
+  border-bottom: none;
+  border-top: 1px solid #4d4d4d;
+}
+
+.quote-summary__row--primary .quote-summary__label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.quote-summary__row--primary .quote-summary__value {
+  font-size: 24px; /* significantly larger */
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* ── Trip Editor: form actions grid ──────────────────────────────── */
+.form-actions--grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 12px;
+}
+
+/* ── Trip Editor: envelope overrides section spacing ─────────────── */
+.envelope-overrides-section {
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 12px;
+}
+
+/* ── Trip Editor: envelope notes input stack ──────────────────────── */
+.envelope-notes-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── Driver Contact Modal ────────────────────────────────────────── */
+.driver-contact__body {
+  gap: var(--space-4);
+}
+
+.driver-contact__section {
+  gap: var(--space-2);
+  flex: 1;
+}
+
+.driver-contact__textarea {
+  min-height: 180px;
+}
+
+.driver-contact__divider {
+  border: none;
+  border-top: 1px solid var(--grid-line);
+  margin: 0;
+}
+
+/* ── Hidden file input ───────────────────────────────────────────── */
+.sr-file-input {
+  display: none;
+}
+
+/* ── Mobile-only header action (JS-toggled) ──────────────────────── */
+.cds-header__action--hidden {
+  display: none;
 }

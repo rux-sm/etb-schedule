@@ -111,12 +111,12 @@ const CACHE = {
         expiry: Date.now() + ttlMs,
       };
       localStorage.setItem(key, JSON.stringify(payload));
-    } catch { }
+    } catch {}
   },
   remove(key) {
     try {
       localStorage.removeItem(key);
-    } catch { }
+    } catch {}
   },
   clearAll() {
     try {
@@ -128,7 +128,7 @@ const CACHE = {
           localStorage.removeItem(k);
         }
       });
-    } catch { }
+    } catch {}
   },
 };
 
@@ -384,7 +384,7 @@ function clamp(n, min, max) {
 function safeUUID() {
   try {
     return crypto.randomUUID();
-  } catch { }
+  } catch {}
   return `tk_${Date.now()}_${Math.floor(Math.random() * 1e9)}`;
 }
 
@@ -1312,7 +1312,7 @@ function applyWeekStart(isMonday) {
 
   try {
     localStorage.setItem("weekStartMonday", state.weekStartsOnMonday ? "1" : "0");
-  } catch { }
+  } catch {}
 
   syncWeekStartUI();
 
@@ -1514,7 +1514,7 @@ function prefetchAdjacentWeeks() {
 
     // ✅ FIX: Calculate Monday for the adjacent week
     const { notesKey } = getWeekRange(targetDate); // We will update getWeekRange to support a date arg
-    fetchWeekDataCached(start, end, notesKey).catch(() => { });
+    fetchWeekDataCached(start, end, notesKey).catch(() => {});
   }
 }
 
@@ -2454,7 +2454,7 @@ function _renderAgendaInner() {
         "color-brown",
         "color-gray",
         "color-violet", // Keep for legacy cleanup
-        "out-of-service"
+        "out-of-service",
       );
       const tripColor = String(t.tripColor || "")
         .trim()
@@ -3625,11 +3625,11 @@ function openDriverContactModal(tripKey) {
   const dDate = trip.departureDate ? parseYMD(trip.departureDate) : null;
   const dDateStr = dDate
     ? dDate.toLocaleDateString("en-US", {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    })
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
     : "the upcoming date";
   const destName = trip.destination || "your destination";
 
@@ -3991,7 +3991,13 @@ function fillEnvelopePage(pageEl, trip, assignment) {
   set("notes3", notesLines[2] || "");
 }
 
-let stateEnvelope = { tripKey: null, trip: null, assignments: [], bg: "yellow", format: "standard" };
+let stateEnvelope = {
+  tripKey: null,
+  trip: null,
+  assignments: [],
+  bg: "yellow",
+  format: "standard",
+};
 
 function openEnvelopeModal(tripKey) {
   let trip = state.tripByKey?.[tripKey];
@@ -4776,15 +4782,15 @@ function buildPrintScheduleFullLetter() {
           <tr>
             <th class="schedule-grid__col-bus">Bus</th>
             ${dates
-      .map((d, i) => {
-        const dObj = parseYMD(d);
-        const dayStr = dObj
-          ? dObj.toLocaleDateString("en-US", { weekday: "short" })
-          : dayIds[i];
-        const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
-        return `<th class="schedule-grid__col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
-      })
-      .join("")}
+              .map((d, i) => {
+                const dObj = parseYMD(d);
+                const dayStr = dObj
+                  ? dObj.toLocaleDateString("en-US", { weekday: "short" })
+                  : dayIds[i];
+                const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
+                return `<th class="schedule-grid__col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
+              })
+              .join("")}
           </tr>
         </thead>
         <tbody>
@@ -5541,149 +5547,14 @@ function initGlassSelects() {
 }
 
 // ======================================================
-// 35B) QUOTE CALCULATOR LOGIC
+// 35B) QUOTE CALCULATOR LOGIC — moved to quoteCalculator.js
 // ======================================================
-function createQuoteDayRow() {
-  const row = document.createElement("div");
-  row.className = "quote-calculator__day-row";
-
-  const dayCount = dom.quoteDaysContainer.children.length + 1;
-  row.innerHTML = `
-    <span class="quote-calculator__day-label">Day <span class="quote-day-num">${dayCount}</span></span>
-    <input type="number" class="quote-calculator__input quote-calculator__day-input" placeholder="Miles" min="0" />
-    <button type="button" class="quote-calculator__day-remove" title="Remove Day">
-      <span class="material-symbols-outlined" style="font-size: 16px;">close</span>
-    </button>
-  `;
-
-  const input = row.querySelector(".quote-calculator__day-input");
-  input.addEventListener("input", calculateQuote);
-
-  const removeBtn = row.querySelector(".quote-calculator__day-remove");
-  removeBtn.addEventListener("click", () => {
-    row.remove();
-    updateQuoteDayLabels();
-    calculateQuote();
-  });
-
-  dom.quoteDaysContainer.appendChild(row);
-  calculateQuote();
-}
-
-function updateQuoteDayLabels() {
-  const rows = Array.from(dom.quoteDaysContainer.children);
-  rows.forEach((row, idx) => {
-    const numSpan = row.querySelector(".quote-day-num");
-    if (numSpan) numSpan.textContent = idx + 1;
-  });
-}
-
-function calculateQuote() {
-  const ldRate = parseFloat(dom.quoteLDRate.value) || 4.5;
-  const deadMiles = parseFloat(dom.quoteDeadMiles.value) || 0;
-  const isLDTrip = dom.quoteTripType.checked;
-  const hasReliefDriver = dom.quoteReliefDriver.checked;
-  const hasHalfDay = dom.quoteHalfDay.checked;
-
-  const dayInputs = dom.quoteDaysContainer.querySelectorAll(".quote-calculator__day-input");
-  const totDays = dayInputs.length;
-
-  if (totDays === 0) {
-    dom.quoteTotalDriverPay.textContent = "$0";
-    dom.quoteFinalTotal.textContent = "$0";
-    return;
-  }
-
-  let totRevMiles = 0;
-  let totalDriverPay = 0;
-
-  const dailyBase = isLDTrip ? 260 : 250;
-  const mealAllowance = 20;
-
-  dayInputs.forEach((input) => {
-    const miles = parseFloat(input.value) || 0;
-    totRevMiles += miles;
-
-    // Driver pay for this day
-    let payForDay = Math.max(dailyBase, miles * 0.6) + mealAllowance;
-    totalDriverPay += payForDay;
-  });
-
-  if (hasReliefDriver) {
-    totalDriverPay *= 2;
-  }
-
-  // Trip Quote Formula
-  const earnedDays = Math.floor(totRevMiles / 430);
-  const extraDays = Math.max(0, totDays - earnedDays);
-
-  const mileageSubtotal = totRevMiles * ldRate;
-  const extraDaysSubtotal = extraDays * 950;
-
-  let totalQuote = mileageSubtotal + extraDaysSubtotal + deadMiles * 0.6;
-
-  if (hasHalfDay) {
-    totalQuote += 475; // 50% of Extra Day Rate ($950)
-  }
-
-  // Constraint: If Total Quote < (Total Calendar Days * 1,400), default to Daily Minimum total
-  const minimumBaseCost = totDays * 1400;
-  if (totalQuote < minimumBaseCost) {
-    totalQuote = minimumBaseCost;
-  }
-
-  // Calculate fields for display
-  const mileageCost = totalQuote;
-  const driver1Pay = hasReliefDriver ? totalDriverPay / 2 : totalDriverPay;
-  const driver2Pay = hasReliefDriver ? driver1Pay : 0;
-  const finalQuote = mileageCost + driver1Pay + driver2Pay;
-
-  // Update DOM
-  dom.quoteDaysBreakdown.textContent = `${earnedDays}/${extraDays}`;
-  dom.quoteMileageCost.textContent =
-    "$" +
-    mileageCost.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  dom.quoteDriver1Pay.textContent =
-    "$" +
-    driver1Pay.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-  if (hasReliefDriver) {
-    dom.quoteDriver2Row.classList.remove("is-hidden");
-    dom.quoteDriver2Pay.textContent =
-      "$" +
-      driver2Pay.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  } else {
-    dom.quoteDriver2Row.classList.add("is-hidden");
-  }
-
-  dom.quoteFinalTotal.textContent =
-    "$" +
-    finalQuote.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-
-function initQuoteCalculator() {
-  if (!dom.quoteAddDayBtn) return;
-  dom.quoteAddDayBtn.addEventListener("click", createQuoteDayRow);
-
-  // Listen to toolbar inputs
-  dom.quoteLDRate.addEventListener("change", calculateQuote);
-  dom.quoteDeadMiles.addEventListener("input", calculateQuote);
-  dom.quoteTripType.addEventListener("change", calculateQuote);
-  dom.quoteReliefDriver.addEventListener("change", calculateQuote);
-  dom.quoteHalfDay.addEventListener("change", calculateQuote);
-
-  // Initialize with 1 day row
-  if (dom.quoteDaysContainer.children.length === 0) {
-    createQuoteDayRow();
-  }
-}
 
 // ======================================================
 // 36) EVENTS
 // ======================================================
 function wireEvents() {
   initGlassSelects();
-  initQuoteCalculator();
 
   // Re-apply bus row visibility after wrapping (initGlassSelects wraps selects;
   // updateBusRowVisibility ran in buildBusRowsOnce before wrapping, so wrappers never got is-hidden)
@@ -6321,11 +6192,11 @@ function wireEvents() {
     // clear all cached week data (both in-memory and persistent).
     try {
       state.weekCache.clear();
-    } catch { }
+    } catch {}
 
     try {
       CACHE.clearAll();
-    } catch { }
+    } catch {}
   }
 
   dom.tripDetailsModal?.addEventListener("click", (e) => {
@@ -7198,7 +7069,7 @@ if (dom.printDailyMaintenancePlanBtn) {
 .schedule-grid-container.is-loading-bars .schedule-grid__trip-bar { opacity: 0.18; pointer-events: none; }
 `;
     document.head.appendChild(style);
-  } catch { }
+  } catch {}
 
   setSidePanelMode("off");
   enforceDesktopEditing();

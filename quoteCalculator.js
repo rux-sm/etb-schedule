@@ -1,0 +1,304 @@
+// =========================================================================
+// QUOTE CALCULATOR MODULE
+// Standalone calculator logic for the Trip Quote Calculator card.
+// =========================================================================
+(function initQuoteCalculator() {
+  // Guard against double-init (e.g. script loaded or evaluated twice)
+  if (window._quoteCalcReady) return;
+  window._quoteCalcReady = true;
+
+  const $ = (id) => document.getElementById(id);
+
+  // ── DOM refs ──────────────────────────────────────────────────────────
+  const els = {
+    ldRate: $("quoteLDRate"),
+    seasonalRate: $("quoteSeasonalRate"),
+    deadMiles: $("quoteDeadMiles"),
+    reliefToggle: $("quoteReliefDriver"),
+    halfDayToggle: $("quoteHalfDay"),
+    ccFeeToggle: $("quoteCCFeeToggle"),
+    daysContainer: $("quoteDaysContainer"),
+    addDayBtn: $("quoteAddDayBtn"),
+    // Summary
+    totalMilesField: $("quoteTotalMiles"),
+    totalDaysCount: $("quoteTotalDaysCount"),
+    billedDaysCount: $("quoteBilledDaysCount"),
+    freeDaysCount: $("quoteFreeDaysCount"),
+    baseRateField: $("quoteBaseRate"),
+    seasonalRateRow: $("quoteSeasonalRateRow"),
+    seasonalRateVal: $("quoteSeasonalRateVal"),
+    ccFeeVal: $("quoteCCFeeVal"),
+    driver1Pay: $("quoteDriver1Pay"),
+    driver2Row: $("quoteDriver2Row"),
+    driver2Pay: $("quoteDriver2Pay"),
+    // Discount
+    discountValue: $("quoteDiscountValue"),
+    discountType: $("quoteDiscountType"),
+    discountRow: $("quoteDiscountRow"),
+    discountAmount: $("quoteDiscountAmount"),
+    finalTotal: $("quoteFinalTotal"),
+    // Info Modal
+    infoBtn: $("quoteInfoBtn"),
+    infoModal: $("quoteInfoModal"),
+    infoCloseBtn: $("quoteInfoCloseBtn"),
+    infoBackdrop: $("quoteInfoBackdrop"),
+  };
+
+  // Bail if the calculator card isn't on the page
+  if (!els.daysContainer || !els.addDayBtn) return;
+
+  // ── Info Modal Management ─────────────────────────────────────────────
+  function openInfoModal() {
+    if (els.infoModal) els.infoModal.hidden = false;
+  }
+
+  function closeInfoModal() {
+    if (els.infoModal) els.infoModal.hidden = true;
+  }
+
+  if (els.infoBtn) els.infoBtn.addEventListener("click", openInfoModal);
+  if (els.infoCloseBtn) els.infoCloseBtn.addEventListener("click", closeInfoModal);
+  if (els.infoBackdrop) els.infoBackdrop.addEventListener("click", closeInfoModal);
+
+  // ── Constants ─────────────────────────────────────────────────────────
+  const LOCAL_DAILY_RATE = 1400;
+  const LD_EXTRA_DAY = 950;
+  const HALF_DAY_SURCHARGE = 475;
+  const MILES_PER_FREE_DAY = 430; // every 430 miles earns 1 free day
+  const MAX_DAYS = 20;
+
+  // Driver pay rates (used for 2nd driver cost calculation)
+  const DRIVER_RATE = 0.6; // per mile (≤1,000 mi)
+  const DRIVER_RATE_OVER_1K = 0.5; // per mile (>1,000 mi, 2-driver trips)
+  const DRIVER_EXTRA_DAY = 150; // per extra day for driver pay
+
+  let dayCounter = 0;
+
+  // ── Helpers ───────────────────────────────────────────────────────────
+  function fmt(n) {
+    if (!n || n === 0) return "-";
+    const isNegative = n < 0;
+    const absN = Math.round(Math.abs(n)); // round to nearest dollar
+    if (absN === 0) return "-";
+    const prefix = isNegative ? "-$" : "$";
+    return (
+      prefix +
+      absN.toLocaleString("en-US", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      })
+    );
+  }
+
+  // ── Day Row Management ────────────────────────────────────────────────
+  function getDayRows() {
+    return els.daysContainer.querySelectorAll(".quote-calculator__day-row");
+  }
+
+  function addDayRow(initialMiles) {
+    const count = getDayRows().length;
+    if (count >= MAX_DAYS) return;
+    dayCounter++;
+
+    const row = document.createElement("div");
+    row.className = "quote-calculator__day-row";
+    const dayNum = count + 1;
+    row.innerHTML =
+      `<span class="quote-calculator__day-label">Day ${dayNum}</span>` +
+      `<input type="number" class="quote-calculator__day-input quote-calculator__input" min="0" value="${initialMiles || ""}" placeholder="Miles" aria-label="Day ${dayNum} miles" />` +
+      `<button type="button" class="quote-calculator__day-remove" aria-label="Remove day" title="Remove day"><span class="material-symbols-outlined" style="font-size:18px">close</span></button>`;
+
+    row.querySelector(".quote-calculator__day-remove").addEventListener("click", () => {
+      row.remove();
+      renumberDays();
+      recalcQuote();
+    });
+    row.querySelector(".quote-calculator__day-input").addEventListener("input", recalcQuote);
+
+    els.daysContainer.appendChild(row);
+    recalcQuote();
+
+    // Focus the new input
+    const input = row.querySelector(".quote-calculator__day-input");
+    if (input && !initialMiles) input.focus();
+  }
+
+  function renumberDays() {
+    getDayRows().forEach((row, i) => {
+      const label = row.querySelector(".quote-calculator__day-label");
+      const input = row.querySelector(".quote-calculator__day-input");
+      if (label) label.textContent = `Day ${i + 1}`;
+      if (input) input.setAttribute("aria-label", `Day ${i + 1} miles`);
+    });
+  }
+
+  // ── Calculation Engine ────────────────────────────────────────────────
+  function recalcQuote() {
+    const stdRate = parseFloat(els.ldRate.value) || 4.5;
+    const seaRate = parseFloat(els.seasonalRate.value) || 0;
+    const deadMiles = parseInt(els.deadMiles.value, 10) || 0;
+    const secondDriverOn = els.reliefToggle.checked;
+    const halfDayOn = els.halfDayToggle.checked;
+    const ccFeeOn = els.ccFeeToggle ? els.ccFeeToggle.checked : false;
+    const manualDiscountVal = parseFloat(els.discountValue.value) || 0;
+    const manualDiscType = els.discountType.value;
+
+    // Gather day miles
+    const dayInputs = els.daysContainer.querySelectorAll(".quote-calculator__day-input");
+    let totalMiles = 0;
+    let totalDays = 0;
+
+    dayInputs.forEach((input) => {
+      const miles = parseInt(input.value, 10) || 0;
+      if (miles > 0) {
+        totalMiles += miles;
+        totalDays++;
+      }
+    });
+
+    // Bus Earned Free Days (using the spreadsheet's exact FLOOR(miles/250) logic)
+    const factor = Math.floor(totalMiles / 250);
+    // Based on the SWITCH logic: 1->1, 2->1, 3->1.5, 4->2, 5->2.5 ...
+    // Note: If factor is 0 (miles < 250), we default to 1 Free Day so Extra Days aren't aggressively
+    // overcharged before the Local Daily Minimum overrides the quote.
+    const busEarnedDays = factor < 3 ? 1 : factor / 2;
+    const busExtraDays = Math.max(0, totalDays - busEarnedDays);
+
+    // Driver Earned Free Days (straight 1 per 430 miles, whole numbers only)
+    const driverEarnedDays = Math.floor(totalMiles / 430);
+    const driverExtraDays = Math.max(0, totalDays - driverEarnedDays);
+
+    // Common cost parts
+    const localCostFloor = totalDays * LOCAL_DAILY_RATE;
+    const driverRate = totalMiles > 1000 ? DRIVER_RATE_OVER_1K : DRIVER_RATE;
+
+    const driver1Pay =
+      totalMiles > 0 ? totalMiles * driverRate + driverExtraDays * DRIVER_EXTRA_DAY : 0;
+
+    const driver2Surcharge =
+      secondDriverOn && totalMiles > 0
+        ? totalMiles * driverRate + driverExtraDays * DRIVER_EXTRA_DAY
+        : 0;
+
+    const halfDaySurcharge = halfDayOn ? HALF_DAY_SURCHARGE : 0;
+    const totalSurcharges = driver2Surcharge + halfDaySurcharge;
+
+    // Helper to calculate pure mileage/day cost
+    function calculateBaseMileageCost(rate) {
+      if (totalMiles === 0 && totalDays === 0 && busExtraDays === 0 && deadMiles === 0) return 0;
+      const ldMileageBase = totalMiles * rate + busExtraDays * LD_EXTRA_DAY;
+      const baseCost = Math.max(ldMileageBase, localCostFloor);
+      const deadMilesCost = deadMiles * rate;
+      return baseCost + deadMilesCost;
+    }
+
+    // 1. Base Rates (excluding surcharges)
+    const standardBaseCost = calculateBaseMileageCost(stdRate);
+
+    // 2. Seasonal Discount
+    let seasonalDiscount = 0;
+    let seasonalBaseCost = 0;
+    if (seaRate > 0 && seaRate < stdRate) {
+      seasonalBaseCost = calculateBaseMileageCost(seaRate);
+      seasonalDiscount = Math.max(0, standardBaseCost - seasonalBaseCost);
+    }
+
+    // 3. Subtotal before manual discount
+    const subtotalBeforeManual = standardBaseCost + totalSurcharges;
+
+    // 4. Manual Discount
+    let manualDiscountAmount = 0;
+    if (manualDiscountVal > 0) {
+      if (manualDiscType === "percent") {
+        manualDiscountAmount = subtotalBeforeManual * (manualDiscountVal / 100);
+      } else {
+        manualDiscountAmount = manualDiscountVal;
+      }
+    }
+
+    // 5. Subtotal after all discounts
+    const discountAmount = seasonalDiscount + manualDiscountAmount;
+    const subtotalAfterDiscount = subtotalBeforeManual - discountAmount;
+
+    // 6. Credit Card Fee (4% of subtotal after discounts)
+    const ccFeeAmount = ccFeeOn ? subtotalAfterDiscount * 0.04 : 0;
+
+    const finalQuote = subtotalAfterDiscount + ccFeeAmount;
+
+    // ── Update UI ──
+    if (els.totalMilesField) {
+      els.totalMilesField.textContent = totalMiles ? totalMiles.toLocaleString() : "-";
+    }
+    if (els.totalDaysCount) {
+      els.totalDaysCount.textContent = totalDays > 0 ? totalDays : "-";
+    }
+    if (els.billedDaysCount) {
+      // Billed days are the base (1 day minimum) plus the "Extra Days" charged.
+      // But it's clearer to just show the "Days" that directly cost something.
+      // Actually, if a trip is 2 days, and has 1 free day, it's 1 billed, 1 free.
+      // A trip is ALWAYS initially billed by the Day. So "Billed Days" = Total Days - Free Days
+      // Which is exactly `busExtraDays` (plus any standard days implied by the Mileage base... wait).
+      // Wait, let's keep it simple: Free Days = busEarnedDays. Billed = totalDays - busEarnedDays.
+      els.billedDaysCount.textContent =
+        totalDays > 0 ? totalDays - Math.min(busEarnedDays, totalDays) : "-";
+    }
+    if (els.freeDaysCount) {
+      els.freeDaysCount.textContent = totalDays > 0 ? Math.min(busEarnedDays, totalDays) : "-";
+    }
+    if (els.baseRateField) {
+      els.baseRateField.textContent = fmt(standardBaseCost);
+    }
+    if (els.seasonalRateVal) {
+      els.seasonalRateVal.textContent = fmt(seasonalBaseCost);
+    }
+    if (els.ccFeeVal) {
+      els.ccFeeVal.textContent = fmt(ccFeeAmount);
+    }
+    if (els.driver1Pay) {
+      els.driver1Pay.textContent = driver1Pay > 0 ? `${fmt(driver1Pay)} (included)` : "(included)";
+    }
+    if (els.driver2Pay) {
+      els.driver2Pay.textContent = fmt(driver2Surcharge);
+    }
+
+    // Discount UI
+    if (els.discountAmount) {
+      els.discountAmount.textContent = fmt(-discountAmount);
+    }
+
+    if (els.finalTotal) {
+      els.finalTotal.textContent = fmt(finalQuote);
+    }
+  }
+
+  // ── Event Wiring ──────────────────────────────────────────────────────
+  els.addDayBtn.onclick = (e) => {
+    e.stopPropagation();
+    addDayRow();
+  };
+
+  els.ldRate.addEventListener("change", recalcQuote);
+  els.seasonalRate.addEventListener("change", recalcQuote);
+  els.deadMiles.addEventListener("input", recalcQuote);
+  els.reliefToggle.addEventListener("change", recalcQuote);
+  els.halfDayToggle.addEventListener("change", recalcQuote);
+  if (els.ccFeeToggle) els.ccFeeToggle.addEventListener("change", recalcQuote);
+  els.discountValue.addEventListener("input", recalcQuote);
+  els.discountType.addEventListener("change", recalcQuote);
+
+  // ── Init ──────────────────────────────────────────────────────────────
+  // Wire any day rows already present in the HTML
+  getDayRows().forEach((row) => {
+    const removeBtn = row.querySelector(".quote-calculator__day-remove");
+    const input = row.querySelector(".quote-calculator__day-input");
+    if (removeBtn)
+      removeBtn.addEventListener("click", () => {
+        row.remove();
+        renumberDays();
+        recalcQuote();
+      });
+    if (input) input.addEventListener("input", recalcQuote);
+  });
+
+  recalcQuote();
+})();
