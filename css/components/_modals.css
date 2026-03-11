@@ -563,7 +563,7 @@
   width: 100%;
 }
 
-.envelope-modal__actions > .btn {
+.envelope-modal__actions>.btn {
   flex: 1;
   justify-content: center;
 }
@@ -914,6 +914,7 @@
 
 /* Print: hide toolbar, show only envelope pages */
 @media print {
+
   .envelope-modal__toolbar,
   .modal__head,
   .modal__foot,
@@ -1040,20 +1041,14 @@
    ========================================================================= */
 
 .quote-calculator {
-  background-color: #121212;
+  background-color: var(--gray-100);
   border: 1px solid #2e2e2e;
   border-radius: 12px;
   color: #ffffff;
 }
 
-.quote-calculator .card__header,
-.quote-calculator .card__footer {
-  background-color: #1e1e1e;
-  border-color: #2e2e2e;
-}
-
 .quote-calculator .card__content {
-  background-color: #121212;
+  background-color: var(--gray-100);
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -1216,11 +1211,11 @@
   border-radius: 50%;
 }
 
-.quote-calculator input:checked + .toggle-slider {
+.quote-calculator input:checked+.toggle-slider {
   background-color: var(--primary-color);
 }
 
-.quote-calculator input:checked + .toggle-slider:before {
+.quote-calculator input:checked+.toggle-slider:before {
   transform: translateX(14px);
 }
 
@@ -1294,18 +1289,19 @@
 }
 
 .quote-calculator__select-mini:focus {
-  border-color: var(--primary-light);
+  border-color: var(--border);
 }
 
 /* ── Quote Summary ───────────────────────────────────────────────── */
 .quote-calculator__summary {
   padding: 0 !important;
-  background: #525252;
+  background: var(--gray-100);
   border-top: none;
 }
 
 .quote-summary__header-container {
-  border-top: 1px solid #393939; /* subtle dark gray border above */
+  border-top: 1px solid var(--gray-100);
+  /* subtle dark gray border above */
   padding: 16px 16px 8px;
 }
 
@@ -1322,19 +1318,21 @@
   justify-content: space-between;
   align-items: center;
   padding: 6px 16px;
-  border-bottom: 1px solid #4d4d4d;
+  border-bottom: 1px solid var(--border);
 }
 
 .quote-summary__label {
   font-size: 13px;
   text-transform: none !important;
-  color: #c6c6c6; /* secondary muted text color */
+  color: #c6c6c6;
+  /* secondary muted text color */
 }
 
 .quote-summary__value {
   font-size: 13px;
   font-weight: 400;
-  color: #ffffff; /* pure white, high contrast */
+  color: #ffffff;
+  /* pure white, high contrast */
   text-align: right;
 }
 
@@ -1350,9 +1348,10 @@
 .quote-summary__row--primary {
   margin-top: 8px;
   padding: 16px;
-  background: #636363; /* slightly lighter background than #525252 */
+  background: var(--gray-100);
+  /* slightly lighter background than #525252 */
   border-bottom: none;
-  border-top: 1px solid #4d4d4d;
+  border-top: 1px solid var(--border);
 }
 
 .quote-summary__row--primary .quote-summary__label {
@@ -1362,7 +1361,8 @@
 }
 
 .quote-summary__row--primary .quote-summary__value {
-  font-size: 24px; /* significantly larger */
+  font-size: 24px;
+  /* significantly larger */
   font-weight: 700;
   color: #ffffff;
 }
@@ -1569,7 +1569,8 @@
 .trip-editor__action-btn--save {
   background-color: var(--primary-color, #0f62fe);
   color: #ffffff;
-  flex: 1; /* Stretch to fill remaining space proportionally */
+  flex: 1;
+  /* Stretch to fill remaining space proportionally */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1578,6 +1579,3 @@
 .trip-editor__action-btn--save:hover {
   filter: brightness(1.1);
 }
-
-
-

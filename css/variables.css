@@ -119,11 +119,11 @@
   --heading-1-letter-spacing: 0;
   --heading-1-color: var(--text);
 
-  --heading-2-size: 16px;
+  --heading-2-size: 18px;
   --heading-2-weight: 600;
   --heading-2-line-height: 1.25;
   --heading-2-letter-spacing: -0.005em;
-  --heading-2-color: rgb(255 255 255);
+  --heading-2-color: var(--text);
 
   /* ==========================================================================
    * 5. SPACING & LAYOUT

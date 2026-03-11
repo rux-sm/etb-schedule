@@ -94,6 +94,7 @@
 
   /* THE CARBON WAY: Reserve the space with transparent borders */
   border: 1px solid transparent;
+  border-top: 3px solid transparent;
   /* Standard accessibility border */
   border-bottom: 3px solid transparent;
   /* Reserves space for the active indicator */

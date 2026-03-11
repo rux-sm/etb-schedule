@@ -43,14 +43,14 @@
         <button id="driversBtn" class="cds-header__action" title="Driver Assignments">
           <span class="material-symbols-outlined">groups</span>
         </button>
-        <button id="notesBtn" class="cds-header__action" title="Weekly Notes">
-          <span class="material-symbols-outlined">sticky_note_2</span>
+        <button id="quoteBtn" class="cds-header__action" title="Quote Calculator">
+          <span class="material-symbols-outlined">calculate</span>
         </button>
         <button id="waitingListBtn" class="cds-header__action" title="Waiting List">
           <span class="material-symbols-outlined">low_priority</span>
         </button>
-        <button id="quoteBtn" class="cds-header__action" title="Quote Calculator">
-          <span class="material-symbols-outlined">calculate</span>
+        <button id="notesBtn" class="cds-header__action" title="Weekly Notes">
+          <span class="material-symbols-outlined">sticky_note_2</span>
         </button>
         <button id="todayBtnMobile" class="cds-header__action cds-header__action--mobile cds-header__action--hidden"
           title="Today" aria-label="Today">
@@ -104,8 +104,8 @@
           <div class="app-layout__sidebar--left app-layout__sidebar--collapsed" id="panelStart">
             <!-- Placeholder for new left panel cards -->
             <div class="card card--compact is-hidden" id="leftPanelCard1">
-              <div class="card__header">
-                <h2 class="section-title">Left Panel Card 1</h2>
+              <div class="panel-header">
+                <h2 class="panel-header__title">Left Panel Card 1</h2>
               </div>
               <div class="card__content">
                 <p>Add your content here</p>
@@ -117,10 +117,10 @@
           <div class="app-layout__sidebar--right app-layout__sidebar--collapsed" id="panelEnd">
             <!-- Quote Calculator Card (hidden by default) -->
             <div class="card card--compact is-hidden quote-calculator" id="quoteCard">
-              <div class="card__header">
-                <h2 class="section-title">Trip Quote Calculator</h2>
-                <div class="card__header-actions">
-                  <button id="quoteInfoBtn" class="btn btn--icon-only btn--ghost" type="button"
+              <div class="panel-header">
+                <h2 class="panel-header__title">Trip Quote Calculator</h2>
+                <div class="panel-header__actions">
+                  <button id="quoteInfoBtn" class="panel-header__action" type="button"
                     aria-label="View Calculator Rules & Logic" title="Rules & Logic">
                     <span class="material-symbols-outlined">info</span>
                   </button>
@@ -129,6 +129,15 @@
 
               <div class="card__content">
                 <div class="quote-calculator__inputs">
+                  <div class="form-group quote-calculator__toolbar-half">
+                    <label for="quoteTotalMilesInput">Total miles</label>
+                    <input type="number" id="quoteTotalMilesInput" class="quote-calculator__input" min="0" value="0" />
+                  </div>
+                  <div class="form-group quote-calculator__toolbar-half">
+                    <label for="quoteTotalDaysInput">Total days</label>
+                    <input type="number" id="quoteTotalDaysInput" class="quote-calculator__input" min="1" value="1" />
+                  </div>
+                  
                   <div class="form-group quote-calculator__toolbar-half">
                     <label for="quoteLDRate">Base Rate</label>
                     <select id="quoteLDRate" class="quote-calculator__select">
@@ -157,6 +166,7 @@
                       <option value="4.4">$4.4</option>
                     </select>
                   </div>
+                  
                   <div class="form-group quote-calculator__toolbar-half">
                     <label for="quoteDeadMiles">Dead miles</label>
                     <input type="number" id="quoteDeadMiles" class="quote-calculator__input" min="0" value="0" />
@@ -187,17 +197,6 @@
                       <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">credit_card</span>
                       CC fee (4%)
                     </button>
-                  </div>
-                </div>
-
-                <div class="quote-calculator__inputs quote-calculator__inputs--days">
-                  <div class="form-group quote-calculator__toolbar-half">
-                    <label for="quoteTotalDaysInput">Total days</label>
-                    <input type="number" id="quoteTotalDaysInput" class="quote-calculator__input" min="1" value="1" />
-                  </div>
-                  <div class="form-group quote-calculator__toolbar-half">
-                    <label for="quoteTotalMilesInput">Total miles</label>
-                    <input type="number" id="quoteTotalMilesInput" class="quote-calculator__input" min="0" value="0" />
                   </div>
                 </div>
               </div>
@@ -251,9 +250,9 @@
 
             <!-- Driver Week Card (hidden by default) -->
             <div class="card card--compact is-hidden" id="driverWeekCard">
-              <div class="card__header">
-                <h2 class="section-title">Driver Assignments</h2>
-                <div class="card__header-actions"></div>
+              <div class="panel-header">
+                <h2 class="panel-header__title">Driver Assignments</h2>
+                <div class="panel-header__actions"></div>
               </div>
 
               <div class="card__content">
@@ -272,9 +271,9 @@
 
             <!-- Notes Card (hidden by default) -->
             <div class="card card--compact is-hidden" id="notesCard">
-              <div class="card__header">
-                <h2 class="section-title">Weekly Notes</h2>
-                <div class="card__header-actions"></div>
+              <div class="panel-header">
+                <h2 class="panel-header__title">Weekly Notes</h2>
+                <div class="panel-header__actions"></div>
               </div>
 
               <div class="card__content">
@@ -295,10 +294,10 @@
 
             <!-- Trip Info Card -->
             <div class="card card--compact is-hidden" id="tripInfoCard">
-              <div class="card__header">
-                <h2 class="section-title">Trip Editor</h2>
-                <div class="card__header-actions">
-                  <span id="tripIdBadge" class="badge badge--primary trip-id-badge is-hidden"></span>
+              <div class="panel-header">
+                <h2 class="panel-header__title">Trip Editor</h2>
+                <div class="panel-header__actions">
+                  <span id="tripIdBadge" class="badge badge--primary trip-id-badge is-hidden" style="margin-right: 8px;"></span>
                 </div>
               </div>
 

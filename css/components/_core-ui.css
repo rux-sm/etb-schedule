@@ -43,9 +43,7 @@ button,
 }
 
 /* Base button hover */
-button:hover:not(.select-trigger):not(.cds-header__action):not(.btn--icon-pagination):not(
-    .btn--toolbar
-  ),
+button:hover:not(.select-trigger):not(.cds-header__action):not(.btn--icon-pagination):not(.btn--toolbar),
 .btn:hover,
 .icon-chip:hover,
 .theme-toggle:hover,
@@ -54,9 +52,7 @@ button:hover:not(.select-trigger):not(.cds-header__action):not(.btn--icon-pagina
 }
 
 /* Focus — IBM standard inner box-shadow ring */
-button:focus:not(.select-trigger):not(.cds-header__action):not(.btn--icon-pagination):not(
-    .btn--toolbar
-  ),
+button:focus:not(.select-trigger):not(.cds-header__action):not(.btn--icon-pagination):not(.btn--toolbar),
 .btn:focus,
 .icon-chip:focus,
 .theme-toggle:focus,
@@ -66,9 +62,7 @@ button:focus:not(.select-trigger):not(.cds-header__action):not(.btn--icon-pagina
 }
 
 /* Active — pressed state */
-button:active:not(.toggle-pill):not(.select-trigger):not(.cds-header__action):not(
-    .btn--icon-pagination
-  ):not(.btn--toolbar),
+button:active:not(.toggle-pill):not(.select-trigger):not(.cds-header__action):not(.btn--icon-pagination):not(.btn--toolbar),
 .btn:active,
 .icon-chip:active,
 .theme-toggle:active,
@@ -983,6 +977,80 @@ label .label-link:active {
   gap: 4px;
 }
 
+/* --- Side Panel Headers (Carbon UI Shell Inspired) --- */
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  width: 100%;
+  flex-shrink: 0;
+  padding: 0 0 0 16px;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--gray-100);
+
+}
+
+.panel-header__title {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  font-size: var(--heading-2-size);
+  font-weight: var(--heading-2-weight);
+  line-height: var(--heading-2-line-height) !important;
+  letter-spacing: var(--heading-2-letter-spacing);
+  color: var(--heading-2-color);
+  white-space: nowrap;
+}
+
+.panel-header__actions {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.panel-header__action {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-top: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color 110ms;
+}
+
+.panel-header__action:hover {
+  background-color: var(--gray-80);
+}
+
+.panel-header__action:active {
+  background-color: var(--gray-60);
+}
+
+.panel-header__action:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: -2px;
+}
+
+.panel-header__action[aria-pressed="true"] {
+  background-color: var(--gray-90);
+  border-bottom-color: var(--accent);
+}
+
+.panel-header__action .material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+  font-size: 24px;
+}
+
 .card__content {
   flex: 1 1 auto;
   min-height: 0;
@@ -1014,7 +1082,7 @@ label .label-link:active {
   padding: var(--card-footer-padding-y) var(--card-footer-padding-x);
   margin-top: 0;
   border-top: 1px solid var(--border);
-  background: var(--surface-container-high);
+  background: var(--gray-100);
   border-radius: 0 0 24px 24px;
   /* Match card radius if visible */
 }
