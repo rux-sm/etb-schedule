@@ -592,6 +592,7 @@
   justify-content: center;
   font-weight: 500;
   gap: 8px;
+  text-shadow: var(--text-shadow);
 }
 
 .schedule-grid__day-name {
@@ -600,6 +601,7 @@
   font-weight: var(--day-header-name-weight);
   line-height: var(--day-header-name-line-height);
   letter-spacing: var(--day-header-name-letter-spacing);
+  text-shadow: var(--text-shadow);
 }
 
 .schedule-grid__day-date {
@@ -608,6 +610,7 @@
   color: var(--day-header-date-color);
   letter-spacing: var(--day-header-date-letter-spacing);
   line-height: var(--day-header-date-line-height);
+  text-shadow: var(--text-shadow);
 }
 
 .schedule-grid__header-cell--today {
@@ -615,6 +618,7 @@
   background: var(--accent);
   overflow: hidden;
   border: var(--border);
+  text-shadow: var(--text-shadow);
 }
 
 
@@ -665,9 +669,9 @@
   pointer-events: none;
   /* pass through so sticky overlay doesn't steal trip bar hover */
   background: var(--surface-1);
-  font-size: 0.875rem;
+  font-size: var(--bus-num-size);
   /* 14px */
-  font-weight: 500;
+  font-weight: var(--bus-num-weight);
 
   min-width: var(--bus-col-w);
   max-width: var(--bus-col-w);
@@ -676,6 +680,7 @@
   padding: 0 !important;
 
   overflow: hidden;
+  text-shadow: var(--text-shadow);
   /* border-inline-end: from general rule — single line, no ::after */
 }
 
@@ -1408,12 +1413,20 @@
   opacity: 0.6;
 }
 
-#busGrid.bus-assign {
+#busGrid.bus-assign,
+.bus-assign-header {
   display: grid;
   grid-template-columns: 80px 1fr 1fr;
   column-gap: 8px;
+}
+
+#busGrid.bus-assign {
   row-gap: 4px;
   /* Tighter vertical spacing for better alignment */
+}
+
+.bus-assign-header {
+  margin-bottom: 2px;
 }
 
 /* Standardized status pattern - apply colors directly from semantic tokens */
@@ -1445,14 +1458,6 @@ select.status-confirmed {
 
 /* Consolidate bus grid definition */
 
-.bus-assign__head {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  line-height: 1.4;
-  padding-bottom: 0;
-  margin-bottom: 1px !important;
-}
 
 
 /* ==========================================================================

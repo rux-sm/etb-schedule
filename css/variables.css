@@ -151,15 +151,15 @@
   --day-row-h: 34px;
 
   /* Day Header */
-  --day-header-date-color: rgb(255 255 255);
-  --day-header-date-size: 1rem;
+  --day-header-date-color: var(--text);
+  --day-header-date-size: 14px;
   --day-header-date-weight: 600;
-  --day-header-date-letter-spacing: 0.02em;
+  --day-header-date-letter-spacing: 0;
   --day-header-date-line-height: 1;
-  --day-header-name-color: rgb(175 175 175);
-  --day-header-name-size: 0.875rem;
-  --day-header-name-weight: 500;
-  --day-header-name-letter-spacing: 0.02em;
+  --day-header-name-color: var(--text);
+  --day-header-name-size: 14px;
+  --day-header-name-weight: 400;
+  --day-header-name-letter-spacing: 0;
   --day-header-name-line-height: 1;
 
   /* Today Indicator */
@@ -167,14 +167,14 @@
   --today-indicator-text: var(--white);
 
   /* Bus Column */
-  --bus-num-color: rgb(175 175 175);
-  --bus-num-size: 0.875rem;
-  --bus-num-weight: 600;
-  --bus-num-letter-spacing: 0.02em;
+  --bus-num-color: var(--text);
+  --bus-num-size: 14px;
+  --bus-num-weight: 500;
+  --bus-num-letter-spacing: 0;
   --bus-num-line-height: 1;
   --bus-lift-color: var(--blue);
   --bus-sleeper-color: var(--text);
-  --bus-col-text: rgb(175 175 175);
+  --bus-col-text: var(--text);
 
   /* ==========================================================================
    * 6. ELEVATION & EFFECTS

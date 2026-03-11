@@ -1213,7 +1213,6 @@ select.is-empty:not(:focus),
 }
 
 /* Legacy bus-assign grid label spacing fix */
-#busGrid.bus-assign .field-label,
-#busGrid.bus-assign .bus-assign__head {
+#busGrid.bus-assign .field-label {
   margin-bottom: calc(1px - 7px);
 }

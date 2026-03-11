@@ -1378,15 +1378,23 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  margin-bottom: 12px;
-  border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 12px;
+  margin-bottom: 8px;
+  /* Removed border-bottom and padding-bottom to tighten spacing */
 }
 
 /* ── Trip Editor: envelope overrides section spacing ─────────────── */
 .envelope-overrides-section {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 12px;
+}
+
+.assignments-overrides-section {
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  border-top: none;
+  padding-top: 0;
+  margin-top: 0;
   padding-bottom: 12px;
 }
 

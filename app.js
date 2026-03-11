@@ -156,10 +156,7 @@ const dom = {
   saveBtn: $("saveBtn"),
   deleteBtn: $("deleteBtn"),
   newBtn: $("newBtn"),
-
-  itineraryBtn: $("itineraryBtn"),
-  openItineraryPdfBtn: $("openItineraryPdfBtn"),
-  removeItineraryPdfBtn: $("removeItineraryPdfBtn"),
+  assignmentsBtn: $("assignmentsBtn"),
   itineraryModal: $("itineraryModal"),
   itineraryField: $("itinerary"),
   itineraryModalField: $("itineraryModalField"),
@@ -168,7 +165,7 @@ const dom = {
 
   busesNeeded: $("busesNeeded"),
   busGrid: $("busGrid"),
-  busPanel: $("busPanel"),
+  assignmentsOverridesSection: $("assignmentsOverridesSection"),
 
   agendaBody: $("agendaBody"),
 
@@ -286,6 +283,7 @@ const dom = {
   ctxEnvelopeBtn: $("ctxEnvelopeBtn"),
   ctxOpenItineraryPdfBtn: $("ctxOpenItineraryPdfBtn"),
   ctxAttachItineraryPdfBtn: $("ctxAttachItineraryPdfBtn"),
+  ctxRemoveItineraryPdfBtn: $("ctxRemoveItineraryPdfBtn"),
   ctxCopyBtn: $("ctxCopyBtn"),
 
   // Cell Context Menu
@@ -1192,7 +1190,16 @@ function updateInvoiceNumberVisibility() {
   // Show if Invoiced, Deposit Received, or Paid in Full
   const show = v === "invoiced" || v === "deposit received" || v === "paid in full";
 
-  numGroup.classList.toggle("is-hidden", !show);
+  if (numInput) {
+    numInput.disabled = !show;
+    // Visually update empty state if we just enabled/disabled it
+    if (!show && !numInput.value) {
+        numInput.classList.add("is-empty");
+    } else if (show && !numInput.value) {
+        numInput.classList.add("is-empty");
+    }
+  }
+
   // Intentionally DO NOT clear numInput.value when hiding, so toggling status
   // does not wipe an already-entered invoice number.
 }
@@ -3151,7 +3158,7 @@ function updateBusRowVisibility() {
 
 function syncBusPanelState() {
   const unlocked = Number(dom.busesNeeded.value) > 0;
-  dom.busPanel.classList.toggle("is-disabled", !unlocked);
+  dom.assignmentsOverridesSection.classList.toggle("is-disabled", !unlocked);
 }
 
 function setBusesNeededAndSync(value) {
@@ -3165,20 +3172,6 @@ function buildBusRowsOnce() {
   state.busRows.length = 0;
 
   dom.busGrid.className = "bus-assign";
-
-  const h1 = document.createElement("div");
-  h1.className = "bus-assign__head";
-  h1.textContent = "Bus";
-
-  const h2 = document.createElement("div");
-  h2.className = "bus-assign__head";
-  h2.textContent = "Driver 1";
-
-  const h3 = document.createElement("div");
-  h3.className = "bus-assign__head";
-  h3.textContent = "Driver 2";
-
-  dom.busGrid.append(h1, h2, h3);
 
   for (let i = 1; i <= 10; i++) {
     const busSel = makeSelect(`bus${i}`);
@@ -4425,15 +4418,7 @@ async function openTripForEdit(tripKey) {
     updateInvoiceNumberVisibility();
     if (typeof syncEmptyFields === "function") syncEmptyFields();
 
-    if (dom.openItineraryPdfBtn) {
-      if (t.itineraryPdfUrl) {
-        dom.openItineraryPdfBtn.disabled = false;
-        if (dom.removeItineraryPdfBtn) dom.removeItineraryPdfBtn.disabled = false;
-      } else {
-        dom.openItineraryPdfBtn.disabled = true;
-        if (dom.removeItineraryPdfBtn) dom.removeItineraryPdfBtn.disabled = true;
-      }
-    }
+
 
     dom.itineraryField.value = t.itinerary || "";
     $("notes").value = t.notes || "";
@@ -5146,6 +5131,37 @@ function wireDelegatedBarEvents() {
     dom.itineraryPdfInput.click();
   });
 
+  dom.ctxRemoveItineraryPdfBtn?.addEventListener("click", async () => {
+    if (!activeContextTripKey) return;
+    const trip = state.tripByKey?.[activeContextTripKey];
+    
+    if (!trip || !trip.itineraryPdfUrl) {
+      toast("No itinerary PDF attached to remove.", "info", 2000);
+      closeTripContextMenu();
+      return;
+    }
+    
+    if (!confirm("Remove this PDF itinerary?")) {
+      closeTripContextMenu();
+      return;
+    }
+    
+    closeTripContextMenu();
+    
+    // Needs to be loaded in the editor for saveBtn.click() to save this specific trip
+    const wasOpenKey = dom.tripKey?.value;
+    if (wasOpenKey !== activeContextTripKey) {
+      toast("Loading trip to remove PDF...", "info", 1000);
+      await openTripForEdit(activeContextTripKey);
+    }
+    
+    trip.itineraryPdfUrl = ""; // Clear from local state
+    
+    // Trigger save process
+    state.tripFormDirty = true;
+    dom.saveBtn.click();
+  });
+
   dom.itineraryPdfInput?.addEventListener("change", async (e) => {
     const input = e.target;
     const file = input.files && input.files[0];
@@ -5806,40 +5822,24 @@ function wireEvents() {
   // applyWeekStart moved to global scope
   // Old buttons (weekStartSunBtn) removed from DOM
 
-  dom.itineraryBtn.addEventListener("click", openItineraryModal);
+  dom.assignmentsBtn?.addEventListener("click", () => {
+    if (dom.assignmentsOverridesSection) {
+      dom.assignmentsOverridesSection.classList.toggle("is-hidden");
+      if (!dom.assignmentsOverridesSection.classList.contains("is-hidden") && dom.envelopeOverridesSection) {
+        dom.envelopeOverridesSection.classList.add("is-hidden");
+      }
+    }
+  });
 
   dom.envelopeBtn?.addEventListener("click", () => {
     if (dom.envelopeOverridesSection) {
       dom.envelopeOverridesSection.classList.toggle("is-hidden");
-    }
-  });
-  dom.openItineraryPdfBtn?.addEventListener("click", () => {
-    const tripKey = dom.tripKey?.value;
-    if (!tripKey) return;
-    const trip = state.tripByKey?.[tripKey];
-    if (trip && trip.itineraryPdfUrl) {
-      window.open(trip.itineraryPdfUrl, "_blank");
+      if (!dom.envelopeOverridesSection.classList.contains("is-hidden") && dom.assignmentsOverridesSection) {
+        dom.assignmentsOverridesSection.classList.add("is-hidden");
+      }
     }
   });
 
-  dom.removeItineraryPdfBtn?.addEventListener("click", () => {
-    const tripKey = dom.tripKey?.value;
-    if (!tripKey) return;
-    const trip = state.tripByKey?.[tripKey];
-    if (trip && trip.itineraryPdfUrl) {
-      if (!confirm("Remove this PDF itinerary?")) return;
-
-      trip.itineraryPdfUrl = ""; // Clear from local state
-
-      // Disable buttons immediately to reflect change
-      dom.openItineraryPdfBtn.disabled = true;
-      dom.removeItineraryPdfBtn.disabled = true;
-
-      // Trigger save process
-      state.tripFormDirty = true;
-      dom.saveBtn.click();
-    }
-  });
   dom.itineraryModal.addEventListener("click", (e) => {
     if (e.target.closest("[data-close]")) closeItineraryModal();
   });
