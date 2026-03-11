@@ -9,20 +9,29 @@
   --primary-color: var(--blue);
 
   /* --- Semantic Hues (Dark Mode — Carbon Tone 50) --- */
-  --blue: #4589ff; /* Blue 50  */
-  --red: #fa4d56; /* Red 50   */
-  --purple: #a56eff; /* Purple 50 */
-  --yellow: #f1c21b; /* Yellow 30 */
-  --teal: #009d9a; /* Teal 50  */
-  --orange: #ff832b; /* Orange 40 */
-  --pink: #ee5396; /* Magenta 50 */
-  --green: #24a148; /* Green 50 */
+  --blue: #4589ff;
+  /* Blue 50  */
+  --red: #fa4d56;
+  /* Red 50   */
+  --purple: #a56eff;
+  /* Purple 50 */
+  --yellow: #f1c21b;
+  /* Yellow 30 */
+  --teal: #009d9a;
+  /* Teal 50  */
+  --orange: #ff832b;
+  /* Orange 40 */
+  --pink: #ee5396;
+  /* Magenta 50 */
+  --green: #24a148;
+  /* Green 50 */
 
   /* --- Alert Colors (IBM Carbon) --- */
   --alert-red: #da1e28;
   --alert-green: #24a148;
   --alert-orange: #ff832b;
   --alert-yellow: #f1c21b;
+  --alert-cyan: #3DDBD9;
 
   /* --- Grays (IBM Carbon) --- */
   --black: #000000;
@@ -43,7 +52,7 @@
    * Semantic layer over the palette for dark mode
    * ========================================================================== */
 
-  --app-bg: #161616;
+  --app-bg: var(--black);
 
   --surface-0: #161616;
   /* Top header bar */
@@ -270,7 +279,7 @@
   /* Row 7: Drivers */
   --tripbar-r7-font-size: 0.75rem;
   --tripbar-r7-row-height: 14px;
-  --tripbar-r7-font-weight: 600;
+  --tripbar-r7-font-weight: 700;
   --tripbar-r7-line-height: 14px;
   --tripbar-r7-letter-spacing: 0.02em;
 

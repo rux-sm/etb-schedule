@@ -270,6 +270,7 @@ const dom = {
   envelopeModal: $("envelopeModal"),
   envelopeModalPages: $("envelopeModalPages"),
   envelopeAssignmentSelect: $("envelopeAssignmentSelect"),
+  envelopeFormatSelect: $("envelopeFormatSelect"),
   envelopeSaveBtn: $("envelopeSaveBtn"),
   envelopePrintBtn: $("envelopePrintBtn"),
   envelopeYellowBtn: $("envelopeYellowBtn"),
@@ -2453,11 +2454,14 @@ function _renderAgendaInner() {
         "color-brown",
         "color-gray",
         "color-violet", // Keep for legacy cleanup
+        "out-of-service"
       );
       const tripColor = String(t.tripColor || "")
         .trim()
         .toLowerCase();
-      if (tripColor) {
+      if (tripColor === "out of service") {
+        bar.classList.add("out-of-service");
+      } else if (tripColor) {
         bar.classList.add(`color-${tripColor}`);
       }
 
@@ -2509,31 +2513,25 @@ function _renderAgendaInner() {
       if (isActualSingleDay) {
         const tDep = formatTime12(depTime);
         const tArr = formatTime12(arrTime);
+        const tSpot = formatTime12(spotTime);
 
-        // Single-Day: show depart on left and arrive on right
-        if (!tDep && !tArr) {
-          bar._left.textContent = "TBD";
-          bar._center.textContent = formatTime12(spotTime) || "";
-          bar._right.textContent = "";
-        } else {
-          bar._left.textContent = tDep || "TBD";
-          bar._center.textContent = formatTime12(spotTime) || "";
-          bar._right.textContent = tArr || "TBD";
-        }
+        bar._left.textContent = tDep || "--";
+        bar._center.textContent = tSpot || "--";
+        bar._right.textContent = tArr || "--";
       } else {
         // Multi-Day:
         // Left side shows Dep Time (only if this bar is the trip start)
         // Right side shows Arr Time (only if this bar is the trip end)
         if (isStartDay) {
-          bar._left.textContent = formatTime12(depTime) || "TBD";
-          bar._center.textContent = formatTime12(spotTime) || "";
+          bar._left.textContent = formatTime12(depTime) || "--";
+          bar._center.textContent = formatTime12(spotTime) || "--";
         } else {
           bar._left.textContent = "";
           bar._center.textContent = "";
         }
 
         if (isEndDay) {
-          bar._right.textContent = formatTime12(arrTime) || "TBD";
+          bar._right.textContent = formatTime12(arrTime) || "--";
         } else {
           bar._right.textContent = "";
         }
@@ -3700,6 +3698,8 @@ function openDriverContactModal(tripKey) {
     reminderText = "No trip date set.";
   }
 
+  reminderText += `\n\nPlease remember to:\n\nFinal Inspection: Perform a walkthrough to ensure no belongings are left behind.\n\nBus Tidiness: Kindly ask passengers to take all trash with them upon arrival.\n\nService Excellence: Prioritize professional and courteous customer service.`;
+
   // Set values and show modal
   dom.driverContactBody.value = officeText;
   dom.driverReminderBody.value = reminderText;
@@ -3770,15 +3770,15 @@ function createEnvelopePageElement() {
       <div class="env-trip-contact">
         <div class="env-trip">
           <div class="env-trip-row env-cols-3">
-            <div class="env-cell"><span class="env-label">BUS #</span><span class="env-value" data-field="busno"></span></div>
-            <div class="env-cell"><span class="env-label">BUS DRIVER</span><span class="env-value" data-field="driver"></span></div>
-            <div class="env-cell"><span class="env-label">CO-DRIVER</span><span class="env-value" data-field="codriver"></span></div>
+            <div class="env-cell"><span class="env-label">BUS:</span><span class="env-value" data-field="busno"></span></div>
+            <div class="env-cell"><span class="env-label">DRIVER:</span><span class="env-value" data-field="driver"></span></div>
+            <div class="env-cell"><span class="env-label">CO-DRIVER:</span><span class="env-value" data-field="codriver"></span></div>
           </div>
           <div class="env-trip-row env-cols-2">
             <div class="env-cell">
               <div style="display:flex;justify-content:space-between;align-items:baseline;width:100%;">
-                <span class="env-label">TRIP DATE</span>
-                <span class="env-label" data-field="returnlabel" style="text-align:right;">RETURN</span>
+                <span class="env-label">TRIP DATE:</span>
+                <span class="env-label" data-field="returnlabel" style="text-align:right;">RETURN:</span>
               </div>
               <div style="display:flex;justify-content:space-between;align-items:center;gap:0.08in;">
                 <span class="env-value" data-field="tripdate" style="width:120px;"></span>
@@ -3786,42 +3786,131 @@ function createEnvelopePageElement() {
                 <span class="env-value" data-field="returndate" style="width:120px;text-align:right;"></span>
               </div>
             </div>
-            <div class="env-cell"><span class="env-label">SPOT TIME</span><span class="env-value" data-field="spottime"></span></div>
+            <div class="env-cell"><span class="env-label">SPOT TIME:</span><span class="env-value" data-field="spottime"></span></div>
           </div>
           <div class="env-trip-row env-cols-1">
-            <div class="env-cell"><span class="env-label">PICK UP ADDRESS</span><span class="env-value" data-field="pickup"></span></div>
+            <div class="env-cell"><span class="env-label">PICK UP ADDRESS:</span><span class="env-value" data-field="pickup"></span></div>
           </div>
           <div class="env-trip-row env-cols-1">
-            <div class="env-cell"><span class="env-label">DESTINATION</span><span class="env-value" data-field="destination"></span></div>
+            <div class="env-cell"><span class="env-label">DESTINATION:</span><span class="env-value" data-field="destination"></span></div>
           </div>
         </div>
         <div class="env-grid-row">
-          <div class="env-cell"><span class="env-label">CONTACT</span><span class="env-value" data-field="contact"></span></div>
-          <div class="env-cell"><span class="env-label">PHONE</span><span class="env-value" data-field="phone"></span></div>
+          <div class="env-cell"><span class="env-label">CONTACT:</span><span class="env-value" data-field="contact"></span></div>
+          <div class="env-cell"><span class="env-label">PHONE:</span><span class="env-value" data-field="phone"></span></div>
         </div>
       </div>
       <div class="env-odometer-box">
         <div class="env-grid-row">
-          <div class="env-cell"><span class="env-label">STARTING ODOMETER</span><span class="env-value" data-field="startodo"></span></div>
-          <div class="env-cell"><span class="env-label">ENDING ODOMETER</span><span class="env-value" data-field="endodo"></span></div>
+          <div class="env-cell"><span class="env-label">STARTING ODOMETER:</span><span class="env-value" data-field="startodo"></span></div>
+          <div class="env-cell"><span class="env-label">ENDING ODOMETER:</span><span class="env-value" data-field="endodo"></span></div>
         </div>
       </div>
-      <div class="env-mini">
+      <div class="env-mini env-mini-standard">
         <table>
+          <tr><td>ELD VERIFIED</td><td><span class="env-choice">DRIVER</span> <span class="env-choice">OFFICE</span></td><td>HOTEL</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
           <tr><td>ELD BACKUP USED</td><td><span class="env-choice">YES</span> <span class="env-choice">NO</span></td><td>DIESEL/BLUE DEF</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
-          <tr><td>ELD VERIFIED</td><td>DRIVER / OFFICE</td><td>HOTEL</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
           <tr><td>CC FOR TRIP <span class="material-symbols-outlined env-cc-icon">credit_card</span></td><td><span class="env-choice">YES</span> <span class="env-choice">NO</span></td><td>REPAIRS</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
           <tr><td colspan="2" class="env-mini-td-left">CC RECEIVED BY</td><td>MISCELLANEOUS</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
           <tr><td colspan="2" class="env-mini-td-left">TOTAL TRIP MILES</td><td>TOTAL</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
         </table>
       </div>
       <div class="env-footer">
-        <span class="env-label">NOTES</span>
+        <span class="env-label">NOTES:</span>
         <div class="env-notes-lines">
           <span class="env-value env-notes-line" data-field="notes1"></span>
           <span class="env-value env-notes-line" data-field="notes2"></span>
           <span class="env-value env-notes-line" data-field="notes3"></span>
         </div>
+      </div>
+    </div>
+  `;
+  return page;
+}
+
+function createAlternateEnvelopePageElement() {
+  const page = document.createElement("div");
+  page.className = "envelope-page env-yellow";
+
+  const brandAddr = ENVELOPE_BRAND_ADDR.replace(/\n/g, "<br>");
+  page.innerHTML = `
+    <div class="env-panel">
+      <div class="env-header">
+        <div class="env-day" data-field="day"></div>
+        <div class="env-brand">
+          <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+          <div class="env-addr">${brandAddr}</div>
+        </div>
+      </div>
+      <div class="env-section-title">TRIP INFORMATION</div>
+      <div class="env-trip-contact">
+        <div class="env-trip">
+          <div class="env-trip-row env-cols-3">
+            <div class="env-cell"><span class="env-label">BUS:</span><span class="env-value" data-field="busno"></span></div>
+            <div class="env-cell"><span class="env-label">DRIVER:</span><span class="env-value" data-field="driver"></span></div>
+            <div class="env-cell"><span class="env-label">CO-DRIVER:</span><span class="env-value" data-field="codriver"></span></div>
+          </div>
+          <div class="env-trip-row env-cols-2">
+            <div class="env-cell">
+              <span class="env-label">TRIP DATE:</span>
+              <span class="env-value" data-field="tripdate"></span>
+            </div>
+            <div class="env-cell">
+              <span class="env-label">SPOT TIME:</span>
+              <span class="env-value" data-field="spottime"></span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="env-grid-row" style="grid-template-columns: 1fr;">
+          <div class="env-cell">
+            <span class="env-label">PICK UP ADDRESS:</span>
+            <span class="env-value">(MVM) 220 S K CENTER ST, MCALLEN, TX 78501</span>
+          </div>
+        </div>
+        
+        <div class="env-grid-row">
+          <div class="env-cell">
+            <span class="env-label">CONTACT PERSON:</span>
+            <span class="env-value">ESCAMILLA</span>
+          </div>
+          <div class="env-cell">
+            <span class="env-label">PHONE:</span>
+            <span class="env-value">(956) 648-9691</span>
+          </div>
+        </div>
+        
+      </div>
+      
+      <table class="env-alt-table">
+        <thead>
+          <tr>
+            <th style="width: 45%;">LOCATION</th>
+            <th style="width: 15%;">TIME IN</th>
+            <th style="width: 15%;">TIME OUT</th>
+            <th style="width: 25%;">ODOMETER</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="font-size: 0.12in; text-transform:uppercase;"></td><td></td><td></td><td></td></tr>
+          <tr><td></td><td></td><td></td><td></td></tr>
+          <tr><td></td><td></td><td></td><td></td></tr>
+          <tr><td></td><td></td><td></td><td></td></tr>
+          <tr><td></td><td></td><td></td><td></td></tr>
+          <tr><td></td><td></td><td></td><td></td></tr>
+          <tr><td></td><td></td><td></td><td></td></tr>
+          <tr><td></td><td></td><td></td><td></td></tr>
+        </tbody>
+      </table>
+      
+      <div class="env-mini">
+        <table>
+          <tr><td>ELD VERIFIED</td><td><span class="env-choice">DRIVER</span> <span class="env-choice">OFFICE</span></td><td>HOTEL</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
+          <tr><td>ELD BACKUP USED</td><td><span class="env-choice">YES</span> <span class="env-choice">NO</span></td><td>DIESEL/BLUE DEF</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
+          <tr><td>CC FOR TRIP <span class="material-symbols-outlined env-cc-icon">credit_card</span></td><td><span class="env-choice">YES</span> <span class="env-choice">NO</span></td><td>REPAIRS</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
+          <tr><td colspan="2" class="env-mini-td-left">CC RECEIVED BY</td><td>MISCELLANEOUS</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
+          <tr><td colspan="2" class="env-mini-td-left">TOTAL TRIP MILES</td><td>TOTAL</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
+        </table>
       </div>
     </div>
   `;
@@ -3902,7 +3991,7 @@ function fillEnvelopePage(pageEl, trip, assignment) {
   set("notes3", notesLines[2] || "");
 }
 
-let stateEnvelope = { tripKey: null, trip: null, assignments: [], bg: "yellow" };
+let stateEnvelope = { tripKey: null, trip: null, assignments: [], bg: "yellow", format: "standard" };
 
 function openEnvelopeModal(tripKey) {
   let trip = state.tripByKey?.[tripKey];
@@ -3943,6 +4032,11 @@ function openEnvelopeModal(tripKey) {
   stateEnvelope.tripKey = tripKey;
   stateEnvelope.trip = trip;
   stateEnvelope.bg = "yellow";
+  if (!stateEnvelope.format) stateEnvelope.format = "standard";
+
+  if (dom.envelopeFormatSelect) {
+    dom.envelopeFormatSelect.value = stateEnvelope.format;
+  }
 
   const pagesContainer = dom.envelopeModalPages;
   if (!pagesContainer) return;
@@ -3993,8 +4087,9 @@ function openEnvelopeModal(tripKey) {
     select.dispatchEvent(new Event("change", { bubbles: true }));
   }
 
+  const isAlternate = stateEnvelope.format === "alternate";
   assignments.forEach((assignment, idx) => {
-    const pageEl = createEnvelopePageElement();
+    const pageEl = isAlternate ? createAlternateEnvelopePageElement() : createEnvelopePageElement();
     pageEl.classList.add(stateEnvelope.bg === "white" ? "env-white" : "env-yellow");
     fillEnvelopePage(pageEl, trip, assignment);
     if (assignments.length > 1) pageEl.style.display = idx === 0 ? "block" : "none";
@@ -4028,10 +4123,11 @@ function printEnvelopePages() {
   const tripForPrint = trip;
 
   // Always print the white style, regardless of screen toggle
+  const isAlternate = stateEnvelope.format === "alternate";
   const bgClass = "env-white";
   const pagesHtml = assignments
     .map((assignment) => {
-      const page = createEnvelopePageElement();
+      const page = isAlternate ? createAlternateEnvelopePageElement() : createEnvelopePageElement();
       page.classList.add(bgClass);
       fillEnvelopePage(page, tripForPrint, assignment);
       return page.outerHTML;
@@ -7029,6 +7125,13 @@ if (dom.envelopeAssignmentSelect) {
   dom.envelopeAssignmentSelect.addEventListener("change", () => {
     const idx = parseInt(dom.envelopeAssignmentSelect.value, 10);
     if (!isNaN(idx)) updateEnvelopeModalSelection(idx);
+  });
+}
+
+if (dom.envelopeFormatSelect) {
+  dom.envelopeFormatSelect.addEventListener("change", () => {
+    stateEnvelope.format = dom.envelopeFormatSelect.value;
+    openEnvelopeModal(stateEnvelope.tripKey);
   });
 }
 // Removed envelopeSaveBtn event listener

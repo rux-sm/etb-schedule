@@ -531,19 +531,29 @@
 
 .envelope-modal__toolbar {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-wrap: nowrap;
   gap: 8px;
+  width: 100%;
+}
+
+.envelope-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
 }
 
 .envelope-modal__label {
   font-size: 0.875rem;
   font-weight: 600;
+  color: var(--text-muted, #a1a1aa);
+  /* Keep consistent with form labels usually */
 }
 
 .envelope-modal__select {
-  min-width: 180px;
-  max-width: 260px;
+  width: 100%;
+  max-width: none;
   /* Let global select styles (_forms.css) handle border/bg/glass effect */
 }
 
@@ -553,7 +563,7 @@
   width: 100%;
 }
 
-.envelope-modal__actions > .btn {
+.envelope-modal__actions>.btn {
   flex: 1;
   justify-content: center;
 }
@@ -729,11 +739,24 @@
 }
 
 .envelope-page .env-cell {
-  padding: 0.05in 0.08in;
+  padding: 0.03in 0.08in;
   border-left: var(--env-border) solid var(--env-rule);
   display: flex;
   flex-direction: column;
-  gap: 0.04in;
+  gap: 0in;
+  height: 0.40in;
+  min-height: 0.40in;
+  max-height: 0.40in;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.envelope-page .env-cell .env-value {
+  margin-top: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
 }
 
 .envelope-page .env-cell:first-child {
@@ -779,7 +802,15 @@
 }
 
 .envelope-page .env-mini tr {
-  height: var(--env-exp-row-h);
+  height: 0.25in;
+  min-height: 0.25in;
+  max-height: 0.25in;
+}
+
+.envelope-page .env-mini.env-mini-standard tr {
+  height: 0.40in;
+  min-height: 0.40in;
+  max-height: 0.40in;
 }
 
 .envelope-page .env-mini td {
@@ -789,6 +820,43 @@
   line-height: 1.05;
   white-space: nowrap;
   text-align: left;
+}
+
+.envelope-page .env-alt-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-family: var(--font-sans);
+  border: var(--env-border) solid var(--env-rule);
+  font-size: 0.12in;
+}
+
+.envelope-page .env-alt-table th,
+.envelope-page .env-alt-table td {
+  border: var(--env-border) solid var(--env-rule);
+  padding: 0.022in 0.07in;
+  vertical-align: middle;
+  line-height: 1.05;
+  text-align: center;
+}
+
+.envelope-page .env-alt-table th {
+  font-size: 0.11in;
+  font-weight: 700;
+  color: #444;
+}
+
+.envelope-page .env-alt-table tr {
+  height: 0.25in;
+  min-height: 0.25in;
+  max-height: 0.25in;
+}
+
+.envelope-page .env-alt-table.env-alt-mini td {
+  font-size: 0.12in;
+  font-weight: 700;
+  text-align: left;
+  white-space: nowrap;
 }
 
 /* Center the second column in the first three rows (YES / NO, etc) */
@@ -846,6 +914,7 @@
 
 /* Print: hide toolbar, show only envelope pages */
 @media print {
+
   .envelope-modal__toolbar,
   .modal__head,
   .modal__foot,
@@ -1158,10 +1227,10 @@
   border-radius: 50%;
 }
 
-.quote-calculator input:checked + .toggle-slider {
+.quote-calculator input:checked+.toggle-slider {
   background-color: var(--primary-color);
 }
 
-.quote-calculator input:checked + .toggle-slider:before {
+.quote-calculator input:checked+.toggle-slider:before {
   transform: translateX(14px);
 }

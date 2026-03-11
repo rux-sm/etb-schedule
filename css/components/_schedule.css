@@ -10,7 +10,7 @@
   width: 100%;
   background-color: var(--gray-100);
   border-bottom: 1px solid var(--gray-80);
-  
+
   /* Critical Layout: Spreads Branding and Actions to the edges */
   display: flex;
   align-items: center;
@@ -60,8 +60,13 @@
   gap: 4px;
 }
 
-.cds-header__title--prefix { font-weight: 400; }
-.cds-header__title--product { font-weight: 600; }
+.cds-header__title--prefix {
+  font-weight: 400;
+}
+
+.cds-header__title--product {
+  font-weight: 600;
+}
 
 /* --- Global Actions (Tiled) --- */
 .cds-header__actions {
@@ -75,7 +80,7 @@
    `button {}` ruleset in _core-ui.css. Re-declares only what UI Shell needs.
    ──────────────────────────────────────────────────────────────────────── */
 .cds-header__action {
-  all: unset; 
+  all: unset;
 
   box-sizing: border-box;
   display: flex;
@@ -84,12 +89,14 @@
 
   width: 48px;
   height: 48px;
-  min-width: 48px;         
-  padding: 0;              
+  min-width: 48px;
+  padding: 0;
 
   /* THE CARBON WAY: Reserve the space with transparent borders */
-  border: 1px solid transparent; /* Standard accessibility border */
-  border-bottom: 3px solid transparent; /* Reserves space for the active indicator */
+  border: 1px solid transparent;
+  /* Standard accessibility border */
+  border-bottom: 3px solid transparent;
+  /* Reserves space for the active indicator */
 
   background: transparent;
   color: var(--text);
@@ -110,19 +117,21 @@
 /* Accessibility Focus Ring (Restored) */
 .cds-header__action:focus-visible {
   outline: 2px solid #ffffff;
-  outline-offset: -2px; /* Keeps outline tightly inside the 48px box */
+  outline-offset: -2px;
+  /* Keeps outline tightly inside the 48px box */
 }
 
 /* Panel-is-open indicator — The Carbon Way */
 .cds-header__action[aria-pressed="true"] {
   background-color: var(--gray-90);
-  border-bottom-color: var(--accent); /* Swaps transparent for Blue */
+  border-bottom-color: var(--accent);
+  /* Swaps transparent for Blue */
 }
 
 /* Header icon formatting — matched to 24px */
 .cds-header__action .material-symbols-outlined {
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" -200, "opsz" 24;
-  font-size: 24px; 
+  font-size: 24px;
 }
 
 /* ==========================================================================
@@ -234,13 +243,14 @@
   align-items: center;
   justify-content: center;
   /* 4px top/bottom keeps it sleek (40px total height), 16px sides aligns it */
-  padding: 4px 0px; 
+  padding: 4px 0px;
   background-color: var(--black);
   border-bottom: none;
   width: 100%;
   flex-shrink: 0;
 }
 }
+
 .agenda-header__inner {
   display: flex;
   align-items: center;
@@ -254,7 +264,8 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 4px; /* Perfect tight gap for the arrow buttons */
+  gap: 4px;
+  /* Perfect tight gap for the arrow buttons */
   min-width: 0;
 }
 
@@ -329,7 +340,8 @@
   flex: 1;
   align-items: center;
   justify-content: center;
-  margin-left: 12px; /* Creates a clear visual break between controls and data */
+  margin-left: 12px;
+  /* Creates a clear visual break between controls and data */
 }
 
 .weekpicker-trigger-wrap {
@@ -357,20 +369,22 @@
 /* Treat the entire date as one unified line of natural text */
 .agenda-header__week-date {
   font-size: 18px;
-  line-height: normal; /* Removes the strict 1px wrap */
+  line-height: normal;
+  /* Removes the strict 1px wrap */
   white-space: nowrap;
-  
+
   /* The Optical Nudge: Pulls the text up by 1.5 pixels 
      to perfectly align the center of the capital letters 
      with the center of the arrow icons */
   display: inline-block;
-  transform: translateY(-1.5px); 
+  transform: translateY(-1.5px);
 }
+
 /* Specific text colors and weights - Let spans just be text! */
 .agenda-header__week-date .wk-month,
 .agenda-header__week-date .wk-month-end {
-  font-weight: 600; 
-  color: var(--accent); 
+  font-weight: 600;
+  color: var(--accent);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-right: 4px;
@@ -888,7 +902,7 @@
   --tripbar-r4-color: var(--yellow);
   /* Bright Neon Lemon */
   --tripbar-r5-color: var(--tripbar-color);
-  --tripbar-r6-color: var(--red);
+  --tripbar-r6-color: var(--alert-cyan);
   /* Bright Coral */
   --tripbar-r7-color: var(--text);
 
@@ -897,6 +911,16 @@
   --tripbar-status-pending-bg: color-mix(in srgb, var(--color-status-pending) 50%, transparent);
   --tripbar-status-pending-color: color-mix(in srgb, var(--color-status-pending) 25%, black);
   --tripbar-status-ok-bg: color-mix(in srgb, var(--color-status-ok) 0%, transparent);
+
+  &.out-of-service {
+    --tripbar-color: var(--gray-60);
+    background: repeating-linear-gradient(-45deg,
+        color-mix(in srgb, var(--tripbar-color) 15%, transparent),
+        color-mix(in srgb, var(--tripbar-color) 15%, transparent) 10px,
+        color-mix(in srgb, var(--tripbar-color) 30%, transparent) 10px,
+        color-mix(in srgb, var(--tripbar-color) 30%, transparent) 20px);
+    opacity: 0.8;
+  }
 
   &.unconfirmed {
     --tripbar-color: var(--tripbar-unconfirmed-color, var(--red));
