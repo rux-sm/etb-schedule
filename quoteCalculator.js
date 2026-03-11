@@ -17,8 +17,8 @@
     reliefToggle: $("quoteReliefDriver"),
     halfDayToggle: $("quoteHalfDay"),
     ccFeeToggle: $("quoteCCFeeToggle"),
-    daysContainer: $("quoteDaysContainer"),
-    addDayBtn: $("quoteAddDayBtn"),
+    totalDaysInput: $("quoteTotalDaysInput"),
+    totalMilesInput: $("quoteTotalMilesInput"),
     // Summary
     totalMilesField: $("quoteTotalMiles"),
     totalDaysCount: $("quoteTotalDaysCount"),
@@ -45,7 +45,7 @@
   };
 
   // Bail if the calculator card isn't on the page
-  if (!els.daysContainer || !els.addDayBtn) return;
+  if (!els.totalDaysInput || !els.totalMilesInput) return;
 
   // ── Info Modal Management ─────────────────────────────────────────────
   function openInfoModal() {
@@ -72,8 +72,6 @@
   const DRIVER_RATE_OVER_1K = 0.5; // per mile (>1,000 mi, 2-driver trips)
   const DRIVER_EXTRA_DAY = 150; // per extra day for driver pay
 
-  let dayCounter = 0;
-
   // ── Helpers ───────────────────────────────────────────────────────────
   function fmt(n) {
     if (!n || n === 0) return "-";
@@ -90,71 +88,20 @@
     );
   }
 
-  // ── Day Row Management ────────────────────────────────────────────────
-  function getDayRows() {
-    return els.daysContainer.querySelectorAll(".quote-calculator__day-row");
-  }
-
-  function addDayRow(initialMiles) {
-    const count = getDayRows().length;
-    if (count >= MAX_DAYS) return;
-    dayCounter++;
-
-    const row = document.createElement("div");
-    row.className = "quote-calculator__day-row";
-    const dayNum = count + 1;
-    row.innerHTML =
-      `<span class="quote-calculator__day-label">Day ${dayNum}</span>` +
-      `<input type="number" class="quote-calculator__day-input quote-calculator__input" min="0" value="${initialMiles || ""}" placeholder="Miles" aria-label="Day ${dayNum} miles" />` +
-      `<button type="button" class="quote-calculator__day-remove" aria-label="Remove day" title="Remove day"><span class="material-symbols-outlined" style="font-size:18px">close</span></button>`;
-
-    row.querySelector(".quote-calculator__day-remove").addEventListener("click", () => {
-      row.remove();
-      renumberDays();
-      recalcQuote();
-    });
-    row.querySelector(".quote-calculator__day-input").addEventListener("input", recalcQuote);
-
-    els.daysContainer.appendChild(row);
-    recalcQuote();
-
-    // Focus the new input
-    const input = row.querySelector(".quote-calculator__day-input");
-    if (input && !initialMiles) input.focus();
-  }
-
-  function renumberDays() {
-    getDayRows().forEach((row, i) => {
-      const label = row.querySelector(".quote-calculator__day-label");
-      const input = row.querySelector(".quote-calculator__day-input");
-      if (label) label.textContent = `Day ${i + 1}`;
-      if (input) input.setAttribute("aria-label", `Day ${i + 1} miles`);
-    });
-  }
-
   // ── Calculation Engine ────────────────────────────────────────────────
   function recalcQuote() {
     const stdRate = parseFloat(els.ldRate.value) || 4.5;
     const seaRate = parseFloat(els.seasonalRate.value) || 0;
     const deadMiles = parseInt(els.deadMiles.value, 10) || 0;
-    const secondDriverOn = els.reliefToggle.checked;
-    const halfDayOn = els.halfDayToggle.checked;
-    const ccFeeOn = els.ccFeeToggle ? els.ccFeeToggle.checked : false;
+    const secondDriverOn = els.reliefToggle.getAttribute("aria-pressed") === "true";
+    const halfDayOn = els.halfDayToggle.getAttribute("aria-pressed") === "true";
+    const ccFeeOn = els.ccFeeToggle ? els.ccFeeToggle.getAttribute("aria-pressed") === "true" : false;
     const manualDiscountVal = parseFloat(els.discountValue.value) || 0;
     const manualDiscType = els.discountType.value;
 
     // Gather day miles
-    const dayInputs = els.daysContainer.querySelectorAll(".quote-calculator__day-input");
-    let totalMiles = 0;
-    let totalDays = 0;
-
-    dayInputs.forEach((input) => {
-      const miles = parseInt(input.value, 10) || 0;
-      if (miles > 0) {
-        totalMiles += miles;
-        totalDays++;
-      }
-    });
+    const totalMiles = parseInt(els.totalMilesInput.value, 10) || 0;
+    const totalDays = parseInt(els.totalDaysInput.value, 10) || 1;
 
     // Bus Earned Free Days (using the spreadsheet's exact FLOOR(miles/250) logic)
     const factor = Math.floor(totalMiles / 250);
@@ -272,33 +219,21 @@
   }
 
   // ── Event Wiring ──────────────────────────────────────────────────────
-  els.addDayBtn.onclick = (e) => {
-    e.stopPropagation();
-    addDayRow();
-  };
-
   els.ldRate.addEventListener("change", recalcQuote);
   els.seasonalRate.addEventListener("change", recalcQuote);
   els.deadMiles.addEventListener("input", recalcQuote);
-  els.reliefToggle.addEventListener("change", recalcQuote);
-  els.halfDayToggle.addEventListener("change", recalcQuote);
-  if (els.ccFeeToggle) els.ccFeeToggle.addEventListener("change", recalcQuote);
+  els.totalDaysInput.addEventListener("input", recalcQuote);
+  els.totalMilesInput.addEventListener("input", recalcQuote);
+  
+  const handleToggleClick = () => setTimeout(recalcQuote, 10);
+  els.reliefToggle.addEventListener("click", handleToggleClick);
+  els.halfDayToggle.addEventListener("click", handleToggleClick);
+  if (els.ccFeeToggle) els.ccFeeToggle.addEventListener("click", handleToggleClick);
+  
   els.discountValue.addEventListener("input", recalcQuote);
   els.discountType.addEventListener("change", recalcQuote);
 
   // ── Init ──────────────────────────────────────────────────────────────
-  // Wire any day rows already present in the HTML
-  getDayRows().forEach((row) => {
-    const removeBtn = row.querySelector(".quote-calculator__day-remove");
-    const input = row.querySelector(".quote-calculator__day-input");
-    if (removeBtn)
-      removeBtn.addEventListener("click", () => {
-        row.remove();
-        renumberDays();
-        recalcQuote();
-      });
-    if (input) input.addEventListener("input", recalcQuote);
-  });
 
   recalcQuote();
 })();

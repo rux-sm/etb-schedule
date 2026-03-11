@@ -5533,6 +5533,9 @@ function initGlassSelects() {
     "paymentStatus",
     "driverStatus",
     "invoiceStatus",
+    "quoteLDRate",
+    "quoteSeasonalRate",
+    "quoteDiscountType",
   ];
   ids.forEach((id) => {
     const sel = $(id);

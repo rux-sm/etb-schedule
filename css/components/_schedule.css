@@ -247,8 +247,6 @@
   background-color: var(--black);
   border-bottom: none;
   width: 100%;
-  flex-shrink: 0;
-}
 }
 
 .agenda-header__inner {
@@ -613,26 +611,12 @@
 
 .schedule-grid__header-cell--today {
   /* Only accent the date number (no full-cell highlight) */
-  background: var(--surface-1);
-  overflow: visible;
+  background: var(--accent);
+  overflow: hidden;
+  border: var(--border);
 }
 
-.schedule-grid__header-cell--today .schedule-grid__day-date {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 0px;
-  background: var(--surface-1);
-  border: none;
-  color: var(--today-indicator-text);
-  font-weight: var(--day-header-date-weight);
-  line-height: var(--day-header-date-line-height);
-  text-shadow: var(--text-shadow);
-  /* Force 1 to prevent vertical drift in flex circle */
-  animation: today-pulse 0.5s infinite alternate ease-in-out;
-}
+
 
 .schedule-grid__row {
   height: var(--schedule-row-height) !important;
@@ -1047,7 +1031,7 @@
   transform: translateY(-50%);
   font-size: var(--tripbar-multi-badge-font-size);
   font-weight: 500;
-  color: color-mix(in srgb, var(--yellow) 100%, white);
+  color: var(--tripbar-color);
   text-shadow: var(--text-shadow);
   width: 22px;
   height: 14px;
@@ -1237,7 +1221,7 @@
 }
 
 .schedule-grid__trip-bar.cont-left::before {
-  content: "line_start_arrow";
+  content: "chevron_left";
 }
 
 .schedule-grid__trip-bar.cont-right {
@@ -1247,7 +1231,7 @@
 }
 
 .schedule-grid__trip-bar.cont-right::after {
-  content: "line_end_arrow";
+  content: "chevron_right";
 }
 
 /* Print overrides (migrated from _legacy-grid.css) */
@@ -1395,9 +1379,7 @@
   color: var(--text);
 }
 
-.driver-week__cell--off {
-  /* Default: available, not selected */
-}
+
 
 .driver-week__cell--unavailable {
   background: #F44336 !important;

@@ -573,7 +573,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 8px;
   flex: 1;
 }
 
@@ -1057,17 +1057,23 @@
   padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
 }
 
-.quote-calculator__toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 12px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #2e2e2e;
+.quote-calculator__inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 24px;
 }
+
+.quote-calculator__toggle-grid {
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+
 
 .quote-calculator .form-group {
   display: flex;
@@ -1076,32 +1082,17 @@
 }
 
 .quote-calculator label {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 400;
   color: #a3a3a3;
   letter-spacing: 0.5px;
-}
-
-/* Thin, outlined inputs */
-.quote-calculator__input,
-.quote-calculator__select {
-  background-color: transparent;
-  border: 1px solid #2e2e2e;
-  border-radius: 8px;
-  color: #ffffff;
-  padding: 4px 8px;
-  font-size: 13px;
-  height: 28px;
-  outline: none;
-  transition: border-color 0.2s;
-  font-family: inherit;
 }
 
 .quote-calculator__input:focus,
 .quote-calculator__select:focus {
   border-color: var(--primary-color);
 }
+
 
 .quote-calculator__days {
   display: flex;
@@ -1113,16 +1104,12 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #1e1e1e;
-  padding: 8px 12px;
-  border: 1px solid #2e2e2e;
-  border-radius: 8px;
+  padding: 4px 0;
 }
 
 .quote-calculator__day-label {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 400;
   color: #a3a3a3;
   width: 40px;
 }
@@ -1132,20 +1119,23 @@
 }
 
 .quote-calculator__day-remove {
-  background: transparent;
-  border: none;
-  color: #a3a3a3;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
-  border-radius: 8px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #a3a3a3;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 0.15s, background 0.15s;
 }
 
 .quote-calculator__day-remove:hover {
-  background-color: var(--danger-subtle);
   color: var(--danger-color);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .quote-calculator__summary {
@@ -1237,34 +1227,46 @@
 /* ── Quote Calculator: toolbar toggle items ──────────────────────── */
 .quote-calculator__toggle-item {
   display: flex;
-  gap: var(--space-2);
+  justify-content: space-between;
   align-items: center;
-  padding-top: 4px;
-  flex: 1 1 45%;
+  width: 100%;
 }
 
 .quote-calculator__toggle-item--full {
-  flex: 1 1 100%;
+  width: 100%;
 }
 
 .quote-calculator__toggle-label {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 400;
+  color: #a3a3a3;
 }
 
 /* ── Quote Calculator: toolbar flex half-width items ─────────────── */
 .quote-calculator__toolbar-half {
-  flex: 1 1 45%;
+  width: 100%;
 }
 
 /* ── Quote Calculator: Add Day button ────────────────────────────── */
 .quote-calculator__add-day-btn {
   width: 100%;
-  margin-top: var(--space-2);
-  border-color: #2e2e2e;
+  margin-top: 16px;
+  background-color: #393939;
   color: #ffffff;
+  border: none;
+  border-radius: 0;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 400;
+  transition: background-color 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.quote-calculator__add-day-btn:hover {
+  background-color: #4c4c4c;
 }
 
 .quote-calculator__add-day-btn .material-symbols-outlined {
@@ -1272,53 +1274,11 @@
   margin-right: 4px;
 }
 
-/* ── Quote Calculator: Dynamic day rows ──────────────────────────── */
-.quote-calculator__day-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 0;
-}
-
-.quote-calculator__day-label {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  min-width: 42px;
-  flex-shrink: 0;
-}
-
-.quote-calculator__day-input {
-  flex: 1;
-}
-
-.quote-calculator__day-remove {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: none;
-  border-radius: 4px;
-  background: transparent;
-  color: var(--text-muted);
-  cursor: pointer;
-  flex-shrink: 0;
-  transition:
-    color 0.15s,
-    background 0.15s;
-}
-
-.quote-calculator__day-remove:hover {
-  color: var(--status-red);
-  background: rgba(255, 255, 255, 0.06);
-}
+/* ── Quote Calculator: Dynamic day rows (deduplicated) ─────────────── */
 
 .quote-calculator__input-group {
   display: flex;
-  gap: 4px;
+  gap: 8px;
 }
 
 .quote-calculator__select-mini {
@@ -1460,3 +1420,164 @@
 .cds-header__action--hidden {
   display: none;
 }
+
+/* ── Trip Editor UI Refactoring ────────────────────────────────────── */
+
+
+
+/* Updated label styling for Trip Editor */
+#tripForm label,
+.trip-editor__req-label {
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  color: #a3a3a3 !important;
+  letter-spacing: 0.5px !important;
+  text-transform: none !important;
+}
+
+/* Dividers & Section Labels */
+.trip-editor__divider {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 1px;
+  background-color: #2e2e2e;
+  margin: 16px 0;
+}
+
+.trip-editor__section-label {
+  grid-column: 1 / -1;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Button Clusters */
+.trip-editor__btn-cluster {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+}
+
+.trip-editor__cluster-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 8px 12px;
+  height: 32px;
+  background-color: transparent;
+  color: var(--primary-color, #0f62fe);
+  border: 1px solid transparent;
+  border-radius: 0;
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background-color 0.2s, background-color 0.2s;
+}
+
+.trip-editor__cluster-btn .material-symbols-outlined {
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+.trip-editor__cluster-btn:hover {
+  background-color: #393939;
+  color: #ffffff;
+}
+
+.trip-editor__cluster-btn--danger {
+  color: var(--danger-color, #da1e28);
+}
+
+.trip-editor__cluster-btn--danger:hover {
+  background-color: var(--danger-subtle, #f5d4d4);
+  color: var(--danger-color, #da1e28);
+}
+
+/* Requirements List (Toggle style matching calculator) */
+.trip-editor__requirements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.trip-editor__req-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+/* Status Grid Block */
+.trip-editor__status-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+  grid-column: 1 / -1;
+}
+
+/* Action Buttons Bottom */
+.trip-editor__bottom-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding-top: 8px;
+}
+
+.trip-editor__action-btn {
+  height: 48px;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 400;
+  border-radius: 0;
+  cursor: pointer;
+  border: none;
+  transition: filter 0.2s, background-color 0.2s;
+}
+
+.trip-editor__action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.trip-editor__action-btn--delete {
+  background-color: transparent;
+  color: var(--danger-color, #da1e28);
+  font-weight: 400;
+}
+
+.trip-editor__action-btn--delete:hover {
+  background-color: rgba(218, 30, 40, 0.1);
+}
+
+.trip-editor__action-btn--clear {
+  background-color: #393939;
+  color: #ffffff;
+}
+
+.trip-editor__action-btn--clear:hover {
+  background-color: #4c4c4c;
+}
+
+.trip-editor__action-btn--save {
+  background-color: var(--primary-color, #0f62fe);
+  color: #ffffff;
+  flex: 1; /* Stretch to fill remaining space proportionally */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.trip-editor__action-btn--save:hover {
+  filter: brightness(1.1);
+}
+
+
+
