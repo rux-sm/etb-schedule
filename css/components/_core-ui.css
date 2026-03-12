@@ -43,7 +43,9 @@ button,
 }
 
 /* Base button hover */
-button:hover:not(.select-trigger):not(.cds-header__action):not(.btn--icon-pagination):not(.btn--toolbar),
+button:hover:not(.select-trigger):not(.cds-header__action):not(.btn--icon-pagination):not(
+    .btn--toolbar
+  ),
 .btn:hover,
 .icon-chip:hover,
 .theme-toggle:hover,
@@ -52,7 +54,9 @@ button:hover:not(.select-trigger):not(.cds-header__action):not(.btn--icon-pagina
 }
 
 /* Focus — IBM standard inner box-shadow ring */
-button:focus:not(.select-trigger):not(.cds-header__action):not(.btn--icon-pagination):not(.btn--toolbar),
+button:focus:not(.select-trigger):not(.cds-header__action):not(.btn--icon-pagination):not(
+    .btn--toolbar
+  ),
 .btn:focus,
 .icon-chip:focus,
 .theme-toggle:focus,
@@ -62,7 +66,9 @@ button:focus:not(.select-trigger):not(.cds-header__action):not(.btn--icon-pagina
 }
 
 /* Active — pressed state */
-button:active:not(.toggle-pill):not(.select-trigger):not(.cds-header__action):not(.btn--icon-pagination):not(.btn--toolbar),
+button:active:not(.toggle-pill):not(.select-trigger):not(.cds-header__action):not(
+    .btn--icon-pagination
+  ):not(.btn--toolbar),
 .btn:active,
 .icon-chip:active,
 .theme-toggle:active,
@@ -375,7 +381,7 @@ label .label-link:active {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 2px 10px 0 10px;
+  padding: 0;
   font-size: 14px;
   /* 16px */
   font-weight: 400;
@@ -389,9 +395,9 @@ label .label-link:active {
 /* BEM: .badge--primary, .badge--error */
 .badge-primary,
 .badge--primary {
-  background: color-mix(in srgb, var(--accent) 100%, transparent);
+  background: color-mix(in srgb, var(--accent) 0%, transparent);
   color: var(--accent);
-  border: 1px solid var(--accent);
+  border: 1px solid transparent;
   vertical-align: middle;
   text-shadow: var(--text-shadow);
 }
@@ -582,26 +588,19 @@ label .label-link:active {
   position: absolute;
   z-index: var(--z-dropdown);
   min-width: 200px;
-  padding: 4px;
+  padding: 0;
 
-  background: color-mix(in srgb, var(--surface-container) 20%, transparent);
-  border: 1px solid color-mix(in srgb, var(--border) 30%, transparent);
+  background: var(--gray-90);
+  border: 1px solid var(--border);
 
-  border-radius: 12px;
-  box-shadow:
-    0 0 0 0.5px color-mix(in srgb, white 15%, transparent) inset,
-    0 1px 0 rgba(0, 0, 0, 0.06),
-    0 10px 32px rgba(0, 0, 0, 0.14),
-    0 4px 12px rgba(0, 0, 0, 0.1);
-
-  -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(105%);
-  backdrop-filter: blur(20px) saturate(180%) brightness(105%);
+  border-radius: 0px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 
   overflow: hidden;
   animation: menuPopIn 120ms ease-out;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 0px;
 }
 
 .dropdown-menu,
@@ -648,8 +647,8 @@ label .label-link:active {
 .dropdown__divider {
   border: 0;
   height: 1px;
-  margin: 6px 6px;
-  background: color-mix(in srgb, var(--border) 70%, transparent);
+  margin: 4px 0;
+  background: var(--border);
 }
 
 .dropdown-item,
@@ -663,13 +662,13 @@ label .label-link:active {
   gap: 8px;
 
   width: 100%;
-  padding: 10px 12px;
+  padding: 8px 16px;
   /* Increased vertical padding for better centering */
   height: 28px;
   /* Ensure consistent height for centering */
 
   border: none;
-  border-radius: 8px;
+  border-radius: 0px;
   background: transparent;
 
   font-size: 0.875rem;
@@ -680,8 +679,7 @@ label .label-link:active {
   cursor: pointer;
 
   transition:
-    background 120ms ease,
-    transform 120ms ease;
+    background 120ms ease;
 }
 
 .dropdown-icon,
@@ -714,7 +712,6 @@ label .label-link:active {
 .dropdown__item:active,
 .context-item:active,
 .context-menu__item:active {
-  transform: translateY(1px);
   background: var(--overlay-active);
 }
 
@@ -768,22 +765,22 @@ label .label-link:active {
 
 /* Status colors on trigger (Directly semantic) */
 .select-trigger.status-pending {
-  background-color: color-mix(in srgb, var(--color-status-pending) 60%, transparent);
+  background-color: transparent;
   border-color: var(--color-status-pending);
 }
 
 .select-trigger.status-ok {
-  background-color: color-mix(in srgb, var(--color-status-ok) 60%, transparent);
+  background-color: transparent;
   border-color: var(--color-status-ok);
 }
 
 .select-trigger.status-assigned {
-  background-color: color-mix(in srgb, var(--color-status-assigned) 60%, transparent);
+  background-color: transparent;
   border-color: var(--color-status-assigned);
 }
 
 .select-trigger.status-blue {
-  background-color: color-mix(in srgb, var(--color-status-blue) 60%, transparent);
+  background-color: transparent;
   border-color: var(--color-status-blue);
 }
 
@@ -987,10 +984,10 @@ label .label-link:active {
   height: 48px;
   width: 100%;
   flex-shrink: 0;
-  padding: 0 0 0 16px;
+  padding: 0 16px;
   border-bottom: 1px solid var(--border);
   background-color: var(--gray-100);
-
+  margin-bottom: 8px;
 }
 
 .panel-header__title {
@@ -1049,7 +1046,11 @@ label .label-link:active {
 }
 
 .panel-header__action .material-symbols-outlined {
-  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
   font-size: 24px;
 }
 
@@ -1080,8 +1081,8 @@ label .label-link:active {
   justify-content: flex-end;
   gap: 8px;
   flex-wrap: wrap;
-  min-height: var(--card-footer-min-height);
-  padding: var(--card-footer-padding-y) var(--card-footer-padding-x);
+  min-height: 48px;
+  padding: 8px 16px;
   margin-top: 0;
   border-top: 1px solid var(--border);
   background: var(--gray-100);

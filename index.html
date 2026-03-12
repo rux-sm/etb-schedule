@@ -128,75 +128,97 @@
               </div>
 
               <div class="card__content">
-                <div class="quote-calculator__inputs">
-                  <div class="form-group quote-calculator__toolbar-half">
-                    <label for="quoteTotalMilesInput">Total miles</label>
-                    <input type="number" id="quoteTotalMilesInput" class="quote-calculator__input" min="0" value="0" />
-                  </div>
-                  <div class="form-group quote-calculator__toolbar-half">
-                    <label for="quoteTotalDaysInput">Total days</label>
-                    <input type="number" id="quoteTotalDaysInput" class="quote-calculator__input" min="1" value="1" />
-                  </div>
+                <div class="quote-calculator__layout-grid">
+                  <!-- Left Column: Static Options -->
+                  <div class="quote-calculator__col-static">
+                    <div class="form-group">
+                      <label for="quoteTotalDaysInput">Days</label>
+                      <input type="number" id="quoteTotalDaysInput" class="quote-calculator__input" min="1" value="1" />
+                    </div>
 
-                  <div class="form-group quote-calculator__toolbar-half">
-                    <label for="quoteLDRate">Base Rate</label>
-                    <select id="quoteLDRate" class="quote-calculator__select">
-                      <option value="4.0">$4.0</option>
-                      <option value="4.1">$4.1</option>
-                      <option value="4.2">$4.2</option>
-                      <option value="4.3">$4.3</option>
-                      <option value="4.4">$4.4</option>
-                      <option value="4.5" selected>
-                        $4.5
-                      </option>
-                      <option value="4.6">$4.6</option>
-                      <option value="4.7">$4.7</option>
-                      <option value="4.8">$4.8</option>
-                      <option value="4.9">$4.9</option>
-                    </select>
-                  </div>
-                  <div class="form-group quote-calculator__toolbar-half">
-                    <label for="quoteSeasonalRate">Seasonal Rate</label>
-                    <select id="quoteSeasonalRate" class="quote-calculator__select">
-                      <option value="">None</option>
-                      <option value="4.0">$4.0</option>
-                      <option value="4.1">$4.1</option>
-                      <option value="4.2">$4.2</option>
-                      <option value="4.3">$4.3</option>
-                      <option value="4.4">$4.4</option>
-                    </select>
-                  </div>
+                    <div class="form-group">
+                      <label for="quoteLDRate">Base Rate</label>
+                      <select id="quoteLDRate" class="quote-calculator__select">
+                        <option value="4.0">$4.0</option>
+                        <option value="4.1">$4.1</option>
+                        <option value="4.2">$4.2</option>
+                        <option value="4.3">$4.3</option>
+                        <option value="4.4">$4.4</option>
+                        <option value="4.5" selected>$4.5</option>
+                        <option value="4.6">$4.6</option>
+                        <option value="4.7">$4.7</option>
+                        <option value="4.8">$4.8</option>
+                        <option value="4.9">$4.9</option>
+                      </select>
+                    </div>
 
-                  <div class="form-group quote-calculator__toolbar-half">
-                    <label for="quoteDeadMiles">Dead miles</label>
-                    <input type="number" id="quoteDeadMiles" class="quote-calculator__input" min="0" value="0" />
-                  </div>
-                  <div class="form-group quote-calculator__toolbar-half">
-                    <label for="quoteDiscountValue">Discount</label>
-                    <div class="quote-calculator__input-group">
-                      <input type="number" id="quoteDiscountValue" class="quote-calculator__input" min="0" value="0" />
-                      <select id="quoteDiscountType" class="quote-calculator__select-mini" title="Discount Type">
-                        <option value="flat">$</option>
-                        <option value="percent">%</option>
+                    <div class="form-group">
+                      <label for="quoteSeasonalRate">Seasonal Rate</label>
+                      <select id="quoteSeasonalRate" class="quote-calculator__select">
+                        <option value="">None</option>
+                        <option value="4.0">$4.0</option>
+                        <option value="4.1">$4.1</option>
+                        <option value="4.2">$4.2</option>
+                        <option value="4.3">$4.3</option>
+                        <option value="4.4">$4.4</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="quoteDiscountValue">Discount $</label>
+                      <!-- Temporarily forcing flat discount for the mockup matching, we can keep the combo box if preferred, but matching mockup cleanly: -->
+                      <!-- If the user wants both $ and %, we could do two fields, but let's stick to the current combo box for functionality but rename label -->
+                      <div class="quote-calculator__input-group">
+                        <input type="number" id="quoteDiscountValue" class="quote-calculator__input" min="0" value="0" />
+                        <select id="quoteDiscountType" class="quote-calculator__select-mini" title="Discount Type">
+                          <option value="flat" selected>$</option>
+                          <option value="percent">%</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="quoteDeadMiles">Dead Miles</label>
+                      <input type="number" id="quoteDeadMiles" class="quote-calculator__input" min="0" value="0" />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="quoteReliefDriver">2nd Driver</label>
+                      <select id="quoteReliefDriver" class="quote-calculator__select">
+                        <option value="false" selected>No</option>
+                        <option value="true">Yes</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="quoteCCFeeToggle">CC Fee 4%</label>
+                      <select id="quoteCCFeeToggle" class="quote-calculator__select">
+                        <option value="false" selected>No</option>
+                        <option value="true">Yes</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="quoteHalfDay">Add Half Day</label>
+                      <select id="quoteHalfDay" class="quote-calculator__select">
+                        <option value="false" selected>No</option>
+                        <option value="true">Yes</option>
                       </select>
                     </div>
                   </div>
-                </div>
 
-                <div class="subsection col-12">
-                  <div class="quote-calculator__toggle-grid toggle-pill__grid" role="group" aria-label="Quote Options">
-                    <button type="button" class="toggle-pill" id="quoteReliefDriver" aria-pressed="false">
-                      <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">person_add</span>
-                      2nd driver
-                    </button>
-                    <button type="button" class="toggle-pill" id="quoteHalfDay" aria-pressed="false">
-                      <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">schedule</span>
-                      Half day
-                    </button>
-                    <button type="button" class="toggle-pill" id="quoteCCFeeToggle" aria-pressed="false">
-                      <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">credit_card</span>
-                      CC fee (4%)
-                    </button>
+                  <!-- Right Column: Dynamic Day Mileages -->
+                  <div class="quote-calculator__col-dynamic">
+                    <div id="quoteDynamicDaysContainer" class="quote-calculator__days">
+                      <!-- Handled by JavaScript:
+                      <div class="form-group">
+                        <label for="quoteDay1">Day 1 Mileage</label>
+                        <input type="number" id="quoteDay1" class="quote-calculator__input day-mileage-input" value="0" />
+                      </div>
+                      -->
+                    </div>
+                    <!-- Hidden total miles input to preserve existing JS math temporarily if needed -->
+                    <input type="hidden" id="quoteTotalMilesInput" value="0" />
                   </div>
                 </div>
               </div>
@@ -306,8 +328,7 @@
               <div class="panel-header">
                 <h2 class="panel-header__title">Trip Editor</h2>
                 <div class="panel-header__actions">
-                  <span id="tripIdBadge" class="badge badge--primary trip-id-badge is-hidden"
-                    style="margin-right: 8px"></span>
+                  <span id="tripIdBadge" class="badge badge--primary trip-id-badge is-hidden"></span>
                 </div>
               </div>
 
@@ -516,13 +537,18 @@
                     <div class="form-actions form-actions--grid">
                       <button id="assignmentsBtn" type="button" class="btn" title="Driver Assignments"
                         aria-label="Driver Assignments">
-                        <span class="material-symbols-outlined">directions_bus</span>
-                        Assignments
+                        <span class="material-symbols-outlined">group</span>
+                        Drivers
                       </button>
                       <button id="envelopeBtn" type="button" class="btn" title="Envelope Overrides"
                         aria-label="Envelope Overrides">
                         <span class="material-symbols-outlined">mail</span>
                         Envelope
+                      </button>
+                      <button id="itineraryBtn" type="button" class="btn" title="Review Trip Manifest"
+                        aria-label="Review Trip Manifest">
+                        <span class="material-symbols-outlined">fact_check</span>
+                        Review
                       </button>
                     </div>
 
@@ -555,29 +581,32 @@
                         </div>
                       </div>
                     </div>
-                  </div>
-
-                  <div class="subsection col-12 is-hidden assignments-overrides-section"
-                    id="assignmentsOverridesSection">
-                    <div class="bus-assign-header">
-                      <div class="form-layout__label">Bus</div>
-                      <div class="form-layout__label">Driver 1</div>
-                      <div class="form-layout__label">Driver 2</div>
+                      <!-- Driver Assignments Section (Toggled by Drivers Button) -->
+                      <div class="form-grid is-hidden assignments-overrides-section"
+                        id="assignmentsOverridesSection">
+                        <div class="bus-assign-header col-12">
+                          <span class="field-label">Bus</span>
+                          <span class="field-label">Driver 1</span>
+                          <span class="field-label">Driver 2</span>
+                        </div>
+                        <div id="busGrid" class="col-12"></div>
+                      </div>
                     </div>
-                    <div id="busGrid"></div>
-                  </div>
                 </form>
               </div>
 
               <div class="card__footer">
                 <div class="form-actions">
                   <button type="button" class="btn btn--danger" id="deleteBtn" disabled>
+                    <span class="material-symbols-outlined">delete</span>
                     Delete
                   </button>
-                  <button type="button" class="btn btn--secondary" id="newBtn">
+                  <button type="button" class="btn" id="newBtn">
+                    <span class="material-symbols-outlined">restart_alt</span>
                     Clear
                   </button>
                   <button type="submit" class="btn btn--primary" id="saveBtn" form="tripForm">
+                    <span class="material-symbols-outlined">save</span>
                     Save
                   </button>
                 </div>

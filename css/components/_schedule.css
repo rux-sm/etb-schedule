@@ -903,13 +903,48 @@
   --tripbar-status-ok-bg: color-mix(in srgb, var(--color-status-ok) 0%, transparent);
 
   &.out-of-service {
-    --tripbar-color: var(--gray-60);
-    background: repeating-linear-gradient(-45deg,
-        color-mix(in srgb, var(--tripbar-color) 15%, transparent),
-        color-mix(in srgb, var(--tripbar-color) 15%, transparent) 10px,
-        color-mix(in srgb, var(--tripbar-color) 30%, transparent) 10px,
-        color-mix(in srgb, var(--tripbar-color) 30%, transparent) 20px);
-    opacity: 0.8;
+    --tripbar-color: var(--color-danger);
+    background: repeating-linear-gradient(
+        -45deg,
+        color-mix(in srgb, var(--color-danger) 8%, transparent),
+        color-mix(in srgb, var(--color-danger) 8%, transparent) 8px,
+        color-mix(in srgb, var(--color-danger) 16%, transparent) 8px,
+        color-mix(in srgb, var(--color-danger) 16%, transparent) 16px
+    );
+    border: 1px dashed color-mix(in srgb, var(--color-danger) 40%, transparent);
+    border-left: 4px solid var(--color-danger);
+    
+    /* Overrides for crisp text and recessed look */
+    opacity: 1;
+    box-shadow: none;
+
+    /* Hide irrelevant fields: Subtitle, Contact, Time, Status Row, Drivers */
+    .schedule-grid__trip-bar__row--2,
+    .schedule-grid__trip-bar__row--3,
+    .schedule-grid__trip-bar__row--4,
+    .schedule-grid__trip-bar__row--5,
+    .schedule-grid__trip-bar__row--7 {
+      visibility: hidden;
+      height: 0;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Adjust layout to just show Destination (row 1) and Notes (row 6) */
+    grid-template-rows: auto auto !important;
+    align-content: start;
+    padding-top: 8px;
+    gap: 4px;
+    
+    .schedule-grid__trip-bar__row--1,
+    .schedule-grid__trip-bar__row--6 {
+      grid-row: auto; /* let it flow naturally */
+    }
+    
+    /* Give destination text slightly more prominence */
+    .schedule-grid__trip-bar__title {
+      font-size: 0.875rem; /* 14px */
+    }
   }
 
   &.unconfirmed {
@@ -1421,12 +1456,16 @@
 }
 
 #busGrid.bus-assign {
-  row-gap: 4px;
+  row-gap: 8px;
   /* Tighter vertical spacing for better alignment */
 }
 
 .bus-assign-header {
-  margin-bottom: 2px;
+  margin-bottom: 0px;
+}
+
+.bus-assign-header .field-label {
+  margin-bottom: 0px;
 }
 
 /* Standardized status pattern - apply colors directly from semantic tokens */

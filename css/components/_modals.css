@@ -508,6 +508,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 48px;
 }
 
 /* ==========================================================================
@@ -1040,44 +1041,48 @@
    ========================================================================= */
 
 .quote-calculator {
-  background-color: var(--gray-100);
-  border: 1px solid #2e2e2e;
-  border-radius: 12px;
-  color: #ffffff;
+  background-color: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  color: var(--white);
 }
 
 .quote-calculator .card__content {
   background-color: var(--gray-100);
-  padding: 12px;
+  padding: 0 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.quote-calculator__inputs {
+.quote-calculator__layout-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 24px;
+  gap: 16px;
+  margin-bottom: 8px;
 }
 
-.quote-calculator__toggle-grid {
-  grid-template-columns: 1fr 1fr;
+.quote-calculator__col-static,
+.quote-calculator__col-dynamic {
+  display: flex;
+  flex-direction: column;
   gap: 8px;
-  margin-bottom: 24px;
 }
 
 .quote-calculator .form-group {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0px;
 }
 
 .quote-calculator label {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 400;
-  color: #a3a3a3;
-  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  line-height: 1;
+  margin-bottom: 8px;
+  margin-top: 0px;
 }
 
 .quote-calculator__input:focus,
@@ -1099,9 +1104,9 @@
 }
 
 .quote-calculator__day-label {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 400;
-  color: #a3a3a3;
+  color: var(--text-muted);
   width: 40px;
 }
 
@@ -1118,7 +1123,7 @@
   padding: 0;
   border: none;
   background: transparent;
-  color: #a3a3a3;
+  color: var(--text-muted);
   cursor: pointer;
   flex-shrink: 0;
   transition:
@@ -1135,10 +1140,10 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 12px;
+  padding: var(--card-padding);
   position: sticky;
   bottom: 0;
-  border-top: 1px solid #2e2e2e;
+  border-top: 1px solid var(--border);
 }
 
 .quote-summary__row {
@@ -1148,21 +1153,21 @@
 }
 
 .quote-summary__label {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
-  color: #a3a3a3;
+  color: var(--text-muted);
   text-transform: uppercase;
 }
 
 .quote-summary__value {
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--white);
 }
 
 .quote-summary__row--primary .quote-summary__label {
-  color: #ffffff;
-  font-size: 14px;
+  color: var(--white);
+  font-size: 0.875rem;
 }
 
 .quote-summary__row--primary .quote-summary__value {
@@ -1191,8 +1196,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #3f3f3f;
-  /* Lighter background to contrast against #121212 */
+  background-color: var(--surface-3);
+  /* Lighter background to contrast against the dark card surface */
   transition: 0.4s;
   border-radius: 18px;
 }
@@ -1204,7 +1209,7 @@
   width: 14px;
   left: 2px;
   bottom: 2px;
-  background-color: #ffffff;
+  background-color: var(--white);
   transition: 0.4s;
   border-radius: 50%;
 }
@@ -1230,9 +1235,9 @@
 }
 
 .quote-calculator__toggle-label {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 400;
-  color: #a3a3a3;
+  color: var(--text-muted);
 }
 
 /* ── Quote Calculator: toolbar flex half-width items ─────────────── */
@@ -1244,12 +1249,12 @@
 .quote-calculator__add-day-btn {
   width: 100%;
   margin-top: 16px;
-  background-color: #393939;
-  color: #ffffff;
+  background-color: var(--surface-2);
+  color: var(--white);
   border: none;
   border-radius: 0;
   padding: 8px 16px;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 400;
   transition: background-color 0.2s;
   display: flex;
@@ -1259,7 +1264,7 @@
 }
 
 .quote-calculator__add-day-btn:hover {
-  background-color: #4c4c4c;
+  background-color: var(--surface-3);
 }
 
 .quote-calculator__add-day-btn .material-symbols-outlined {
@@ -1277,13 +1282,13 @@
 .quote-calculator__select-mini {
   background: var(--surface-2);
   border: 1px solid var(--border-subtle);
-  border-radius: 4px;
+  border-radius: 0px;
   color: var(--text-primary);
   font-size: 13px;
   padding: 0 4px;
   outline: none;
   cursor: pointer;
-  height: 32px;
+  height: 30px;
 }
 
 .quote-calculator__select-mini:focus {
@@ -1376,26 +1381,21 @@
 /* ── Trip Editor: form actions grid ──────────────────────────────── */
 .form-actions--grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   margin-bottom: 8px;
   /* Removed border-bottom and padding-bottom to tighten spacing */
 }
 
-/* ── Trip Editor: envelope overrides section spacing ─────────────── */
-.envelope-overrides-section {
-  margin-bottom: 16px;
-  border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 12px;
-}
-
+/* ── Trip Editor: section spacing standardization ─────────────────── */
+/* Ensures borders have room to "breathe" and match global subsection rhythm */
+.envelope-overrides-section,
 .assignments-overrides-section {
-  margin-bottom: 16px;
-  border-bottom: 1px solid var(--border-subtle);
-  border-top: none;
-  padding-top: 0;
-  margin-top: 0;
-  padding-bottom: 12px;
+  margin-top: 0px;
+  padding-top: 0px;
+  border-top: 1px solid transparent;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
 }
 
 /* ── Trip Editor: envelope notes input stack ──────────────────────── */
@@ -1421,8 +1421,8 @@
 
 .driver-contact__divider {
   border: none;
-  border-top: 1px solid var(--grid-line);
-  margin: 0;
+  border-top: 1px solid var(--border);
+  margin-top: 12px;
 }
 
 /* ── Hidden file input ───────────────────────────────────────────── */
@@ -1440,11 +1440,11 @@
 /* Updated label styling for Trip Editor */
 #tripForm label,
 .trip-editor__req-label {
-  font-size: 12px !important;
-  font-weight: 400 !important;
-  color: #a3a3a3 !important;
-  letter-spacing: 0.5px !important;
-  text-transform: none !important;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  text-transform: none;
 }
 
 /* Dividers & Section Labels */
@@ -1452,15 +1452,15 @@
   grid-column: 1 / -1;
   width: 100%;
   height: 1px;
-  background-color: #2e2e2e;
-  margin: 16px 0;
+  background-color: var(--red);
+  margin: var(--card-padding) 0;
 }
 
 .trip-editor__section-label {
   grid-column: 1 / -1;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--white);
   margin-bottom: 8px;
   display: block;
 }
@@ -1480,7 +1480,7 @@
   padding: 8px 12px;
   height: 32px;
   background-color: transparent;
-  color: var(--primary-color, #0f62fe);
+  color: var(--accent);
   border: 1px solid transparent;
   border-radius: 0;
   font-size: 13px;
@@ -1497,17 +1497,17 @@
 }
 
 .trip-editor__cluster-btn:hover {
-  background-color: #393939;
-  color: #ffffff;
+  background-color: var(--surface-3);
+  color: var(--white);
 }
 
 .trip-editor__cluster-btn--danger {
-  color: var(--danger-color, #da1e28);
+  color: var(--alert-red);
 }
 
 .trip-editor__cluster-btn--danger:hover {
-  background-color: var(--danger-subtle, #f5d4d4);
-  color: var(--danger-color, #da1e28);
+  background-color: color-mix(in srgb, var(--alert-red) 15%, transparent);
+  color: var(--alert-red);
 }
 
 /* Requirements List (Toggle style matching calculator) */
@@ -1565,7 +1565,7 @@
 
 .trip-editor__action-btn--delete {
   background-color: transparent;
-  color: var(--danger-color, #da1e28);
+  color: var(--alert-red);
   font-weight: 400;
 }
 
@@ -1574,17 +1574,17 @@
 }
 
 .trip-editor__action-btn--clear {
-  background-color: #393939;
-  color: #ffffff;
+  background-color: var(--surface-2);
+  color: var(--white);
 }
 
 .trip-editor__action-btn--clear:hover {
-  background-color: #4c4c4c;
+  background-color: var(--surface-3);
 }
 
 .trip-editor__action-btn--save {
-  background-color: var(--primary-color, #0f62fe);
-  color: #ffffff;
+  background-color: var(--accent);
+  color: var(--white);
   flex: 1;
   /* Stretch to fill remaining space proportionally */
   display: flex;

@@ -93,15 +93,22 @@
     const stdRate = parseFloat(els.ldRate.value) || 4.5;
     const seaRate = parseFloat(els.seasonalRate.value) || 0;
     const deadMiles = parseInt(els.deadMiles.value, 10) || 0;
-    const secondDriverOn = els.reliefToggle.getAttribute("aria-pressed") === "true";
-    const halfDayOn = els.halfDayToggle.getAttribute("aria-pressed") === "true";
-    const ccFeeOn = els.ccFeeToggle ? els.ccFeeToggle.getAttribute("aria-pressed") === "true" : false;
+    const secondDriverOn = els.reliefToggle.value === "true";
+    const halfDayOn = els.halfDayToggle.value === "true";
+    const ccFeeOn = els.ccFeeToggle ? els.ccFeeToggle.value === "true" : false;
     const manualDiscountVal = parseFloat(els.discountValue.value) || 0;
     const manualDiscType = els.discountType.value;
 
     // Gather day miles
-    const totalMiles = parseInt(els.totalMilesInput.value, 10) || 0;
     const totalDays = parseInt(els.totalDaysInput.value, 10) || 1;
+    let totalMiles = 0;
+    for (let i = 1; i <= totalDays; i++) {
+      const input = $(`quoteDay${i}`);
+      if (input && input.value) {
+        totalMiles += parseInt(input.value, 10) || 0;
+      }
+    }
+    if (els.totalMilesInput) els.totalMilesInput.value = totalMiles;
 
     // Bus Earned Free Days (using the spreadsheet's exact FLOOR(miles/250) logic)
     const factor = Math.floor(totalMiles / 250);
@@ -218,22 +225,63 @@
     }
   }
 
+  // ── Dynamic Days Logic ────────────────────────────────────────────────
+  function renderDynamicDays() {
+    const totalDays = parseInt(els.totalDaysInput.value, 10) || 1;
+    const container = $("quoteDynamicDaysContainer");
+    if (!container) return;
+    
+    // Get current number of inputs
+    const currentInputs = container.querySelectorAll('.day-mileage-input');
+    const currentCount = currentInputs.length;
+    
+    // Create new inputs if needed
+    for (let i = currentCount; i < totalDays; i++) {
+      const dayNum = i + 1;
+      const div = document.createElement('div');
+      div.className = 'form-group';
+      div.id = `quoteDayWrapper${dayNum}`;
+      div.innerHTML = `
+        <label for="quoteDay${dayNum}">Day ${dayNum} Mileage</label>
+        <input type="number" id="quoteDay${dayNum}" class="quote-calculator__input day-mileage-input" value="0" min="0" />
+      `;
+      container.appendChild(div);
+      
+      // Add event listener to new input
+      const input = div.querySelector('input');
+      input.addEventListener('input', recalcQuote);
+    }
+    
+    // Show/hide based on totalDays
+    const maxCount = Math.max(currentCount, totalDays);
+    for (let i = 1; i <= maxCount; i++) {
+       const wrapper = $(`quoteDayWrapper${i}`);
+       if (wrapper) {
+         wrapper.style.display = i <= totalDays ? 'flex' : 'none';
+       }
+    }
+  }
+
   // ── Event Wiring ──────────────────────────────────────────────────────
   els.ldRate.addEventListener("change", recalcQuote);
   els.seasonalRate.addEventListener("change", recalcQuote);
   els.deadMiles.addEventListener("input", recalcQuote);
-  els.totalDaysInput.addEventListener("input", recalcQuote);
-  els.totalMilesInput.addEventListener("input", recalcQuote);
   
-  const handleToggleClick = () => setTimeout(recalcQuote, 10);
-  els.reliefToggle.addEventListener("click", handleToggleClick);
-  els.halfDayToggle.addEventListener("click", handleToggleClick);
-  if (els.ccFeeToggle) els.ccFeeToggle.addEventListener("click", handleToggleClick);
+  els.totalDaysInput.addEventListener("input", () => {
+    renderDynamicDays();
+    recalcQuote();
+  });
+  
+  if (els.totalMilesInput) els.totalMilesInput.addEventListener("input", recalcQuote);
+  
+  els.reliefToggle.addEventListener("change", recalcQuote);
+  els.halfDayToggle.addEventListener("change", recalcQuote);
+  if (els.ccFeeToggle) els.ccFeeToggle.addEventListener("change", recalcQuote);
   
   els.discountValue.addEventListener("input", recalcQuote);
   els.discountType.addEventListener("change", recalcQuote);
 
   // ── Init ──────────────────────────────────────────────────────────────
-
+  renderDynamicDays();
   recalcQuote();
 })();

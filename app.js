@@ -260,6 +260,7 @@ const dom = {
 
   // Envelope Modal & Overrides
   envelopeBtn: $("envelopeBtn"),
+  itineraryBtn: $("itineraryBtn"),
   envelopeOverridesSection: $("envelopeOverridesSection"),
   envelopeNote1: $("envelopeNote1"),
   envelopeNote2: $("envelopeNote2"),
@@ -3171,7 +3172,7 @@ function buildBusRowsOnce() {
   dom.busGrid.innerHTML = "";
   state.busRows.length = 0;
 
-  dom.busGrid.className = "bus-assign";
+  dom.busGrid.classList.add("bus-assign");
 
   for (let i = 1; i <= 10; i++) {
     const busSel = makeSelect(`bus${i}`);
@@ -5839,6 +5840,7 @@ function wireEvents() {
       }
     }
   });
+  dom.itineraryBtn?.addEventListener("click", openItineraryModal);
 
   dom.itineraryModal.addEventListener("click", (e) => {
     if (e.target.closest("[data-close]")) closeItineraryModal();

@@ -269,8 +269,8 @@
 
   .app-layout__sidebar--left>.card:not(.is-hidden) .card__content,
   .app-layout__sidebar--left>.card:not(.is-hidden) .card__footer {
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 
   .app-layout__sidebar--left>.card:not(.is-hidden) .card__content {
@@ -281,8 +281,8 @@
 
   .app-layout__sidebar--right>.card:not(.is-hidden) .card__content,
   .app-layout__sidebar--right>.card:not(.is-hidden) .card__footer {
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 
   .app-layout__sidebar--right>.card:not(.is-hidden) .card__content {

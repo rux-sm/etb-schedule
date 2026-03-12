@@ -213,14 +213,16 @@ samp {
     box-shadow:
       0 0 8px color-mix(in srgb, var(--tripbar-color) 20%, transparent),
       0 2px 8px rgba(0, 0, 0, 0.2);
-    filter: brightness(var(--tripbar-hover-brightness-from)) saturate(var(--tripbar-hover-saturate-from));
+    filter: brightness(var(--tripbar-hover-brightness-from))
+      saturate(var(--tripbar-hover-saturate-from));
   }
 
   to {
     box-shadow:
       0 0 24px color-mix(in srgb, var(--tripbar-color) 60%, transparent),
       0 6px 16px rgba(0, 0, 0, 0.5);
-    filter: brightness(var(--tripbar-hover-brightness-to)) saturate(var(--tripbar-hover-saturate-to));
+    filter: brightness(var(--tripbar-hover-brightness-to))
+      saturate(var(--tripbar-hover-saturate-to));
   }
 }
 
@@ -261,7 +263,6 @@ samp {
 }
 
 @keyframes jello {
-
   0%,
   11.1%,
   100% {
@@ -322,7 +323,6 @@ samp {
 }
 
 @keyframes arrow-left-bounce {
-
   0%,
   100% {
     transform: translate(0, -50%);
@@ -334,7 +334,6 @@ samp {
 }
 
 @keyframes arrow-right-bounce {
-
   0%,
   100% {
     transform: translate(0, -50%);
@@ -614,9 +613,15 @@ samp {
   }
 
   /* Legal print: hide itinerary, contact, driver status icons to make room for others */
-  .print-table .schedule-grid__trip-bar__status-badges>.schedule-grid__trip-bar__mini-badge:nth-child(3),
-  .print-table .schedule-grid__trip-bar__status-badges>.schedule-grid__trip-bar__mini-badge:nth-child(4),
-  .print-table .schedule-grid__trip-bar__status-badges>.schedule-grid__trip-bar__mini-badge:nth-child(5) {
+  .print-table
+    .schedule-grid__trip-bar__status-badges
+    > .schedule-grid__trip-bar__mini-badge:nth-child(3),
+  .print-table
+    .schedule-grid__trip-bar__status-badges
+    > .schedule-grid__trip-bar__mini-badge:nth-child(4),
+  .print-table
+    .schedule-grid__trip-bar__status-badges
+    > .schedule-grid__trip-bar__mini-badge:nth-child(5) {
     display: none !important;
   }
 
@@ -1077,16 +1082,16 @@ select.is-empty:not(:focus),
 }
 
 /* --- 10. LABELS --- */
-.form-group>label,
+.form-group > label,
 .field-label {
   display: block;
   width: 100%;
   font-size: 0.75rem;
   font-weight: 400;
   color: var(--text-muted);
-  line-height: 1.5;
-  padding-left: 4px;
-  margin-bottom: 4px;
+
+  line-height: 1;
+  margin-bottom: 8px; /* Exact 8px margin from the bottom of the text */
   letter-spacing: 0.05em;
 }
 
@@ -1096,7 +1101,7 @@ select.is-empty:not(:focus),
   grid-template-columns: repeat(12, 1fr);
   width: 100%;
   gap: 8px;
-  margin: 16px auto;
+  margin: 0px auto;
   align-items: start;
 }
 
@@ -1127,11 +1132,15 @@ select.is-empty:not(:focus),
 .subsection {
   grid-column: span 12;
   margin-top: 8px;
-  padding-top: 12px;
+  padding-top: 8px;
   border-top: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0px; /* Zero gap ensures first-child label defines the 8px visual space */
+}
+
+.subsection-grid {
+  margin-top: 0px; /* Local spacing for non-label content */
 }
 
 .subsection-grid {
@@ -1140,27 +1149,21 @@ select.is-empty:not(:focus),
   gap: 8px;
 }
 
-.card__footer {
-  padding: 12px 16px;
-  background: transparent;
-  border-top: 1px solid var(--border-subtle);
-}
-
 .form-actions {
   display: flex;
+  align-items: center;
   gap: 8px;
   padding: 0;
   width: 100%;
 }
 
-.form-actions>.btn {
+.form-actions > .btn {
   flex: 1;
   min-width: 80px;
   justify-content: center;
 }
 
 @container form-grid (max-width: 350px) {
-
   .col-2,
   .col-4,
   .col-5,
@@ -1179,7 +1182,6 @@ select.is-empty:not(:focus),
 }
 
 @media (max-width: 600px) {
-
   .form-grid .col-2,
   .form-grid .col-4,
   .form-grid .col-5,
@@ -1210,9 +1212,4 @@ select.is-empty:not(:focus),
   -webkit-backdrop-filter: blur(16px) saturate(160%);
   backdrop-filter: blur(16px) saturate(160%);
   border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
-}
-
-/* Legacy bus-assign grid label spacing fix */
-#busGrid.bus-assign .field-label {
-  margin-bottom: calc(1px - 7px);
 }
