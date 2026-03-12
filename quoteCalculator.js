@@ -42,6 +42,8 @@
     infoModal: $("quoteInfoModal"),
     infoCloseBtn: $("quoteInfoCloseBtn"),
     infoBackdrop: $("quoteInfoBackdrop"),
+    // Copy button
+    copySummaryBtn: $("quoteCopySummary"),
   };
 
   // Bail if the calculator card isn't on the page
@@ -225,6 +227,50 @@
     }
   }
 
+  // ── Copy Summary Logic ────────────────────────────────────────────────
+  async function copySummary() {
+    const btn = els.copySummaryBtn;
+    if (!btn) return;
+
+    // Grab raw values
+    const miles = els.totalMilesField.textContent || "0";
+    const total = els.finalTotal.textContent || "$0";
+    
+    // Check Driver 2 Pay
+    const d2Text = els.driver2Pay.textContent || "";
+    const d2Val = d2Text.replace(/[$,]/g, "");
+    const hasD2 = parseFloat(d2Val) > 0;
+
+    // Check Discount
+    const discText = els.discountAmount.textContent || "";
+    // discountAmount typically shows "-$VAL"
+    const discVal = discText.replace(/[$,-]/g, "");
+    const hasDisc = parseFloat(discVal) > 0;
+
+    // Build parts
+    let parts = [`${miles} mi`, total];
+    if (hasD2) parts.push(`Dr2 ${d2Text}`);
+    if (hasDisc) parts.push(`Dsc ${discText}`);
+
+    const summaryText = parts.join(" | ");
+
+    try {
+      await navigator.clipboard.writeText(summaryText);
+      
+      // Visual feedback
+      const originalHtml = btn.innerHTML;
+      btn.classList.add("btn--success");
+      btn.innerHTML = `<span class="material-symbols-outlined">check</span> <span>Copied!</span>`;
+      
+      setTimeout(() => {
+        btn.classList.remove("btn--success");
+        btn.innerHTML = originalHtml;
+      }, 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  }
+
   // ── Dynamic Days Logic ────────────────────────────────────────────────
   function renderDynamicDays() {
     const totalDays = parseInt(els.totalDaysInput.value, 10) || 1;
@@ -280,6 +326,10 @@
 
   els.discountValue.addEventListener("input", recalcQuote);
   els.discountType.addEventListener("change", recalcQuote);
+
+  if (els.copySummaryBtn) {
+    els.copySummaryBtn.addEventListener("click", copySummary);
+  }
 
   // ── Init ──────────────────────────────────────────────────────────────
   renderDynamicDays();
