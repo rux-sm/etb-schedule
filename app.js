@@ -5553,6 +5553,10 @@ function initGlassSelects() {
     "quoteLDRate",
     "quoteSeasonalRate",
     "quoteDiscountType",
+    "quoteReliefDriver",
+    "quoteCCFeeToggle",
+    "quoteHalfDay",
+    "quoteTotalDaysInput",
   ];
   ids.forEach((id) => {
     const sel = $(id);

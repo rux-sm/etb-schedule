@@ -76,12 +76,10 @@
   --color-text-disabled: #8d8d8d;
   /* Gray 50 */
 
-  --border: #262626;
-  /* Gray 80: standard borders / dividers */
-  --grid-line: #393939;
-  /* Gray 80: calendar grid lines */
-  --border-strong: #525252;
-  /* Gray 70: active input outlines */
+  --border: var(--gray-80);
+  --grid-line: var(--gray-90);
+  --border-strong: var(--gray-70);
+
 
   /* ==========================================================================
    * 3. STATUS & STATE

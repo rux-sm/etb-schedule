@@ -451,27 +451,27 @@
 
 /* Outer Boundaries */
 .schedule-grid {
-  border-inline-start: 1px solid var(--border);
+  border-inline-start: 1px solid var(--grid-line);
   /* Left boundary */
 }
 
 .schedule-grid__header-cell {
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--grid-line);
   /* Top boundary */
 }
 
 .schedule-grid__header-cell:last-child,
 .schedule-grid__cell:last-child {
-  border-inline-end: 1px solid var(--border);
+  border-inline-end: 1px solid var(--grid-line);
   /* Right boundary */
 }
 
 /* Inner Gridlines */
 .schedule-grid__header-cell,
 .schedule-grid__cell {
-  border-inline-end: 1px solid var(--border);
+  border-inline-end: 1px solid var(--grid-line);
   /* Vertical tracking lines */
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--grid-line);
   /* Horizontal tracking lines */
 }
 
@@ -512,7 +512,7 @@
 
 .waiting-list-row .schedule-grid__bus-cell {
   background-color: var(--surface-1) !important;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--grid-line);
   color: var(--text-muted);
   font-size: 0.6875rem;
   /* 11px */
@@ -617,7 +617,7 @@
   /* Only accent the date number (no full-cell highlight) */
   background: var(--accent);
   overflow: hidden;
-  border: var(--border);
+  border: var(--grid-line);
   text-shadow: var(--text-shadow);
 }
 
@@ -904,16 +904,14 @@
 
   &.out-of-service {
     --tripbar-color: var(--color-danger);
-    background: repeating-linear-gradient(
-        -45deg,
+    background: repeating-linear-gradient(-45deg,
         color-mix(in srgb, var(--color-danger) 8%, transparent),
         color-mix(in srgb, var(--color-danger) 8%, transparent) 8px,
         color-mix(in srgb, var(--color-danger) 16%, transparent) 8px,
-        color-mix(in srgb, var(--color-danger) 16%, transparent) 16px
-    );
+        color-mix(in srgb, var(--color-danger) 16%, transparent) 16px);
     border: 1px dashed color-mix(in srgb, var(--color-danger) 40%, transparent);
     border-left: 4px solid var(--color-danger);
-    
+
     /* Overrides for crisp text and recessed look */
     opacity: 1;
     box-shadow: none;
@@ -935,15 +933,17 @@
     align-content: start;
     padding-top: 8px;
     gap: 4px;
-    
+
     .schedule-grid__trip-bar__row--1,
     .schedule-grid__trip-bar__row--6 {
-      grid-row: auto; /* let it flow naturally */
+      grid-row: auto;
+      /* let it flow naturally */
     }
-    
+
     /* Give destination text slightly more prominence */
     .schedule-grid__trip-bar__title {
-      font-size: 0.875rem; /* 14px */
+      font-size: 0.875rem;
+      /* 14px */
     }
   }
 

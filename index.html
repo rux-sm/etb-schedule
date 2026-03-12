@@ -133,7 +133,38 @@
                   <div class="quote-calculator__col-static">
                     <div class="form-group">
                       <label for="quoteTotalDaysInput">Days</label>
-                      <input type="number" id="quoteTotalDaysInput" class="quote-calculator__input" min="1" value="1" />
+                      <select id="quoteTotalDaysInput" class="quote-calculator__select">
+                        <option value="1" selected>1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                        <option value="24">24</option>
+                        <option value="25">25</option>
+                        <option value="26">26</option>
+                        <option value="27">27</option>
+                        <option value="28">28</option>
+                        <option value="29">29</option>
+                        <option value="30">30</option>
+                      </select>
                     </div>
 
                     <div class="form-group">
@@ -169,7 +200,8 @@
                       <!-- Temporarily forcing flat discount for the mockup matching, we can keep the combo box if preferred, but matching mockup cleanly: -->
                       <!-- If the user wants both $ and %, we could do two fields, but let's stick to the current combo box for functionality but rename label -->
                       <div class="quote-calculator__input-group">
-                        <input type="number" id="quoteDiscountValue" class="quote-calculator__input" min="0" value="0" />
+                        <input type="text" id="quoteDiscountValue" class="quote-calculator__input" inputmode="numeric"
+                          pattern="[0-9]*" value="0" />
                         <select id="quoteDiscountType" class="quote-calculator__select-mini" title="Discount Type">
                           <option value="flat" selected>$</option>
                           <option value="percent">%</option>
@@ -179,7 +211,8 @@
 
                     <div class="form-group">
                       <label for="quoteDeadMiles">Dead Miles</label>
-                      <input type="number" id="quoteDeadMiles" class="quote-calculator__input" min="0" value="0" />
+                      <input type="text" id="quoteDeadMiles" class="quote-calculator__input" inputmode="numeric"
+                        pattern="[0-9]*" value="0" />
                     </div>
 
                     <div class="form-group">
@@ -223,47 +256,43 @@
                 </div>
               </div>
 
-              <div class="card__footer quote-calculator__summary">
-                <div class="quote-summary__header-container">
-                  <div class="quote-summary__header">Quote summary</div>
-                </div>
-
+              <div class="quote-calculator__summary">
                 <div class="quote-summary__row">
-                  <span class="quote-summary__label">Total miles</span>
+                  <span class="quote-summary__label">Total Miles</span>
                   <span class="quote-summary__value" id="quoteTotalMiles">-</span>
                 </div>
 
                 <div class="quote-summary__row">
-                  <span class="quote-summary__label">Total days</span>
+                  <span class="quote-summary__label">Total Days</span>
                   <span class="quote-summary__value">
                     <span id="quoteTotalDaysCount" class="quote-summary__value-main">-</span>
-                    <span class="quote-summary__value-sub">(<span id="quoteBilledDaysCount">-</span> Billed |
-                      <span id="quoteFreeDaysCount">-</span> Free)</span>
+                    <span class="quote-summary__value-sub">(<span id="quoteBilledDaysCount">-</span> Billed • <span
+                        id="quoteFreeDaysCount">-</span> Free)</span>
                   </span>
                 </div>
 
                 <div class="quote-summary__row">
-                  <span class="quote-summary__label">Base rate</span>
+                  <span class="quote-summary__label">Base Rate</span>
                   <span class="quote-summary__value" id="quoteBaseRate">-</span>
                 </div>
 
                 <div class="quote-summary__row" id="quoteSeasonalRateRow">
-                  <span class="quote-summary__label">Seasonal rate</span>
+                  <span class="quote-summary__label">Seasonal Rate</span>
                   <span class="quote-summary__value" id="quoteSeasonalRateVal">-</span>
                 </div>
 
                 <div class="quote-summary__row" id="quoteCCFeeRow">
-                  <span class="quote-summary__label">Credit card fee</span>
+                  <span class="quote-summary__label">Credit Card Fee</span>
                   <span class="quote-summary__value" id="quoteCCFeeVal">-</span>
                 </div>
 
                 <div class="quote-summary__row">
-                  <span class="quote-summary__label">Driver 1</span>
-                  <span class="quote-summary__value" id="quoteDriver1Pay">(included)</span>
+                  <span class="quote-summary__label">Driver 1 Pay</span>
+                  <span class="quote-summary__value" id="quoteDriver1Pay"></span>
                 </div>
 
                 <div class="quote-summary__row" id="quoteDriver2Row">
-                  <span class="quote-summary__label">Driver 2</span>
+                  <span class="quote-summary__label">Driver 2 Pay</span>
                   <span class="quote-summary__value" id="quoteDriver2Pay">-</span>
                 </div>
 
@@ -273,8 +302,18 @@
                 </div>
 
                 <div class="quote-summary__row quote-summary__row--primary">
-                  <span class="quote-summary__label">Estimated total</span>
+                  <span class="quote-summary__label">Total</span>
                   <span class="quote-summary__value" id="quoteFinalTotal">-</span>
+                </div>
+              </div>
+
+              <!-- Action Footer -->
+              <div class="card__footer">
+                <div class="form-actions" style="width: 100%;">
+                  <button type="button" class="btn btn--primary" id="quoteCopySummary" style="width: 100%;">
+                    <span class="material-symbols-outlined">content_copy</span>
+                    <span>Copy Summary</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -581,17 +620,16 @@
                         </div>
                       </div>
                     </div>
-                      <!-- Driver Assignments Section (Toggled by Drivers Button) -->
-                      <div class="form-grid is-hidden assignments-overrides-section"
-                        id="assignmentsOverridesSection">
-                        <div class="bus-assign-header col-12">
-                          <span class="field-label">Bus</span>
-                          <span class="field-label">Driver 1</span>
-                          <span class="field-label">Driver 2</span>
-                        </div>
-                        <div id="busGrid" class="col-12"></div>
+                    <!-- Driver Assignments Section (Toggled by Drivers Button) -->
+                    <div class="form-grid is-hidden assignments-overrides-section" id="assignmentsOverridesSection">
+                      <div class="bus-assign-header col-12">
+                        <span class="field-label">Bus</span>
+                        <span class="field-label">Driver 1</span>
+                        <span class="field-label">Driver 2</span>
                       </div>
+                      <div id="busGrid" class="col-12"></div>
                     </div>
+                  </div>
                 </form>
               </div>
 
@@ -1017,86 +1055,51 @@
 
     <div class="modal__card" role="dialog" aria-modal="true" aria-label="Quote Calculator Rules">
       <div class="modal__head">
-        <h2 class="section-title" style="margin-bottom: 0">
+        <h2 class="panel-header__title" style="margin-bottom: 0">
           Quote Calculator — Rules & Logic
         </h2>
       </div>
 
-      <div class="modal__body" style="
-            line-height: 1.5;
-            color: var(--text-secondary);
-            max-height: 60vh;
-            overflow-y: auto;
-            padding: 1.5rem;
-          ">
-        <h3 style="
-              color: var(--text-primary);
-              margin-top: 0;
-              margin-bottom: 0.5rem;
-              font-size: 1.1rem;
-              font-weight: 500;
-            ">
-          1. Base Mileage & Daily Minimums
-        </h3>
-        <ul style="margin-top: 0; margin-bottom: 1.5rem; padding-left: 1.25rem">
-          <li style="margin-bottom: 0.5rem">
-            <strong style="color: var(--text-primary)">Long Distance Rate:</strong> The core price
-            of the trip is calculated by multiplying Total Miles × Selected Rate (e.g., $4.50/mi).
+      <div class="modal__body">
+        <h3>1. Base Mileage & Daily Minimums</h3>
+        <ul>
+          <li>
+            <strong>Long Distance Rate:</strong> The core price of the trip is calculated by multiplying Total Miles ×
+            Selected Rate (e.g., $4.50/mi).
           </li>
           <li>
-            <strong style="color: var(--text-primary)">Local Daily Minimum:</strong> Trips are
-            protected against low mileage by a $1,400 per-day minimum. If the calculated mileage
-            cost is lower than $1,400/day, the quote automatically defaults to the $1,400 daily
-            minimum instead.
+            <strong>Local Daily Minimum:</strong> Trips are protected against low mileage by a $1,400 per-day minimum.
+            If the calculated mileage cost is lower than $1,400/day, the quote automatically defaults to the $1,400
+            daily minimum instead.
           </li>
         </ul>
 
-        <h3 style="
-              color: var(--text-primary);
-              margin-top: 0;
-              margin-bottom: 0.5rem;
-              font-size: 1.1rem;
-              font-weight: 500;
-            ">
-          2. Free Days vs. Extra Days
-        </h3>
-        <ul style="margin-top: 0; margin-bottom: 1.5rem; padding-left: 1.25rem">
-          <li style="margin-bottom: 0.5rem">
-            <strong style="color: var(--text-primary)">Earning Free Days:</strong> The bus earns 1
-            Free Day for trips under 750 miles. After 750 miles, the bus earns an additional 0.5
-            Free Days for every 250 miles driven. Driver Free Days are earned strictly as 1 per
-            430 miles.
+        <h3>2. Free Days vs. Extra Days</h3>
+        <ul>
+          <li>
+            <strong>Earning Free Days:</strong> The bus earns 1 Free Day for trips under 750 miles. After 750 miles, the
+            bus earns an additional 0.5 Free Days for every 250 miles driven. Driver Free Days are earned strictly as 1
+            per 430 miles.
           </li>
           <li>
-            <strong style="color: var(--text-primary)">Extra Day Charges:</strong> If the Number
-            of Trip Days exceeds the Earned Free Days, the customer is billed for the difference
-            at $950 per Extra Day.
+            <strong>Extra Day Charges:</strong> If the Number of Trip Days exceeds the Earned Free Days, the customer is
+            billed for the difference at $950 per Extra Day.
           </li>
         </ul>
 
-        <h3 style="
-              color: var(--text-primary);
-              margin-top: 0;
-              margin-bottom: 0.5rem;
-              font-size: 1.1rem;
-              font-weight: 500;
-            ">
-          3. Driver Pay & Surcharges
-        </h3>
-        <ul style="margin-top: 0; margin-bottom: 0; padding-left: 1.25rem">
-          <li style="margin-bottom: 0.5rem">
-            <strong style="color: var(--text-primary)">Driver Pay (Included):</strong> The first
-            driver is paid $0.60/mile. If the total trip exceeds 1,000 miles, this drops to
-            $0.50/mile.
-          </li>
-          <li style="margin-bottom: 0.5rem">
-            <strong style="color: var(--text-primary)">Driver Extra Days:</strong> Drivers earn 1
-            free day per 430 miles (calculated strictly in whole numbers). If the trip length
-            exceeds the driver's free days, they are paid $150 per Extra Day.
+        <h3>3. Driver Pay & Surcharges</h3>
+        <ul>
+          <li>
+            <strong>Driver Pay (Included):</strong> The first driver is paid $0.60/mile. If the total trip exceeds 1,000
+            miles, this drops to $0.50/mile.
           </li>
           <li>
-            <strong style="color: var(--text-primary)">2nd Driver:</strong> Adding a second driver
-            duplicates the Driver 1 pay rules and adds it as a surcharge to the Estimated Total.
+            <strong>Driver Extra Days:</strong> Drivers earn 1 free day per 430 miles (calculated strictly in whole
+            numbers). If the trip length exceeds the driver's free days, they are paid $150 per Extra Day.
+          </li>
+          <li>
+            <strong>2nd Driver:</strong> Adding a second driver duplicates the Driver 1 pay rules and adds it as a
+            surcharge to the Estimated Total.
           </li>
         </ul>
       </div>

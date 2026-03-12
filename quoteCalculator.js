@@ -65,7 +65,7 @@
   const LD_EXTRA_DAY = 950;
   const HALF_DAY_SURCHARGE = 475;
   const MILES_PER_FREE_DAY = 430; // every 430 miles earns 1 free day
-  const MAX_DAYS = 20;
+  const MAX_DAYS = 30;
 
   // Driver pay rates (used for 2nd driver cost calculation)
   const DRIVER_RATE = 0.6; // per mile (≤1,000 mi)
@@ -74,10 +74,10 @@
 
   // ── Helpers ───────────────────────────────────────────────────────────
   function fmt(n) {
-    if (!n || n === 0) return "-";
+    if (!n || n === 0) return "";
     const isNegative = n < 0;
     const absN = Math.round(Math.abs(n)); // round to nearest dollar
-    if (absN === 0) return "-";
+    if (absN === 0) return "";
     const prefix = isNegative ? "-$" : "$";
     return (
       prefix +
@@ -181,10 +181,10 @@
 
     // ── Update UI ──
     if (els.totalMilesField) {
-      els.totalMilesField.textContent = totalMiles ? totalMiles.toLocaleString() : "-";
+      els.totalMilesField.textContent = totalMiles ? totalMiles.toLocaleString() : "";
     }
     if (els.totalDaysCount) {
-      els.totalDaysCount.textContent = totalDays > 0 ? totalDays : "-";
+      els.totalDaysCount.textContent = totalDays > 0 ? totalDays : "";
     }
     if (els.billedDaysCount) {
       // Billed days are the base (1 day minimum) plus the "Extra Days" charged.
@@ -194,10 +194,10 @@
       // Which is exactly `busExtraDays` (plus any standard days implied by the Mileage base... wait).
       // Wait, let's keep it simple: Free Days = busEarnedDays. Billed = totalDays - busEarnedDays.
       els.billedDaysCount.textContent =
-        totalDays > 0 ? totalDays - Math.min(busEarnedDays, totalDays) : "-";
+        totalDays > 0 ? totalDays - Math.min(busEarnedDays, totalDays) : "";
     }
     if (els.freeDaysCount) {
-      els.freeDaysCount.textContent = totalDays > 0 ? Math.min(busEarnedDays, totalDays) : "-";
+      els.freeDaysCount.textContent = totalDays > 0 ? Math.min(busEarnedDays, totalDays) : "";
     }
     if (els.baseRateField) {
       els.baseRateField.textContent = fmt(standardBaseCost);
@@ -209,7 +209,7 @@
       els.ccFeeVal.textContent = fmt(ccFeeAmount);
     }
     if (els.driver1Pay) {
-      els.driver1Pay.textContent = driver1Pay > 0 ? `${fmt(driver1Pay)} (included)` : "(included)";
+      els.driver1Pay.textContent = driver1Pay > 0 ? `${fmt(driver1Pay)}` : "";
     }
     if (els.driver2Pay) {
       els.driver2Pay.textContent = fmt(driver2Surcharge);
@@ -230,11 +230,11 @@
     const totalDays = parseInt(els.totalDaysInput.value, 10) || 1;
     const container = $("quoteDynamicDaysContainer");
     if (!container) return;
-    
+
     // Get current number of inputs
     const currentInputs = container.querySelectorAll('.day-mileage-input');
     const currentCount = currentInputs.length;
-    
+
     // Create new inputs if needed
     for (let i = currentCount; i < totalDays; i++) {
       const dayNum = i + 1;
@@ -243,22 +243,22 @@
       div.id = `quoteDayWrapper${dayNum}`;
       div.innerHTML = `
         <label for="quoteDay${dayNum}">Day ${dayNum} Mileage</label>
-        <input type="number" id="quoteDay${dayNum}" class="quote-calculator__input day-mileage-input" value="0" min="0" />
+        <input type="text" id="quoteDay${dayNum}" class="quote-calculator__input day-mileage-input" value="0" inputmode="numeric" pattern="[0-9]*" />
       `;
       container.appendChild(div);
-      
+
       // Add event listener to new input
       const input = div.querySelector('input');
       input.addEventListener('input', recalcQuote);
     }
-    
+
     // Show/hide based on totalDays
     const maxCount = Math.max(currentCount, totalDays);
     for (let i = 1; i <= maxCount; i++) {
-       const wrapper = $(`quoteDayWrapper${i}`);
-       if (wrapper) {
-         wrapper.style.display = i <= totalDays ? 'flex' : 'none';
-       }
+      const wrapper = $(`quoteDayWrapper${i}`);
+      if (wrapper) {
+        wrapper.style.display = i <= totalDays ? 'flex' : 'none';
+      }
     }
   }
 
@@ -266,18 +266,18 @@
   els.ldRate.addEventListener("change", recalcQuote);
   els.seasonalRate.addEventListener("change", recalcQuote);
   els.deadMiles.addEventListener("input", recalcQuote);
-  
-  els.totalDaysInput.addEventListener("input", () => {
+
+  els.totalDaysInput.addEventListener("change", () => {
     renderDynamicDays();
     recalcQuote();
   });
-  
+
   if (els.totalMilesInput) els.totalMilesInput.addEventListener("input", recalcQuote);
-  
+
   els.reliefToggle.addEventListener("change", recalcQuote);
   els.halfDayToggle.addEventListener("change", recalcQuote);
   if (els.ccFeeToggle) els.ccFeeToggle.addEventListener("change", recalcQuote);
-  
+
   els.discountValue.addEventListener("input", recalcQuote);
   els.discountType.addEventListener("change", recalcQuote);
 
