@@ -31,7 +31,7 @@
   --alert-green: #24a148;
   --alert-orange: #ff832b;
   --alert-yellow: #f1c21b;
-  --alert-cyan: #3DDBD9;
+  --alert-cyan: #3ddbd9;
 
   /* --- Grays (IBM Carbon) --- */
   --black: #000000;
@@ -48,38 +48,64 @@
   --white: #ffffff;
 
   /* ==========================================================================
-   * 2. THEME TOKENS — Surfaces, Text, Borders
-   * Semantic layer over the palette for dark mode
+   * 2. THEME TOKENS — The IBM Carbon Way (Gray 100 Theme)
    * ========================================================================== */
 
-  --app-bg: var(--black);
+  /* The absolute floor of the app */
+  --background: var(--gray-100);
 
-  --surface-0: #161616;
-  /* Top header bar */
-  --surface-1: #000;
-  /* Gray 90: main schedule grid */
-  --surface-2: #161616;
-  /* Gray 80: side panels */
-  --surface-3: #262626;
-  /* Gray 70: popovers, dropdowns */
-  --surface-4: #525252;
-  /* Gray 60: hover states on elevated surfaces */
+  /* UI Shell (Header bar) - Carbon maps the UI Shell base color to the background token */
+  --layer-ui-shell: var(--black); /* Keeping your black preference for the header */
 
-  --text: var(--white);
-  /* Gray 10: primary text */
-  --text-secondary: #c6c6c6;
-  /* Gray 30: secondary info */
-  --text-muted: #a8a8a8;
-  /* Gray 40: placeholder / subtle icons */
-  --placeholder: #a8a8a8;
-  /* Gray 40 */
-  --color-text-disabled: #8d8d8d;
-  /* Gray 50 */
+  /* Layer 01 – Primary components resting directly on the background (schedule grid, main cards) */
+  --layer-01: var(--gray-100);
+  --layer-01-border-subtle: var(--gray-80);
+  --layer-01-border: var(--gray-80);
 
-  --border: var(--gray-80);
-  --grid-line: var(--gray-90);
-  --border-strong: var(--gray-70);
+  /* Layer 02 – Components resting on Layer 01 (side panels, secondary nested cards) */
+  --layer-02: var(--gray-90);
+  --layer-02-border-subtle: var(--gray-80);
+  --layer-02-border: var(--gray-70);
 
+  /* Layer 03 – Elevated overlays (menus, dropdowns, modals) */
+  --layer-03: var(--gray-80);
+  --layer-03-border-subtle: var(--gray-70);
+  --layer-03-border: var(--gray-60);
+
+  /* --- Text Colors --- */
+  --text-primary: var(--white);
+  --text-secondary: var(--gray-30);
+  --text-placeholder: var(--gray-40);
+  --text-disabled: var(--gray-50);
+
+  --field-bg: var(--layer-03);
+  --field-hover-bg: color-mix(in srgb, var(--field-bg), white 10%);
+  --field-border-bottom: var(--layer-03-border);
+
+  /* Primary (Action/Save - Solid Blue) */
+  --btn-primary-bg: var(--blue);
+  --btn-primary-text: var(--white);
+  --btn-primary-hover: color-mix(in srgb, var(--blue) 85%, black);
+  --btn-primary-active: color-mix(in srgb, var(--blue) 70%, black);
+
+  /* Secondary (Structural/Cancel - Solid Gray matching Layer 03) */
+  --btn-secondary-bg: var(--layer-03);
+  --btn-secondary-text: var(--white);
+  --btn-secondary-hover: color-mix(in srgb, var(--layer-03), white 10%);
+  --btn-secondary-active: color-mix(in srgb, var(--layer-03), white 20%);
+
+  /* Danger (Delete) */
+  --btn-danger-bg: var(--alert-red);
+  --btn-danger-text: var(--white);
+  --btn-danger-hover: color-mix(in srgb, var(--alert-red) 85%, black);
+
+  /* Tertiary / Toggle Tiles (For Requirements) */
+  --btn-ghost-bg: var(--layer-03); /* Matches your input backgrounds perfectly */
+  --btn-ghost-border: transparent;
+  --btn-ghost-text: var(--text-secondary); /* Dimmed until clicked */
+  --btn-ghost-hover-bg: color-mix(in srgb, var(--layer-03), white 10%);
+  --btn-ghost-active-bg: var(--layer-03);
+  --btn-ghost-active-border: var(--blue);
 
   /* ==========================================================================
    * 3. STATUS & STATE
@@ -185,6 +211,11 @@
   --date-picker-filter: none;
   --agenda-header-bg: rgb(31 32 33);
 
+  /* Surface container aliases (used by newer components) */
+  --surface-container: var(--surface-2);
+  --surface-container-high: var(--surface-3);
+  --surface-container-highest: var(--surface-4);
+
   /* ==========================================================================
    * 7. INTERACTIVE
    * Buttons, inputs, focus, overlays
@@ -200,22 +231,11 @@
   --control-padding-x: 16px;
   --control-radius: 8px;
   --control-radius-icon: 8px;
-  --input-height: 30px;
+  --input-height: 32px; /* IBM Carbon v11 Small variant standard */
   --input-padding-x: 6px;
   --input-font-size: 0.875rem;
   --input-font-weight: 300;
   --input-border-radius: 0px;
-
-  --color-button-bg: var(--gray-70);
-  --color-button-text: rgb(255 255 255);
-  --color-button-hover-bg: var(--gray-80);
-  --color-button-primary-bg: var(--accent);
-  --color-button-primary-text: #ffffff;
-  --color-button-primary-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-  --color-button-primary-hover-brightness: 1.15;
-  --color-input-bg: #262626;
-  --color-input-border: #262626;
-  --color-input-border-hover: #262626;
 
   /* ==========================================================================
    * 8. COMPONENT — Trip Bar
@@ -315,66 +335,60 @@
 
 /* ==========================================================================
  * LIGHT THEME OVERRIDES
+ * ========================================================================/* ==========================================================================
+ * LIGHT THEME OVERRIDES
  * ========================================================================== */
 [data-theme="light"] {
   color-scheme: light;
 
-  /* --- 1. Palette (Light — Carbon Tone 70) --- */
-  --blue: #0043ce;
-  --red: #a2191f;
-  --purple: #6929c4;
-  --yellow: #ff832b;
-  --teal: #005d5d;
+  /* --- 1. Palette (New Scratch Palette) --- */
+  --blue: #0062ff;
+  --red: #da1e28;
+  --green: #198038;
+  --yellow: #f1c21b;
   --orange: #ff832b;
-  --pink: #9f1853;
-  --green: #0e6027;
+  --teal: #007d79;
+  --purple: #8a3ffc;
+  --pink: #d02670;
 
-  /* --- 2. Theme Tokens --- */
-  --app-bg: #f8f9fa;
-  --surface-0: #f1f3f4;
-  --surface-1: #ffffff;
-  --surface-2: #ffffff;
-  --surface-3: #e8eaed;
-  --surface-4: rgb(209 213 219);
+  /* --- 2. Surfaces (Phase 1) --- */
+  --app-bg: var(--white);
+  /* Soft gray background */
+  --surface-0: var(--gray-30);
+  /* White (Header) */
+  --surface-1: var(--white);
+  /* White (Main Content) */
+  --surface-2: var(--gray-30);
+  /* Soft gray (Sidebars) */
+  --surface-3: var(--gray-20);
+  /* White (Elevated/Cards) */
+  --surface-4: var(--gray-40);
+  /* Light gray (Hover states/Tertiary) */
 
-  --text: #212121;
-  --text-secondary: #525252;
-  /* Carbon Gray 70 (was pure black) */
-  --text-muted: #8d8d8d;
-  /* Carbon Gray 50 (was pure black) */
-  --placeholder: rgba(107, 114, 128, 0.7);
-  --color-text-disabled: rgb(156 163 175);
+  --color-input-bg: var(--gray-20);
+  --color-input-border: var(--gray-20);
+  --color-input-border-hover: var(--gray-30);
 
-  --border: rgba(0, 0, 0, 0.12);
-  --grid-line: rgba(0, 0, 0, 0.08);
-  --border-strong: rgba(0, 0, 0, 0.2);
+  --text: var(--black);
+  --text-secondary: var(--black);
+  --text-muted: var(--gray-90);
+  --placeholder: #9aa0a6;
+  --color-text-disabled: #bdc1c6;
 
-  /* --- 6. Elevation & Effects --- */
-  --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
-  --elevation-hover: 0 4px 6px rgba(0, 0, 0, 0.06), 0 8px 16px rgba(0, 0, 0, 0.12);
+  --border: var(--gray-50);
+  --grid-line: var(--gray-30);
+  --border-strong: var(--gray-50);
+
+  --elevation-1: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --elevation-hover: 0 8px 16px rgba(0, 0, 0, 0.1);
   --text-shadow: none;
   --date-picker-filter: none;
-  --agenda-header-bg: rgb(231 232 233);
+  --agenda-header-bg: #f4f4f4;
 
-  /* --- 7. Interactive --- */
-  --overlay-hover: rgba(0, 0, 0, 0.05);
-  --overlay-active: rgba(0, 0, 0, 0.1);
-  --focus-ring-color: color-mix(in srgb, #2196f3 50%, transparent);
-  --color-button-bg: #e0e0e0;
-  /* Carbon Gray 20 (was dark HSL) */
-  --color-button-text: #161616;
-  /* Carbon Gray 100 (readable on light bg) */
-  --color-button-hover-brightness: 0.95;
-  --color-button-primary-bg: #2196f3;
-  --color-button-primary-text: #ffffff;
-  --color-button-primary-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-  --color-button-primary-hover-brightness: 0.9;
-  --color-input-bg: rgb(230 230 230);
-  --color-input-border: rgba(0, 0, 0, 0.2);
-  --color-input-border-hover: rgba(0, 0, 0, 0.28);
+  --overlay-hover: rgba(0, 0, 0, 0.04);
+  --overlay-active: rgba(0, 0, 0, 0.08);
 
-  /* --- 5. Layout --- */
-  --today-indicator-bg: var(--accent);
+  --today-indicator-bg: var(--blue);
   --today-indicator-text: #ffffff;
-  --tripbar-bg-mix-percent: 25%;
+  --tripbar-bg-mix-percent: 15%;
 }

@@ -31,7 +31,7 @@
 /* Sidebar symmetry: identical background for both panels (padding on .card-content only) */
 .app-layout__sidebar--left:not(.app-layout__sidebar--collapsed),
 .app-layout__sidebar--right:not(.app-layout__sidebar--collapsed) {
-  background: var(--surface-2);
+  background: var(--layer-02);
   padding: 0;
   margin: 0;
   /* box-shadow removed for flat UI */
@@ -48,7 +48,7 @@
   padding: 0;
   margin: 0;
   border-radius: 0px;
-  background: var(--surface-1);
+  background: var(--layer-01);
   display: flex;
   flex-direction: column;
 
@@ -235,13 +235,13 @@
 
   .app-layout__sidebar--left {
     order: 0;
-    border-right: 1px solid var(--border);
+    border-right: 1px solid var(--layer-02-border);
   }
 
   .app-layout__sidebar--right {
     order: 2;
     border-right: none;
-    border-left: 1px solid var(--border);
+    border-left: 1px solid var(--layer-02-border);
   }
 
   .app-layout__sidebar--left.app-layout__sidebar--collapsed,
@@ -267,11 +267,7 @@
     overflow: visible;
   }
 
-  .app-layout__sidebar--left>.card:not(.is-hidden) .card__content,
-  .app-layout__sidebar--left>.card:not(.is-hidden) .card__footer {
-    padding-left: 16px;
-    padding-right: 16px;
-  }
+ 
 
   .app-layout__sidebar--left>.card:not(.is-hidden) .card__content {
     flex: auto;
@@ -279,8 +275,29 @@
     min-height: 0;
   }
 
-  .app-layout__sidebar--right>.card:not(.is-hidden) .card__content,
-  .app-layout__sidebar--right>.card:not(.is-hidden) .card__footer {
+/* --- LEFT SIDEBAR --- */
+
+  .app-layout__sidebar--left > .card:not(.is-hidden) .card__content {
+    padding-left: 16px;
+    padding-right: 8px;
+    flex: auto;
+    overflow-y: auto;
+    min-height: 0;
+  }
+
+  .app-layout__sidebar--left > .card:not(.is-hidden) .card__footer {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* --- RIGHT SIDEBAR --- */
+
+  .app-layout__sidebar--right > .card:not(.is-hidden) .card__content {
+    padding-left: 16px;
+    padding-right: 8px;
+  }
+
+  .app-layout__sidebar--right > .card:not(.is-hidden) .card__footer {
     padding-left: 16px;
     padding-right: 16px;
   }
@@ -300,9 +317,7 @@
     box-shadow: none;
   }
 
-  [data-theme="light"] .app-layout__main>.card {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.5);
-  }
+/* [Light mode shadow override removed for scratch redo] */
 
   .app-layout__sidebar--right.is-hidden {
     display: none;
@@ -320,103 +335,127 @@
    (BEM refactor of .form-grid and .col-*)
    ========================================================================== */
 
-/* --- 1. The Global Form Container --- */
-.form-layout {
+/* --- 1. THE MAIN GRID --- */
+.form-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  /* Rigid fractions */
   width: 100%;
-  /* Fixed width slightly smaller than panel (420px) to allow for padding/gutters */
-  gap: 8px;
-  margin: 16px auto;
+  
+  /* Carbon Compact: 16px row gap, 8px column gap */
+  gap: 16px 8px; 
   align-items: start;
-  container-type: inline-size;
-  container-name: form-layout;
 }
 
-/* --- 2. Unified Form Group Wrapper --- */
-.form-layout__group>label,
-.form-layout__label {
+/* Strip out stray margins from your input wrappers so they don't stack with the grid gap */
+.form-group, 
+.col-2, .col-4, .col-5, .col-6, .col-8, .col-12 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* --- 2. SECTION DIVIDERS & SUBSECTIONS --- */
+/* Target: 32px above the line, 16px below the line */
+
+.subsection {
+  grid-column: span 12;
+  border-top: 1px solid var(--border-subtle);
+  
+  /* Carbon Compact: Rely on grid gap (16px) for space above line, 8px padding below */
+  margin-top: 0; 
+  padding-top: 0; 
+  margin-bottom: 0;
+}
+
+/* If you are using a standalone <hr> for lines (like above Itinerary Status) */
+hr.form-divider {
+  grid-column: span 12;
+  border: 0;
+  border-top: 1px solid var(--border-subtle);
+  
+  margin-top: 0; /* Rely on 16px grid gap */
+  margin-bottom: 0;
+  padding: 0;
+}
+
+/* --- 3. Unified Form Group Wrapper --- */
+.form-grid label,
+.field-label {
   display: block;
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: 0.8125rem; /* ~13px */
+  font-weight: 400;
   color: var(--text-muted);
   line-height: 1.25;
-  margin-bottom: 1px !important;
-  letter-spacing: 0.05em;
+  margin-bottom: 4px !important; /* Carbon spacing-02 for compact variant */
+  letter-spacing: 0.02em;
   width: 100%;
-  min-height: 1.4em;
 }
 
-.form-layout__group>input,
-.form-layout__group>select,
-.form-layout__group>textarea {
+/* Target ALL inputs, selects, and textareas for consistent 32px height */
+.form-grid input,
+.form-grid select,
+.form-grid textarea,
+.form-control,
+select {
   width: 100%;
+  height: 32px; /* Carbon Small variant spec */
   box-sizing: border-box;
 }
 
-/* --- 3. Column Spans --- */
-.form-layout__col-2 {
-  grid-column: span 2;
+/* Specific fix for select elements which can sometimes resist height rules */
+select {
+  appearance: none;
+  line-height: 1;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
-.form-layout__col-4 {
-  grid-column: span 4;
-}
+/* --- 4. Column Spans (Legacy support if needed alongside .col-*) --- */
+.col-2 { grid-column: span 2; }
+.col-4 { grid-column: span 4; }
+.col-5 { grid-column: span 5; }
+.col-6 { grid-column: span 6; }
+.col-8 { grid-column: span 8; }
+.col-12 { grid-column: span 12; }
 
-.form-layout__col-5 {
-  grid-column: span 5;
-}
 
-.form-layout__col-6 {
-  grid-column: span 6;
-}
 
-.form-layout__col-8 {
-  grid-column: span 8;
-}
-
-.form-layout__col-12 {
-  grid-column: span 12;
-}
-
-/* --- 4. Subsections --- */
-.form-layout__subsection {
-  grid-column: span 12;
-  margin-top: 4px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  margin-bottom: calc(1px - 7px) !important;
-}
-
-.form-layout__subsection>.form-layout__label {
-  margin-bottom: 1px !important;
-}
-
-.form-layout__subsection>.toggle-pill-grid {
-  margin-top: 0;
-}
-
-/* We use negative margin to counteract the 8px grid gap, leaving 1px visual space + border */
-#busGrid.bus-assign .form-layout__label {
-  margin-bottom: calc(1px - 7px) !important;
-}
-
-.form-layout__subsection-grid {
+/* Requirements Toggle Pill Grid alignment */
+.toggle-pill-grid,
+.toggle-pill__grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px !important; /* Forces consistency with main form gaps */
+  margin-top: 12px;
+  padding: 0;
 }
 
-/* --- 5. Actions Row --- */
-.form-layout__actions {
+/* --- 5. Actions Row (Carbon Footer) --- */
+.form-actions {
   display: flex;
   gap: 8px;
-  padding: 0 6px;
-  flex-wrap: wrap;
   align-items: center;
+}
+
+.form-actions--footer {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 2fr; /* Delete on left (1 part), Group on right (2 parts) */
+  gap: 8px;
+  padding: 0;
+}
+
+.form-actions__group {
+  display: flex !important;
+  gap: 8px;
+  width: 100%;
+}
+
+.form-actions__group .btn {
+  flex: 1; /* Makes Clear and Save equal */
+}
+
+.form-actions--footer > .btn--danger {
+  width: 100%; /* Ensures Delete matches the base unit of the grid */
 }
 
 /* ==========================================================================
@@ -472,7 +511,7 @@
   grid-template-rows: auto 1fr;
   height: 100vh;
   width: 100%;
-  background: var(--app-bg);
+  background: var(--layer-01);
   overflow: hidden;
 }
 
@@ -508,32 +547,6 @@
   margin: 0;
   letter-spacing: var(--heading-1-letter-spacing);
   white-space: nowrap;
-}
-
-/* App header (top bar) BEM in css/5-components/_app-header.css */
-
-.week-picker-trigger {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  cursor: pointer;
-  height: var(--week-picker-height);
-  padding: 0 var(--control-padding-x);
-  border-radius: var(--control-radius-icon);
-  transition: background-color 160ms ease;
-  position: relative;
-}
-
-.week-picker-trigger:hover {
-  background-color: var(--surface-4);
-  color: var(--text);
-}
-
-.week-picker-trigger .date-input-overlay {
-  inset-inline-start: 0 !important;
-  top: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
 }
 
 /* Control groups */

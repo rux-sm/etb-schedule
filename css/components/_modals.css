@@ -456,7 +456,7 @@
   font-size: 16px;
   background: var(--surface-3);
   padding: 6px 10px;
-  border-left: 4px solid var(--color-primary, #4f46e5);
+  border-left: 4px solid var(--red);
 }
 
 .daily-plan__day-header span {
@@ -590,7 +590,7 @@
   width: 100%;
 }
 
-.envelope-modal__actions>.btn {
+.envelope-modal__actions > .btn {
   flex: 1;
   justify-content: center;
 }
@@ -941,7 +941,6 @@
 
 /* Print: hide toolbar, show only envelope pages */
 @media print {
-
   .envelope-modal__toolbar,
   .modal__head,
   .modal__foot,
@@ -1021,7 +1020,7 @@
   flex: 1;
   min-height: 200px;
   max-height: 100%;
-  background: var(--surface-3);
+  background: var(--field-bg);
   color: var(--text);
   border-radius: 2px;
   padding: 6px 6px;
@@ -1070,14 +1069,13 @@
 .quote-calculator {
   background-color: var(--surface-2);
   border: 1px solid var(--border);
-  border-radius: var(--card-radius);
   color: var(--white);
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
 }
 
 .quote-calculator .card__content {
-  background-color: var(--gray-100);
+  background-color: var(--surface-2);
   padding: 0 16px;
   display: flex;
   flex-direction: column;
@@ -1087,7 +1085,7 @@
 .quote-calculator__layout-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 8px;
   margin-bottom: 8px;
 }
 
@@ -1186,7 +1184,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--surface-3);
+  background-color: var(--surface-2);
   /* Lighter background to contrast against the dark card surface */
   transition: 0.4s;
   border-radius: 18px;
@@ -1199,16 +1197,16 @@
   width: 14px;
   left: 2px;
   bottom: 2px;
-  background-color: var(--white);
+  background-color: var(--text);
   transition: 0.4s;
   border-radius: 50%;
 }
 
-.quote-calculator input:checked+.toggle-slider {
+.quote-calculator input:checked + .toggle-slider {
   background-color: var(--primary-color);
 }
 
-.quote-calculator input:checked+.toggle-slider:before {
+.quote-calculator input:checked + .toggle-slider:before {
   transform: translateX(14px);
 }
 
@@ -1240,7 +1238,7 @@
   width: 100%;
   margin-top: 16px;
   background-color: var(--surface-2);
-  color: var(--white);
+  color: var(--text);
   border: none;
   border-radius: 0;
   padding: 8px 16px;
@@ -1288,7 +1286,7 @@
 /* ── Quote Summary ───────────────────────────────────────────────── */
 .quote-calculator__summary {
   padding: 0 !important;
-  background: var(--gray-100);
+  background: var(--surface-2);
   border-top: 1px solid var(--border);
   margin-top: auto;
   display: flex;
@@ -1309,13 +1307,13 @@
 .quote-summary__label {
   font-size: 14px;
   text-transform: none !important;
-  color: var(--gray-30);
+  color: var(--text-secondary);
 }
 
 .quote-summary__value {
   font-size: 14px;
   font-weight: 600;
-  color: var(--white);
+  color: var(--text);
   text-align: right;
   display: flex;
   align-items: center;
@@ -1328,12 +1326,11 @@
 }
 
 .quote-summary__value-sub {
-  color: var(--gray-40);
+  color: var(--text-muted);
   font-size: 0.85em;
   font-weight: 400;
   margin-left: 4px;
 }
-
 
 /* Discount row (yellow = adjustment) */
 .quote-summary__row--discount .quote-summary__label,
@@ -1343,12 +1340,13 @@
 
 /* Total row */
 .quote-summary__row--primary {
-  height: 48px; /* Tighter total row height */
+  height: 48px;
+  /* Tighter total row height */
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 16px;
-  background: var(--gray-100);
+  background: var(--surface-2);
   border-top: none;
   border-bottom: none !important;
 }

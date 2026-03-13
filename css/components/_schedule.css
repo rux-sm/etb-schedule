@@ -8,8 +8,8 @@
   z-index: 1000;
   height: 48px;
   width: 100%;
-  background-color: var(--gray-100);
-  border-bottom: 1px solid var(--gray-80);
+  background-color: var(--layer-ui-shell);
+  border-bottom: 1px solid var(--border);
 
   /* Critical Layout: Spreads Branding and Actions to the edges */
   display: flex;
@@ -39,7 +39,7 @@
   content: "";
   width: 1px;
   height: 20px;
-  background: var(--gray-80);
+  background: var(--layer-02-border);
   position: absolute;
   right: 0;
 }
@@ -112,7 +112,7 @@
 
 /* Active press — one step brighter */
 .cds-header__action:active {
-  background-color: var(--gray-60);
+  background-color: var(--gray-70);
 }
 
 /* Accessibility Focus Ring (Restored) */
@@ -124,7 +124,7 @@
 
 /* Panel-is-open indicator — The Carbon Way */
 .cds-header__action[aria-pressed="true"] {
-  background-color: var(--gray-90);
+  background-color: var(--gray-70);
   border-bottom-color: var(--accent);
   /* Swaps transparent for Blue */
 }
@@ -133,104 +133,6 @@
 .cds-header__action .material-symbols-outlined {
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" -200, "opsz" 24;
   font-size: 24px;
-}
-
-/* ==========================================================================
-   5-COMPONENTS / SCHEDULE NAV 
-   The top navigation above the schedule grid (Agenda Header)
-   ========================================================================== */
-
-.schedule-nav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--app-bg);
-  border-bottom: none;
-  flex-shrink: 0;
-  height: var(--bar-height);
-}
-
-.schedule-nav__inner {
-  /* Inherits flex/dims from .card__header */
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  padding: 0;
-  height: var(--bar-height);
-  width: 100%;
-  flex-shrink: 0;
-}
-
-.schedule-nav__group {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.schedule-nav__group .btn--icon,
-.schedule-nav__group .weekpicker-trigger-wrap .btn--icon {
-  width: var(--week-picker-height);
-  height: var(--week-picker-height);
-}
-
-/* Week heading - Default (Desktop 20px) */
-.schedule-nav__heading {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  justify-content: space-between;
-  white-space: nowrap;
-  height: 40px;
-  line-height: 40px;
-  margin: 0;
-}
-
-/* Week date pieces */
-.schedule-nav__month,
-.schedule-nav__month-end {
-  /* month - ACCENT */
-  font-weight: 700;
-  font-size: 1.375rem;
-  letter-spacing: var(--heading-2-letter-spacing);
-  color: var(--accent);
-  line-height: 40px;
-  height: 40px;
-  text-transform: uppercase;
-}
-
-.schedule-nav__dates {
-  /* dates - WHITE */
-  font-weight: 400;
-  font-size: 1.375rem;
-  letter-spacing: var(--heading-2-letter-spacing);
-  color: var(--text);
-  margin-inline-start: 2px;
-  line-height: 40px;
-  height: 40px;
-}
-
-.schedule-nav__year {
-  /* year - GREY */
-  font-weight: 700;
-  font-size: 1.375rem;
-  letter-spacing: var(--heading-2-letter-spacing);
-  height: 40px;
-  line-height: 40px;
-  color: var(--text-muted);
-  margin-inline-start: 2px;
-}
-
-.schedule-nav__separator {
-  color: #616161;
-  font-size: var(--heading-1-size);
-  font-weight: var(--heading-1-weight);
-  letter-spacing: var(--heading-1-letter-spacing);
-  line-height: 40px;
-  height: 40px;
-  margin: 0 2px;
 }
 
 /* ==========================================================================
@@ -245,7 +147,7 @@
   justify-content: center;
   /* 4px top/bottom keeps it sleek (40px total height), 16px sides aligns it */
   padding: 4px 0px;
-  background-color: var(--black);
+  background-color: var(--layer-01);
   border-bottom: none;
   width: 100%;
 }
@@ -311,7 +213,7 @@
   border-radius: 0;
 
   background-color: transparent;
-  border: 1px solid var(--gray-90);
+  border: 1px solid var(--layer-01-border);
   color: var(--text);
   font-size: 14px;
   cursor: pointer;
@@ -319,7 +221,7 @@
 }
 
 .btn--toolbar:hover {
-  background-color: var(--gray-90);
+  background-color: var(--surface-3);
 }
 
 .btn--toolbar .material-symbols-outlined {
@@ -417,7 +319,7 @@
   /* Match table height */
   overflow: auto;
   /* Scroll internally when content exceeds */
-  background: var(--surface-1);
+  background: var(--layer-01);
   border-inline-start: none;
 }
 
@@ -451,27 +353,27 @@
 
 /* Outer Boundaries */
 .schedule-grid {
-  border-inline-start: 1px solid var(--grid-line);
+  border-inline-start: 1px solid var(--layer-01-border);
   /* Left boundary */
 }
 
 .schedule-grid__header-cell {
-  border-top: 1px solid var(--grid-line);
+  border-top: 1px solid var(--layer-01-border);
   /* Top boundary */
 }
 
 .schedule-grid__header-cell:last-child,
 .schedule-grid__cell:last-child {
-  border-inline-end: 1px solid var(--grid-line);
+  border-inline-end: 1px solid var(--layer-01-border);
   /* Right boundary */
 }
 
 /* Inner Gridlines */
 .schedule-grid__header-cell,
 .schedule-grid__cell {
-  border-inline-end: 1px solid var(--grid-line);
+  border-inline-end: 1px solid var(--layer-01-border);
   /* Vertical tracking lines */
-  border-bottom: 1px solid var(--grid-line);
+  border-bottom: 1px solid var(--layer-01-border);
   /* Horizontal tracking lines */
 }
 
@@ -483,7 +385,7 @@
   height: 20px !important;
   max-height: 20px !important;
   min-height: 20px !important;
-  background-color: var(--app-bg);
+  background-color: var(--white);
 }
 
 .schedule-grid__row--notes .schedule-grid__cell {
@@ -505,14 +407,14 @@
 
 #waitingBody tr.waiting-list-row td,
 .waiting-list-row td {
-  background-color: var(--surface-1) !important;
+  background-color: var(--layer-01) !important;
   border-top: none;
   vertical-align: top;
 }
 
 .waiting-list-row .schedule-grid__bus-cell {
-  background-color: var(--surface-1) !important;
-  border-top: 1px solid var(--grid-line);
+  background-color: var(--layer-01) !important;
+  border-top: 1px solid var(--layer-01-border);
   color: var(--text-muted);
   font-size: 0.6875rem;
   /* 11px */
@@ -555,7 +457,7 @@
 
 
 .schedule-grid__header-cell {
-  background: var(--surface-1);
+  background: var(--layer-01);
   padding: 0;
   height: var(--day-row-h);
   position: sticky;
@@ -575,7 +477,7 @@
   position: sticky;
   inset-inline-start: 0;
   z-index: 3000 !important;
-  background: var(--surface-1);
+  background: var(--layer-01);
   min-width: var(--bus-col-w);
   max-width: var(--bus-col-w);
   width: var(--bus-col-w);
@@ -668,7 +570,7 @@
   z-index: 500;
   pointer-events: none;
   /* pass through so sticky overlay doesn't steal trip bar hover */
-  background: var(--surface-1);
+  background: var(--layer-01);
   font-size: var(--bus-num-size);
   /* 14px */
   font-weight: var(--bus-num-weight);
@@ -745,7 +647,7 @@
 
 /* Bus cell highlight: only when hovering bus indicator (not when trip bar overlaps due to sticky) */
 .schedule-grid__row--has-bus-color>.schedule-grid__cell:first-child:has(.schedule-grid__bus-indicator:hover) {
-  background-color: var(--bus-accent-color, var(--surface-1));
+  background-color: var(--bus-accent-color, var(--layer-01));
 }
 
 .schedule-grid__bus-icons {
@@ -1364,7 +1266,7 @@
   max-width: 100%;
   overflow: auto;
   margin: 0;
-  background: var(--surface-3);
+  background: var(--layer-03);
 }
 
 .driver-week__table {
@@ -1387,8 +1289,8 @@
   text-align: center;
   white-space: nowrap;
   cursor: pointer;
-  border-inline-end: 1px solid var(--surface-2);
-  border-bottom: 1px solid var(--surface-2);
+  border-inline-end: 1px solid var(--layer-03-border);
+  border-bottom: 1px solid var(--layer-03-border);
 }
 
 .driver-week__table th:last-child,
@@ -1428,17 +1330,9 @@
 }
 
 .driver-week__cell--on {
-  background: var(--color-primary);
-  color: #fff;
+  background: var(--accent);
+  color: var(--text);
   font-weight: 700;
-}
-
-/* --- 4. Status Grid Optimization --- */
-.status-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr) !important;
-  gap: 8px;
-  width: 100%;
 }
 
 /* --- 5. Rigid Bus Assignment --- */
@@ -1451,50 +1345,61 @@
 #busGrid.bus-assign,
 .bus-assign-header {
   display: grid;
-  grid-template-columns: 80px 1fr 1fr;
-  column-gap: 8px;
+  grid-template-columns: 64px 1fr 1fr;
+  column-gap: 12px;
 }
 
 #busGrid.bus-assign {
-  row-gap: 8px;
-  /* Tighter vertical spacing for better alignment */
+  row-gap: 10px;
+  align-items: start;
+}
+
+.assignments-overrides-section {
+  row-gap: 0;
 }
 
 .bus-assign-header {
-  margin-bottom: 0px;
+  margin-bottom: 4px;
 }
 
 .bus-assign-header .field-label {
-  margin-bottom: 0px;
+  margin-bottom: 0;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+/* Driver + Status block: driver on top, status below (Carbon-style grouped layout) */
+.bus-assign__driver-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.bus-assign__driver-block .select-dropdown:first-child,
+.bus-assign__driver-block > select:first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.bus-assign__status-wrap {
+  flex-shrink: 0;
+}
+
+.bus-assign__status-cell {
+  min-width: 0;
+  width: 100%;
+}
+
+.bus-assign__status-cell .select-trigger {
+  font-size: 0.6875rem;
+  padding-inline: 6px;
+  min-height: 28px;
 }
 
 /* Standardized status pattern - apply colors directly from semantic tokens */
-select[class*="status-"] {
-  border: 1px solid var(--border);
-  /* Neutral fallback border */
-}
-
-select.status-pending {
-  background-color: color-mix(in srgb, var(--color-status-pending) 60%, transparent);
-  border-color: var(--color-status-pending);
-}
-
-select.status-ok {
-  background-color: color-mix(in srgb, var(--color-status-ok) 60%, transparent);
-  border-color: var(--color-status-ok);
-}
-
-select.status-assigned {
-  background-color: color-mix(in srgb, var(--color-status-assigned) 60%, transparent);
-  border-color: var(--color-status-assigned);
-}
-
-select.status-blue,
-select.status-confirmed {
-  background-color: color-mix(in srgb, var(--color-status-blue) 60%, transparent);
-  border-color: var(--color-status-blue);
-}
-
 /* Consolidate bus grid definition */
 
 

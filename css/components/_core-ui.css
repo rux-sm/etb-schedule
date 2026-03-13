@@ -1,27 +1,24 @@
 /* ==========================================================================
-   5-COMPONENTS / BUTTONS & CONTROLS
+   5-COMPONENTS / BUTTONS & CONTROLS (IBM Carbon Refactor)
    Buttons, chips, toggles, segmented controls
    ========================================================================== */
 
 button,
 .btn,
-.icon-chip,
 .theme-toggle,
 .seg__btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  height: var(--control-height);
+  /* Lock height to perfectly match your form inputs */
+  height: var(--input-height, 40px);
   min-width: 80px;
-  /* Standard button minimum width */
-  padding: 0 calc(var(--control-padding-x) * 1.5);
-  /* Wider padding */
+  padding: 0 16px;
 
+  /* Carbon Strict Geometry */
   border: 1px solid transparent;
-  /* Reserved for focus/structure */
-  border-radius: 0;
-  /* IBM Onyx sharp corners */
+  border-radius: 0px;
 
   font-family: var(--font-sans);
   font-size: 0.875rem;
@@ -29,194 +26,168 @@ button,
   line-height: 1;
   text-decoration: none;
   white-space: nowrap;
-
-  color: var(--color-button-text);
-  background-color: var(--color-button-bg);
-
   cursor: pointer;
 
   transition:
-    background-color 0.15s cubic-bezier(0.2, 0, 0.38, 0.9),
-    border-color 0.15s cubic-bezier(0.2, 0, 0.38, 0.9),
-    color 0.15s cubic-bezier(0.2, 0, 0.38, 0.9),
-    box-shadow 0.15s cubic-bezier(0.2, 0, 0.38, 0.9);
+    background-color 0.11s ease,
+    border-color 0.11s ease,
+    color 0.11s ease;
 }
 
-/* Base button hover */
-button:hover:not(.select-trigger):not(.cds-header__action):not(.btn--icon-pagination):not(.btn--toolbar),
-.btn:hover,
-.icon-chip:hover,
-.theme-toggle:hover,
-.seg__btn:hover {
-  background-color: var(--color-button-hover-bg);
+/* ── Focus Ring (Unified for ALL buttons) ────────────────────── */
+button:focus-visible,
+.btn:focus-visible,
+.toggle-pill:focus-visible {
+  outline: 2px solid var(--blue) !important;
+  outline-offset: -2px !important;
+  border-color: transparent !important;
 }
 
-/* Focus — IBM standard inner box-shadow ring */
-button:focus:not(.select-trigger):not(.cds-header__action):not(.btn--icon-pagination):not(.btn--toolbar),
-.btn:focus,
-.icon-chip:focus,
-.theme-toggle:focus,
-.seg__btn:focus {
-  outline: 2px solid var(--accent);
-  outline-offset: -2px;
+/* ── Icons Inside Buttons ────────────────────────────────────── */
+.btn .material-symbols-outlined,
+.toggle-pill__icon {
+  font-size: 1.125rem;
+  font-weight: 400;
+  margin-right: 8px;
 }
 
-/* Active — pressed state */
-button:active:not(.toggle-pill):not(.select-trigger):not(.cds-header__action):not(.btn--icon-pagination):not(.btn--toolbar),
-.btn:active,
-.icon-chip:active,
-.theme-toggle:active,
-.seg__btn:active {
-  background-color: var(--surface-active);
-  transform: scale(0.99);
-  /* Minimal scale down */
+/* ── Primary Button (Save, Copy Summary) ──────────────────────────── */
+.btn--primary {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+}
+.btn--primary:hover {
+  background-color: var(--btn-primary-hover);
+}
+.btn--primary:active {
+  background-color: var(--btn-primary-active);
 }
 
-/* Disabled */
-button:disabled,
-.btn:disabled,
-.icon-chip:disabled,
-.theme-toggle:disabled,
-.seg__btn:disabled,
-button[aria-disabled="true"],
-.btn[aria-disabled="true"],
-.icon-chip[aria-disabled="true"],
-.theme-toggle[aria-disabled="true"],
-.seg__btn[aria-disabled="true"] {
-  background-color: var(--surface-3);
-  color: var(--text-muted);
+/* ── Secondary Button (Cancel, Clear) ──────────────────────── */
+.btn--secondary {
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+}
+.btn--secondary:hover {
+  background-color: var(--btn-secondary-hover);
+}
+.btn--secondary:active {
+  background-color: var(--btn-secondary-active);
+}
+
+/* ── Danger Button (Delete) ────────────────────────────────── */
+.btn--danger {
+  background-color: var(--btn-danger-bg);
+  color: var(--btn-danger-text);
+}
+.btn--danger:hover {
+  background-color: var(--btn-danger-hover);
+}
+.btn--danger:active {
+  background-color: color-mix(in srgb, var(--btn-danger-bg) 70%, black);
+}
+
+/* ── Danger Ghost Button (Delete in Footer/Context) ────────── */
+.btn--danger.btn--ghost {
+  background-color: transparent;
+  color: var(--red); /* Red 50 */
   border-color: transparent;
+}
+
+.btn--danger.btn--ghost:hover {
+  background-color: var(--alert-red) !important; /* Red 60 */
+  color: var(--white) !important;
+}
+
+.btn--danger.btn--ghost:active {
+  background-color: color-mix(in srgb, var(--alert-red) 85%, black) !important;
+  color: var(--white) !important;
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  background-color: var(--surface-3) !important;
+  color: var(--text-disabled) !important;
   cursor: not-allowed;
   pointer-events: none;
 }
 
-/* ── Icons Inside Buttons ────────────────────────────────────── */
-.btn .material-symbols-outlined {
-  font-size: 1.125rem;
-  /* 18px */
+/* ==========================================================================
+   REQUIREMENTS TOGGLES (.toggle-pill)
+   Carbon Tertiary/Ghost Button Logic
+   ========================================================================== */
+
+.toggle-pill-grid,
+.toggle-pill__grid {
+  /* Layout handled in layout.css */
+}
+
+.toggle-pill-grid-label,
+.toggle-pill__label {
+  grid-column: 1 / -1;
+  font-size: 0.75rem;
   font-weight: 400;
-  margin-right: 6px;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+  margin-bottom: 4px;
 }
 
-.btn .material-symbols-outlined.icon--trailing {
-  margin-right: 0;
-  margin-left: 6px;
-}
-
-/* ── Primary filled button (Save, Action) ──────────────────────────── */
-.btn--primary {
-  background-color: var(--accent);
-  color: var(--color-on-primary);
-  border: 1px solid transparent;
-  box-shadow: none;
-}
-
-.btn--primary:hover {
-  background-color: color-mix(in srgb, var(--accent) 85%, black);
-  filter: none;
-}
-
-.btn--primary:active {
-  background-color: color-mix(in srgb, var(--accent) 70%, black);
-}
-
-.btn--primary:focus {
-  outline: 2px solid white;
-  outline-offset: -4px;
-}
-
-/* ── Secondary button (Outlined / Structural) ──────────────────────── */
-.btn--secondary {
-  background-color: transparent;
-  color: var(--accent);
-  border: 1px solid var(--accent);
-}
-
-.btn--secondary:hover {
-  background-color: var(--accent);
-  color: var(--color-on-primary);
-}
-
-.btn--secondary:active {
-  background-color: color-mix(in srgb, var(--accent) 85%, black);
-  border-color: color-mix(in srgb, var(--accent) 85%, black);
-}
-
-/* Optional: remove default button styles in Safari/Firefox */
-:where(button, .btn, .theme-toggle, .seg__btn) {
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-/* Destructive button (BEM: .btn--danger) */
-.btn--danger {
-  background-color: #da1e28;
-  color: white;
-  /* IBM standard internal red 60 */
-  border: 1px solid transparent;
-}
-
-.btn--danger:hover {
-  background-color: color-mix(in srgb, #da1e28 85%, black);
-  color: white;
-}
-
-.btn--danger:active {
-  background-color: #a2191f;
-  /* IBM Red 70 */
-  border-color: transparent;
-}
-
-.btn--danger:focus {
-  outline: 2px solid white;
-  outline-offset: -4px;
-}
-
-.btn--danger:disabled,
-.btn--danger[aria-disabled="true"] {
-  background-color: transparent !important;
-  color: var(--text-muted) !important;
-  border-color: var(--border) !important;
-}
-
-/* Compact button (BEM: .btn--compact) — smaller padding/font for modal footers */
-.btn--compact {
-  height: 32px;
-  padding: 0 12px;
-  font-size: 0.875rem;
-}
-
-/* Toggle Buttons (aria-pressed) */
-/* Header icon buttons now styled by .btn-icon-header in _schedule.css */
-
-/* Segmented controls */
-.seg {
+.toggle-pill {
   display: inline-flex;
   align-items: center;
-  padding: 0 2px;
-  border-radius: var(--control-radius);
-  border: none;
-  background: var(--color-button-bg);
-  height: var(--control-height-icon);
+  justify-content: center;
+
+  height: var(--input-height, 40px);
+  padding: 0 16px;
+
+  font-size: 0.875rem;
+  font-weight: 400;
+  border-radius: 0px;
+  cursor: pointer;
+  user-select: none;
+
+  /* The Fix: Solid background, transparent border */
+  background-color: var(--btn-ghost-bg);
+  color: var(--btn-ghost-text);
+  border: 1px solid var(--btn-ghost-border);
+
+  transition:
+    background-color 0.11s ease,
+    border-color 0.11s ease,
+    color 0.11s ease,
+    box-shadow 0.11s ease;
 }
 
-.seg__btn {
-  border: 0;
-  background: transparent;
-  height: calc(var(--control-height-icon) - 4px);
-  padding: 0 8px;
+.toggle-pill:hover {
+  background-color: var(--btn-ghost-hover-bg);
+  color: var(--text-primary); /* Brightens the text slightly on hover */
 }
 
-.seg__btn[aria-pressed="true"] {
-  background: var(--color-primary);
-  border: none;
-  color: var(--color-on-primary);
+.toggle-pill[aria-pressed="true"],
+.toggle-pill.is-active {
+  background-color: var(--btn-ghost-active-bg);
+  border-color: var(--btn-ghost-active-border);
+  color: var(--white);
+  font-weight: 600;
+
+  /* Carbon trick: Use an inset box-shadow to make the blue border 
+     look 2px thick without shifting the grid layout */
+  box-shadow: inset 0 0 0 1px var(--btn-ghost-active-border);
 }
 
-/* Icon button */
-/* Icon button - styling moved to .icon-btn in _icons.css */
+.toggle-pill .toggle-pill__icon {
+  opacity: 0.7;
+  transition: opacity 0.11s ease;
+}
 
-/* Inline label link - subtle text link within labels */
+.toggle-pill:hover .toggle-pill__icon,
+.toggle-pill[aria-pressed="true"] .toggle-pill__icon,
+.toggle-pill.is-active .toggle-pill__icon {
+  opacity: 1;
+}
+
+/* --- Inline label link & Layout Utils (Retained from original) --- */
 label .label-link {
   background: none;
   border: none;
@@ -227,20 +198,10 @@ label .label-link {
   font-weight: 400;
   text-decoration: none;
   cursor: pointer;
-  vertical-align: baseline;
-  line-height: 1.4;
   display: inline;
-  height: auto;
 }
-
 label .label-link:hover {
-  color: var(--accent);
   text-decoration: underline;
-}
-
-label .label-link:active {
-  color: var(--accent);
-  opacity: 0.8;
 }
 
 .bus-icons {
@@ -254,81 +215,6 @@ label .label-link:active {
   justify-content: center;
   gap: 1px;
   z-index: 5;
-}
-
-/* Toggle pill group (BEM: .toggle-pill__grid, .toggle-pill__label) */
-.toggle-pill-grid,
-.toggle-pill__grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.toggle-pill-grid-label,
-.toggle-pill__label {
-  grid-column: 1 / -1;
-  font-size: 0.75rem;
-  font-weight: 400;
-  color: var(--text-muted);
-  letter-spacing: 0.02em;
-  text-transform: capitalize;
-  /* Tighter gap from label to first row than between pill rows */
-  margin-bottom: calc(4px - 8px);
-}
-
-/* TOGGLE BUTTONS IN TRIP EDITOR */
-.toggle-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-size: 0.8125rem;
-  font-weight: 400;
-  padding: 6px 14px;
-  line-height: 1;
-  border-radius: 0;
-  border: 1px solid var(--gray-80);
-  background: transparent;
-  color: var(--text-muted);
-  cursor: pointer;
-  -webkit-user-select: none;
-  user-select: none;
-  transition:
-    background 160ms ease,
-    border-color 160ms ease,
-    color 160ms ease;
-}
-
-.toggle-pill:hover {
-  border-color: var(--text-secondary);
-  color: var(--text);
-}
-
-.toggle-pill-icon,
-.toggle-pill__icon {
-  font-size: 1.125rem;
-  /* 18px */
-  font-weight: 400;
-  margin-right: 6px;
-  /* Icon leading for consistency */
-  opacity: 0.6;
-  transition: opacity 160ms ease;
-}
-
-.toggle-pill[aria-pressed="true"] {
-  background: var(--accent);
-  color: var(--color-on-primary);
-  border-color: transparent;
-}
-
-.toggle-pill[aria-pressed="true"] .toggle-pill__icon {
-  opacity: 1;
-}
-
-/* Focus — border-color only, same as inputs */
-.toggle-pill:focus {
-  outline: none;
-  border-color: var(--color-primary) !important;
 }
 
 /* Card Close Button (Moved from legacy UI components) */
@@ -393,7 +279,7 @@ label .label-link:active {
   color: var(--accent);
   border: 1px solid transparent;
   vertical-align: middle;
-  text-shadow: var(--text-shadow);
+  text-shadow: none;
 }
 
 .badge-error,
@@ -401,7 +287,7 @@ label .label-link:active {
   background: color-mix(in srgb, var(--color-danger) 33%, transparent);
   color: var(--color-danger);
   border: 1px solid var(--color-danger);
-  text-shadow: var(--text-shadow);
+  text-shadow: none;
 }
 
 /* ==========================================================================
@@ -429,10 +315,7 @@ label .label-link:active {
   text-shadow: var(--text-shadow);
 }
 
-[data-theme="light"] .icon-bus--lift,
-[data-theme="light"] .icon-bus--sleeper {
-  text-shadow: var(--text-shadow);
-}
+/* Light mode icon shadow overrides removed */
 
 /* ── 2. Trip Bar Req Icons ────────────────────────────────── */
 .icon-req {
@@ -566,251 +449,6 @@ label .label-link:active {
 }
 
 /* ==========================================================================
-   5-COMPONENTS / MENUS
-   Dropdown menus and context menus (BEM: .dropdown__*, .context-menu__*)
-   ========================================================================== */
-
-.dropdown-wrapper,
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-menu,
-.dropdown__menu,
-.context-menu {
-  position: absolute;
-  z-index: var(--z-dropdown);
-  min-width: 200px;
-  padding: 0;
-
-  background: var(--gray-90);
-  border: 1px solid var(--border);
-
-  border-radius: 0px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-
-  overflow: hidden;
-  animation: menuPopIn 120ms ease-out;
-  display: flex;
-  flex-direction: column;
-  gap: 0px;
-}
-
-.dropdown-menu,
-.dropdown__menu {
-  top: calc(100% + 4px);
-  inset-inline-end: 0;
-}
-
-/* Open upward when near bottom edge (avoids card resize) */
-.dropdown__menu.dropdown__menu--up {
-  top: auto;
-  bottom: calc(100% + 4px);
-}
-
-.context-menu {
-  top: 0;
-  inset-inline-start: 0;
-}
-
-.dropdown-menu[hidden],
-.dropdown__menu[hidden],
-.context-menu[hidden] {
-  display: none;
-}
-
-.context-header,
-.context-menu__header {
-  padding: 8px 12px;
-  font-size: 0.6875rem;
-  /* 11px */
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-
-  color: var(--text-muted);
-  opacity: 0.85;
-
-  text-align: start;
-  border-bottom: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
-  margin-bottom: 4px;
-}
-
-.dropdown-divider,
-.dropdown__divider {
-  border: 0;
-  height: 1px;
-  margin: 4px 0;
-  background: var(--border);
-}
-
-.dropdown-item,
-.dropdown__item,
-.context-item,
-.context-menu__item {
-  display: flex;
-  align-items: center;
-  /* Already centers vertically */
-  justify-content: flex-start;
-  gap: 8px;
-
-  width: 100%;
-  padding: 8px 16px;
-  /* Increased vertical padding for better centering */
-  height: 28px;
-  /* Ensure consistent height for centering */
-
-  border: none;
-  border-radius: 0px;
-  background: transparent;
-
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text);
-
-  text-align: start;
-  cursor: pointer;
-
-  transition:
-    background 120ms ease;
-}
-
-.dropdown-icon,
-.dropdown__icon,
-.context-item .material-symbols-outlined,
-.context-menu__item .material-symbols-outlined {
-  display: inline-flex;
-  width: 20px;
-  flex: 0 0 auto;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.125rem;
-  /* 18px */
-  opacity: 0.85;
-}
-
-.dropdown-icon.is-active,
-.dropdown__icon.is-active {
-  color: #fff;
-}
-
-.dropdown-item:hover,
-.dropdown__item:hover,
-.context-item:hover,
-.context-menu__item:hover {
-  background: var(--overlay-hover);
-}
-
-.dropdown-item:active,
-.dropdown__item:active,
-.context-item:active,
-.context-menu__item:active {
-  background: var(--overlay-active);
-}
-
-/* ==========================================================================
-   CUSTOM SELECT DROPDOWN (glass effect for trip editor status fields)
-   Uses same glass styling as dropdown__menu
-   ========================================================================== */
-.select-dropdown {
-  position: relative;
-  display: block;
-  width: 100%;
-}
-
-.select-dropdown .dropdown__menu {
-  inset-inline-start: 0;
-  inset-inline-end: 0;
-  min-width: 100%;
-}
-
-/* Bus grid: limit dropdown height to avoid page scroll */
-#busGrid .select-dropdown .dropdown__menu {
-  max-height: 240px;
-  overflow-y: auto;
-}
-
-/* Layout + dropdown-only overrides. Form-field look (border, shadow, hover, focus) lives in _forms.css */
-.select-trigger {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  min-width: 0;
-  text-align: center;
-  border: 1px solid var(--color-input-border);
-}
-
-.select-trigger:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.select-trigger::after {
-  content: "";
-  width: 14px;
-  height: 14px;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-  background-repeat: no-repeat;
-  background-position: center;
-  flex-shrink: 0;
-}
-
-/* Status colors on trigger (Directly semantic) */
-.select-trigger.status-pending {
-  background-color: transparent;
-  border-color: var(--color-status-pending);
-}
-
-.select-trigger.status-ok {
-  background-color: transparent;
-  border-color: var(--color-status-ok);
-}
-
-.select-trigger.status-assigned {
-  background-color: transparent;
-  border-color: var(--color-status-assigned);
-}
-
-.select-trigger.status-blue {
-  background-color: transparent;
-  border-color: var(--color-status-blue);
-}
-
-/* Status colors inside dropown options */
-.dropdown-icon.status-pending {
-  color: var(--color-status-pending);
-}
-
-.dropdown-icon.status-ok {
-  color: var(--color-status-ok);
-}
-
-.dropdown-icon.status-assigned {
-  color: var(--color-status-assigned);
-}
-
-.dropdown-icon.status-blue {
-  color: var(--color-status-blue);
-}
-
-/* Match input focus ring exactly */
-.select-trigger.is-open {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);
-}
-
-.select-dropdown .select-native {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-}
-
-/* ==========================================================================
    5-COMPONENTS / LOADING OVERLAY
    BEM: .loading-overlay (block), .loading-overlay__backdrop, .loading-overlay__card, etc.
    ========================================================================== */
@@ -932,8 +570,7 @@ label .label-link:active {
    ========================================================================== */
 
 .card {
-  background: var(--surface-container-high);
-  border-radius: 24px;
+  background: var(--surface-2);
   /* More premium, rounded corners like the 'Create' button */
   /* box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.5); */
   border: none !important;
@@ -979,9 +616,9 @@ label .label-link:active {
   width: 100%;
   flex-shrink: 0;
   padding: 0 16px;
-  border-bottom: 1px solid var(--border);
-  background-color: var(--gray-100);
-  margin-bottom: 8px;
+  border-bottom: 1px solid var(--layer-02-border);
+  background-color: var(--layer-02);
+  margin-bottom: 16px;
 }
 
 .panel-header__title {
@@ -1022,11 +659,11 @@ label .label-link:active {
 }
 
 .panel-header__action:hover {
-  background-color: var(--gray-80);
+  background-color: var(--red);
 }
 
 .panel-header__action:active {
-  background-color: var(--gray-60);
+  background-color: var(--surface-3);
 }
 
 .panel-header__action:focus-visible {
@@ -1035,7 +672,7 @@ label .label-link:active {
 }
 
 .panel-header__action[aria-pressed="true"] {
-  background-color: var(--gray-90);
+  background-color: var(--red);
   border-bottom-color: var(--accent);
 }
 
@@ -1077,9 +714,9 @@ label .label-link:active {
   flex-wrap: wrap;
   padding: 16px;
   margin-top: 0;
-  border-top: 1px solid var(--border);
-  background: var(--gray-100);
-  border-radius: 0 0 24px 24px;
+  border-top: 1px solid var(--layer-02-border);
+  background: var(--layer-02);
+  border-radius: 0;
   /* Match card radius if visible */
 }
 
@@ -1087,4 +724,77 @@ label .label-link:active {
   min-height: 0;
   padding: 4px;
   border-top: none;
+}
+
+/* ==========================================================================
+   ACCORDION (IBM Carbon Style)
+   ========================================================================== */
+.cds-accordion {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  /* Removed border-top and margin-top to allow tight fit in subsection */
+}
+
+.cds-accordion__item {
+  border-bottom: 1px solid var(--layer-02-border);
+}
+
+.cds-accordion__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 40px; /* Exact height for 3 items = 120px */
+  padding: 0 8px; /* Matches form-grid internal alignment */
+  margin: 0;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background-color 0.11s ease;
+}
+
+.cds-accordion__heading:hover {
+  background-color: var(--layer-03);
+}
+
+.cds-accordion__heading:focus-visible {
+  outline: 2px solid var(--focus-ring-color);
+  outline-offset: -2px;
+}
+
+.cds-accordion__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cds-accordion__title .material-symbols-outlined {
+  font-size: 1.125rem; /* 18px */
+  color: var(--text-secondary);
+}
+
+.cds-accordion__arrow {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  transition: transform 0.11s ease;
+}
+
+/* Rotate chevron when expanded */
+.cds-accordion__heading[aria-expanded="true"] .cds-accordion__arrow {
+  transform: rotate(180deg);
+}
+
+.cds-accordion__content {
+  padding: 16px 8px;
+  background-color: transparent;
+}
+
+/* Utilize your existing is-hidden class */
+.cds-accordion__content.is-hidden {
+  display: none;
 }

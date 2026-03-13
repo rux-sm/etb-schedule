@@ -156,6 +156,8 @@ const dom = {
   saveBtn: $("saveBtn"),
   deleteBtn: $("deleteBtn"),
   newBtn: $("newBtn"),
+  requirementsBtn: $("requirementsBtn"),
+  requirementsSection: $("requirementsSection"),
   assignmentsBtn: $("assignmentsBtn"),
   itineraryModal: $("itineraryModal"),
   itineraryField: $("itinerary"),
@@ -260,7 +262,6 @@ const dom = {
 
   // Envelope Modal & Overrides
   envelopeBtn: $("envelopeBtn"),
-  itineraryBtn: $("itineraryBtn"),
   envelopeOverridesSection: $("envelopeOverridesSection"),
   envelopeNote1: $("envelopeNote1"),
   envelopeNote2: $("envelopeNote2"),
@@ -283,6 +284,7 @@ const dom = {
   ctxViewBtn: $("ctxViewBtn"),
   ctxEnvelopeBtn: $("ctxEnvelopeBtn"),
   ctxOpenItineraryPdfBtn: $("ctxOpenItineraryPdfBtn"),
+  ctxEditTripInfoBtn: $("ctxEditTripInfoBtn"),
   ctxAttachItineraryPdfBtn: $("ctxAttachItineraryPdfBtn"),
   ctxRemoveItineraryPdfBtn: $("ctxRemoveItineraryPdfBtn"),
   ctxCopyBtn: $("ctxCopyBtn"),
@@ -1059,6 +1061,22 @@ function startProgressCreep({ from = 70, to = 95, everyMs = 250, label = "Verify
 // ======================================================
 // 13) STATUS SELECT CLASSES & ICONS
 // ======================================================
+function getEffectiveDriverStatus(t) {
+  const assigns = state.assignmentsByTripKey?.[String(t?.tripKey)] || [];
+  const statuses = [];
+  for (const a of assigns) {
+    const d1 = String(a.driver1 || "").trim();
+    const d2 = String(a.driver2 || "").trim();
+    if (d1 && d1 !== "None") statuses.push(String(a.driver1Status || "").trim() || "Pending");
+    if (d2 && d2 !== "None") statuses.push(String(a.driver2Status || "").trim() || "Pending");
+  }
+  if (statuses.length === 0) return (t?.driverStatus || "Pending").trim();
+  const statusOrder = { Pending: 0, Assigned: 1, Confirmed: 2, "Driver Info Sent": 3 };
+  return statuses.reduce((a, b) =>
+    (statusOrder[a] ?? 0) <= (statusOrder[b] ?? 0) ? a : b,
+  );
+}
+
 function getStatusIcon(fieldId, statusValue) {
   const s = String(statusValue || "")
     .trim()
@@ -1284,6 +1302,21 @@ function syncEmptyStateForForm() {
         updateStatusSelect(invSel);
       });
     }
+
+    // Auto-set Contact status to Received when both Trip contact and Trip contact phone are filled
+    const syncContactStatusFromEnvelope = () => {
+      const contactSel = $("contactStatus");
+      const envelopeContact = String($("envelopeTripContact")?.value || "").trim();
+      const envelopePhone = String($("envelopeTripPhone")?.value || "").trim();
+      if (contactSel && envelopeContact && envelopePhone) {
+        contactSel.value = "Received";
+        contactSel.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    };
+    [$("envelopeTripContact"), $("envelopeTripPhone")].filter(Boolean).forEach((el) => {
+      el.addEventListener("input", syncContactStatusFromEnvelope);
+      el.addEventListener("change", syncContactStatusFromEnvelope);
+    });
 
     form.addEventListener("reset", () =>
       setTimeout(() => {
@@ -2352,10 +2385,11 @@ function _renderAgendaInner() {
         badgeEl.classList.toggle("is-ok", !pending && !blue && !yellow && !!s);
       }
 
+      const effectiveDriverStatus = getEffectiveDriverStatus(t);
       if (bar._bI) setBadge(bar._bI, t.itineraryStatus);
       if (bar._bC) setBadge(bar._bC, t.contactStatus);
       if (bar._b$) setBadge(bar._b$, t.paymentStatus);
-      if (bar._bD) setBadge(bar._bD, t.driverStatus);
+      if (bar._bD) setBadge(bar._bD, effectiveDriverStatus);
       if (bar._bInv) setBadge(bar._bInv, t.invoiceStatus);
 
       // Swap payment status icon based on value
@@ -2388,7 +2422,7 @@ function _renderAgendaInner() {
         bar._bD.classList.add("has-action");
         const glyph = bar._bD.querySelector(".schedule-grid__trip-bar__badge-glyph");
         if (glyph) {
-          const iconName = getStatusIcon("driverStatus", t.driverStatus);
+          const iconName = getStatusIcon("driverStatus", effectiveDriverStatus);
           glyph.textContent = iconName || "person";
           glyph.dataset.action = "showDriverContact";
           glyph.dataset.tripkey = t.tripKey;
@@ -2440,7 +2474,7 @@ function _renderAgendaInner() {
       const isUnconfirmed = pay === "pending quote" || pay === "quoted" || pay === "pending";
       bar.classList.toggle("unconfirmed", isUnconfirmed);
 
-      const ds = String(t.driverStatus || "")
+      const ds = String(effectiveDriverStatus || "")
         .trim()
         .toLowerCase();
       bar.classList.toggle("driverstatus-pending", ds === "pending");
@@ -3101,6 +3135,27 @@ function getDriverOptions() {
   return base.concat(mapped);
 }
 
+const DRIVER_STATUS_OPTIONS = [
+  { value: "Pending", label: "Pending" },
+  { value: "Assigned", label: "Assigned" },
+  { value: "Confirmed", label: "Confirmed" },
+  { value: "Driver Info Sent", label: "Driver Info Sent" },
+];
+
+function makeDriverStatusSelect(name) {
+  const sel = document.createElement("select");
+  sel.name = name;
+  sel.setAttribute("aria-label", "Driver status");
+  DRIVER_STATUS_OPTIONS.forEach((o) => {
+    const opt = document.createElement("option");
+    opt.value = o.value;
+    opt.textContent = o.label;
+    sel.appendChild(opt);
+  });
+  sel.value = "Pending";
+  return sel;
+}
+
 function syncBusSelectEmptyState() {
   document.querySelectorAll("#busGrid select").forEach((el) => {
     const v = (el.value ?? "").trim();
@@ -3129,28 +3184,31 @@ function updateBusRowVisibility() {
     const enabled = raw > 0 && show;
 
     const busCell = r.busSel.closest(".select-dropdown") || r.busSel;
-    const d1Cell = r.d1Sel.closest(".select-dropdown") || r.d1Sel;
-    const d2Cell = r.d2Sel.closest(".select-dropdown") || r.d2Sel;
     busCell.classList.toggle("is-hidden", !show);
-    d1Cell.classList.toggle("is-hidden", !show);
-    d2Cell.classList.toggle("is-hidden", !show);
+    r.d1Block.classList.toggle("is-hidden", !show);
+    r.d2Block.classList.toggle("is-hidden", !show);
 
     r.busSel.disabled = !enabled;
     r.d1Sel.disabled = !enabled;
+    r.d1StatusSel.disabled = !enabled;
     r.d2Sel.disabled = !enabled;
+    r.d2StatusSel.disabled = !enabled;
 
     // Disable custom dropdown triggers when select is disabled (native select is hidden)
     const busTrigger = busCell.querySelector?.(".select-trigger");
-    const d1Trigger = d1Cell.querySelector?.(".select-trigger");
-    const d2Trigger = d2Cell.querySelector?.(".select-trigger");
+    [r.d1Sel, r.d1StatusSel, r.d2Sel, r.d2StatusSel].forEach((sel) => {
+      const cell = sel.closest(".select-dropdown") || sel.parentElement;
+      const trigger = cell?.querySelector?.(".select-trigger");
+      if (trigger) trigger.disabled = !enabled;
+    });
     if (busTrigger) busTrigger.disabled = !enabled;
-    if (d1Trigger) d1Trigger.disabled = !enabled;
-    if (d2Trigger) d2Trigger.disabled = !enabled;
 
     if (!show) {
       r.busSel.value = "None";
       r.d1Sel.value = "None";
+      r.d1StatusSel.value = "Pending";
       r.d2Sel.value = "None";
+      r.d2StatusSel.value = "Pending";
     }
   });
 
@@ -3177,15 +3235,33 @@ function buildBusRowsOnce() {
   for (let i = 1; i <= 10; i++) {
     const busSel = makeSelect(`bus${i}`);
     const d1Sel = makeSelect(`bus${i}_driver1`);
+    const d1StatusSel = makeDriverStatusSelect(`bus${i}_driver1Status`);
     const d2Sel = makeSelect(`bus${i}_driver2`);
+    const d2StatusSel = makeDriverStatusSelect(`bus${i}_driver2Status`);
 
     busSel.classList.add("bus-assign__cell");
-    d1Sel.classList.add("bus-assign__cell");
-    d2Sel.classList.add("bus-assign__cell");
 
-    dom.busGrid.append(busSel, d1Sel, d2Sel);
+    const d1Block = document.createElement("div");
+    d1Block.className = "bus-assign__driver-block";
+    d1Block.appendChild(d1Sel);
+    const d1StatusWrap = document.createElement("div");
+    d1StatusWrap.className = "bus-assign__status-wrap";
+    d1StatusSel.classList.add("bus-assign__status-cell");
+    d1StatusWrap.appendChild(d1StatusSel);
+    d1Block.appendChild(d1StatusWrap);
 
-    state.busRows.push({ row: null, busSel, d1Sel, d2Sel });
+    const d2Block = document.createElement("div");
+    d2Block.className = "bus-assign__driver-block";
+    d2Block.appendChild(d2Sel);
+    const d2StatusWrap = document.createElement("div");
+    d2StatusWrap.className = "bus-assign__status-wrap";
+    d2StatusSel.classList.add("bus-assign__status-cell");
+    d2StatusWrap.appendChild(d2StatusSel);
+    d2Block.appendChild(d2StatusWrap);
+
+    dom.busGrid.append(busSel, d1Block, d2Block);
+
+    state.busRows.push({ row: null, busSel, d1Sel, d1StatusSel, d2Sel, d2StatusSel, d1Block, d2Block });
   }
 
   refreshBusSelectOptions();
@@ -4289,6 +4365,14 @@ function setTripFormFromState(tripKey) {
     if (el) el.dispatchEvent(new Event("change", { bubbles: true }));
   });
   if (typeof updateInvoiceNumberVisibility === "function") updateInvoiceNumberVisibility();
+  
+  // Collapse overrides accordion by default when loading a trip
+  if (dom.requirementsBtn) dom.requirementsBtn.setAttribute("aria-expanded", "false");
+  if (dom.requirementsSection) dom.requirementsSection.classList.add("is-hidden");
+  if (dom.assignmentsBtn) dom.assignmentsBtn.setAttribute("aria-expanded", "false");
+  if (dom.assignmentsOverridesSection) dom.assignmentsOverridesSection.classList.add("is-hidden");
+  if (dom.envelopeBtn) dom.envelopeBtn.setAttribute("aria-expanded", "false");
+  if (dom.envelopeOverridesSection) dom.envelopeOverridesSection.classList.add("is-hidden");
 
   dom.itineraryField.value = t.itinerary || "";
   $("notes").value = t.notes || "";
@@ -4298,10 +4382,13 @@ function setTripFormFromState(tripKey) {
   dom.busesNeeded?.dispatchEvent(new Event("change", { bubbles: true }));
   setModeEdit(String(t.tripKey || tripKey), String(t.tripId || ""));
 
+  const fallbackDriverStatus = t.driverStatus || "Pending";
   state.busRows.forEach((r) => {
     r.busSel.value = "None";
     r.d1Sel.value = "None";
+    r.d1StatusSel.value = "Pending";
     r.d2Sel.value = "None";
+    r.d2StatusSel.value = "Pending";
   });
   assigns.forEach((a, i) => {
     const row = state.busRows[i];
@@ -4309,6 +4396,8 @@ function setTripFormFromState(tripKey) {
     if (a.busId) row.busSel.value = String(a.busId);
     if (a.driver1) row.d1Sel.value = String(a.driver1);
     if (a.driver2) row.d2Sel.value = String(a.driver2);
+    row.d1StatusSel.value = a.driver1Status || fallbackDriverStatus;
+    row.d2StatusSel.value = a.driver2Status || fallbackDriverStatus;
   });
   updateBusRowVisibility();
   state.busRows.forEach((r) => {
@@ -4354,7 +4443,9 @@ async function openTripForEdit(tripKey) {
   state.busRows.forEach((r) => {
     r.busSel.value = "None";
     r.d1Sel.value = "None";
+    r.d1StatusSel.value = "Pending";
     r.d2Sel.value = "None";
+    r.d2StatusSel.value = "Pending";
   });
   // Reset badges/status
   $("tripIdBadge").textContent = "";
@@ -4441,11 +4532,14 @@ async function openTripForEdit(tripKey) {
     dom.busesNeeded?.dispatchEvent(new Event("change", { bubbles: true }));
     setModeEdit(String(t.tripKey || tripKey), String(t.tripId || ""));
 
-    state.busRows.forEach((r) => {
-      r.busSel.value = "None";
-      r.d1Sel.value = "None";
-      r.d2Sel.value = "None";
-    });
+  const fallbackDriverStatus = t.driverStatus || "Pending";
+  state.busRows.forEach((r) => {
+    r.busSel.value = "None";
+    r.d1Sel.value = "None";
+    r.d1StatusSel.value = "Pending";
+    r.d2Sel.value = "None";
+    r.d2StatusSel.value = "Pending";
+  });
 
     const assigns = assignResp?.ok && assignResp.assignments ? assignResp.assignments : [];
     assigns.forEach((a) => {
@@ -4457,6 +4551,8 @@ async function openTripForEdit(tripKey) {
       if (a.busId) row.busSel.value = String(a.busId);
       if (a.driver1) row.d1Sel.value = String(a.driver1);
       if (a.driver2) row.d2Sel.value = String(a.driver2);
+      row.d1StatusSel.value = a.driver1Status || fallbackDriverStatus;
+      row.d2StatusSel.value = a.driver2Status || fallbackDriverStatus;
     });
 
     updateBusRowVisibility();
@@ -5089,6 +5185,16 @@ function wireDelegatedBarEvents() {
   });
 
   // Wire Context Actions
+  dom.ctxEditTripInfoBtn?.addEventListener("click", async () => {
+    if (activeContextTripKey) {
+      if (dom.tripKey.value !== activeContextTripKey) {
+        await openTripForEdit(activeContextTripKey);
+      }
+      openItineraryModal();
+      closeTripContextMenu();
+    }
+  });
+
   dom.ctxEditBtn?.addEventListener("click", () => {
     if (activeContextTripKey) {
       openTripForEdit(activeContextTripKey);
@@ -5231,6 +5337,7 @@ function wireDelegatedBarEvents() {
       const trip = state.tripByKey?.[tripKey];
       if (trip) {
         trip.itineraryPdfUrl = pdfUrl;
+        trip.itineraryStatus = "Received";
         scheduleAgendaReflow();
       }
 
@@ -5827,24 +5934,72 @@ function wireEvents() {
   // applyWeekStart moved to global scope
   // Old buttons (weekStartSunBtn) removed from DOM
 
-  dom.assignmentsBtn?.addEventListener("click", () => {
-    if (dom.assignmentsOverridesSection) {
-      dom.assignmentsOverridesSection.classList.toggle("is-hidden");
-      if (!dom.assignmentsOverridesSection.classList.contains("is-hidden") && dom.envelopeOverridesSection) {
+  // Carbon Accordion Logic: Trip Requirements
+  dom.requirementsBtn?.addEventListener("click", () => {
+    const isExpanded = dom.requirementsBtn.getAttribute("aria-expanded") === "true";
+    const newState = !isExpanded;
+
+    // Toggle current
+    dom.requirementsBtn.setAttribute("aria-expanded", String(newState));
+    dom.requirementsSection?.classList.toggle("is-hidden", !newState);
+
+    // Auto-close others if opening Requirements
+    if (newState) {
+      if (dom.assignmentsBtn && dom.assignmentsOverridesSection) {
+        dom.assignmentsBtn.setAttribute("aria-expanded", "false");
+        dom.assignmentsOverridesSection.classList.add("is-hidden");
+      }
+      if (dom.envelopeBtn && dom.envelopeOverridesSection) {
+        dom.envelopeBtn.setAttribute("aria-expanded", "false");
         dom.envelopeOverridesSection.classList.add("is-hidden");
       }
     }
   });
 
+  // Carbon Accordion Logic: Driver Assignments
+  dom.assignmentsBtn?.addEventListener("click", () => {
+    const isExpanded = dom.assignmentsBtn.getAttribute("aria-expanded") === "true";
+    const newState = !isExpanded;
+
+    // Toggle current
+    dom.assignmentsBtn.setAttribute("aria-expanded", String(newState));
+    dom.assignmentsOverridesSection?.classList.toggle("is-hidden", !newState);
+
+    // Auto-close others if opening Assignments
+    if (newState) {
+      if (dom.requirementsBtn && dom.requirementsSection) {
+        dom.requirementsBtn.setAttribute("aria-expanded", "false");
+        dom.requirementsSection.classList.add("is-hidden");
+      }
+      if (dom.envelopeBtn && dom.envelopeOverridesSection) {
+        dom.envelopeBtn.setAttribute("aria-expanded", "false");
+        dom.envelopeOverridesSection.classList.add("is-hidden");
+      }
+    }
+  });
+
+  // Carbon Accordion Logic: Envelope Overrides
   dom.envelopeBtn?.addEventListener("click", () => {
-    if (dom.envelopeOverridesSection) {
-      dom.envelopeOverridesSection.classList.toggle("is-hidden");
-      if (!dom.envelopeOverridesSection.classList.contains("is-hidden") && dom.assignmentsOverridesSection) {
+    const isExpanded = dom.envelopeBtn.getAttribute("aria-expanded") === "true";
+    const newState = !isExpanded;
+
+    // Toggle current
+    dom.envelopeBtn.setAttribute("aria-expanded", String(newState));
+    dom.envelopeOverridesSection?.classList.toggle("is-hidden", !newState);
+
+    // Auto-close others if opening Envelope
+    if (newState) {
+      if (dom.requirementsBtn && dom.requirementsSection) {
+        dom.requirementsBtn.setAttribute("aria-expanded", "false");
+        dom.requirementsSection.classList.add("is-hidden");
+      }
+      if (dom.assignmentsBtn && dom.assignmentsOverridesSection) {
+        dom.assignmentsBtn.setAttribute("aria-expanded", "false");
         dom.assignmentsOverridesSection.classList.add("is-hidden");
       }
     }
   });
-  dom.itineraryBtn?.addEventListener("click", openItineraryModal);
+
 
   dom.itineraryModal.addEventListener("click", (e) => {
     if (e.target.closest("[data-close]")) closeItineraryModal();
@@ -6046,6 +6201,8 @@ function wireEvents() {
           busId,
           driver1,
           driver2,
+          driver1Status: String(row.d1StatusSel?.value || "Pending").trim(),
+          driver2Status: String(row.d2StatusSel?.value || "Pending").trim(),
         });
       }
     }
@@ -6062,6 +6219,36 @@ function wireEvents() {
       return;
     }
 
+    // Derive trip-level driverStatus from per-driver status (for backend compatibility)
+    const driverStatuses = [];
+    for (let i = 0; i < numBuses; i++) {
+      const row = state.busRows[i];
+      if (!row) continue;
+      const busId = String(row.busSel.value || "").trim();
+      if (!busId || busId === "None") continue;
+      const d1 = String(row.d1Sel.value || "").trim();
+      const d2 = String(row.d2Sel.value || "").trim();
+      if (d1 && d1 !== "None") driverStatuses.push(String(row.d1StatusSel?.value || "Pending").trim());
+      if (d2 && d2 !== "None") driverStatuses.push(String(row.d2StatusSel?.value || "Pending").trim());
+    }
+    const statusOrder = { Pending: 0, Assigned: 1, Confirmed: 2, "Driver Info Sent": 3 };
+    const worst = driverStatuses.length
+      ? driverStatuses.reduce((a, b) =>
+          (statusOrder[a] ?? 0) <= (statusOrder[b] ?? 0) ? a : b,
+        )
+      : "Pending";
+    $("driverStatus").value = worst;
+
+    // Auto-set Contact status to Received when both Trip contact and Trip contact phone are filled
+    const envelopeContact = String($("envelopeTripContact")?.value || "").trim();
+    const envelopePhone = String($("envelopeTripPhone")?.value || "").trim();
+    let contactStatusValue = $("contactStatus").value;
+    if (envelopeContact && envelopePhone) {
+      contactStatusValue = "Received";
+      $("contactStatus").value = contactStatusValue;
+      $("contactStatus").dispatchEvent(new Event("change", { bubbles: true }));
+    }
+
     // Construct trip from form
     const optimisticTrip = {
       tripKey: key,
@@ -6075,7 +6262,7 @@ function wireEvents() {
       spotTime: $("spotTime").value,
       arrivalTime: $("arrivalTime").value,
       itineraryStatus: $("itineraryStatus").value,
-      contactStatus: $("contactStatus").value,
+      contactStatus: contactStatusValue,
       paymentStatus: $("paymentStatus").value,
       driverStatus: $("driverStatus").value,
       invoiceStatus: $("invoiceStatus").value,
@@ -6179,7 +6366,9 @@ function wireEvents() {
     state.busRows.forEach((r) => {
       r.busSel.value = "None";
       r.d1Sel.value = "None";
+      r.d1StatusSel.value = "Pending";
       r.d2Sel.value = "None";
+      r.d2StatusSel.value = "Pending";
       r.busSel.dispatchEvent(new Event("change", { bubbles: true }));
       r.d1Sel.dispatchEvent(new Event("change", { bubbles: true }));
       r.d2Sel.dispatchEvent(new Event("change", { bubbles: true }));
@@ -6190,6 +6379,14 @@ function wireEvents() {
       (id) => updateStatusSelect($(id)),
     );
     updateInvoiceNumberVisibility();
+    
+    // Collapse overrides accordion by default when resetting form
+    if (dom.requirementsBtn) dom.requirementsBtn.setAttribute("aria-expanded", "false");
+    if (dom.requirementsSection) dom.requirementsSection.classList.add("is-hidden");
+    if (dom.assignmentsBtn) dom.assignmentsBtn.setAttribute("aria-expanded", "false");
+    if (dom.assignmentsOverridesSection) dom.assignmentsOverridesSection.classList.add("is-hidden");
+    if (dom.envelopeBtn) dom.envelopeBtn.setAttribute("aria-expanded", "false");
+    if (dom.envelopeOverridesSection) dom.envelopeOverridesSection.classList.add("is-hidden");
 
     // Form has just been reset after save/delete; treat as clean.
     state.tripFormDirty = false;

@@ -3,30 +3,49 @@
    Browser resets, box-sizing, custom scrollbars
    ========================================================================== */
 
-/* ── SCROLLBARS — Overlay style (hide gutter/track) ────────────────────── */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+/* ── SCROLLBARS — Carbon Style & Layout Shift Fix ────────────────────── */
+.app-layout__sidebar--left .card__content,
+.app-layout__sidebar--right .card__content,
+.schedule-grid-container {
+  scrollbar-gutter: stable; /* The Magic Fix: Always reserve scrollbar space so nothing jumps */
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
+.app-layout__sidebar--left .card__content::-webkit-scrollbar,
+.app-layout__sidebar--right .card__content::-webkit-scrollbar,
+.schedule-grid-container::-webkit-scrollbar {
+  width: 8px; /* Carbon keeps scrollbars extremely slim */
+  height: 8px; /* For horizontal scrollbars if ever needed */
 }
 
-::-webkit-scrollbar-thumb {
-  background-color: var(--surface-container-highest);
-  border-radius: 999px;
-  border: 2px solid transparent;
-  background-clip: content-box;
+.app-layout__sidebar--left .card__content::-webkit-scrollbar-track,
+.app-layout__sidebar--right .card__content::-webkit-scrollbar-track,
+.schedule-grid-container::-webkit-scrollbar-track {
+  background: transparent; /* Lets the panel background show through */
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background-color: var(--accent);
+.app-layout__sidebar--left .card__content::-webkit-scrollbar-thumb,
+.app-layout__sidebar--right .card__content::-webkit-scrollbar-thumb,
+.schedule-grid-container::-webkit-scrollbar-thumb {
+  background-color: var(--gray-60); /* A neutral, mid-tier gray */
   border: 1px solid transparent;
+  background-clip: content-box; /* Creates a tiny invisible border for breathing room */
+  border-radius: 0px; /* Carbon relies on strict square geometry */
 }
 
-::-webkit-scrollbar-corner {
-  background: transparent;
+.app-layout__sidebar--left .card__content::-webkit-scrollbar-thumb:hover,
+.app-layout__sidebar--right .card__content::-webkit-scrollbar-thumb:hover,
+.schedule-grid-container::-webkit-scrollbar-thumb:hover {
+  background-color: var(--gray-50); /* Brightens 1 step when hovered */
+}
+
+/* Firefox Support (Firefox uses different scrollbar properties) */
+@supports (scrollbar-color: auto) {
+  .app-layout__sidebar--left .card__content,
+  .app-layout__sidebar--right .card__content,
+  .schedule-grid-container {
+    scrollbar-width: thin;
+    scrollbar-color: var(--gray-60) transparent;
+  }
 }
 
 /* ── BASE & RESET ──────────────────────────────────────────────────────── */
@@ -81,7 +100,7 @@ body {
   line-height: 1.5;
   letter-spacing: 0.02em;
   color: var(--text);
-  background: var(--surface);
+  background: var(--surface-0);
   transition:
     background-color 200ms ease,
     color 200ms ease;
@@ -936,10 +955,8 @@ samp {
 }
 
 /* ==========================================================================
-   3-ELEMENTS / FORMS
-   Base styles for all interactive form fields:
-   native inputs, selects, textareas, and custom .select-trigger buttons
-   ========================================================================== */
+ * CARBON DESIGN SYSTEM — FORM INPUTS & CONTROLS
+ * ========================================================================== */
 
 /* --- 1. SHARED BASE — all field types share these styles --- */
 input,
@@ -950,30 +967,32 @@ textarea,
   width: 100%;
   box-sizing: border-box;
 
-  height: var(--input-height);
-  padding: 0 var(--input-padding-x);
+  height: var(--input-height, 40px); /* Carbon standard is typically 40px */
+  padding: 0 var(--input-padding-x, 16px);
 
-  border: 1px solid var(--color-input-border);
-  border-radius: var(--input-border-radius);
-  background-color: var(--color-input-bg);
+  /* Carbon Style: Solid background, square corners, bottom border only */
+  background-color: var(--field-bg);
+  border: none; /* Strip native borders */
+  border-bottom: 1px solid var(--field-border-bottom);
+  border-radius: 0; /* Strictly square */
 
-  font-size: var(--input-font-size);
-  font-weight: var(--input-font-weight);
-  color: var(--text);
+  font-size: var(--input-font-size, 0.875rem);
+  font-weight: 400; /* Carbon uses standard weight for input text */
+  color: var(--text-primary);
   text-align: left;
 
   outline: none;
   cursor: pointer;
 
   transition:
-    border-color 0.12s ease,
-    box-shadow 0.12s ease,
-    background 0.12s ease;
+    background-color 0.11s cubic-bezier(0.2, 0, 0.38, 0.9),
+    outline 0.11s;
 }
 
 /* --- 2. PLAIN TEXT INPUTS — override cursor only --- */
 input[type="text"],
-input[type="tel"] {
+input[type="tel"],
+input[type="number"] {
   cursor: text;
 }
 
@@ -986,17 +1005,16 @@ input[type="number"] {
 
 /* --- 4. NATIVE SELECT DROPDOWNS --- */
 select {
-  padding: 0 24px 0 var(--input-padding-x);
+  padding: 0 40px 0 var(--input-padding-x); /* Room for chevron */
   appearance: none;
   -webkit-appearance: none;
 
-  /* Hint OS-level popup to render dark (affects Tab+Enter keyboard dropdown) */
   color-scheme: dark;
 
   /* Custom chevron arrow */
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
-  background-position: right 8px center;
+  background-position: right 16px center;
   background-size: 14px;
 
   white-space: nowrap;
@@ -1010,24 +1028,19 @@ select.select--centered {
 }
 
 /* --- 5. CUSTOM DROPDOWN BUTTONS (.select-trigger) --- */
-/* These are <button> elements that visually behave as dropdowns.
-   The shared base gives them the same border/bg/font as inputs.
-   NOTE: the chevron icon is part of the button's inner HTML — no background-image needed here. */
 .select-trigger {
-  padding: 0 8px 0 var(--input-padding-x);
+  padding: 0 16px 0 var(--input-padding-x);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-align: center;
-  border-radius: var(--input-border-radius);
-  border: solid transparent;
+  text-align: left; /* Align left to match standard inputs */
 }
 
 /* --- 6. TEXTAREAS --- */
 textarea {
-  min-height: var(--input-height);
+  min-height: var(--input-height, 40px);
   height: auto;
-  padding: 8px var(--input-padding-x);
+  padding: 11px var(--input-padding-x); /* Adjust padding for multi-line */
   resize: vertical;
   line-height: 1.4;
   cursor: text;
@@ -1036,49 +1049,281 @@ textarea {
 /* --- 7. PLACEHOLDER & HOVER --- */
 input::placeholder,
 textarea::placeholder {
-  color: var(--placeholder);
+  color: var(--text-placeholder);
   opacity: 1;
 }
 
+/* Carbon hover effect: slightly lighter background */
 input:hover,
 select:hover,
 textarea:hover,
 .select-trigger:hover {
-  border-color: var(--color-input-border-hover, var(--border-strong));
+  background-color: color-mix(in srgb, var(--field-bg), white 10%);
 }
 
 /* --- 8. FOCUS — unified for ALL field types --- */
-/* Single rule covers: text inputs, date/time, native selects,
-   textareas, and custom .select-trigger dropdown buttons */
 input:focus,
 select:focus,
 textarea:focus,
 .select-trigger:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);
-  outline: none;
+  /* Carbon signature focus: 2px inset blue outline */
+  outline: 2px solid var(--blue);
+  outline-offset: -2px; /* Pulls the outline inside so layout doesn't shift */
+  border-bottom-color: transparent; /* Hide bottom border when outline is active */
+}
+
+/* ==========================================================================
+   5-COMPONENTS / MENUS (IBM Carbon Refactor)
+   Dropdown menus and context menus (BEM: .dropdown__*, .context-menu__*)
+   ========================================================================== */
+
+.dropdown-wrapper,
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* --- Floating Menus (Always Layer 03 in Carbon) --- */
+.dropdown-menu,
+.dropdown__menu,
+.context-menu {
+  position: absolute;
+  z-index: var(--z-dropdown);
+  min-width: 200px;
+  padding: 0;
+
+  /* Force to Layer 03 (Highest elevation, lightest background) */
+  background-color: var(--layer-03, var(--gray-70));
+  border: 1px solid var(--border-subtle, var(--gray-60));
+  border-radius: 0px; /* Strictly square */
+
+  /* Carbon uses a very subtle shadow for floating menus, relying more on border contrast */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+  overflow: hidden;
+  animation: menuPopIn 120ms cubic-bezier(0.2, 0, 0.38, 0.9);
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown-menu,
+.dropdown__menu {
+  top: calc(100% + 4px);
+  inset-inline-end: 0;
+}
+
+.dropdown__menu.dropdown__menu--up {
+  top: auto;
+  bottom: calc(100% + 4px);
+}
+
+.context-menu {
+  top: 0;
+  inset-inline-start: 0;
+}
+
+.dropdown-menu[hidden],
+.dropdown__menu[hidden],
+.context-menu[hidden] {
+  display: none;
+}
+
+/* --- Menu Headers & Dividers --- */
+.context-header,
+.context-menu__header {
+  padding: 8px 16px;
+  font-size: 0.75rem; /* Standardized to 12px for readability */
+  font-weight: 600;
+  letter-spacing: 0.32px;
+  text-transform: uppercase;
+  color: var(--text-secondary); /* Carbon secondary text */
+  text-align: start;
+  margin-bottom: 0;
+}
+
+.dropdown-divider,
+.dropdown__divider {
+  border: 0;
+  height: 1px;
+  margin: 4px 0;
+  background-color: var(--border-subtle, var(--gray-60));
+}
+
+/* --- Menu Items --- */
+.dropdown-item,
+.dropdown__item,
+.context-item,
+.context-menu__item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+  padding: 0 16px;
+
+  /* Carbon highly condensed height (32px) to support your data density */
+  height: 32px;
+
+  border: none;
+  border-radius: 0px;
+  background-color: transparent;
+
+  font-size: 0.875rem;
+  font-weight: 400; /* Carbon items are normal weight until hovered/selected */
+  color: var(--text-primary);
+  text-align: start;
+  cursor: pointer;
+
+  transition:
+    background-color 0.11s ease,
+    color 0.11s ease;
+}
+
+.dropdown-icon,
+.dropdown__icon,
+.context-item .material-symbols-outlined,
+.context-menu__item .material-symbols-outlined {
+  display: inline-flex;
+  width: 20px;
+  flex: 0 0 auto;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.125rem;
+  color: var(--text-secondary); /* Icons default to secondary color */
+}
+
+/* Carbon Hover: 10% brighter background mix */
+.dropdown-item:hover,
+.dropdown__item:hover,
+.context-item:hover,
+.context-menu__item:hover {
+  background-color: color-mix(in srgb, var(--layer-03, var(--gray-70)), white 10%);
+  color: var(--text-primary);
+}
+
+/* Carbon Active/Pressed state */
+.dropdown-item:active,
+.dropdown__item:active,
+.context-item:active,
+.context-menu__item:active {
+  background-color: color-mix(in srgb, var(--layer-03, var(--gray-70)), white 20%);
+}
+
+/* Active Selection overrides */
+.dropdown-icon.is-active,
+.dropdown__icon.is-active,
+.dropdown-item.is-active {
+  color: var(--blue); /* Carbon uses primary blue to indicate current selection */
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   CUSTOM SELECT DROPDOWN (.select-trigger)
+   Matches standard input field design 
+   ========================================================================== */
+.select-dropdown {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.select-dropdown .dropdown__menu {
+  inset-inline-start: 0;
+  inset-inline-end: 0;
+  min-width: 100%;
+}
+
+#busGrid .select-dropdown .dropdown__menu {
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+/* The Trigger (The button that looks like an input) */
+.select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-width: 0;
+  text-align: left;
+
+  /* Inherits from the contextual layers we set up in the main input CSS */
+  background-color: var(--field-bg);
+  border: 1px solid transparent;
+  border-bottom: 1px solid var(--field-border-bottom);
+  color: var(--text-primary);
+}
+
+.select-trigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-bottom-style: dashed; /* Carbon accessibility trick for disabled fields */
+}
+
+.select-trigger::after {
+  content: "";
+  width: 14px;
+  height: 14px;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+/* --- Status Colors --- */
+/* In Carbon, we keep the background and borders clean, only the icon carries the status color */
+
+.dropdown-icon.status-pending {
+  color: var(--color-status-pending);
+}
+.dropdown-icon.status-ok {
+  color: var(--color-status-ok);
+}
+.dropdown-icon.status-assigned {
+  color: var(--color-status-assigned);
+}
+.dropdown-icon.status-blue {
+  color: var(--color-status-blue);
+}
+
+/* --- The "Is Open" Focus State --- */
+/* Matches the standard input focus ring exactly */
+.select-trigger.is-open {
+  outline: 2px solid var(--blue);
+  outline-offset: -2px;
+  border-bottom-color: transparent; /* Hide bottom border to let the blue ring shine */
+}
+
+.select-dropdown .select-native {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }
 
 /* --- 9. DATE/TIME PICKER ICON --- */
 ::-webkit-calendar-picker-indicator {
-  filter: var(--date-picker-filter);
+  filter: invert(1); /* Ensures icon is white in dark mode */
   opacity: 0.85;
   cursor: pointer;
+  padding: 4px;
 }
 
 ::-webkit-calendar-picker-indicator:hover {
   opacity: 1;
 }
 
-/* Unfilled date/time fields and default selects: dim placeholder text */
 input[type="date"].is-empty:not(:focus)::-webkit-datetime-edit,
 input[type="time"].is-empty:not(:focus)::-webkit-datetime-edit {
-  color: var(--placeholder);
+  color: var(--text-placeholder);
 }
 
 select.is-empty:not(:focus),
 .select-trigger.is-empty {
-  color: var(--placeholder);
+  color: var(--text-placeholder);
 }
 
 /* --- 10. LABELS --- */
@@ -1086,74 +1331,65 @@ select.is-empty:not(:focus),
 .field-label {
   display: block;
   width: 100%;
-  font-size: 0.75rem;
+  font-size: 0.75rem; /* 12px */
   font-weight: 400;
-  color: var(--text-muted);
-
-  line-height: 1;
-  margin-bottom: 8px; /* Exact 8px margin from the bottom of the text */
-  letter-spacing: 0.05em;
+  color: var(--text-secondary); /* Labels are secondary text in Carbon */
+  line-height: 1.33;
+  margin-bottom: 8px;
+  letter-spacing: 0.32px;
 }
 
 /* --- 11. FORM GRID LAYOUT --- */
+/* (Grid classes remain unchanged as they are structurally sound) */
 .form-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   width: 100%;
-  gap: 8px;
-  margin: 0px auto;
+  gap: 16px 8px; /* Added row gap to separate stacked inputs */
+  margin: 0;
   align-items: start;
 }
 
 .col-2 {
   grid-column: span 2;
 }
-
 .col-4 {
   grid-column: span 4;
 }
-
 .col-5 {
   grid-column: span 5;
 }
-
 .col-6 {
   grid-column: span 6;
 }
-
 .col-8 {
   grid-column: span 8;
 }
-
 .col-12 {
   grid-column: span 12;
 }
 
 .subsection {
   grid-column: span 12;
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px solid var(--border);
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 1px solid var(--layer-02-border);
   display: flex;
   flex-direction: column;
-  gap: 0px; /* Zero gap ensures first-child label defines the 8px visual space */
-}
-
-.subsection-grid {
-  margin-top: 0px; /* Local spacing for non-label content */
+  height: min-content;
 }
 
 .subsection-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
+  gap: 16px 8px;
 }
 
 .form-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 0;
+  gap: 16px; /* Carbon uses more generous spacing for actions */
+
   width: 100%;
 }
 
@@ -1171,11 +1407,9 @@ select.is-empty:not(:focus),
   .col-8 {
     grid-column: span 12;
   }
-
   .subsection-grid {
     grid-template-columns: 1fr;
   }
-
   .form-actions {
     justify-content: flex-start;
   }
@@ -1189,27 +1423,24 @@ select.is-empty:not(:focus),
   .form-grid .col-8 {
     grid-column: span 12;
   }
-
   .form-grid .subsection-grid {
     grid-template-columns: 1fr;
   }
-
   .form-grid .form-actions {
     justify-content: flex-start;
   }
 }
 
-/* --- 12. COMPONENT OVERRIDES — glass style for panel selects --- */
-
-/* Trip editor & sidebar selects: glass background to match context menus */
+/* --- 12. COMPONENT OVERRIDES — Contextual Adjustments --- */
+/* * Replaced the Apple-style backdrop-filter glass effect. 
+ * If these sidebars are elevated (Layer 02 or 03), ensure their parent container 
+ * has the correct layer class applied in HTML so the --field-bg token updates automatically! 
+ */
 #tripInfoCard select,
 #notesCard select,
 #driverWeekCard select,
 .app-layout__sidebar--right select,
 .app-layout__sidebar--left select,
 .dropdown_item {
-  background-color: color-mix(in srgb, var(--surface-container) 30%, transparent);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-  backdrop-filter: blur(16px) saturate(160%);
-  border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+  /* Inherits exactly what a normal input does now. Let the HTML structure dictate the background color. */
 }

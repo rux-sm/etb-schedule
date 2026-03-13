@@ -167,9 +167,19 @@
                       </select>
                     </div>
 
-                    <div class="form-group">
+                  <div class="form-group">
                       <label for="quoteLDRate">Base Rate</label>
                       <select id="quoteLDRate" class="quote-calculator__select">
+                        <option value="3.0">$3.0</option>
+                        <option value="3.1">$3.1</option>
+                        <option value="3.2">$3.2</option>
+                        <option value="3.3">$3.3</option>
+                        <option value="3.4">$3.4</option>
+                        <option value="3.5">$3.5</option>
+                        <option value="3.6">$3.6</option>
+                        <option value="3.7">$3.7</option>
+                        <option value="3.8">$3.8</option>
+                        <option value="3.9">$3.9</option>
                         <option value="4.0">$4.0</option>
                         <option value="4.1">$4.1</option>
                         <option value="4.2">$4.2</option>
@@ -180,6 +190,7 @@
                         <option value="4.7">$4.7</option>
                         <option value="4.8">$4.8</option>
                         <option value="4.9">$4.9</option>
+                        <option value="5.0">$5.0</option>
                       </select>
                     </div>
 
@@ -187,11 +198,27 @@
                       <label for="quoteSeasonalRate">Seasonal Rate</label>
                       <select id="quoteSeasonalRate" class="quote-calculator__select">
                         <option value="">None</option>
+                        <option value="3.0">$3.0</option>
+                        <option value="3.1">$3.1</option>
+                        <option value="3.2">$3.2</option>
+                        <option value="3.3">$3.3</option>
+                        <option value="3.4">$3.4</option>
+                        <option value="3.5">$3.5</option>
+                        <option value="3.6">$3.6</option>
+                        <option value="3.7">$3.7</option>
+                        <option value="3.8">$3.8</option>
+                        <option value="3.9">$3.9</option>
                         <option value="4.0">$4.0</option>
                         <option value="4.1">$4.1</option>
                         <option value="4.2">$4.2</option>
                         <option value="4.3">$4.3</option>
                         <option value="4.4">$4.4</option>
+                        <option value="4.5">$4.5</option>
+                        <option value="4.6">$4.6</option>
+                        <option value="4.7">$4.7</option>
+                        <option value="4.8">$4.8</option>
+                        <option value="4.9">$4.9</option>
+                        <option value="5.0">$5.0</option>
                       </select>
                     </div>
 
@@ -321,7 +348,7 @@
             <!-- Driver Week Card (hidden by default) -->
             <div class="card card--compact is-hidden" id="driverWeekCard">
               <div class="panel-header">
-                <h2 class="panel-header__title">Driver Assignments</h2>
+                <h2 class="panel-header__title">Driver & bus assignments</h2>
                 <div class="panel-header__actions"></div>
               </div>
 
@@ -423,27 +450,27 @@
                   </div>
 
                   <div class="form-group col-6">
-                    <label for="tripDate">Departure Date</label>
+                    <label for="tripDate">Departure date</label>
                     <input type="date" id="tripDate" name="departureDate" required />
                   </div>
 
                   <div class="form-group col-6">
-                    <label for="arrivalDate">Arrival Date</label>
+                    <label for="arrivalDate">Arrival date</label>
                     <input type="date" id="arrivalDate" name="arrivalDate" />
                   </div>
 
                   <div class="form-group col-4">
-                    <label for="departureTime">Departure Time</label>
+                    <label for="departureTime">Departure time</label>
                     <input type="time" id="departureTime" name="departureTime" />
                   </div>
 
                   <div class="form-group col-4">
-                    <label for="spotTime">Spot Time</label>
+                    <label for="spotTime">Spot time</label>
                     <input type="time" id="spotTime" name="spotTime" />
                   </div>
 
                   <div class="form-group col-4">
-                    <label for="arrivalTime">Arrival Time</label>
+                    <label for="arrivalTime">Arrival time</label>
                     <input type="time" id="arrivalTime" name="arrivalTime" />
                   </div>
 
@@ -477,10 +504,8 @@
                     <input type="text" id="comments" name="comments" placeholder="" />
                   </div>
 
-                  <div class="subsection col-12">
-                    <div class="status-grid">
-                      <div class="form-group">
-                        <label for="itineraryStatus">Itinerary Status</label>
+                      <div class="form-group col-6">
+                        <label for="itineraryStatus">Itinerary status</label>
                         <select id="itineraryStatus" name="itineraryStatus" required>
                           <option value="" disabled selected></option>
                           <option value="Pending">Pending</option>
@@ -489,8 +514,8 @@
                         </select>
                       </div>
 
-                      <div class="form-group">
-                        <label for="contactStatus">Contact Status</label>
+                      <div class="form-group col-6">
+                        <label for="contactStatus">Contact status</label>
                         <select id="contactStatus" name="contactStatus" required>
                           <option value="" disabled selected></option>
                           <option value="Pending">Pending</option>
@@ -499,8 +524,8 @@
                         </select>
                       </div>
 
-                      <div class="form-group">
-                        <label for="paymentStatus">Approval Status</label>
+                      <div class="form-group col-6">
+                        <label for="paymentStatus">Approval status</label>
                         <select id="paymentStatus" name="paymentStatus" required>
                           <option value="" disabled selected></option>
                           <option value="Pending Quote">Pending Quote</option>
@@ -511,9 +536,9 @@
                         </select>
                       </div>
 
-                      <div class="form-group">
-                        <label for="driverStatus">Driver Status</label>
-                        <select id="driverStatus" name="driverStatus" required>
+                      <div class="form-group col-6 is-hidden" id="driverStatusGroup" aria-hidden="true">
+                        <label for="driverStatus">Driver status</label>
+                        <select id="driverStatus" name="driverStatus" required tabindex="-1">
                           <option value="" disabled selected></option>
                           <option value="Pending">Pending</option>
                           <option value="Assigned">Assigned</option>
@@ -522,8 +547,8 @@
                         </select>
                       </div>
 
-                      <div class="form-group">
-                        <label for="invoiceStatus">Invoice Status</label>
+                      <div class="form-group col-6">
+                        <label for="invoiceStatus">Invoice status</label>
                         <select id="invoiceStatus" name="invoiceStatus" required>
                           <option value="" disabled selected></option>
                           <option value="Pending Invoice">Pending Invoice</option>
@@ -533,120 +558,135 @@
                         </select>
                       </div>
 
-                      <div class="form-group" id="invoiceNumberGroup">
-                        <label for="invoiceNumber">Invoice Number</label>
+                      <div class="form-group col-6" id="invoiceNumberGroup">
+                        <label for="invoiceNumber">Invoice number</label>
                         <input type="text" id="invoiceNumber" name="invoiceNumber" placeholder="#" disabled />
                       </div>
-                    </div>
-                  </div>
 
                   <textarea id="itinerary" name="itinerary" class="is-hidden" aria-label="Itinerary Content"></textarea>
-                  <div class="subsection col-12">
-                    <span class="field-label">Requirements</span>
-                    <div class="toggle-pill__grid" role="group" aria-label="Requirements">
-                      <button type="button" class="toggle-pill" id="req56Pass" aria-pressed="false">
-                        <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">tatami_seat</span>
-                        56 Pax
-                      </button>
-                      <button type="button" class="toggle-pill" id="reqSleeper" aria-pressed="false">
-                        <span class="toggle-pill__icon material-symbols-outlined"
-                          aria-hidden="true">airline_seat_flat</span>
-                        Sleeper
-                      </button>
-                      <button type="button" class="toggle-pill" id="reqLift" aria-pressed="false">
-                        <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">accessible</span>
-                        Lift
-                      </button>
-                      <button type="button" class="toggle-pill" id="reqRelief" aria-pressed="false">
-                        <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">warning</span>
-                        Relief
-                      </button>
-                      <button type="button" class="toggle-pill" id="reqCoDriver" aria-pressed="false">
-                        <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">person_add</span>
-                        Co-Driver
-                      </button>
-                      <button type="button" class="toggle-pill" id="reqHotel" aria-pressed="false">
-                        <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">apartment</span>
-                        Hotel
-                      </button>
-                    </div>
-                  </div>
-
-                  <div class="subsection col-12">
-                    <div class="form-actions form-actions--grid">
-                      <button id="assignmentsBtn" type="button" class="btn" title="Driver Assignments"
-                        aria-label="Driver Assignments">
-                        <span class="material-symbols-outlined">group</span>
-                        Drivers
-                      </button>
-                      <button id="envelopeBtn" type="button" class="btn" title="Envelope Overrides"
-                        aria-label="Envelope Overrides">
-                        <span class="material-symbols-outlined">mail</span>
-                        Envelope
-                      </button>
-                      <button id="itineraryBtn" type="button" class="btn" title="Review Trip Manifest"
-                        aria-label="Review Trip Manifest">
-                        <span class="material-symbols-outlined">fact_check</span>
-                        Review
-                      </button>
-                    </div>
-
-                    <!-- Envelope Overrides Section (Toggled by Envelope Button) -->
-                    <div id="envelopeOverridesSection" class="form-grid is-hidden envelope-overrides-section">
-                      <div class="form-group col-12">
-                        <label for="envelopePickup">Pick Up Address</label>
-                        <input type="text" id="envelopePickup" name="envelopePickup" placeholder="Pick up address..." />
-                      </div>
-
-                      <div class="form-group col-6">
-                        <label for="envelopeTripContact">Trip Contact</label>
-                        <input type="text" id="envelopeTripContact" name="envelopeTripContact"
-                          placeholder="Primary contact name..." />
-                      </div>
-
-                      <div class="form-group col-6">
-                        <label for="envelopeTripPhone">Trip Contact Phone</label>
-                        <input type="tel" id="envelopeTripPhone" name="envelopeTripPhone" autocomplete="tel"
-                          inputmode="tel" placeholder="Primary contact phone..." />
-                      </div>
-
-                      <div class="form-group col-12">
-                        <span class="field-label">Envelope Notes</span>
-                        <div class="envelope-notes-stack">
-                          <input type="text" id="envelopeNote1" placeholder="Notes Line 1" />
-                          <input type="text" id="envelopeNote2" placeholder="Notes Line 2" />
-                          <input type="text" id="envelopeNote3" placeholder="Notes Line 3" />
-                          <input type="hidden" id="envelopeTripNotes" name="envelopeTripNotes" />
+                  <div class="subsection col-12" style="padding-left: 0; padding-right: 0;">
+                    <div class="cds-accordion" id="tripExtrasAccordion">
+                      
+                      <div class="cds-accordion__item">
+                        <button type="button" class="cds-accordion__heading" aria-expanded="false" aria-controls="requirementsSection" id="requirementsBtn">
+                          <span class="cds-accordion__title">
+                            <span class="material-symbols-outlined">fact_check</span>
+                            Trip requirements
+                          </span>
+                          <span class="material-symbols-outlined cds-accordion__arrow">expand_more</span>
+                        </button>
+                        <div id="requirementsSection" class="cds-accordion__content is-hidden">
+                          <div class="toggle-pill__grid" role="group" aria-label="Requirements" style="margin-top: 0;">
+                            <button type="button" class="toggle-pill" id="req56Pass" aria-pressed="false">
+                              <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">tatami_seat</span>
+                              56 Pax
+                            </button>
+                            <button type="button" class="toggle-pill" id="reqSleeper" aria-pressed="false">
+                              <span class="toggle-pill__icon material-symbols-outlined"
+                                aria-hidden="true">airline_seat_flat</span>
+                              Sleeper
+                            </button>
+                            <button type="button" class="toggle-pill" id="reqLift" aria-pressed="false">
+                              <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">accessible</span>
+                              Lift
+                            </button>
+                            <button type="button" class="toggle-pill" id="reqRelief" aria-pressed="false">
+                              <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">warning</span>
+                              Relief
+                            </button>
+                            <button type="button" class="toggle-pill" id="reqCoDriver" aria-pressed="false">
+                              <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">person_add</span>
+                              Co-Driver
+                            </button>
+                            <button type="button" class="toggle-pill" id="reqHotel" aria-pressed="false">
+                              <span class="toggle-pill__icon material-symbols-outlined" aria-hidden="true">apartment</span>
+                              Hotel
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <!-- Driver Assignments Section (Toggled by Drivers Button) -->
-                    <div class="form-grid is-hidden assignments-overrides-section" id="assignmentsOverridesSection">
-                      <div class="bus-assign-header col-12">
-                        <span class="field-label">Bus</span>
-                        <span class="field-label">Driver 1</span>
-                        <span class="field-label">Driver 2</span>
+                      
+                      <div class="cds-accordion__item">
+                        <button type="button" class="cds-accordion__heading" aria-expanded="false" aria-controls="assignmentsOverridesSection" id="assignmentsBtn">
+                          <span class="cds-accordion__title">
+                            <span class="material-symbols-outlined">group</span>
+                             Bus and driver assignments
+                          </span>
+                          <span class="material-symbols-outlined cds-accordion__arrow">expand_more</span>
+                        </button>
+                        
+                        <div id="assignmentsOverridesSection" class="cds-accordion__content is-hidden">
+                          <div class="form-grid assignments-overrides-section">
+                            <div class="bus-assign-header col-12">
+                              <span class="field-label">Bus</span>
+                              <span class="field-label">Driver 1</span>
+                              <span class="field-label">Driver 2</span>
+                            </div>
+                            <div id="busGrid" class="col-12"></div>
+                          </div>
+                        </div>
                       </div>
-                      <div id="busGrid" class="col-12"></div>
+
+                      <div class="cds-accordion__item">
+                        <button type="button" class="cds-accordion__heading" aria-expanded="false" aria-controls="envelopeOverridesSection" id="envelopeBtn">
+                          <span class="cds-accordion__title">
+                            <span class="material-symbols-outlined">mail</span>
+                            Envelope information
+                          </span>
+                          <span class="material-symbols-outlined cds-accordion__arrow">expand_more</span>
+                        </button>
+                        
+                        <div id="envelopeOverridesSection" class="cds-accordion__content is-hidden">
+                          <div class="form-grid envelope-overrides-section">
+                            <div class="form-group col-12">
+                              <label for="envelopePickup">Pick up address</label>
+                              <input type="text" id="envelopePickup" name="envelopePickup" placeholder="Pick up address" />
+                            </div>
+
+                            <div class="form-group col-6">
+                              <label for="envelopeTripContact">Trip contact</label>
+                              <input type="text" id="envelopeTripContact" name="envelopeTripContact" placeholder="Primary contact name" />
+                            </div>
+
+                            <div class="form-group col-6">
+                              <label for="envelopeTripPhone">Trip contact phone</label>
+                              <input type="tel" id="envelopeTripPhone" name="envelopeTripPhone" autocomplete="tel" inputmode="tel" placeholder="Primary contact phone" />
+                            </div>
+
+                            <div class="form-group col-12">
+                              <span class="field-label">Envelope notes</span>
+                              <div class="envelope-notes-stack">
+                                <input type="text" id="envelopeNote1" placeholder="Notes Line 1" />
+                                <input type="text" id="envelopeNote2" placeholder="Notes Line 2" />
+                                <input type="text" id="envelopeNote3" placeholder="Notes Line 3" />
+                                <input type="hidden" id="envelopeTripNotes" name="envelopeTripNotes" />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
                     </div>
                   </div>
                 </form>
               </div>
 
               <div class="card__footer">
-                <div class="form-actions">
-                  <button type="button" class="btn btn--danger" id="deleteBtn" disabled>
+                <div class="form-actions form-actions--footer">
+                  <button type="button" class="btn btn--danger btn--ghost" id="deleteBtn" disabled>
                     <span class="material-symbols-outlined">delete</span>
                     Delete
                   </button>
-                  <button type="button" class="btn" id="newBtn">
-                    <span class="material-symbols-outlined">restart_alt</span>
-                    Clear
-                  </button>
-                  <button type="submit" class="btn btn--primary" id="saveBtn" form="tripForm">
-                    <span class="material-symbols-outlined">save</span>
-                    Save
-                  </button>
+                  <div class="form-actions__group">
+                    <button type="button" class="btn" id="newBtn">
+                      <span class="material-symbols-outlined">restart_alt</span>
+                      Clear
+                    </button>
+                    <button type="submit" class="btn btn--primary" id="saveBtn" form="tripForm">
+                      <span class="material-symbols-outlined">save</span>
+                      Save
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -1014,9 +1054,13 @@
       <span class="material-symbols-outlined">edit</span>
       <span>Edit Trip</span>
     </button>
+    <button id="ctxEditTripInfoBtn" class="context-menu__item" type="button">
+      <span class="material-symbols-outlined">fact_check</span>
+      <span>Edit Trip Review</span>
+    </button>
     <button id="ctxViewBtn" class="context-menu__item" type="button">
       <span class="material-symbols-outlined">visibility</span>
-      <span>View Details</span>
+      <span>Trip Review</span>
     </button>
     <button id="ctxEnvelopeBtn" class="context-menu__item" type="button">
       <span class="material-symbols-outlined">mail</span>
