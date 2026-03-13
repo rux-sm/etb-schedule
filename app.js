@@ -699,6 +699,8 @@ function sanitizeWeekResp(resp) {
       busId: asStr(a?.busId).trim(),
       driver1: asStr(a?.driver1).trim(),
       driver2: asStr(a?.driver2).trim(),
+      driver1Status: asStr(a?.driver1Status).trim(),
+      driver2Status: asStr(a?.driver2Status).trim(),
     }))
     .filter((a) => a.tripKey);
 
@@ -1437,8 +1439,12 @@ function updateWeekTitle() {
 // ======================================================
 // 15) WEEK CACHE + STALE GUARDS
 // ======================================================
+const WEEK_CACHE_VERSION = "v2"; // Bump to invalidate old cache (e.g. assignments without driver1Status/driver2Status)
 function weekKey(start, end) {
   return `${start}..${end}`;
+}
+function weekCacheKey(start, end) {
+  return `week_${WEEK_CACHE_VERSION}_${weekKey(start, end)}`;
 }
 
 function getCachedWeek(key, maxAgeMs = CONFIG.WEEK_CACHE_MAX_AGE_MS) {
@@ -1477,7 +1483,7 @@ async function fetchWeekDataCached(start, end, notesKey, force = false) {
       state.weekCache.set(key, { ts: Date.now(), resp });
 
       // Save to Persistent Cache (7 days)
-      CACHE.set("week_" + key, resp, 7 * 24 * 60 * 60 * 1000);
+      CACHE.set(weekCacheKey(start, end), resp, 7 * 24 * 60 * 60 * 1000);
 
       return resp;
     } catch (err) {
@@ -1518,6 +1524,8 @@ function applyWeekRespToState(resp) {
       busId: String(a.busId || "").trim(),
       driver1: String(a.driver1 || "").trim(),
       driver2: String(a.driver2 || "").trim(),
+      driver1Status: String(a.driver1Status || "").trim(),
+      driver2Status: String(a.driver2Status || "").trim(),
     });
   }
 
@@ -2292,7 +2300,8 @@ function _renderAgendaInner() {
         });
         const bC = makeMini("phone_enabled", true); // Contact
         const b$ = makeMini("description", true); // Payment / Approval
-        const bD = makeMini("person", true); // Driver
+        const bD1 = makeMini("person", true); // Driver 1
+        const bD2 = makeMini("person", true); // Driver 2
         const bInv = makeMini("attach_money", true); // Invoice
         const invText = document.createElement("span");
         invText.className = "schedule-grid__trip-bar__mini-badge-text icon-invoice-text";
@@ -2306,7 +2315,7 @@ function _renderAgendaInner() {
 
         const statusBadgesWrap = document.createElement("div");
         statusBadgesWrap.className = "schedule-grid__trip-bar__status-badges";
-        statusBadgesWrap.append(barReqIcons, b$, bI, bC, bD, bInv);
+        statusBadgesWrap.append(barReqIcons, b$, bI, bC, bD1, bD2, bInv);
         statusRow.append(statusBadgesWrap);
 
         r5.appendChild(statusRow);
@@ -2336,7 +2345,8 @@ function _renderAgendaInner() {
         bar._bI = bI;
         bar._bC = bC;
         bar._b$ = b$;
-        bar._bD = bD;
+        bar._bD1 = bD1;
+        bar._bD2 = bD2;
         bar._bInv = bInv;
         bar._preDrivers = preDriversRow;
         bar._drivers = driversRow;
@@ -2389,7 +2399,8 @@ function _renderAgendaInner() {
       if (bar._bI) setBadge(bar._bI, t.itineraryStatus);
       if (bar._bC) setBadge(bar._bC, t.contactStatus);
       if (bar._b$) setBadge(bar._b$, t.paymentStatus);
-      if (bar._bD) setBadge(bar._bD, effectiveDriverStatus);
+      if (bar._bD1) setBadge(bar._bD1, a.driver1Status || "Pending");
+      if (bar._bD2) setBadge(bar._bD2, a.driver2Status || "Pending");
       if (bar._bInv) setBadge(bar._bInv, t.invoiceStatus);
 
       // Swap payment status icon based on value
@@ -2417,16 +2428,35 @@ function _renderAgendaInner() {
         }
       }
 
-      // Swap driver status icon based on value
-      if (bar._bD) {
-        bar._bD.classList.add("has-action");
-        const glyph = bar._bD.querySelector(".schedule-grid__trip-bar__badge-glyph");
+      // Swap driver 1 status icon based on value
+      if (bar._bD1) {
+        bar._bD1.classList.add("has-action");
+        const glyph = bar._bD1.querySelector(".schedule-grid__trip-bar__badge-glyph");
         if (glyph) {
-          const iconName = getStatusIcon("driverStatus", effectiveDriverStatus);
+          const s1 = (a.driver1Status || "Pending").toLowerCase();
+          const iconName = getStatusIcon("driverStatus", s1);
           glyph.textContent = iconName || "person";
           glyph.dataset.action = "showDriverContact";
           glyph.dataset.tripkey = t.tripKey;
           glyph.style.cursor = "pointer";
+        }
+      }
+
+      // Swap driver 2 status icon based on value, only if driver 2 exists
+      if (bar._bD2) {
+        const hasD2 = a.driver2 && a.driver2 !== "None";
+        bar._bD2.classList.toggle("is-hidden", !hasD2);
+        if (hasD2) {
+          bar._bD2.classList.add("has-action");
+          const glyph = bar._bD2.querySelector(".schedule-grid__trip-bar__badge-glyph");
+          if (glyph) {
+            const s2 = (a.driver2Status || "Pending").toLowerCase();
+            const iconName = getStatusIcon("driverStatus", s2);
+            glyph.textContent = iconName || "person";
+            glyph.dataset.action = "showDriverContact";
+            glyph.dataset.tripkey = t.tripKey;
+            glyph.style.cursor = "pointer";
+          }
         }
       }
 
@@ -3348,7 +3378,7 @@ async function loadTripsForWeek(reqId) {
   const { start, end, notesKey } = getWeekRange();
 
   // 1. Instant Load from LocalStorage (SWR)
-  const localKey = "week_" + weekKey(start, end);
+  const localKey = weekCacheKey(start, end);
   const localData = CACHE.get(localKey);
 
   if (localData && localData.ok) {
@@ -4396,14 +4426,16 @@ function setTripFormFromState(tripKey) {
     if (a.busId) row.busSel.value = String(a.busId);
     if (a.driver1) row.d1Sel.value = String(a.driver1);
     if (a.driver2) row.d2Sel.value = String(a.driver2);
-    row.d1StatusSel.value = a.driver1Status || fallbackDriverStatus;
-    row.d2StatusSel.value = a.driver2Status || fallbackDriverStatus;
+    row.d1StatusSel.value = String(a.driver1Status || "").trim() || fallbackDriverStatus;
+    row.d2StatusSel.value = String(a.driver2Status || "").trim() || fallbackDriverStatus;
   });
   updateBusRowVisibility();
   state.busRows.forEach((r) => {
     r.busSel.dispatchEvent(new Event("change", { bubbles: true }));
     r.d1Sel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d1StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
     r.d2Sel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d2StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
   });
   syncBusPanelState();
   if (typeof syncBusSelectEmptyState === "function") syncBusSelectEmptyState();
@@ -4551,15 +4583,17 @@ async function openTripForEdit(tripKey) {
       if (a.busId) row.busSel.value = String(a.busId);
       if (a.driver1) row.d1Sel.value = String(a.driver1);
       if (a.driver2) row.d2Sel.value = String(a.driver2);
-      row.d1StatusSel.value = a.driver1Status || fallbackDriverStatus;
-      row.d2StatusSel.value = a.driver2Status || fallbackDriverStatus;
+      row.d1StatusSel.value = String(a.driver1Status || "").trim() || fallbackDriverStatus;
+      row.d2StatusSel.value = String(a.driver2Status || "").trim() || fallbackDriverStatus;
     });
 
     updateBusRowVisibility();
     state.busRows.forEach((r) => {
       r.busSel.dispatchEvent(new Event("change", { bubbles: true }));
       r.d1Sel.dispatchEvent(new Event("change", { bubbles: true }));
+      r.d1StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
       r.d2Sel.dispatchEvent(new Event("change", { bubbles: true }));
+      r.d2StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
     });
     syncBusPanelState();
     syncBusSelectEmptyState();
@@ -6197,12 +6231,15 @@ function wireEvents() {
 
         if (busId && busId !== "None") hasAssignedBus = true;
 
+        const d1Status = String(row.d1StatusSel?.value || "Pending").trim();
+        const d2Status = String(row.d2StatusSel?.value || "Pending").trim();
+
         optimisticAssignments.push({
           busId,
           driver1,
           driver2,
-          driver1Status: String(row.d1StatusSel?.value || "Pending").trim(),
-          driver2Status: String(row.d2StatusSel?.value || "Pending").trim(),
+          driver1Status: driver1 && driver1 !== "None" ? d1Status : "",
+          driver2Status: driver2 && driver2 !== "None" ? d2Status : "",
         });
       }
     }
@@ -6238,6 +6275,7 @@ function wireEvents() {
         )
       : "Pending";
     $("driverStatus").value = worst;
+    $("driverStatus").dispatchEvent(new Event("change", { bubbles: true }));
 
     // Auto-set Contact status to Received when both Trip contact and Trip contact phone are filled
     const envelopeContact = String($("envelopeTripContact")?.value || "").trim();

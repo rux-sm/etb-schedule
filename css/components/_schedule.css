@@ -146,10 +146,13 @@
   align-items: center;
   justify-content: center;
   /* 4px top/bottom keeps it sleek (40px total height), 16px sides aligns it */
-  padding: 4px 0px;
   background-color: var(--layer-01);
   border-bottom: none;
   width: 100%;
+  /* Matches the grid's footprint: 
+     Left: 8px (7px container padding + 1px grid border)
+     Right: 9px (8px scrollbar gutter + 1px grid border) */
+  padding: 8px 9px 8px 8px;
 }
 
 .agenda-header__inner {
@@ -321,6 +324,8 @@
   /* Scroll internally when content exceeds */
   background: var(--layer-01);
   border-inline-start: none;
+  padding-inline-start: 7px;
+  /* 7px padding + 1px border = 8px; exactly matches the header's 8px padding */
 }
 
 @media (max-width: 899px) {
@@ -1379,7 +1384,7 @@
 }
 
 .bus-assign__driver-block .select-dropdown:first-child,
-.bus-assign__driver-block > select:first-child {
+.bus-assign__driver-block>select:first-child {
   flex: 1;
   min-width: 0;
 }
