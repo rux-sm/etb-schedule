@@ -7,39 +7,54 @@
 .app-layout__sidebar--left .card__content,
 .app-layout__sidebar--right .card__content,
 .schedule-grid-container {
-  scrollbar-gutter: stable; /* The Magic Fix: Always reserve scrollbar space so nothing jumps */
+  scrollbar-gutter: stable;
+  /* The Magic Fix: Always reserve scrollbar space so nothing jumps */
 }
 
 .app-layout__sidebar--left .card__content::-webkit-scrollbar,
 .app-layout__sidebar--right .card__content::-webkit-scrollbar,
 .schedule-grid-container::-webkit-scrollbar {
-  width: 8px; /* Carbon keeps scrollbars extremely slim */
-  height: 8px; /* For horizontal scrollbars if ever needed */
+  width: 8px;
+  /* Carbon keeps scrollbars extremely slim */
+  height: 8px;
+  /* For horizontal scrollbars if ever needed */
 }
 
 .app-layout__sidebar--left .card__content::-webkit-scrollbar-track,
 .app-layout__sidebar--right .card__content::-webkit-scrollbar-track,
 .schedule-grid-container::-webkit-scrollbar-track {
-  background: transparent; /* Lets the panel background show through */
+  background: transparent;
+  /* Lets the panel background show through */
 }
 
 .app-layout__sidebar--left .card__content::-webkit-scrollbar-thumb,
 .app-layout__sidebar--right .card__content::-webkit-scrollbar-thumb,
 .schedule-grid-container::-webkit-scrollbar-thumb {
-  background-color: var(--gray-60); /* A neutral, mid-tier gray */
+  background-color: var(--gray-60);
+  /* A neutral, mid-tier gray */
   border: 1px solid transparent;
-  background-clip: content-box; /* Creates a tiny invisible border for breathing room */
-  border-radius: 0px; /* Carbon relies on strict square geometry */
+  background-clip: content-box;
+  /* Creates a tiny invisible border for breathing room */
+  border-radius: 0px;
+  /* Carbon relies on strict square geometry */
 }
 
 .app-layout__sidebar--left .card__content::-webkit-scrollbar-thumb:hover,
 .app-layout__sidebar--right .card__content::-webkit-scrollbar-thumb:hover,
 .schedule-grid-container::-webkit-scrollbar-thumb:hover {
-  background-color: var(--gray-50); /* Brightens 1 step when hovered */
+  background-color: var(--gray-50);
+  /* Brightens 1 step when hovered */
+}
+
+/* Schedule: no thumb border so content aligns flush with scrollbar gutter */
+.schedule-grid-container::-webkit-scrollbar-thumb {
+  border: none;
+  background-clip: border-box;
 }
 
 /* Firefox Support (Firefox uses different scrollbar properties) */
 @supports (scrollbar-color: auto) {
+
   .app-layout__sidebar--left .card__content,
   .app-layout__sidebar--right .card__content,
   .schedule-grid-container {
@@ -232,16 +247,14 @@ samp {
     box-shadow:
       0 0 8px color-mix(in srgb, var(--tripbar-color) 20%, transparent),
       0 2px 8px rgba(0, 0, 0, 0.2);
-    filter: brightness(var(--tripbar-hover-brightness-from))
-      saturate(var(--tripbar-hover-saturate-from));
+    filter: brightness(var(--tripbar-hover-brightness-from)) saturate(var(--tripbar-hover-saturate-from));
   }
 
   to {
     box-shadow:
       0 0 24px color-mix(in srgb, var(--tripbar-color) 60%, transparent),
       0 6px 16px rgba(0, 0, 0, 0.5);
-    filter: brightness(var(--tripbar-hover-brightness-to))
-      saturate(var(--tripbar-hover-saturate-to));
+    filter: brightness(var(--tripbar-hover-brightness-to)) saturate(var(--tripbar-hover-saturate-to));
   }
 }
 
@@ -282,6 +295,7 @@ samp {
 }
 
 @keyframes jello {
+
   0%,
   11.1%,
   100% {
@@ -342,6 +356,7 @@ samp {
 }
 
 @keyframes arrow-left-bounce {
+
   0%,
   100% {
     transform: translate(0, -50%);
@@ -353,6 +368,7 @@ samp {
 }
 
 @keyframes arrow-right-bounce {
+
   0%,
   100% {
     transform: translate(0, -50%);
@@ -632,15 +648,9 @@ samp {
   }
 
   /* Legal print: hide itinerary, contact, driver status icons to make room for others */
-  .print-table
-    .schedule-grid__trip-bar__status-badges
-    > .schedule-grid__trip-bar__mini-badge:nth-child(3),
-  .print-table
-    .schedule-grid__trip-bar__status-badges
-    > .schedule-grid__trip-bar__mini-badge:nth-child(4),
-  .print-table
-    .schedule-grid__trip-bar__status-badges
-    > .schedule-grid__trip-bar__mini-badge:nth-child(5) {
+  .print-table .schedule-grid__trip-bar__status-badges>.schedule-grid__trip-bar__mini-badge:nth-child(3),
+  .print-table .schedule-grid__trip-bar__status-badges>.schedule-grid__trip-bar__mini-badge:nth-child(4),
+  .print-table .schedule-grid__trip-bar__status-badges>.schedule-grid__trip-bar__mini-badge:nth-child(5) {
     display: none !important;
   }
 
@@ -967,17 +977,21 @@ textarea,
   width: 100%;
   box-sizing: border-box;
 
-  height: var(--input-height, 40px); /* Carbon standard is typically 40px */
+  height: var(--input-height, 40px);
+  /* Carbon standard is typically 40px */
   padding: 0 var(--input-padding-x, 16px);
 
   /* Carbon Style: Solid background, square corners, bottom border only */
   background-color: var(--field-bg);
-  border: none; /* Strip native borders */
+  border: none;
+  /* Strip native borders */
   border-bottom: 1px solid var(--field-border-bottom);
-  border-radius: 0; /* Strictly square */
+  border-radius: 0;
+  /* Strictly square */
 
   font-size: var(--input-font-size, 0.875rem);
-  font-weight: 400; /* Carbon uses standard weight for input text */
+  font-weight: 400;
+  /* Carbon uses standard weight for input text */
   color: var(--text-primary);
   text-align: left;
 
@@ -1005,7 +1019,8 @@ input[type="number"] {
 
 /* --- 4. NATIVE SELECT DROPDOWNS --- */
 select {
-  padding: 0 40px 0 var(--input-padding-x); /* Room for chevron */
+  padding: 0 40px 0 var(--input-padding-x);
+  /* Room for chevron */
   appearance: none;
   -webkit-appearance: none;
 
@@ -1033,14 +1048,16 @@ select.select--centered {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-align: left; /* Align left to match standard inputs */
+  text-align: left;
+  /* Align left to match standard inputs */
 }
 
 /* --- 6. TEXTAREAS --- */
 textarea {
   min-height: var(--input-height, 40px);
   height: auto;
-  padding: 11px var(--input-padding-x); /* Adjust padding for multi-line */
+  padding: 11px var(--input-padding-x);
+  /* Adjust padding for multi-line */
   resize: vertical;
   line-height: 1.4;
   cursor: text;
@@ -1068,8 +1085,10 @@ textarea:focus,
 .select-trigger:focus {
   /* Carbon signature focus: 2px inset blue outline */
   outline: 2px solid var(--blue);
-  outline-offset: -2px; /* Pulls the outline inside so layout doesn't shift */
-  border-bottom-color: transparent; /* Hide bottom border when outline is active */
+  outline-offset: -2px;
+  /* Pulls the outline inside so layout doesn't shift */
+  border-bottom-color: transparent;
+  /* Hide bottom border when outline is active */
 }
 
 /* ==========================================================================
@@ -1095,7 +1114,8 @@ textarea:focus,
   /* Force to Layer 03 (Highest elevation, lightest background) */
   background-color: var(--layer-03, var(--gray-70));
   border: 1px solid var(--border-subtle, var(--gray-60));
-  border-radius: 0px; /* Strictly square */
+  border-radius: 0px;
+  /* Strictly square */
 
   /* Carbon uses a very subtle shadow for floating menus, relying more on border contrast */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -1132,11 +1152,13 @@ textarea:focus,
 .context-header,
 .context-menu__header {
   padding: 8px 16px;
-  font-size: 0.75rem; /* Standardized to 12px for readability */
+  font-size: 0.75rem;
+  /* Standardized to 12px for readability */
   font-weight: 600;
   letter-spacing: 0.32px;
   text-transform: uppercase;
-  color: var(--text-secondary); /* Carbon secondary text */
+  color: var(--text-secondary);
+  /* Carbon secondary text */
   text-align: start;
   margin-bottom: 0;
 }
@@ -1169,7 +1191,8 @@ textarea:focus,
   background-color: transparent;
 
   font-size: 0.875rem;
-  font-weight: 400; /* Carbon items are normal weight until hovered/selected */
+  font-weight: 400;
+  /* Carbon items are normal weight until hovered/selected */
   color: var(--text-primary);
   text-align: start;
   cursor: pointer;
@@ -1189,7 +1212,8 @@ textarea:focus,
   justify-content: center;
   align-items: center;
   font-size: 1.125rem;
-  color: var(--text-secondary); /* Icons default to secondary color */
+  color: var(--text-secondary);
+  /* Icons default to secondary color */
 }
 
 /* Carbon Hover: 10% brighter background mix */
@@ -1213,7 +1237,8 @@ textarea:focus,
 .dropdown-icon.is-active,
 .dropdown__icon.is-active,
 .dropdown-item.is-active {
-  color: var(--blue); /* Carbon uses primary blue to indicate current selection */
+  color: var(--blue);
+  /* Carbon uses primary blue to indicate current selection */
   font-weight: 600;
 }
 
@@ -1257,7 +1282,8 @@ textarea:focus,
 .select-trigger:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  border-bottom-style: dashed; /* Carbon accessibility trick for disabled fields */
+  border-bottom-style: dashed;
+  /* Carbon accessibility trick for disabled fields */
 }
 
 .select-trigger::after {
@@ -1277,12 +1303,15 @@ textarea:focus,
 .dropdown-icon.status-pending {
   color: var(--color-status-pending);
 }
+
 .dropdown-icon.status-ok {
   color: var(--color-status-ok);
 }
+
 .dropdown-icon.status-assigned {
   color: var(--color-status-assigned);
 }
+
 .dropdown-icon.status-blue {
   color: var(--color-status-blue);
 }
@@ -1292,7 +1321,8 @@ textarea:focus,
 .select-trigger.is-open {
   outline: 2px solid var(--blue);
   outline-offset: -2px;
-  border-bottom-color: transparent; /* Hide bottom border to let the blue ring shine */
+  border-bottom-color: transparent;
+  /* Hide bottom border to let the blue ring shine */
 }
 
 .select-dropdown .select-native {
@@ -1306,7 +1336,8 @@ textarea:focus,
 
 /* --- 9. DATE/TIME PICKER ICON --- */
 ::-webkit-calendar-picker-indicator {
-  filter: invert(1); /* Ensures icon is white in dark mode */
+  filter: invert(1);
+  /* Ensures icon is white in dark mode */
   opacity: 0.85;
   cursor: pointer;
   padding: 4px;
@@ -1327,13 +1358,15 @@ select.is-empty:not(:focus),
 }
 
 /* --- 10. LABELS --- */
-.form-group > label,
+.form-group>label,
 .field-label {
   display: block;
   width: 100%;
-  font-size: 0.75rem; /* 12px */
+  font-size: 0.75rem;
+  /* 12px */
   font-weight: 400;
-  color: var(--text-secondary); /* Labels are secondary text in Carbon */
+  color: var(--text-secondary);
+  /* Labels are secondary text in Carbon */
   line-height: 1.33;
   margin-bottom: 8px;
   letter-spacing: 0.32px;
@@ -1345,7 +1378,8 @@ select.is-empty:not(:focus),
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   width: 100%;
-  gap: 16px 8px; /* Added row gap to separate stacked inputs */
+  gap: 16px 8px;
+  /* Added row gap to separate stacked inputs */
   margin: 0;
   align-items: start;
 }
@@ -1353,18 +1387,23 @@ select.is-empty:not(:focus),
 .col-2 {
   grid-column: span 2;
 }
+
 .col-4 {
   grid-column: span 4;
 }
+
 .col-5 {
   grid-column: span 5;
 }
+
 .col-6 {
   grid-column: span 6;
 }
+
 .col-8 {
   grid-column: span 8;
 }
+
 .col-12 {
   grid-column: span 12;
 }
@@ -1388,18 +1427,20 @@ select.is-empty:not(:focus),
 .form-actions {
   display: flex;
   align-items: center;
-  gap: 16px; /* Carbon uses more generous spacing for actions */
+  gap: 16px;
+  /* Carbon uses more generous spacing for actions */
 
   width: 100%;
 }
 
-.form-actions > .btn {
+.form-actions>.btn {
   flex: 1;
   min-width: 80px;
   justify-content: center;
 }
 
 @container form-grid (max-width: 350px) {
+
   .col-2,
   .col-4,
   .col-5,
@@ -1407,15 +1448,18 @@ select.is-empty:not(:focus),
   .col-8 {
     grid-column: span 12;
   }
+
   .subsection-grid {
     grid-template-columns: 1fr;
   }
+
   .form-actions {
     justify-content: flex-start;
   }
 }
 
 @media (max-width: 600px) {
+
   .form-grid .col-2,
   .form-grid .col-4,
   .form-grid .col-5,
@@ -1423,9 +1467,11 @@ select.is-empty:not(:focus),
   .form-grid .col-8 {
     grid-column: span 12;
   }
+
   .form-grid .subsection-grid {
     grid-template-columns: 1fr;
   }
+
   .form-grid .form-actions {
     justify-content: flex-start;
   }

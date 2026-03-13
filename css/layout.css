@@ -177,7 +177,7 @@
     flex: 1;
     overflow: visible;
     min-height: 0;
-    gap: 12px;
+    gap: var(--layout-panel-gap);
     /* Increased gutter */
   }
 

@@ -156,6 +156,7 @@
 
   --layout-container-max: 100%;
   --panel-width: 400px;
+  --layout-panel-gap: 12px;
   --card-padding: 16px;
   --card-footer-padding-y: 12px;
   --card-footer-padding-x: 16px;
@@ -173,6 +174,10 @@
   --bus-col-w: 34px;
   --week-picker-height: 32px;
   --day-row-h: 34px;
+  --schedule-edge-inset-left: 16px;
+  --schedule-edge-inset-right: 16px;
+  /* Matches schedule-grid-container scrollbar width for agenda-header alignment */
+  --scrollbar-gutter-width: 8px;
 
   /* Day Header */
   --day-header-date-color: var(--text);

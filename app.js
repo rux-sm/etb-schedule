@@ -1812,7 +1812,9 @@ function getColMetricsCached() {
 
   const startCell = firstBodyRow.cells[1];
   const r = startCell.getBoundingClientRect();
-  const key = `${r.left}:${r.width}:${dom.agendaBody?.rows?.length || 0}`;
+  const container = document.querySelector(".schedule-grid-container");
+  const containerW = container?.clientWidth ?? 0;
+  const key = `${r.left}:${r.width}:${containerW}:${dom.agendaBody?.rows?.length || 0}`;
 
   if (state.lastColMetrics?.key === key) return state.lastColMetrics.col;
 
@@ -2010,7 +2012,7 @@ function rerenderAgendaAfterLayout() {
 
 const scheduleAgendaReflow = debounce(() => {
   rerenderAgendaAfterLayout();
-}, 120);
+}, 50);
 
 function renderAgenda() {
   try {
@@ -2430,15 +2432,19 @@ function _renderAgendaInner() {
 
       // Swap driver 1 status icon based on value
       if (bar._bD1) {
-        bar._bD1.classList.add("has-action");
-        const glyph = bar._bD1.querySelector(".schedule-grid__trip-bar__badge-glyph");
-        if (glyph) {
-          const s1 = (a.driver1Status || "Pending").toLowerCase();
-          const iconName = getStatusIcon("driverStatus", s1);
-          glyph.textContent = iconName || "person";
-          glyph.dataset.action = "showDriverContact";
-          glyph.dataset.tripkey = t.tripKey;
-          glyph.style.cursor = "pointer";
+        const hasD1 = d1 && d1 !== "None";
+        bar._bD1.classList.toggle("is-hidden", !hasD1);
+        if (hasD1) {
+          bar._bD1.classList.add("has-action");
+          const glyph = bar._bD1.querySelector(".schedule-grid__trip-bar__badge-glyph");
+          if (glyph) {
+            const s1 = (a.driver1Status || "Pending").toLowerCase();
+            const iconName = getStatusIcon("driverStatus", s1);
+            glyph.textContent = iconName || "person";
+            glyph.dataset.action = "showDriverContact";
+            glyph.dataset.tripkey = t.tripKey;
+            glyph.style.cursor = "pointer";
+          }
         }
       }
 
@@ -3176,13 +3182,18 @@ function makeDriverStatusSelect(name) {
   const sel = document.createElement("select");
   sel.name = name;
   sel.setAttribute("aria-label", "Driver status");
+  const emptyOpt = document.createElement("option");
+  emptyOpt.value = "";
+  emptyOpt.textContent = "";
+  sel.appendChild(emptyOpt);
+
   DRIVER_STATUS_OPTIONS.forEach((o) => {
     const opt = document.createElement("option");
     opt.value = o.value;
     opt.textContent = o.label;
     sel.appendChild(opt);
   });
-  sel.value = "Pending";
+  sel.value = ""; // Default to blank; will be set to Pending during assignments
   return sel;
 }
 
@@ -6371,6 +6382,15 @@ function wireEvents() {
       originalTripByKey,
       originalAssignments,
     };
+
+    // CLEANLINESS: Clear status values for unassigned drivers so backend doesn't save them
+    for (let i = 0; i < 10; i++) {
+      const row = state.busRows[i];
+      if (!row) continue;
+      if (row.d1Sel.value === "None") row.d1StatusSel.value = "";
+      if (row.d2Sel.value === "None") row.d2StatusSel.value = "";
+    }
+
     startVerifyFallback();
     dom.tripForm.submit();
 
@@ -7352,12 +7372,15 @@ if (dom.printDailyMaintenancePlanBtn) {
   );
 
   const tableWrap = document.querySelector(".schedule-grid-container");
+  const scheduleCard = document.querySelector(".app-layout__main > .card");
   if (tableWrap && "ResizeObserver" in window) {
-    const ro = new ResizeObserver(() => {
+    const onResize = () => {
       state.lastColMetrics = null;
       scheduleAgendaReflow();
-    });
+    };
+    const ro = new ResizeObserver(onResize);
     ro.observe(tableWrap);
+    if (scheduleCard && scheduleCard !== tableWrap) ro.observe(scheduleCard);
   }
 
   if (document.fonts?.ready) {

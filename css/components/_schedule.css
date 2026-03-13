@@ -73,7 +73,10 @@
   display: flex;
   align-items: center;
   height: 100%;
+  padding-inline-end: var(--schedule-edge-inset-right);
 }
+
+/* Desktop: no panel-gap compensation needed — main header spans full viewport including sidebars */
 
 /* ── Header Action Button (Carbon .cds--header__action) ─────────────────
    Uses `all: unset` to completely sever inheritance from the global
@@ -145,14 +148,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* 4px top/bottom keeps it sleek (40px total height), 16px sides aligns it */
   background-color: var(--layer-01);
   border-bottom: none;
   width: 100%;
-  /* Matches the grid's footprint: 
-     Left: 8px (7px container padding + 1px grid border)
-     Right: 9px (8px scrollbar gutter + 1px grid border) */
-  padding: 8px 9px 8px 8px;
+  height: 48px;
+  /* Match schedule-grid-container: same scrollbar-gutter = no padding needed, buttons align */
+  overflow: auto;
+  scrollbar-gutter: stable;
 }
 
 .agenda-header__inner {
@@ -319,13 +321,10 @@
 .schedule-grid-container {
   width: 100%;
   height: auto;
-  /* Match table height */
   overflow: auto;
-  /* Scroll internally when content exceeds */
   background: var(--layer-01);
   border-inline-start: none;
-  padding-inline-start: 7px;
-  /* 7px padding + 1px border = 8px; exactly matches the header's 8px padding */
+  scrollbar-gutter: stable;
 }
 
 @media (max-width: 899px) {
