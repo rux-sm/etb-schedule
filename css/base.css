@@ -3,60 +3,72 @@
    Browser resets, box-sizing, custom scrollbars
    ========================================================================== */
 
-/* ── SCROLLBARS — Carbon Style & Layout Shift Fix ────────────────────── */
+/* ── SCROLLBARS — Hide vertical, keep horizontal where intended ───────── */
+/* Main schedule horizontal scrollbar remains visible */
+.schedule-grid-container::-webkit-scrollbar,
+.driver-week__wrap::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.schedule-grid-container::-webkit-scrollbar:vertical,
+.driver-week__wrap::-webkit-scrollbar:vertical {
+  width: 0;
+}
+
+.schedule-grid-container::-webkit-scrollbar:horizontal,
+.driver-week__wrap::-webkit-scrollbar:horizontal {
+  height: 8px;
+}
+
+.schedule-grid-container::-webkit-scrollbar-track,
+.driver-week__wrap::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.schedule-grid-container::-webkit-scrollbar-thumb,
+.driver-week__wrap::-webkit-scrollbar-thumb {
+  background-color: var(--gray-60);
+  border-radius: 0;
+}
+
+.schedule-grid-container::-webkit-scrollbar-thumb:hover,
+.driver-week__wrap::-webkit-scrollbar-thumb:hover {
+  background-color: var(--gray-50);
+}
+
+/* Hide vertical scrollbars while preserving wheel/trackpad scrolling */
 .app-layout__sidebar--left .card__content,
 .app-layout__sidebar--right .card__content,
-.schedule-grid-container {
-  scrollbar-gutter: stable;
-  /* The Magic Fix: Always reserve scrollbar space so nothing jumps */
+.agenda-header,
+.modal__body,
+.card__content--scrollable,
+.schedule-grid__conflict-panel .card__content,
+.notes-textarea,
+.notes__textarea,
+.modal--itinerary .modal__body textarea {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .app-layout__sidebar--left .card__content::-webkit-scrollbar,
 .app-layout__sidebar--right .card__content::-webkit-scrollbar,
-.schedule-grid-container::-webkit-scrollbar {
-  width: 8px;
-  /* Carbon keeps scrollbars extremely slim */
-  height: 8px;
-  /* For horizontal scrollbars if ever needed */
-}
-
-.app-layout__sidebar--left .card__content::-webkit-scrollbar-track,
-.app-layout__sidebar--right .card__content::-webkit-scrollbar-track,
-.schedule-grid-container::-webkit-scrollbar-track {
-  background: transparent;
-  /* Lets the panel background show through */
-}
-
-.app-layout__sidebar--left .card__content::-webkit-scrollbar-thumb,
-.app-layout__sidebar--right .card__content::-webkit-scrollbar-thumb,
-.schedule-grid-container::-webkit-scrollbar-thumb {
-  background-color: var(--gray-60);
-  /* A neutral, mid-tier gray */
-  border: 1px solid transparent;
-  background-clip: content-box;
-  /* Creates a tiny invisible border for breathing room */
-  border-radius: 0px;
-  /* Carbon relies on strict square geometry */
-}
-
-.app-layout__sidebar--left .card__content::-webkit-scrollbar-thumb:hover,
-.app-layout__sidebar--right .card__content::-webkit-scrollbar-thumb:hover,
-.schedule-grid-container::-webkit-scrollbar-thumb:hover {
-  background-color: var(--gray-50);
-  /* Brightens 1 step when hovered */
-}
-
-/* Schedule: no thumb border so content aligns flush with scrollbar gutter */
-.schedule-grid-container::-webkit-scrollbar-thumb {
-  border: none;
-  background-clip: border-box;
+.app-layout__sidebar--left > .card:not(.is-hidden) .card__content::-webkit-scrollbar,
+.app-layout__sidebar--right > .card:not(.is-hidden) .card__content::-webkit-scrollbar,
+.agenda-header::-webkit-scrollbar,
+.modal__body::-webkit-scrollbar,
+.card__content--scrollable::-webkit-scrollbar,
+.schedule-grid__conflict-panel .card__content::-webkit-scrollbar,
+.notes-textarea::-webkit-scrollbar,
+.notes__textarea::-webkit-scrollbar,
+.modal--itinerary .modal__body textarea::-webkit-scrollbar {
+  display: none;
 }
 
 /* Firefox Support (Firefox uses different scrollbar properties) */
 @supports (scrollbar-color: auto) {
-  .app-layout__sidebar--left .card__content,
-  .app-layout__sidebar--right .card__content,
-  .schedule-grid-container {
+  .schedule-grid-container,
+  .driver-week__wrap {
     scrollbar-width: thin;
     scrollbar-color: var(--gray-60) transparent;
   }

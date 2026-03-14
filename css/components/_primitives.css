@@ -117,11 +117,6 @@ button:focus-visible,
    Carbon Tertiary/Ghost Button Logic
    ========================================================================== */
 
-.toggle-pill-grid,
-.toggle-pill__grid {
-  /* Layout handled in layout.css */
-}
-
 .toggle-pill-grid-label,
 .toggle-pill__label {
   grid-column: 1 / -1;
@@ -145,6 +140,7 @@ button:focus-visible,
   font-weight: 400;
   border-radius: 0px;
   cursor: pointer;
+  -webkit-user-select: none;
   user-select: none;
 
   /* The Fix: Solid background, transparent border */
