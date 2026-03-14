@@ -188,23 +188,23 @@
       <main class="main">
         <div class="container">
           <div
-            class="app-layout"
+            class="o-app-layout"
             id="layoutPanels"
           >
             <!-- START PANEL -->
             <div
-              class="app-layout__sidebar--left app-layout__sidebar--collapsed"
+              class="o-app-layout__sidebar o-app-layout__sidebar--left is-collapsed"
               id="panelStart"
             >
               <!-- Placeholder for new left panel cards -->
               <div
-                class="card card--compact is-hidden"
+                class="c-card c-card--compact is-hidden"
                 id="leftPanelCard1"
               >
                 <div class="c-header c-header--panel">
                   <h2 class="c-header__title">Left Panel Card 1</h2>
                 </div>
-                <div class="card__content">
+                <div class="c-card__body">
                   <p>Add your content here</p>
                 </div>
               </div>
@@ -212,12 +212,12 @@
 
             <!-- END PANEL (Trip Editor, Drivers, Notes) -->
             <div
-              class="app-layout__sidebar--right app-layout__sidebar--collapsed"
+              class="o-app-layout__sidebar o-app-layout__sidebar--right is-collapsed"
               id="panelEnd"
             >
               <!-- Quote Calculator Card (hidden by default) -->
               <div
-                class="card card--compact is-hidden quote-calculator"
+                class="c-card c-card--compact is-hidden quote-calculator"
                 id="quoteCard"
               >
                 <div class="c-header c-header--panel">
@@ -235,7 +235,7 @@
                   </div>
                 </div>
 
-                <div class="card__content">
+                <div class="c-card__body">
                   <div class="quote-calculator__layout-grid">
                     <!-- Left Column: Static Options -->
                     <div class="quote-calculator__col-static">
@@ -562,7 +562,7 @@
                 </div>
 
                 <!-- Action Footer -->
-                <div class="card__footer">
+                <div class="c-card__footer">
                   <div
                     class="form-actions"
                     style="width: 100%"
@@ -582,7 +582,7 @@
 
               <!-- Driver Week Card (hidden by default) -->
               <div
-                class="card card--compact is-hidden"
+                class="c-card c-card--compact is-hidden"
                 id="driverWeekCard"
               >
                 <div class="c-header c-header--panel">
@@ -590,7 +590,7 @@
                   <div class="c-header__actions"></div>
                 </div>
 
-                <div class="card__content">
+                <div class="c-card__body">
                   <div class="driver-week__wrap">
                     <table class="driver-week__table">
                       <thead>
@@ -601,12 +601,12 @@
                   </div>
                 </div>
 
-                <div class="card__footer"></div>
+                <div class="c-card__footer"></div>
               </div>
 
               <!-- Notes Card (hidden by default) -->
               <div
-                class="card card--compact is-hidden"
+                class="c-card c-card--compact is-hidden"
                 id="notesCard"
               >
                 <div class="c-header c-header--panel">
@@ -614,7 +614,7 @@
                   <div class="c-header__actions"></div>
                 </div>
 
-                <div class="card__content">
+                <div class="c-card__body">
                   <div class="notes__wrap">
                     <textarea
                       id="scheduleNotes"
@@ -624,7 +624,7 @@
                   </div>
                 </div>
 
-                <div class="card__footer">
+                <div class="c-card__footer">
                   <div class="form-actions">
                     <button
                       type="button"
@@ -639,7 +639,7 @@
 
               <!-- Trip Info Card -->
               <div
-                class="card card--compact is-hidden"
+                class="c-card c-card--compact is-hidden"
                 id="tripInfoCard"
               >
                 <div class="c-header c-header--panel">
@@ -652,7 +652,7 @@
                   </div>
                 </div>
 
-                <div class="card__content">
+                <div class="c-card__body">
                   <form
                     id="tripForm"
                     class="form-grid"
@@ -1235,7 +1235,7 @@
                   </form>
                 </div>
 
-                <div class="card__footer">
+                <div class="c-card__footer">
                   <div class="form-actions form-actions--footer">
                     <button
                       type="button"
@@ -1278,8 +1278,8 @@
             </div>
 
             <!-- MAIN PANEL (Schedule) -->
-            <div class="app-layout__main">
-              <div class="card">
+            <div class="o-app-layout__main">
+              <div class="c-card">
                 <!-- Conflicts badge (overlay) -->
                 <div class="schedule-badge-wrap">
                   <span
@@ -1457,13 +1457,13 @@
 
                 <div
                   id="conflictPanel"
-                  class="card is-hidden"
+                  class="c-card is-hidden"
                 >
-                  <div class="card-title">
+                  <div class="c-card__title">
                     Conflicts
                     <span class="badge badge--error">Needs attention</span>
                   </div>
-                  <div class="card__content">
+                  <div class="c-card__body">
                     <div
                       id="conflictList"
                       class="help"

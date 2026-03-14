@@ -285,61 +285,44 @@
   }
 }
 
-.app-layout__main .schedule-grid-container {
-  overflow-x: auto;
-  min-height: 0;
+.o-app-layout__main .schedule-grid-container {
   border-radius: 0;
   margin-bottom: 0;
 }
 
-.app-layout.is-resizing .app-layout__main .schedule-grid-container {
-  overflow-x: hidden;
-}
-
 /* Visual skin for schedule page shells lives with schedule component styles */
-.app-layout__sidebar--left:not(.app-layout__sidebar--collapsed),
-.app-layout__sidebar--right:not(.app-layout__sidebar--collapsed) {
+.o-app-layout__sidebar--left:not(.is-collapsed),
+.o-app-layout__sidebar--right:not(.is-collapsed) {
   background: var(--layer-02);
 }
 
-.app-layout__main > .card {
+.o-app-layout__main > .c-card {
   border-radius: 0;
   background: var(--red);
 }
 
-.app-layout__sidebar--left > .card:not(.is-hidden) .panel-header,
-.app-layout__sidebar--right > .card:not(.is-hidden) .panel-header {
-  margin-bottom: 16px;
-}
-
 /* Sidebar cards keep compact, muted content defaults without global shell coupling */
-.app-layout__sidebar--left > .card:not(.is-hidden) .card__content,
-.app-layout__sidebar--right > .card:not(.is-hidden) .card__content {
+.o-app-layout__sidebar--left > .c-card:not(.is-hidden) .c-card__body,
+.o-app-layout__sidebar--right > .c-card:not(.is-hidden) .c-card__body {
   font-size: 0.75rem;
   font-weight: 400;
   color: var(--text-muted);
 }
 
-.app-layout__sidebar--left > .card:not(.is-hidden) .card__content {
+.o-app-layout__sidebar--left > .c-card:not(.is-hidden) .c-card__body {
   padding-left: 16px;
   padding-right: 8px;
 }
 
-.app-layout__sidebar--right > .card:not(.is-hidden) .card__content {
+.o-app-layout__sidebar--right > .c-card:not(.is-hidden) .c-card__body {
   padding-left: 16px;
   padding-right: 8px;
 }
 
-.app-layout__sidebar--left > .card:not(.is-hidden) .card__footer,
-.app-layout__sidebar--right > .card:not(.is-hidden) .card__footer {
+.o-app-layout__sidebar--left > .c-card:not(.is-hidden) .c-card__footer,
+.o-app-layout__sidebar--right > .c-card:not(.is-hidden) .c-card__footer {
   padding-left: 16px;
   padding-right: 16px;
-}
-
-/* When inside an app layout main panel, use flexbox to fill available space */
-.schedule-grid-container--fluid {
-  flex: 1;
-  min-height: 0;
 }
 
 /* ==========================================================================
@@ -688,7 +671,7 @@
 
 
 
-.schedule-grid__conflict-panel .card__content {
+.schedule-grid__conflict-panel .c-card__body {
   max-height: 200px;
   overflow-y: auto;
 }

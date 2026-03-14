@@ -1045,7 +1045,7 @@
   box-shadow: var(--focus-ring) !important;
 }
 
-#notesCard .card__content {
+#notesCard .c-card__body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1074,7 +1074,7 @@
   font-feature-settings: "tnum";
 }
 
-.quote-calculator .card__content {
+.quote-calculator .c-card__body {
   background-color: var(--surface-2);
   padding: 0 16px;
   display: flex;

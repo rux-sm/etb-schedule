@@ -2992,10 +2992,10 @@ function showCardInPanel(cardType, panel) {
   // Add to target panel
   if (panel === "left" && panelStart) {
     panelStart.appendChild(config.card);
-    panelStart.classList.remove("app-layout__sidebar--collapsed");
+    panelStart.classList.remove("is-collapsed");
   } else if (panel === "right" && panelEndEl) {
     panelEndEl.appendChild(config.card);
-    panelEndEl.classList.remove("app-layout__sidebar--collapsed");
+    panelEndEl.classList.remove("is-collapsed");
   }
 
   // Show the card
@@ -3048,10 +3048,10 @@ function hideCard(cardType) {
   const rightHasCards = Object.values(state.cardPanelAssignments).includes("right");
 
   if (panelStart && !leftHasCards) {
-    panelStart.classList.add("app-layout__sidebar--collapsed");
+    panelStart.classList.add("is-collapsed");
   }
   if (panelEndEl && !rightHasCards) {
-    panelEndEl.classList.add("app-layout__sidebar--collapsed");
+    panelEndEl.classList.add("is-collapsed");
   }
 
   scheduleAgendaReflow();
@@ -3104,7 +3104,7 @@ function setPanelStartMode(show) {
   const panelStart = document.getElementById("panelStart");
   if (!panelStart) return;
 
-  panelStart.classList.toggle("app-layout__sidebar--collapsed", !show);
+  panelStart.classList.toggle("is-collapsed", !show);
 
   const btn = document.getElementById("panelStartBtn");
   if (btn) {
@@ -7376,7 +7376,7 @@ if (dom.printDailyMaintenancePlanBtn) {
   );
 
   const tableWrap = document.querySelector(".schedule-grid-container");
-  const scheduleCard = document.querySelector(".app-layout__main > .card");
+  const scheduleCard = document.querySelector(".o-app-layout__main > .c-card");
   if (tableWrap && "ResizeObserver" in window) {
     const onResize = () => {
       state.lastColMetrics = null;

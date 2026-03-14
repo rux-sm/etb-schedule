@@ -427,6 +427,121 @@ Follow this rule set moving forward:
 - Context files for local overrides only
 - Incremental migration, not a rewrite
 
+## Panel/Card Shell Consolidation Action Sheet
+
+This is the next migration category after headers.
+
+Goal:
+
+- reduce panel/card layering complexity
+- keep visual parity while migrating
+- keep red debug surfaces in place during cleanup
+
+### Phase 0: Rules for this pass
+
+1. Do not remove legacy classes from HTML in the first pass.
+2. Add dual classes first, then add CSS alias selectors.
+3. Keep red debug backgrounds until layer audit is complete.
+4. Remove dead selectors only after confirming no HTML usage.
+
+### Phase 1: Markup dual-class additions
+
+Apply these mappings in `index.html`:
+
+- `app-layout` -> `app-layout o-app-layout`
+- `app-layout__main` -> `app-layout__main o-app-layout__main`
+- `app-layout__sidebar--left` -> `app-layout__sidebar--left o-app-layout__sidebar o-app-layout__sidebar--left`
+- `app-layout__sidebar--right` -> `app-layout__sidebar--right o-app-layout__sidebar o-app-layout__sidebar--right`
+- `card` -> `card c-card`
+- `card card--compact` -> `card c-card card--compact c-card--compact`
+- `card__content` -> `card__content c-card__body`
+- `card__footer` -> `card__footer c-card__footer`
+- `card-title` -> `card-title c-card__title` (only where title is a local card header block)
+
+Primary targets currently in markup:
+
+- side-panel card roots and internals
+- main schedule card root
+- conflict panel card block
+
+### Phase 2: CSS alias selectors (no behavior changes)
+
+Add dual-selector aliases so old and new classes resolve to the same rules.
+
+In `css/components/_primitives.css`:
+
+- `.card, .c-card`
+- `.card--compact, .card.compact, .c-card--compact`
+- `.card__content, .c-card__body`
+- `.card__footer, .c-card__footer`
+- `.card__footer:empty, .c-card__footer:empty`
+
+In `css/layout.css` (structural selectors only):
+
+- `.app-layout, .o-app-layout`
+- `.app-layout__main, .o-app-layout__main`
+- `.app-layout__sidebar--left, .o-app-layout__sidebar--left`
+- `.app-layout__sidebar--right, .o-app-layout__sidebar--right`
+- collapsed states should support both naming families
+
+In `css/components/_schedule.css` (context and visual selectors only):
+
+- `.app-layout__main > .card` should be aliased with `.o-app-layout__main > .c-card`
+- sidebar card body/footer context rules should include both class families
+- conflict panel card body rules should include both card body families
+
+### Phase 3: Ownership cleanup
+
+Move or keep rules based on ownership:
+
+- Keep structure mechanics in `css/layout.css`:
+  - width
+  - height
+  - flex/grid flow
+  - collapse mechanics
+  - overflow behavior
+
+- Keep shared card primitive visuals in `css/components/_primitives.css`:
+  - base card shell
+  - base body/footer defaults
+
+- Keep schedule-specific context overrides in `css/components/_schedule.css`:
+  - schedule panel visual skin
+  - sidebar-specific typography/padding
+  - debug surface overrides
+
+### Phase 4: Dead selector sweep
+
+When dual classes are in place and parity is confirmed:
+
+1. grep for old-only selectors and remove any that have no HTML usage
+2. remove legacy HTML classes only after CSS parity verification
+3. run one final grep to confirm no dead class family remains
+
+### Definition of done for panel/card category
+
+1. both legacy and new panel/card class families render identically
+2. layout ownership is clear between object and component files
+3. no dead panel/card selectors remain
+4. red debug surfaces are still active for ongoing layer inspection
+
+### Suggested canonical names for this category
+
+- layout objects
+  - `o-app-layout`
+  - `o-app-layout__main`
+  - `o-app-layout__sidebar`
+  - `o-app-layout__sidebar--left`
+  - `o-app-layout__sidebar--right`
+
+- card components
+  - `c-card`
+  - `c-card--compact`
+  - `c-card__header`
+  - `c-card__title`
+  - `c-card__body`
+  - `c-card__footer`
+
 ## Related Docs
 
 - Audit and owner mapping: `docs/HEADER_CONTAINER_AUDIT.md`
