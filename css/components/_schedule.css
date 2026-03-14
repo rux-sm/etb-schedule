@@ -2,31 +2,15 @@
    APP HEADER - CARBON UI SHELL (48px)
    ========================================================================== */
 
-.cds-header {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  height: 48px;
-  width: 100%;
-  background-color: var(--layer-ui-shell);
-  border-bottom: 1px solid var(--border);
-
-  /* Critical Layout: Spreads Branding and Actions to the edges */
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0;
-}
-
 /* --- Branding Layout --- */
-.cds-header__branding {
+.app-header__branding {
   display: flex;
   align-items: center;
   padding-left: 16px;
   height: 100%;
 }
 
-.cds-header__logo-container {
+.app-header__logo-wrap {
   display: flex;
   align-items: center;
   height: 100%;
@@ -35,7 +19,7 @@
 }
 
 /* The Carbon Vertical Divider */
-.cds-header__logo-container::after {
+.app-header__logo-wrap::after {
   content: "";
   width: 1px;
   height: 20px;
@@ -44,13 +28,13 @@
   right: 0;
 }
 
-.cds-header__logo {
+.app-header__logo-img {
   height: 22px;
   width: auto;
 }
 
 /* --- Typography --- */
-.cds-header__title {
+.app-header__title {
   margin-left: 12px;
   font-size: 20px;
   line-height: 1;
@@ -60,83 +44,59 @@
   gap: 4px;
 }
 
-.cds-header__title--prefix {
+.app-header__title--prefix {
   font-weight: 400;
 }
 
-.cds-header__title--product {
+.app-header__title--product {
   font-weight: 600;
 }
 
+/* --- App Header Variant Overrides --- */
+.c-header.c-header--app {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: var(--layer-ui-shell);
+  border-bottom: 1px solid var(--border);
+}
+
 /* --- Global Actions (Tiled) --- */
-.cds-header__actions {
-  display: flex;
-  align-items: center;
-  height: 100%;
+.c-header.c-header--app .c-header__actions {
   padding-inline-end: var(--schedule-edge-inset-right);
 }
 
 /* Desktop: no panel-gap compensation needed — main header spans full viewport including sidebars */
 
-/* ── Header Action Button (Carbon .cds--header__action) ─────────────────
-   Uses `all: unset` to completely sever inheritance from the global
-   `button {}` ruleset in _core-ui.css. Re-declares only what UI Shell needs.
-   ──────────────────────────────────────────────────────────────────────── */
-.cds-header__action {
-  all: unset;
-
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 48px;
-  height: 48px;
-  min-width: 48px;
-  padding: 0;
-
-  /* THE CARBON WAY: Reserve the space with transparent borders */
-  border: 1px solid transparent;
-  border-top: 3px solid transparent;
-  /* Standard accessibility border */
-  border-bottom: 3px solid transparent;
-  /* Reserves space for the active indicator */
-
-  background: transparent;
+/* ── Header Action Button (App header variant over shared c-header action) ── */
+.c-header.c-header--app .c-header__action {
   color: var(--text);
-  cursor: pointer;
-  transition: background-color 110ms;
 }
 
 /* Hover — Carbon Gray 80 */
-.cds-header__action:hover {
+.c-header.c-header--app .c-header__action:hover {
   background-color: var(--gray-80);
 }
 
 /* Active press — one step brighter */
-.cds-header__action:active {
+.c-header.c-header--app .c-header__action:active {
   background-color: var(--gray-70);
 }
 
-/* Accessibility Focus Ring (Restored) */
-.cds-header__action:focus-visible {
-  outline: 2px solid #ffffff;
-  outline-offset: -2px;
-  /* Keeps outline tightly inside the 48px box */
-}
-
 /* Panel-is-open indicator — The Carbon Way */
-.cds-header__action[aria-pressed="true"] {
+.c-header.c-header--app .c-header__action[aria-pressed="true"] {
   background-color: var(--gray-70);
   border-bottom-color: var(--accent);
   /* Swaps transparent for Blue */
 }
 
 /* Header icon formatting — matched to 24px */
-.cds-header__action .material-symbols-outlined {
+.c-header.c-header--app .c-header__action .material-symbols-outlined {
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" -200, "opsz" 24;
   font-size: 24px;
 }
+
+/* See u-hidden in base.css for display:none utility */
 
 /* ==========================================================================
    5-COMPONENTS / AGENDA HEADER
@@ -157,11 +117,9 @@
   scrollbar-gutter: stable;
 }
 
-.agenda-header__inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
+.c-header.c-header--schedule {
+  height: var(--size-header-row);
+  padding: 0;
 }
 
 /* --- Left / Right containers --- */
@@ -175,11 +133,10 @@
   min-width: 0;
 }
 
-.agenda-header__nav-right {
+.c-header.c-header--schedule .c-header__actions {
   flex-shrink: 0;
-  display: flex;
-  align-items: center;
   gap: 8px;
+  height: auto;
 }
 
 /* --- 32×32 Icon Pagination Arrows --- */
@@ -266,11 +223,7 @@
 }
 
 /* --- Typography and headings --- */
-.agenda-header__week-heading {
-  margin: 0;
-  /* The parent .agenda-header__date-left is a flexbox, 
-     so it will perfectly center this h2 automatically! */
-}
+/* .c-header__title base handles margin/padding; see _primitives.css */
 
 /* Treat the entire date as one unified line of natural text */
 .agenda-header__week-date {
@@ -342,6 +295,46 @@
 
 .app-layout.is-resizing .app-layout__main .schedule-grid-container {
   overflow-x: hidden;
+}
+
+/* Visual skin for schedule page shells lives with schedule component styles */
+.app-layout__sidebar--left:not(.app-layout__sidebar--collapsed),
+.app-layout__sidebar--right:not(.app-layout__sidebar--collapsed) {
+  background: var(--layer-02);
+}
+
+.app-layout__main > .card {
+  border-radius: 0;
+  background: var(--red);
+}
+
+.app-layout__sidebar--left > .card:not(.is-hidden) .panel-header,
+.app-layout__sidebar--right > .card:not(.is-hidden) .panel-header {
+  margin-bottom: 16px;
+}
+
+/* Sidebar cards keep compact, muted content defaults without global shell coupling */
+.app-layout__sidebar--left > .card:not(.is-hidden) .card__content,
+.app-layout__sidebar--right > .card:not(.is-hidden) .card__content {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.app-layout__sidebar--left > .card:not(.is-hidden) .card__content {
+  padding-left: 16px;
+  padding-right: 8px;
+}
+
+.app-layout__sidebar--right > .card:not(.is-hidden) .card__content {
+  padding-left: 16px;
+  padding-right: 8px;
+}
+
+.app-layout__sidebar--left > .card:not(.is-hidden) .card__footer,
+.app-layout__sidebar--right > .card:not(.is-hidden) .card__footer {
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 /* When inside an app layout main panel, use flexbox to fill available space */

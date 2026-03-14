@@ -74,26 +74,26 @@
 }
 
 /* --- Base: header, body, footer --- */
-.modal__head {
+.c-header.c-header--modal {
   flex-shrink: 0;
-  height: 48px;
-  padding: 0 16px;
+  height: var(--size-header-row);
+  padding: 0 var(--space-lg);
   border-bottom: 1px solid var(--grid-line);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--space-sm);
   background: var(--surface-2);
 }
 
-.modal__head .section-title {
+.c-header.c-header--modal .section-title {
   margin: 0;
   padding: 0;
   font-size: 1rem;
   font-weight: 600;
 }
 
-.modal__head .form-control {
+.c-header.c-header--modal .form-control {
   width: auto;
 }
 
@@ -178,7 +178,7 @@
   max-width: calc(92ch + 2 * 12px + 2 * 12px);
 }
 
-.modal--trip-details .modal__head,
+.modal--trip-details .c-header.c-header--modal,
 .modal--trip-details .modal__foot {
   font-family: var(--font-sans);
 }
@@ -942,7 +942,7 @@
 /* Print: hide toolbar, show only envelope pages */
 @media print {
   .envelope-modal__toolbar,
-  .modal__head,
+  .c-header--modal,
   .modal__foot,
   .modal__backdrop {
     display: none !important;
@@ -1412,11 +1412,6 @@
 
 /* ── Hidden file input ───────────────────────────────────────────── */
 .sr-file-input {
-  display: none;
-}
-
-/* ── Mobile-only header action (JS-toggled) ──────────────────────── */
-.cds-header__action--hidden {
   display: none;
 }
 

@@ -1074,9 +1074,7 @@ function getEffectiveDriverStatus(t) {
   }
   if (statuses.length === 0) return (t?.driverStatus || "Pending").trim();
   const statusOrder = { Pending: 0, Assigned: 1, Confirmed: 2, "Driver Info Sent": 3 };
-  return statuses.reduce((a, b) =>
-    (statusOrder[a] ?? 0) <= (statusOrder[b] ?? 0) ? a : b,
-  );
+  return statuses.reduce((a, b) => ((statusOrder[a] ?? 0) <= (statusOrder[b] ?? 0) ? a : b));
 }
 
 function getStatusIcon(fieldId, statusValue) {
@@ -1215,9 +1213,9 @@ function updateInvoiceNumberVisibility() {
     numInput.disabled = !show;
     // Visually update empty state if we just enabled/disabled it
     if (!show && !numInput.value) {
-        numInput.classList.add("is-empty");
+      numInput.classList.add("is-empty");
     } else if (show && !numInput.value) {
-        numInput.classList.add("is-empty");
+      numInput.classList.add("is-empty");
     }
   }
 
@@ -3302,7 +3300,16 @@ function buildBusRowsOnce() {
 
     dom.busGrid.append(busSel, d1Block, d2Block);
 
-    state.busRows.push({ row: null, busSel, d1Sel, d1StatusSel, d2Sel, d2StatusSel, d1Block, d2Block });
+    state.busRows.push({
+      row: null,
+      busSel,
+      d1Sel,
+      d1StatusSel,
+      d2Sel,
+      d2StatusSel,
+      d1Block,
+      d2Block,
+    });
   }
 
   refreshBusSelectOptions();
@@ -4280,7 +4287,7 @@ function printEnvelopePages() {
   /* Hide modal chrome from the main app; only show the envelope page(s) */
   .modal--envelope .modal__card--envelope,
   .envelope-modal__toolbar,
-  .modal__head,
+  .c-header--modal,
   .modal__foot,
   .modal__backdrop {
     display: none !important;
@@ -4406,7 +4413,7 @@ function setTripFormFromState(tripKey) {
     if (el) el.dispatchEvent(new Event("change", { bubbles: true }));
   });
   if (typeof updateInvoiceNumberVisibility === "function") updateInvoiceNumberVisibility();
-  
+
   // Collapse overrides accordion by default when loading a trip
   if (dom.requirementsBtn) dom.requirementsBtn.setAttribute("aria-expanded", "false");
   if (dom.requirementsSection) dom.requirementsSection.classList.add("is-hidden");
@@ -4553,8 +4560,6 @@ async function openTripForEdit(tripKey) {
     updateInvoiceNumberVisibility();
     if (typeof syncEmptyFields === "function") syncEmptyFields();
 
-
-
     dom.itineraryField.value = t.itinerary || "";
     $("notes").value = t.notes || "";
     $("comments").value = t.comments || "";
@@ -4575,14 +4580,14 @@ async function openTripForEdit(tripKey) {
     dom.busesNeeded?.dispatchEvent(new Event("change", { bubbles: true }));
     setModeEdit(String(t.tripKey || tripKey), String(t.tripId || ""));
 
-  const fallbackDriverStatus = t.driverStatus || "Pending";
-  state.busRows.forEach((r) => {
-    r.busSel.value = "None";
-    r.d1Sel.value = "None";
-    r.d1StatusSel.value = "Pending";
-    r.d2Sel.value = "None";
-    r.d2StatusSel.value = "Pending";
-  });
+    const fallbackDriverStatus = t.driverStatus || "Pending";
+    state.busRows.forEach((r) => {
+      r.busSel.value = "None";
+      r.d1Sel.value = "None";
+      r.d1StatusSel.value = "Pending";
+      r.d2Sel.value = "None";
+      r.d2StatusSel.value = "Pending";
+    });
 
     const assigns = assignResp?.ok && assignResp.assignments ? assignResp.assignments : [];
     assigns.forEach((a) => {
@@ -4839,11 +4844,11 @@ function buildPrintScheduleTwoPages() {
       headerClone.classList.add("print-header");
       headerClone
         .querySelectorAll(
-          ".agenda-header__nav-right, .agenda-header__date-left .btn--icon, .weekpicker-trigger-wrap",
+          ".c-header__actions, .agenda-header__date-left .btn--icon, .weekpicker-trigger-wrap",
         )
         .forEach((el) => el.remove());
       const topbarLogo = document.querySelector(".app-header__logo-wrap");
-      const headerInner = headerClone.querySelector(".agenda-header__inner");
+      const headerInner = headerClone.querySelector(".c-header--schedule");
       if (topbarLogo && headerInner) {
         const logoClone = topbarLogo.cloneNode(true);
         logoClone.classList.add("print-header-logo");
@@ -5286,29 +5291,29 @@ function wireDelegatedBarEvents() {
   dom.ctxRemoveItineraryPdfBtn?.addEventListener("click", async () => {
     if (!activeContextTripKey) return;
     const trip = state.tripByKey?.[activeContextTripKey];
-    
+
     if (!trip || !trip.itineraryPdfUrl) {
       toast("No itinerary PDF attached to remove.", "info", 2000);
       closeTripContextMenu();
       return;
     }
-    
+
     if (!confirm("Remove this PDF itinerary?")) {
       closeTripContextMenu();
       return;
     }
-    
+
     closeTripContextMenu();
-    
+
     // Needs to be loaded in the editor for saveBtn.click() to save this specific trip
     const wasOpenKey = dom.tripKey?.value;
     if (wasOpenKey !== activeContextTripKey) {
       toast("Loading trip to remove PDF...", "info", 1000);
       await openTripForEdit(activeContextTripKey);
     }
-    
+
     trip.itineraryPdfUrl = ""; // Clear from local state
-    
+
     // Trigger save process
     state.tripFormDirty = true;
     dom.saveBtn.click();
@@ -6045,7 +6050,6 @@ function wireEvents() {
     }
   });
 
-
   dom.itineraryModal.addEventListener("click", (e) => {
     if (e.target.closest("[data-close]")) closeItineraryModal();
   });
@@ -6276,14 +6280,14 @@ function wireEvents() {
       if (!busId || busId === "None") continue;
       const d1 = String(row.d1Sel.value || "").trim();
       const d2 = String(row.d2Sel.value || "").trim();
-      if (d1 && d1 !== "None") driverStatuses.push(String(row.d1StatusSel?.value || "Pending").trim());
-      if (d2 && d2 !== "None") driverStatuses.push(String(row.d2StatusSel?.value || "Pending").trim());
+      if (d1 && d1 !== "None")
+        driverStatuses.push(String(row.d1StatusSel?.value || "Pending").trim());
+      if (d2 && d2 !== "None")
+        driverStatuses.push(String(row.d2StatusSel?.value || "Pending").trim());
     }
     const statusOrder = { Pending: 0, Assigned: 1, Confirmed: 2, "Driver Info Sent": 3 };
     const worst = driverStatuses.length
-      ? driverStatuses.reduce((a, b) =>
-          (statusOrder[a] ?? 0) <= (statusOrder[b] ?? 0) ? a : b,
-        )
+      ? driverStatuses.reduce((a, b) => ((statusOrder[a] ?? 0) <= (statusOrder[b] ?? 0) ? a : b))
       : "Pending";
     $("driverStatus").value = worst;
     $("driverStatus").dispatchEvent(new Event("change", { bubbles: true }));
@@ -6437,7 +6441,7 @@ function wireEvents() {
       (id) => updateStatusSelect($(id)),
     );
     updateInvoiceNumberVisibility();
-    
+
     // Collapse overrides accordion by default when resetting form
     if (dom.requirementsBtn) dom.requirementsBtn.setAttribute("aria-expanded", "false");
     if (dom.requirementsSection) dom.requirementsSection.classList.add("is-hidden");

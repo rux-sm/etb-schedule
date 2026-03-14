@@ -3,8 +3,8 @@
 @import "base.css";
 @import "layout.css";
 
-/* Core UI (buttons, cards, menus, icons, toast, loading) */
-@import "components/_core-ui.css";
+/* Core UI primitives (buttons, cards, headers, icons, toast, loading) */
+@import "components/_primitives.css";
 
 /* Schedule view (grid, nav, panels, agenda) */
 @import "components/_schedule.css";

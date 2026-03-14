@@ -54,7 +54,6 @@
 
 /* Firefox Support (Firefox uses different scrollbar properties) */
 @supports (scrollbar-color: auto) {
-
   .app-layout__sidebar--left .card__content,
   .app-layout__sidebar--right .card__content,
   .schedule-grid-container {
@@ -103,6 +102,11 @@ body {
    the component :focus { border-color } rule already fires for both */
 *:focus-visible {
   outline: none;
+}
+
+/* --- Global Utilities --- */
+.u-hidden {
+  display: none !important;
 }
 
 /* ==========================================================================
@@ -247,14 +251,16 @@ samp {
     box-shadow:
       0 0 8px color-mix(in srgb, var(--tripbar-color) 20%, transparent),
       0 2px 8px rgba(0, 0, 0, 0.2);
-    filter: brightness(var(--tripbar-hover-brightness-from)) saturate(var(--tripbar-hover-saturate-from));
+    filter: brightness(var(--tripbar-hover-brightness-from))
+      saturate(var(--tripbar-hover-saturate-from));
   }
 
   to {
     box-shadow:
       0 0 24px color-mix(in srgb, var(--tripbar-color) 60%, transparent),
       0 6px 16px rgba(0, 0, 0, 0.5);
-    filter: brightness(var(--tripbar-hover-brightness-to)) saturate(var(--tripbar-hover-saturate-to));
+    filter: brightness(var(--tripbar-hover-brightness-to))
+      saturate(var(--tripbar-hover-saturate-to));
   }
 }
 
@@ -295,7 +301,6 @@ samp {
 }
 
 @keyframes jello {
-
   0%,
   11.1%,
   100% {
@@ -356,7 +361,6 @@ samp {
 }
 
 @keyframes arrow-left-bounce {
-
   0%,
   100% {
     transform: translate(0, -50%);
@@ -368,7 +372,6 @@ samp {
 }
 
 @keyframes arrow-right-bounce {
-
   0%,
   100% {
     transform: translate(0, -50%);
@@ -648,9 +651,15 @@ samp {
   }
 
   /* Legal print: hide itinerary, contact, driver status icons to make room for others */
-  .print-table .schedule-grid__trip-bar__status-badges>.schedule-grid__trip-bar__mini-badge:nth-child(3),
-  .print-table .schedule-grid__trip-bar__status-badges>.schedule-grid__trip-bar__mini-badge:nth-child(4),
-  .print-table .schedule-grid__trip-bar__status-badges>.schedule-grid__trip-bar__mini-badge:nth-child(5) {
+  .print-table
+    .schedule-grid__trip-bar__status-badges
+    > .schedule-grid__trip-bar__mini-badge:nth-child(3),
+  .print-table
+    .schedule-grid__trip-bar__status-badges
+    > .schedule-grid__trip-bar__mini-badge:nth-child(4),
+  .print-table
+    .schedule-grid__trip-bar__status-badges
+    > .schedule-grid__trip-bar__mini-badge:nth-child(5) {
     display: none !important;
   }
 
@@ -671,7 +680,7 @@ samp {
     justify-content: flex-start !important;
   }
 
-  .print-header .agenda-header__inner {
+  .print-header .c-header--schedule {
     margin: 0 !important;
     min-height: 0 !important;
   }
@@ -688,7 +697,7 @@ samp {
     object-fit: contain;
   }
 
-  .print-header .agenda-header__week-heading {
+  .print-header .c-header__title {
     color: #333 !important;
     font-size: 14pt !important;
     line-height: 1.2 !important;
@@ -828,7 +837,7 @@ samp {
     padding: 0 !important;
   }
 
-  #printRoot.print-mode-letter-full .print-header .agenda-header__week-heading {
+  #printRoot.print-mode-letter-full .print-header .c-header__title {
     font-size: 14pt !important;
     line-height: 1.2 !important;
   }
@@ -1358,7 +1367,7 @@ select.is-empty:not(:focus),
 }
 
 /* --- 10. LABELS --- */
-.form-group>label,
+.form-group > label,
 .field-label {
   display: block;
   width: 100%;
@@ -1433,14 +1442,13 @@ select.is-empty:not(:focus),
   width: 100%;
 }
 
-.form-actions>.btn {
+.form-actions > .btn {
   flex: 1;
   min-width: 80px;
   justify-content: center;
 }
 
 @container form-grid (max-width: 350px) {
-
   .col-2,
   .col-4,
   .col-5,
@@ -1459,7 +1467,6 @@ select.is-empty:not(:focus),
 }
 
 @media (max-width: 600px) {
-
   .form-grid .col-2,
   .form-grid .col-4,
   .form-grid .col-5,
