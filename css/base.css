@@ -1042,8 +1042,8 @@ input[type="number"] {
 select {
   padding: 0 40px 0 var(--input-padding-x);
   /* Room for chevron */
-  appearance: none;
   -webkit-appearance: none;
+  appearance: none;
 
   color-scheme: dark;
 
@@ -1494,18 +1494,4 @@ select.is-empty:not(:focus),
   .form-grid .form-actions {
     justify-content: flex-start;
   }
-}
-
-/* --- 12. COMPONENT OVERRIDES — Contextual Adjustments --- */
-/* * Replaced the Apple-style backdrop-filter glass effect. 
- * If these sidebars are elevated (Layer 02 or 03), ensure their parent container 
- * has the correct layer class applied in HTML so the --field-bg token updates automatically! 
- */
-#tripInfoCard select,
-#notesCard select,
-#driverWeekCard select,
-.app-layout__sidebar--right select,
-.app-layout__sidebar--left select,
-.dropdown_item {
-  /* Inherits exactly what a normal input does now. Let the HTML structure dictate the background color. */
 }
