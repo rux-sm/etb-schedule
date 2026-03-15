@@ -58,7 +58,7 @@
   top: 0;
   z-index: 1000;
   background-color: var(--layer-ui-shell);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--layer-ui-shell-border);
 }
 
 /* --- Global Actions (Tiled) --- */
@@ -243,26 +243,25 @@
 .agenda-header__week-date .wk-month-end {
   font-weight: 600;
   color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.2px;
   margin-right: 4px;
 }
 
 .agenda-header__week-date .wk-dates {
-  font-weight: 400;
+  font-weight: 600;
   color: var(--text);
   margin-right: 4px;
 }
 
 .agenda-header__week-date .wk-sep {
   color: var(--text);
-  font-weight: 400;
+  font-weight: 600;
   margin-right: 4px;
 }
 
 .agenda-header__week-date .wk-year {
-  font-weight: 600;
-  color: var(--text);
+  font-weight: 500;
+  color: var(--text-secondary);
 }
 
 /* ==========================================================================
@@ -274,7 +273,7 @@
   width: 100%;
   height: auto;
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: auto;
   background: var(--layer-01);
   border-inline-start: none;
 }
@@ -296,9 +295,17 @@
   background: var(--layer-02);
 }
 
+.o-app-layout__sidebar--left {
+  border-right: 1px solid var(--layer-02-border);
+}
+
+.o-app-layout__sidebar--right {
+  border-left: 1px solid var(--layer-02-border);
+}
+
 .o-app-layout__main > .c-card {
   border-radius: 0;
-  background: var(--red);
+  background: var(--layer-01);
 }
 
 /* Sidebar cards keep compact, muted content defaults without global shell coupling */
@@ -310,19 +317,16 @@
 }
 
 .o-app-layout__sidebar--left > .c-card:not(.is-hidden) .c-card__body {
-  padding-left: 16px;
-  padding-right: 8px;
+  padding: var(--space-lg);
 }
 
 .o-app-layout__sidebar--right > .c-card:not(.is-hidden) .c-card__body {
-  padding-left: 16px;
-  padding-right: 8px;
+  padding: var(--space-lg);
 }
 
 .o-app-layout__sidebar--left > .c-card:not(.is-hidden) .c-card__footer,
 .o-app-layout__sidebar--right > .c-card:not(.is-hidden) .c-card__footer {
-  padding-left: 16px;
-  padding-right: 16px;
+  padding: var(--space-lg);
 }
 
 /* ==========================================================================
@@ -1243,9 +1247,10 @@
 .driver-week__wrap {
   width: auto;
   max-width: 100%;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
   margin: 0;
-  background: var(--layer-03);
+  background: var(--surface-2);
 }
 
 .driver-week__table {
@@ -1258,7 +1263,7 @@
 
 .driver-week__table th {
   color: var(--text);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .driver-week__table th,
@@ -1268,8 +1273,8 @@
   text-align: center;
   white-space: nowrap;
   cursor: pointer;
-  border-inline-end: 1px solid var(--layer-03-border);
-  border-bottom: 1px solid var(--layer-03-border);
+  border-inline-end: 1px solid var(--layer-02-border);
+  border-bottom: 1px solid var(--layer-02-border);
 }
 
 .driver-week__table th:last-child,
@@ -1291,27 +1296,26 @@
 }
 
 .driver-week__table th:first-child {
-  font-weight: 700;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.02em;
 }
 
 .driver-week__count {
-  font-weight: 600;
+  font-weight: 400;
   color: var(--text);
 }
 
 
 
 .driver-week__cell--unavailable {
-  background: #F44336 !important;
-  color: #fff !important;
+  background: var(--red)!important;
+  color: var(--text) !important;
 }
 
 .driver-week__cell--on {
   background: var(--accent);
   color: var(--text);
-  font-weight: 700;
 }
 
 /* --- 5. Rigid Bus Assignment --- */

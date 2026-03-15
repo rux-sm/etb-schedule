@@ -89,8 +89,9 @@
 .c-header.c-header--modal .section-title {
   margin: 0;
   padding: 0;
-  font-size: 1rem;
+  font-size: 1.125rem; /* 18px */
   font-weight: 600;
+  color: var(--text);
 }
 
 .c-header.c-header--modal .form-control {
@@ -147,7 +148,7 @@
 .modal--itinerary .modal__card {
   font-family: var(--font-sans);
   font-size: 0.875rem;
-  max-width: calc(92ch + 2 * 12px + 2 * 12px);
+  max-width: calc(86ch + 2 * 12px + 2 * 12px);
 }
 
 .modal--itinerary .modal__body textarea {
@@ -167,15 +168,13 @@
   color: var(--text-secondary);
   background: var(--surface-3);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 0;
 }
 
 /* --- Variants: Trip Details Modal --- */
 .modal--trip-details .modal__card {
-  font-family: var(--font-mono);
   font-size: 0.875rem;
-  text-align: center;
-  max-width: calc(92ch + 2 * 12px + 2 * 12px);
+  max-width: calc(86ch + 2 * 12px + 2 * 12px);
 }
 
 .modal--trip-details .c-header.c-header--modal,
@@ -189,6 +188,10 @@
 }
 
 /* Modal specific inputs */
+#itineraryModalField {
+  text-align: center;
+}
+
 #itineraryModalField:focus {
   outline: none;
   border-color: var(--accent);
@@ -221,7 +224,8 @@
   display: grid;
   align-items: center;
   grid-template-columns: repeat(4, 1fr);
-  gap: 8px 12px;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
 /* Each label-value pair */
@@ -229,21 +233,33 @@
 .trip-details__grid-item {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 4px;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 3px;
   min-width: 0;
-  margin-bottom: 12px;
-  /* 12px */
+  min-height: 56px;
+  margin-bottom: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--grid-line);
+  background: color-mix(in srgb, var(--surface-3), transparent 75%);
 }
 
 .detail-value,
 .trip-details__value {
-  font-size: 0.75rem;
-  font-weight: 400;
+  font-size: 0.9375rem;
+  font-weight: 600;
   color: var(--text);
-  line-height: 1;
+  line-height: 1.15;
   min-width: 0;
   word-break: break-word;
+}
+
+.trip-details__meta-grid .toggle-pill-grid-label {
+  grid-column: auto;
+  margin-bottom: 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-transform: none;
 }
 
 .detail-value.status-pending,
@@ -288,7 +304,8 @@
   letter-spacing: normal;
   font-variant-numeric: normal;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 0;
+  text-align: center;
   width: 100%;
   max-width: 100%;
 
@@ -1114,7 +1131,7 @@
 
 .quote-calculator__input:focus,
 .quote-calculator__select:focus {
-  border-color: var(--primary-color);
+  border-color: var(--color-primary);
 }
 
 .quote-calculator__days {
@@ -1203,7 +1220,7 @@
 }
 
 .quote-calculator input:checked + .toggle-slider {
-  background-color: var(--primary-color);
+  background-color: var(--color-primary);
 }
 
 .quote-calculator input:checked + .toggle-slider:before {
@@ -1368,8 +1385,6 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
-  margin-bottom: 8px;
-  /* Removed border-bottom and padding-bottom to tighten spacing */
 }
 
 /* ── Trip Editor: section spacing standardization ─────────────────── */
@@ -1379,8 +1394,6 @@
   margin-top: 0px;
   padding-top: 0px;
   border-top: 1px solid transparent;
-  margin-bottom: 8px;
-  padding-bottom: 8px;
 }
 
 /* ── Trip Editor: envelope notes input stack ──────────────────────── */
@@ -1392,11 +1405,11 @@
 
 /* ── Driver Contact Modal ────────────────────────────────────────── */
 .driver-contact__body {
-  gap: var(--space-4);
+  gap: var(--space-lg);
 }
 
 .driver-contact__section {
-  gap: var(--space-2);
+  gap: var(--space-sm);
   flex: 1;
 }
 

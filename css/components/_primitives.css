@@ -660,7 +660,7 @@ label .label-link:hover {
   flex-shrink: 0;
   padding: 0 var(--space-lg);
   border-bottom: 1px solid var(--layer-02-border);
-  background-color: var(--layer-02);
+  background-color: var(--layer-03);
 }
 
 .c-header.c-header--panel .c-header__title {
@@ -725,7 +725,7 @@ label .label-link:hover {
   padding: 16px;
   margin-top: 0;
   border-top: 1px solid var(--layer-02-border);
-  background: var(--layer-02);
+  background: var(--layer-03);
   border-radius: 0;
   /* Match card radius if visible */
 }

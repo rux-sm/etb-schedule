@@ -145,7 +145,7 @@ const dom = {
   weekStartSunBtn: $("weekStartSunBtn"),
   weekStartMonBtn: $("weekStartMonBtn"),
 
-  tripForm: $("tripForm"),
+  tripForm: document.querySelector('[data-js="trip-form"]') || $("tripForm"),
   hiddenIframe: $("hidden_iframe"),
 
   action: $("action"),
@@ -157,7 +157,8 @@ const dom = {
   deleteBtn: $("deleteBtn"),
   newBtn: $("newBtn"),
   requirementsBtn: $("requirementsBtn"),
-  requirementsSection: $("requirementsSection"),
+  requirementsSection:
+    document.querySelector('[data-js="trip-requirements-section"]') || $("requirementsSection"),
   assignmentsBtn: $("assignmentsBtn"),
   itineraryModal: $("itineraryModal"),
   itineraryField: $("itinerary"),
@@ -166,14 +167,16 @@ const dom = {
   itinerarySaveBtn: $("itinerarySaveBtn"),
 
   busesNeeded: $("busesNeeded"),
-  busGrid: $("busGrid"),
-  assignmentsOverridesSection: $("assignmentsOverridesSection"),
+  busGrid: document.querySelector('[data-js="trip-bus-grid"]') || $("busGrid"),
+  assignmentsOverridesSection:
+    document.querySelector('[data-js="trip-assignments-section"]') ||
+    $("assignmentsOverridesSection"),
 
-  agendaBody: $("agendaBody"),
+  agendaBody: document.querySelector('[data-js="schedule-agenda-body"]') || $("agendaBody"),
 
   tripInputBtn: $("tripInputBtn"),
-  layoutPanels: $("layoutPanels"),
-  panelEnd: $("panelEnd"),
+  panelStart: document.querySelector('[data-js="panel-sidebar-left"]') || $("panelStart"),
+  panelEnd: document.querySelector('[data-js="panel-sidebar-right"]') || $("panelEnd"),
 
   headerWeek: $("headerWeek"), // Added for date title updates
   weekWrapper: $("dateWrapper"), // Added for width sync
@@ -183,31 +186,34 @@ const dom = {
   prevWeekBtn: $("prevWeekBtn"),
   nextWeekBtn: $("nextWeekBtn"),
 
-  conflictPanel: $("conflictPanel"),
-  conflictList: $("conflictList"),
-  conflictBadge: $("overflowBadge"),
+  conflictPanel:
+    document.querySelector('[data-js="schedule-conflict-panel"]') || $("conflictPanel"),
+  conflictList: document.querySelector('[data-js="schedule-conflict-list"]') || $("conflictList"),
+  conflictBadge:
+    document.querySelector('[data-js="schedule-conflict-badge"]') || $("overflowBadge"),
 
   tripDetailsModal: $("tripDetailsModal"),
   tripDetailsBody: $("tripDetailsBody"),
 
-  driverWeekCard: $("driverWeekCard"),
-  notesCard: $("notesCard"),
+  driverWeekCard: document.querySelector('[data-js="panel-card-drivers"]') || $("driverWeekCard"),
+  notesCard: document.querySelector('[data-js="panel-card-notes"]') || $("notesCard"),
   notesWeekTitle: $("notesWeekTitle"),
   scheduleNotes: $("scheduleNotes"),
   saveNotesBtn: $("saveNotesBtn"),
-  tripInfoCard: $("tripInfoCard"),
-  driverWeekHeadRow: $("driverWeekHeadRow"),
-  driverWeekBody: $("driverWeekBody"),
+  tripInfoCard: document.querySelector('[data-js="panel-card-trip-info"]') || $("tripInfoCard"),
+  driverWeekHeadRow:
+    document.querySelector('[data-js="driver-week-head-row"]') || $("driverWeekHeadRow"),
+  driverWeekBody: document.querySelector('[data-js="driver-week-body"]') || $("driverWeekBody"),
 
   driversBtn: $("driversBtn"),
   notesBtn: $("notesBtn"),
   waitingListBtn: $("waitingListBtn"),
   quoteBtn: $("quoteBtn"),
-  waitingBody: $("waitingBody"),
+  waitingBody: document.querySelector('[data-js="schedule-waiting-body"]') || $("waitingBody"),
   waitingCard: $("waitingCard"),
 
   // Quote Calculator
-  quoteCard: $("quoteCard"),
+  quoteCard: document.querySelector('[data-js="panel-card-quote"]') || $("quoteCard"),
   quoteLDRate: $("quoteLDRate"),
   quoteDeadMiles: $("quoteDeadMiles"),
   quoteTripType: $("quoteTripType"),
@@ -262,7 +268,8 @@ const dom = {
 
   // Envelope Modal & Overrides
   envelopeBtn: $("envelopeBtn"),
-  envelopeOverridesSection: $("envelopeOverridesSection"),
+  envelopeOverridesSection:
+    document.querySelector('[data-js="trip-envelope-section"]') || $("envelopeOverridesSection"),
   envelopeNote1: $("envelopeNote1"),
   envelopeNote2: $("envelopeNote2"),
   envelopeNote3: $("envelopeNote3"),
@@ -296,6 +303,52 @@ const dom = {
   // Hidden file input for itinerary PDF upload
   itineraryPdfInput: $("itineraryPdfInput"),
 };
+
+const SELECTORS = {
+  layoutPanelsHook: '[data-js="layout-panels"]',
+  scheduleAgendaHeaderHook: '[data-js="schedule-agenda-header"]',
+  scheduleMainCardHook: '[data-js="schedule-main-card"]',
+  scheduleGridTableHook: '[data-js="schedule-grid-table"]',
+  scheduleGridWrapHook: '[data-js="schedule-grid-wrap"]',
+};
+
+function getLayoutPanelsEl() {
+  return document.querySelector(SELECTORS.layoutPanelsHook);
+}
+
+function getScheduleGridWrapEl() {
+  return document.querySelector(SELECTORS.scheduleGridWrapHook);
+}
+
+function getScheduleGridTableEl() {
+  return document.querySelector(SELECTORS.scheduleGridTableHook);
+}
+
+function getScheduleAgendaHeaderEl() {
+  return document.querySelector(SELECTORS.scheduleAgendaHeaderHook);
+}
+
+function getScheduleMainCardEl() {
+  return document.querySelector(SELECTORS.scheduleMainCardHook);
+}
+
+function warnOnMissingRequiredHooks() {
+  const requiredHooks = [
+    ["layout panels", SELECTORS.layoutPanelsHook],
+    ["schedule main card", SELECTORS.scheduleMainCardHook],
+    ["schedule agenda header", SELECTORS.scheduleAgendaHeaderHook],
+    ["schedule grid wrapper", SELECTORS.scheduleGridWrapHook],
+    ["schedule grid table", SELECTORS.scheduleGridTableHook],
+  ];
+
+  const missing = requiredHooks.filter(([, selector]) => !document.querySelector(selector));
+  if (!missing.length) return;
+
+  console.warn(
+    "Missing required data-js hooks:",
+    missing.map(([name, selector]) => `${name} (${selector})`),
+  );
+}
 
 // ======================================================
 // 4) STATE
@@ -1161,7 +1214,7 @@ function setSelectToPlaceholder(id) {
 }
 
 function hasSelectedBusForTrip() {
-  const busSel = document.querySelector("#busGrid select[name='bus1']");
+  const busSel = dom.busGrid?.querySelector("select[name='bus1']");
   if (!busSel) return false;
   const v = String(busSel.value || "").trim();
   return v && v !== "None";
@@ -1598,7 +1651,7 @@ function hideScheduleRenderToast() {
 }
 
 function setBarsHidden(hidden) {
-  const wrap = document.querySelector(".schedule-grid-container");
+  const wrap = getScheduleGridWrapEl();
   wrap?.classList?.toggle("is-loading-bars", !!hidden);
 }
 
@@ -1740,7 +1793,7 @@ function buildAgendaRows() {
   });
 
   // WAITING LIST ROW -> Render into SAME table (it's a tbody now)
-  const waitingBody = document.getElementById("waitingBody");
+  const waitingBody = dom.waitingBody;
   if (waitingBody) {
     waitingBody.innerHTML = "";
 
@@ -1795,7 +1848,7 @@ function ensureAgendaGrid() {
   const okMain = dom.agendaBody.rows && dom.agendaBody.rows.length === expected;
 
   // Check waiting body too
-  const waitingBody = document.getElementById("waitingBody");
+  const waitingBody = dom.waitingBody;
   // It's in the same table now, so just check if it exists
   const okWait = !!waitingBody;
 
@@ -1810,7 +1863,7 @@ function getColMetricsCached() {
 
   const startCell = firstBodyRow.cells[1];
   const r = startCell.getBoundingClientRect();
-  const container = document.querySelector(".schedule-grid-container");
+  const container = getScheduleGridWrapEl();
   const containerW = container?.clientWidth ?? 0;
   const key = `${r.left}:${r.width}:${containerW}:${dom.agendaBody?.rows?.length || 0}`;
 
@@ -1846,7 +1899,7 @@ function syncRowBarsWidth(col) {
   });
 
   // Sync waiting list rows
-  const wb = document.getElementById("waitingBody");
+  const wb = dom.waitingBody;
   if (wb) {
     wb.querySelectorAll(".schedule-grid__row-bars").forEach((bars) => {
       bars.style.width = `${total}px`;
@@ -2060,7 +2113,7 @@ function _renderAgendaInner() {
   }
 
   // Waiting List Mapping
-  const waitingBody = document.getElementById("waitingBody");
+  const waitingBody = dom.waitingBody;
   if (waitingBody && waitingBody.rows.length > 0) {
     const wRow = waitingBody.rows[0];
     const wBars = wRow.querySelector(".schedule-grid__row-bars");
@@ -2955,7 +3008,7 @@ function getCardPanel(cardType) {
 /** Suppress horizontal scrollbar during layout changes (panel open/close, window resize) */
 let _resizeTimer = 0;
 function suppressScrollbarDuringResize() {
-  const layout = document.getElementById("layoutPanels");
+  const layout = getLayoutPanelsEl();
   if (!layout) return;
   layout.classList.add("is-resizing");
   clearTimeout(_resizeTimer);
@@ -2963,7 +3016,7 @@ function suppressScrollbarDuringResize() {
 }
 
 function getFirstAvailablePanel() {
-  const panelStart = document.getElementById("panelStart");
+  const panelStart = dom.panelStart;
   const panelEndEl = dom.panelEnd;
 
   const leftHasCard = Object.values(state.cardPanelAssignments).includes("left");
@@ -2980,7 +3033,7 @@ function showCardInPanel(cardType, panel) {
 
   suppressScrollbarDuringResize();
 
-  const panelStart = document.getElementById("panelStart");
+  const panelStart = dom.panelStart;
   const panelEndEl = dom.panelEnd;
 
   // Remove card from current location if it's a direct child
@@ -3041,7 +3094,7 @@ function hideCard(cardType) {
   }
 
   // Collapse panel if it's now empty (check state, not DOM)
-  const panelStart = document.getElementById("panelStart");
+  const panelStart = dom.panelStart;
   const panelEndEl = dom.panelEnd;
 
   const leftHasCards = Object.values(state.cardPanelAssignments).includes("left");
@@ -3101,7 +3154,7 @@ function setSidePanelMode(mode) {
 }
 
 function setPanelStartMode(show) {
-  const panelStart = document.getElementById("panelStart");
+  const panelStart = dom.panelStart;
   if (!panelStart) return;
 
   panelStart.classList.toggle("is-collapsed", !show);
@@ -3196,7 +3249,7 @@ function makeDriverStatusSelect(name) {
 }
 
 function syncBusSelectEmptyState() {
-  document.querySelectorAll("#busGrid select").forEach((el) => {
+  dom.busGrid?.querySelectorAll("select").forEach((el) => {
     const v = (el.value ?? "").trim();
     const cell = el.closest(".select-dropdown") || el;
     cell.classList.toggle("is-empty", !v || v === "None");
@@ -4763,7 +4816,7 @@ function buildPrintScheduleTwoPages() {
   const printRoot = document.getElementById("printRoot");
   if (!printRoot) return;
 
-  const weekTable = document.querySelector(".schedule-grid");
+  const weekTable = getScheduleGridTableEl();
   if (!weekTable) return;
 
   const weekTitle = document.getElementById("headerWeek")?.textContent || "Schedule";
@@ -4838,7 +4891,7 @@ function buildPrintScheduleTwoPages() {
     const card = document.createElement("div");
     card.className = "print-card";
 
-    const agendaHeader = document.querySelector(".agenda-header");
+    const agendaHeader = getScheduleAgendaHeaderEl();
     const headerClone = agendaHeader ? agendaHeader.cloneNode(true) : null;
     if (headerClone) {
       headerClone.classList.add("print-header");
@@ -5221,7 +5274,7 @@ function handleScheduleInteraction(e, isContext) {
 }
 
 function wireDelegatedBarEvents() {
-  const containers = document.querySelectorAll(".schedule-grid-container");
+  const containers = document.querySelectorAll(SELECTORS.scheduleGridWrapHook);
   if (!containers.length) return;
 
   // Close context menu on any click outside
@@ -5722,7 +5775,7 @@ function initGlassSelects() {
   });
 
   // Bus assignment and driver selects (dynamic options, rebuild menu on open)
-  document.querySelectorAll("#busGrid select").forEach((sel) => {
+  dom.busGrid?.querySelectorAll("select").forEach((sel) => {
     wrapSelectInGlassDropdown(sel, { rebuildMenuOnOpen: true, cellClass: "bus-assign__cell" });
   });
 }
@@ -7331,10 +7384,12 @@ if (dom.printDailyMaintenancePlanBtn) {
 // 39) BOOT
 // ======================================================
 (function boot() {
+  warnOnMissingRequiredHooks();
+
   try {
     const style = document.createElement("style");
     style.textContent = `
-.schedule-grid-container.is-loading-bars .schedule-grid__trip-bar { opacity: 0.18; pointer-events: none; }
+  ${SELECTORS.scheduleGridWrapHook}.is-loading-bars .schedule-grid__trip-bar { opacity: 0.18; pointer-events: none; }
 `;
     document.head.appendChild(style);
   } catch {}
@@ -7375,8 +7430,8 @@ if (dom.printDailyMaintenancePlanBtn) {
     { passive: true },
   );
 
-  const tableWrap = document.querySelector(".schedule-grid-container");
-  const scheduleCard = document.querySelector(".o-app-layout__main > .c-card");
+  const tableWrap = getScheduleGridWrapEl();
+  const scheduleCard = getScheduleMainCardEl();
   if (tableWrap && "ResizeObserver" in window) {
     const onResize = () => {
       state.lastColMetrics = null;

@@ -40,12 +40,16 @@
 /* Hide vertical scrollbars while preserving wheel/trackpad scrolling */
 .o-app-layout__sidebar--left .c-card__body,
 .o-app-layout__sidebar--right .c-card__body,
+.o-app-layout__sidebar--right,
 .agenda-header,
 .modal__body,
 .card__content--scrollable,
 .schedule-grid__conflict-panel .c-card__body,
 .notes-textarea,
 .notes__textarea,
+.detail-text.detail-itinerary-scroll,
+.trip-details__itinerary-scroll,
+#busGrid .select-dropdown .dropdown__menu,
 .modal--itinerary .modal__body textarea {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -53,6 +57,7 @@
 
 .o-app-layout__sidebar--left .c-card__body::-webkit-scrollbar,
 .o-app-layout__sidebar--right .c-card__body::-webkit-scrollbar,
+.o-app-layout__sidebar--right::-webkit-scrollbar,
 .o-app-layout__sidebar--left > .c-card:not(.is-hidden) .c-card__body::-webkit-scrollbar,
 .o-app-layout__sidebar--right > .c-card:not(.is-hidden) .c-card__body::-webkit-scrollbar,
 .agenda-header::-webkit-scrollbar,
@@ -61,17 +66,11 @@
 .schedule-grid__conflict-panel .c-card__body::-webkit-scrollbar,
 .notes-textarea::-webkit-scrollbar,
 .notes__textarea::-webkit-scrollbar,
+.detail-text.detail-itinerary-scroll::-webkit-scrollbar,
+.trip-details__itinerary-scroll::-webkit-scrollbar,
+#busGrid .select-dropdown .dropdown__menu::-webkit-scrollbar,
 .modal--itinerary .modal__body textarea::-webkit-scrollbar {
   display: none;
-}
-
-/* Firefox Support (Firefox uses different scrollbar properties) */
-@supports (scrollbar-color: auto) {
-  .schedule-grid-container,
-  .driver-week__wrap {
-    scrollbar-width: thin;
-    scrollbar-color: var(--gray-60) transparent;
-  }
 }
 
 /* ── BASE & RESET ──────────────────────────────────────────────────────── */
@@ -119,6 +118,23 @@ body {
 /* --- Global Utilities --- */
 .u-hidden {
   display: none !important;
+}
+
+.u-w-full {
+  width: 100% !important;
+}
+
+.u-px-0 {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.u-mt-0 {
+  margin-top: 0 !important;
+}
+
+.u-text-danger {
+  color: var(--color-danger) !important;
 }
 
 /* ==========================================================================

@@ -2,476 +2,14 @@
    4-OBJECTS / LAYOUT
    Structural wrappers, grid systems, no cosmetics
    ========================================================================== */
-/* Layout shell (.app, .main, .container) lives in _layout.css; this file defines the o-app-layout object layer. */
+/* This file contains the app shell + object layout + responsive form grid structure. */
 
-/* --- LAYOUT PANELS (Sidebars & Main Schedule Area) --- */
-.o-app-layout {
-  display: grid;
-  grid-template-columns: var(--panel-width) 1fr var(--panel-width);
-  gap: 0;
-  align-items: start;
-  overflow: visible;
-  flex: 1;
-  /* Take available space in flex container */
-  min-height: 0;
-  /* Critical for flex children to respect parent constraints */
-}
-
-.o-app-layout__sidebar--right,
-.o-app-layout__sidebar--left,
-.o-app-layout__main {
-  min-width: 0;
-}
-
-/* Margin below center schedule card only */
-.o-app-layout__main {
-  padding-bottom: 24px;
-}
-
-/* Sidebar symmetry: structural reset only (visual skin lives in component layer) */
-.o-app-layout__sidebar--left:not(.is-collapsed),
-.o-app-layout__sidebar--right:not(.is-collapsed) {
-  padding: 0;
-  margin: 0;
-  /* box-shadow removed for flat UI */
-}
-
-
-
-.o-app-layout__main>.c-card {
-  height: auto;
-  /* Match table height, don't stretch */
-  max-height: 100%;
-  /* But don't exceed viewport */
-
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-
-  overflow: visible;
-  /* border: 1px solid var(--border); */
-  /* Let table container handle scrolling */
-}
-
-.o-app-layout__main .schedule-grid-container {
-  overflow-x: auto;
-  min-height: 0;
-}
-
-.o-app-layout.is-resizing .o-app-layout__main .schedule-grid-container {
-  overflow-x: hidden;
-}
-
-.schedule-grid-container--fluid {
-  flex: 1;
-  min-height: 0;
-}
-
-/* Mobile: let the schedule table fit the screen instead of forcing 1150px */
-@media (max-width: 899px) {
-  .schedule-grid {
-    min-width: 100%;
-  }
-
-  /* Ensure the main card reaches the edges for a full-screen mobile look */
-  .o-app-layout__main>.c-card {
-    margin: 0 !important;
-    padding: 0 !important;
-    /* Remove the 18px padding */
-    width: 100% !important;
-    border-radius: 0;
-  }
-
-  .app {
-    height: 100vh;
-    overflow: hidden;
-  }
-
-  .main {
-    padding: 0;
-    width: 100%;
-    max-width: 100%;
-
-    /* Portrait: Home bar protection at bottom */
-    @media (orientation: portrait) {
-      padding-bottom: env(safe-area-inset-bottom, 20px);
-    }
-
-    /* Landscape: Notch protection on sides + Home bar bottom */
-    @media (orientation: landscape) {
-      padding-left: env(safe-area-inset-left, 0);
-      padding-right: env(safe-area-inset-right, 0);
-      padding-bottom: env(safe-area-inset-bottom, 12px);
-    }
-  }
-
-  .container {
-    padding: 0;
-    width: 100%;
-    max-width: 100%;
-  }
-
-  /* Scheduler layout — single column on mobile */
-  .o-app-layout {
-    grid-template-columns: 1fr;
-  }
-
-  #layoutPanels {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-    gap: 8px;
-  }
-
-  .o-app-layout__sidebar--right {
-    display: none;
-    flex: 0 0 auto;
-    max-height: 45vh;
-    overflow-y: auto;
-    width: 100%;
-  }
-
-  .o-app-layout__sidebar--right.is-active {
-    display: block;
-  }
-
-  .o-app-layout__main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    order: 2;
-    width: 100%;
-    min-height: 0;
-  }
-
-  .o-app-layout__main>.c-card {
-    flex: 0 1 auto;
-    height: auto;
-    width: 100%;
-    max-height: 100%;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .o-app-layout__main .schedule-grid-container,
-  .schedule-grid-container {
-    flex: 0 1 auto;
-    display: block;
-    overflow: auto;
-  }
-}
-
-@media (min-width: 900px) {
-  #layoutPanels {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    flex: 1;
-    overflow: visible;
-    min-height: 0;
-    gap: var(--layout-panel-gap);
-    /* Increased gutter */
-  }
-
-  .o-app-layout__main {
-    flex: 1;
-    order: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: visible;
-    align-items: stretch;
-    /* Stretch card to full width */
-  }
-
-  .o-app-layout__main>.c-card {
-    height: auto;
-    /* Match table height, don't stretch */
-    max-height: 100%;
-    /* But don't exceed viewport */
-    display: flex;
-    flex-direction: column;
-    overflow: visible;
-    /* Let table container handle scrolling */
-  }
-
-  .o-app-layout__main .schedule-grid-container {
-    flex: 1;
-    min-height: 0;
-    overflow: auto;
-  }
-
-  .o-app-layout__sidebar--left,
-  .o-app-layout__sidebar--right {
-    width: var(--panel-width);
-    flex-shrink: 0;
-    position: relative;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    /* Increased gutter */
-    border-right: none;
-    /* Remove border */
-    transition:
-      width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      opacity 0.2s ease,
-      margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: visible;
-    white-space: nowrap;
-  }
-
-  .o-app-layout__sidebar--left {
-    order: 0;
-    border-right: 1px solid var(--layer-02-border);
-  }
-
-  .o-app-layout__sidebar--right {
-    order: 2;
-    border-right: none;
-    border-left: 1px solid var(--layer-02-border);
-  }
-
-  .o-app-layout__sidebar--left.is-collapsed,
-  .o-app-layout__sidebar--right.is-collapsed {
-    width: 0 !important;
-    opacity: 0;
-    margin: 0 !important;
-    pointer-events: none;
-  }
-
-  .o-app-layout__sidebar--left>.c-card,
-  .o-app-layout__sidebar--right>.c-card {
-    min-width: 100%;
-    width: 100%;
-    height: 700px;
-  }
-
-  .o-app-layout__sidebar--left>.c-card:not(.is-hidden),
-  .o-app-layout__sidebar--right>.c-card:not(.is-hidden) {
-    flex: auto;
-    display: flex;
-    flex-direction: column;
-    overflow: visible;
-  }
-
- 
-
-  .o-app-layout__sidebar--left>.c-card:not(.is-hidden) .c-card__body {
-    flex: auto;
-    overflow-y: auto;
-    min-height: 0;
-  }
-
-/* --- LEFT / RIGHT SIDEBAR --- */
-
-  .o-app-layout__sidebar--right>.c-card:not(.is-hidden) .c-card__body {
-    flex: auto;
-    overflow-y: auto;
-    min-height: 0;
-  }
-
-  .o-app-layout__main {
-    position: relative;
-    z-index: 1;
-  }
-
-  .o-app-layout__main>.c-card {
-    box-shadow: none;
-  }
-
-/* [Light mode shadow override removed for scratch redo] */
-
-  .o-app-layout__sidebar--right.is-hidden {
-    display: none;
-  }
-}
-
-/* ==========================================================================
-   4-OBJECTS / GRID
-   Responsive form layout grid and column system
-   (BEM refactor of .form-grid and .col-*)
-   ========================================================================== */
-
-/* --- 1. THE MAIN GRID --- */
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  width: 100%;
-  
-  /* Carbon Compact: 16px row gap, 8px column gap */
-  gap: 16px 8px; 
-  align-items: start;
-}
-
-/* Strip out stray margins from your input wrappers so they don't stack with the grid gap */
-.form-group, 
-.col-2, .col-4, .col-5, .col-6, .col-8, .col-12 {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-/* --- 2. SECTION DIVIDERS & SUBSECTIONS --- */
-/* Target: 32px above the line, 16px below the line */
-
-.subsection {
-  grid-column: span 12;
-  border-top: 1px solid var(--border-subtle);
-  
-  /* Carbon Compact: Rely on grid gap (16px) for space above line, 8px padding below */
-  margin-top: 0; 
-  padding-top: 0; 
-  margin-bottom: 0;
-}
-
-/* If you are using a standalone <hr> for lines (like above Itinerary Status) */
-hr.form-divider {
-  grid-column: span 12;
-  border: 0;
-  border-top: 1px solid var(--border-subtle);
-  
-  margin-top: 0; /* Rely on 16px grid gap */
-  margin-bottom: 0;
-  padding: 0;
-}
-
-/* --- 3. Unified Form Group Wrapper --- */
-.form-grid label,
-.field-label {
-  display: block;
-  font-size: 0.8125rem; /* ~13px */
-  font-weight: 400;
-  color: var(--text-muted);
-  line-height: 1.25;
-  margin-bottom: 4px !important; /* Carbon spacing-02 for compact variant */
-  letter-spacing: 0.02em;
-  width: 100%;
-}
-
-/* Target ALL inputs, selects, and textareas for consistent 32px height */
-.form-grid input,
-.form-grid select,
-.form-grid textarea,
-.form-control,
-select {
-  width: 100%;
-  height: 32px; /* Carbon Small variant spec */
-  box-sizing: border-box;
-}
-
-/* Specific fix for select elements which can sometimes resist height rules */
-select {
-  appearance: none;
-  line-height: 1;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-/* --- 4. Column Spans (Legacy support if needed alongside .col-*) --- */
-.col-2 { grid-column: span 2; }
-.col-4 { grid-column: span 4; }
-.col-5 { grid-column: span 5; }
-.col-6 { grid-column: span 6; }
-.col-8 { grid-column: span 8; }
-.col-12 { grid-column: span 12; }
-
-
-
-/* Requirements Toggle Pill Grid alignment */
-.toggle-pill-grid,
-.toggle-pill__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px !important; /* Forces consistency with main form gaps */
-  margin-top: 12px;
-  padding: 0;
-}
-
-/* --- 5. Actions Row (Carbon Footer) --- */
-.form-actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.form-actions--footer {
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 2fr; /* Delete on left (1 part), Group on right (2 parts) */
-  gap: 8px;
-  padding: 0;
-}
-
-.form-actions__group {
-  display: flex !important;
-  gap: 8px;
-  width: 100%;
-}
-
-.form-actions__group .btn {
-  flex: 1; /* Makes Clear and Save equal */
-}
-
-.form-actions--footer > .btn--danger {
-  width: 100%; /* Ensures Delete matches the base unit of the grid */
-}
-
-/* ==========================================================================
-   Container & Media Queries for Grid Responsiveness
-   ========================================================================== */
-
-/* Container query for extremely narrow form layouts */
-@container form-layout (max-width: 350px) {
-
-  .form-layout__col-2,
-  .form-layout__col-4,
-  .form-layout__col-5,
-  .form-layout__col-6,
-  .form-layout__col-8 {
-    grid-column: span 12;
-  }
-
-  .form-layout__subsection-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .form-layout__actions {
-    justify-content: flex-start;
-  }
-}
-
-/* Viewport-based responsive behavior */
-@media (max-width: 800px) {
-
-  .form-layout .form-layout__col-2,
-  .form-layout .form-layout__col-4,
-  .form-layout .form-layout__col-5,
-  .form-layout .form-layout__col-6,
-  .form-layout .form-layout__col-8 {
-    grid-column: span 12;
-  }
-
-  .form-layout .form-layout__subsection-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .form-layout .form-layout__actions {
-    justify-content: flex-start;
-  }
-}
-
-/* ==========================================================================
-   4-OBJECTS / LAYOUT
-   App shell (.app, .main, .container), shared .heading-1; BEM in _objects.css, _app-header.css.
-   ========================================================================== */
+/* --- APP SHELL BASE (.app, .main, .container) --- */
 .app {
   display: grid;
   grid-template-rows: auto 1fr;
   height: 100vh;
   width: 100%;
-  background: var(--red);
   overflow: hidden;
 }
 
@@ -481,9 +19,8 @@ select {
   flex-direction: column;
   min-height: 0;
   overflow: hidden;
-  /* Prevent main from scrolling */
+  /* Keep the app shell as the scroll owner, not .main. */
   flex: 1;
-  /* Take available space */
 }
 
 .container {
@@ -494,7 +31,7 @@ select {
   flex-direction: column;
   min-height: 0;
   overflow: visible;
-  /* Allow dropdowns to display outside container */
+  /* Allow overlays/dropdowns to escape container bounds. */
 }
 
 /* Page-level title: shared style (app header, agenda week) */
@@ -520,9 +57,7 @@ select {
   display: none;
 }
 
-/* Panel layout object hooks */
-
-/* Mobile layout */
+/* --- APP SHELL MOBILE --- */
 @media (max-width: 899px) {
   .app {
     height: 100vh;
@@ -581,7 +116,7 @@ select {
 
   .app-header__inner {
     padding: 0 16px !important;
-    /* Increase from space-2 to space-4 */
+    /* Slightly wider horizontal breathing room on mobile. */
   }
 
   .app-header__logo-wrap {
@@ -598,7 +133,7 @@ select {
 
   .status-grid {
     grid-template-columns: 1fr;
-    /* Stack them to prevent horizontal squishing */
+    /* Stack on mobile to avoid horizontal compression. */
     gap: 12px;
   }
 
@@ -628,18 +163,11 @@ select {
     z-index: 10;
   }
 
-  /* Fix 4: Sticky Header alignment */
-
-  /* Scheduler layout — single column on mobile (app-layout in _objects.css) */
-
   .dropdown-menu,
   .dropdown__menu {
     inset-inline-end: -10px;
     min-width: 180px;
   }
-}
-
-@media (max-width: 899px) {
 
   .o-app-layout__main .c-card__body,
   .c-card .c-card__body {
@@ -647,21 +175,423 @@ select {
   }
 }
 
+/* --- LAYOUT PANELS (Sidebars & Main Schedule Area) --- */
+.o-app-layout {
+  display: grid;
+  grid-template-columns: var(--panel-width) 1fr var(--panel-width);
+  gap: 0;
+  align-items: start;
+  overflow: visible;
+  flex: 1;
+  /* Fill remaining app space. */
+  min-height: 0;
+  /* Required so nested flex children can shrink/scroll correctly. */
+}
+
+.o-app-layout__sidebar--right,
+.o-app-layout__sidebar--left,
+.o-app-layout__main {
+  min-width: 0;
+}
+
+/* Margin below center schedule card only */
+.o-app-layout__main {
+  padding-bottom: var(--space-xl);
+}
+
+/* Sidebar symmetry: structural reset only (visual skin lives in component layer) */
+.o-app-layout__sidebar--left:not(.is-collapsed),
+.o-app-layout__sidebar--right:not(.is-collapsed) {
+  padding: 0;
+  margin: 0;
+  /* box-shadow removed for flat UI */
+}
+
+.o-app-layout__main > .c-card {
+  height: auto;
+  /* Match table height; avoid forced stretch. */
+  max-height: 100%;
+
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+
+  overflow: visible;
+  /* Let the table container own scrolling. */
+}
+
+.o-app-layout__main .schedule-grid-container {
+  overflow-x: auto;
+  min-height: 0;
+}
+
+.o-app-layout.is-resizing .o-app-layout__main .schedule-grid-container {
+  overflow-x: hidden;
+}
+
+.schedule-grid-container--fluid {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Mobile: let the schedule table fit the screen instead of forcing 1150px */
+@media (max-width: 899px) {
+  /* Ensure the main card reaches the edges for a full-screen mobile look */
+  .o-app-layout__main > .c-card {
+    margin: 0 !important;
+    padding: 0 !important;
+    /* Remove the 18px padding */
+    width: 100% !important;
+    border-radius: 0;
+  }
+
+  /* Scheduler layout — single column on mobile */
+  .o-app-layout {
+    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .o-app-layout__sidebar--right {
+    display: none;
+    flex: 0 0 auto;
+    max-height: 45vh;
+    overflow-y: auto;
+    width: 100%;
+  }
+
+  .o-app-layout__sidebar--right.is-active {
+    display: block;
+  }
+
+  .o-app-layout__main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    order: 2;
+    width: 100%;
+    min-height: 0;
+  }
+
+  .o-app-layout__main > .c-card {
+    flex: 0 1 auto;
+    height: auto;
+    width: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .o-app-layout__main .schedule-grid-container,
+  .schedule-grid-container {
+    flex: 0 1 auto;
+    display: block;
+    overflow-x: auto;
+    overflow-y: auto;
+  }
+}
+
+@media (min-width: 900px) {
+  .o-app-layout {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    flex: 1;
+    overflow: visible;
+    min-height: 0;
+    gap: var(--layout-panel-gap);
+  }
+
+  .o-app-layout__main {
+    flex: 1;
+    order: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+    align-items: stretch;
+  }
+
+  .o-app-layout__main > .c-card {
+    height: auto;
+    /* Match table height; avoid forced stretch. */
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+    /* Let the table container own scrolling. */
+  }
+
+  .o-app-layout__main .schedule-grid-container {
+    flex: 1;
+    min-height: 0;
+    overflow-x: auto;
+    overflow-y: auto;
+  }
+
+  .o-app-layout__sidebar--left,
+  .o-app-layout__sidebar--right {
+    width: var(--panel-width);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border-right: none;
+    transition:
+      width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.2s ease,
+      margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: visible;
+    white-space: nowrap;
+  }
+
+  .o-app-layout__sidebar--left {
+    order: 0;
+  }
+
+  .o-app-layout__sidebar--right {
+    order: 2;
+    border-right: none;
+  }
+
+  .o-app-layout__sidebar--left.is-collapsed,
+  .o-app-layout__sidebar--right.is-collapsed {
+    width: 0 !important;
+    opacity: 0;
+    margin: 0 !important;
+    pointer-events: none;
+  }
+
+  .o-app-layout__sidebar--left > .c-card,
+  .o-app-layout__sidebar--right > .c-card {
+    min-width: 100%;
+    width: 100%;
+    height: 700px;
+  }
+
+  .o-app-layout__sidebar--left > .c-card:not(.is-hidden),
+  .o-app-layout__sidebar--right > .c-card:not(.is-hidden) {
+    flex: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+  }
+
+  .o-app-layout__sidebar--left > .c-card:not(.is-hidden) .c-card__body {
+    flex: auto;
+    overflow-y: auto;
+    min-height: 0;
+  }
+
+  /* Right sidebar body scroll region. */
+  .o-app-layout__sidebar--right > .c-card:not(.is-hidden) .c-card__body {
+    flex: auto;
+    overflow-y: auto;
+    min-height: 0;
+  }
+
+  .o-app-layout__main {
+    position: relative;
+    z-index: 1;
+  }
+
+  .o-app-layout__main > .c-card {
+    box-shadow: none;
+  }
+
+  .o-app-layout__sidebar--right.is-hidden {
+    display: none;
+  }
+}
+
 /* ==========================================================================
-   Agenda header (date + prev/next week above week table)
+   4-OBJECTS / GRID
+   Responsive form layout grid and column system
+   (BEM refactor of .form-grid and .col-*)
    ========================================================================== */
 
-/* Agenda header in css/5-components/_agenda-header.css */
+/* --- 1. THE MAIN GRID --- */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  width: 100%;
+
+  /* Carbon Compact: 16px row gap, 8px column gap */
+  gap: 16px 8px;
+  align-items: start;
+}
+
+/* Strip out stray margins from your input wrappers so they don't stack with the grid gap */
+.form-group,
+.col-2,
+.col-4,
+.col-5,
+.col-6,
+.col-8,
+.col-12 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* --- 2. SECTION DIVIDERS & SUBSECTIONS --- */
+/* Target: 32px above the line, 16px below the line */
+
+.subsection {
+  grid-column: span 12;
+  border-top: 1px solid var(--border-subtle);
+
+  /* Carbon Compact: Rely on grid gap (16px) for space above line, 8px padding below */
+  margin-top: 0;
+  padding-top: 0;
+  margin-bottom: 0;
+}
+
+/* If you are using a standalone <hr> for lines (like above Itinerary Status) */
+hr.form-divider {
+  grid-column: span 12;
+  border: 0;
+  border-top: 1px solid var(--border-subtle);
+
+  margin-top: 0; /* Rely on 16px grid gap */
+  margin-bottom: 0;
+  padding: 0;
+}
+
+/* --- 3. Unified Form Group Wrapper --- */
+.form-grid label,
+.field-label {
+  display: block;
+  font-size: 0.8125rem; /* ~13px */
+  font-weight: 400;
+  color: var(--text-muted);
+  line-height: 1.25;
+  margin-bottom: 4px !important; /* Carbon spacing-02 for compact variant */
+  letter-spacing: 0.02em;
+  width: 100%;
+}
+
+/* Target ALL inputs, selects, and textareas for consistent 32px height */
+.form-grid input,
+.form-grid select,
+.form-grid textarea,
+.form-control,
+select {
+  width: 100%;
+  height: 32px; /* Carbon Small variant spec */
+  box-sizing: border-box;
+}
+
+/* Specific fix for select elements which can sometimes resist height rules */
+select {
+  appearance: none;
+  line-height: 1;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* --- 4. Column Spans (Legacy support if needed alongside .col-*) --- */
+.col-2 {
+  grid-column: span 2;
+}
+.col-4 {
+  grid-column: span 4;
+}
+.col-5 {
+  grid-column: span 5;
+}
+.col-6 {
+  grid-column: span 6;
+}
+.col-8 {
+  grid-column: span 8;
+}
+.col-12 {
+  grid-column: span 12;
+}
+
+/* Requirements Toggle Pill Grid alignment */
+.toggle-pill-grid,
+.toggle-pill__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px !important; /* Forces consistency with main form gaps */
+  margin-top: 12px;
+  padding: 0;
+}
+
+/* --- 5. Actions Row (Carbon Footer) --- */
+.form-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.form-actions--footer {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 2fr; /* Delete on left (1 part), Group on right (2 parts) */
+  gap: 8px;
+  padding: 0;
+}
+
+.form-actions__group {
+  display: flex !important;
+  gap: 8px;
+  width: 100%;
+}
+
+.form-actions__group .btn {
+  flex: 1; /* Keep Clear and Save equal width. */
+}
+
+.form-actions--footer > .btn--danger {
+  width: 100%; /* Match Delete width to the grid unit. */
+}
 
 /* ==========================================================================
-/* ==========================================================================
-   10) WEEK TABLE
+   Grid Responsiveness
    ========================================================================== */
 
-/* Week table and day label styles in css/5-components/_schedule-grid.css */
+/* Container query for extremely narrow form layouts */
+@container form-layout (max-width: 350px) {
+  .form-layout__col-2,
+  .form-layout__col-4,
+  .form-layout__col-5,
+  .form-layout__col-6,
+  .form-layout__col-8 {
+    grid-column: span 12;
+  }
 
-/* Week table styles in css/5-components/_schedule-grid.css */
+  .form-layout__subsection-grid {
+    grid-template-columns: 1fr;
+  }
 
-/* Trip bar styles in css/5-components/_schedule-grid.css */
+  .form-layout__actions {
+    justify-content: flex-start;
+  }
+}
 
-/* ==========================================================================
+/* Viewport-based responsive behavior */
+@media (max-width: 800px) {
+  .form-layout .form-layout__col-2,
+  .form-layout .form-layout__col-4,
+  .form-layout .form-layout__col-5,
+  .form-layout .form-layout__col-6,
+  .form-layout .form-layout__col-8 {
+    grid-column: span 12;
+  }
+
+  .form-layout .form-layout__subsection-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-layout .form-layout__actions {
+    justify-content: flex-start;
+  }
+}

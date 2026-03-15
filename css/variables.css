@@ -6,8 +6,6 @@
    * IBM Carbon Gray scale + semantic hues (single source of truth)
    * ========================================================================== */
 
-  --primary-color: var(--blue);
-
   /* --- Semantic Hues (Dark Mode — Carbon Tone 50) --- */
   --blue: #4589ff;
   /* Blue 50  */
@@ -56,7 +54,7 @@
 
   /* UI Shell (Header bar) - Carbon maps the UI Shell base color to the background token */
   --layer-ui-shell: var(--black); /* Keeping your black preference for the header */
-
+  --layer-ui-shell-border: var(--gray-80);
   /* Layer 01 – Primary components resting directly on the background (schedule grid, main cards) */
   --layer-01: var(--gray-100);
   --layer-01-border-subtle: var(--gray-80);
@@ -144,9 +142,9 @@
   --heading-1-color: var(--text);
 
   --heading-2-size: 18px;
-  --heading-2-weight: 600;
+  --heading-2-weight: 400;
   --heading-2-line-height: 1.25;
-  --heading-2-letter-spacing: -0.005em;
+  --heading-2-letter-spacing: 0;
   --heading-2-color: var(--text);
 
   /* ==========================================================================
@@ -161,20 +159,20 @@
   --space-lg: 16px;
   --space-xl: 24px;
   --panel-width: 400px;
-  --layout-panel-gap: 12px;
+  --layout-panel-gap: var(--space-xl);
   --card-padding: 16px;
   --card-footer-padding-y: 12px;
   --card-footer-padding-x: 16px;
   --card-footer-min-height: 40px;
   --bar-height: 40px;
   --topbar-height: 48px;
-  --topbar-border: #393939;
-  --topbar-action-hover: #353535;
-  --topbar-action-active: #4d4d4d;
-  --topbar-active-accent: #0f62fe;
+  --topbar-border: var(--layer-ui-shell-border);
+  --topbar-action-hover: color-mix(in srgb, var(--layer-ui-shell), white 20%);
+  --topbar-action-active: color-mix(in srgb, var(--layer-ui-shell), white 30%);
+  --topbar-active-accent: #0f62fe; /* Carbon Blue 60 — active indicator (intentionally distinct from --blue / Blue 50) */
   --topbar-title-size: 16px;
   --topbar-title-weight: 400;
-  --topbar-divider-color: var(--gray-80);
+  --topbar-divider-color: var(--layer-ui-shell-border);
   --size-header-row: 48px;
   --size-header-action: 48px;
   --size-toolbar-action: 32px;
@@ -224,7 +222,23 @@
   --date-picker-filter: none;
   --agenda-header-bg: rgb(31 32 33);
 
+  /* Surface tokens — dark-mode definitions (canonical layer aliases)
+   * These satisfy components that reference --surface-* and --border.
+   * Light theme overrides these in [data-theme="light"] below. */
+  --app-bg: var(--background);
+  --surface-0: var(--background);
+  --surface-1: var(--layer-01);
+  --surface-2: var(--layer-02);
+  --surface-3: var(--layer-03);
+  --surface-4: var(--gray-70);
+  --border: var(--layer-02-border);
+  --border-strong: var(--layer-03-border);
+  --grid-line: var(--layer-02-border-subtle);
+  --text: var(--text-primary);
+  --text-muted: var(--text-secondary);
+
   /* Surface container aliases (used by newer components) */
+  --surface-container-lowest: var(--background);
   --surface-container: var(--surface-2);
   --surface-container-high: var(--surface-3);
   --surface-container-highest: var(--surface-4);

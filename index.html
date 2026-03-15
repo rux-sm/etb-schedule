@@ -65,35 +65,35 @@
           <button
             id="tripInputBtn"
             class="c-header__action"
-            title="Trip Editor"
+            title="Trip editor"
           >
             <span class="material-symbols-outlined">add</span>
           </button>
           <button
             id="driversBtn"
             class="c-header__action"
-            title="Driver Assignments"
+            title="Driver assignments"
           >
             <span class="material-symbols-outlined">groups</span>
           </button>
           <button
             id="quoteBtn"
             class="c-header__action"
-            title="Quote Calculator"
+            title="Quote calculator"
           >
             <span class="material-symbols-outlined">calculate</span>
           </button>
           <button
             id="waitingListBtn"
             class="c-header__action"
-            title="Waiting List"
+            title="Waiting list"
           >
             <span class="material-symbols-outlined">low_priority</span>
           </button>
           <button
             id="notesBtn"
             class="c-header__action"
-            title="Weekly Notes"
+            title="Weekly notes"
           >
             <span class="material-symbols-outlined">sticky_note_2</span>
           </button>
@@ -189,20 +189,22 @@
         <div class="container">
           <div
             class="o-app-layout"
-            id="layoutPanels"
+            data-js="layout-panels"
           >
             <!-- START PANEL -->
             <div
               class="o-app-layout__sidebar o-app-layout__sidebar--left is-collapsed"
               id="panelStart"
+              data-js="panel-sidebar-left"
             >
               <!-- Placeholder for new left panel cards -->
               <div
                 class="c-card c-card--compact is-hidden"
                 id="leftPanelCard1"
+                data-js="panel-card-left-placeholder"
               >
                 <div class="c-header c-header--panel">
-                  <h2 class="c-header__title">Left Panel Card 1</h2>
+                  <h2 class="c-header__title">Left panel card 1</h2>
                 </div>
                 <div class="c-card__body">
                   <p>Add your content here</p>
@@ -214,14 +216,16 @@
             <div
               class="o-app-layout__sidebar o-app-layout__sidebar--right is-collapsed"
               id="panelEnd"
+              data-js="panel-sidebar-right"
             >
               <!-- Quote Calculator Card (hidden by default) -->
               <div
                 class="c-card c-card--compact is-hidden quote-calculator"
                 id="quoteCard"
+                data-js="panel-card-quote"
               >
                 <div class="c-header c-header--panel">
-                  <h2 class="c-header__title">Quote Calculator</h2>
+                  <h2 class="c-header__title">Quote calculator</h2>
                   <div class="c-header__actions">
                     <button
                       id="quoteInfoBtn"
@@ -443,6 +447,7 @@
                     <div class="quote-calculator__col-dynamic">
                       <div
                         id="quoteDynamicDaysContainer"
+                        data-js="quote-dynamic-days"
                         class="quote-calculator__days"
                       >
                         <!-- Handled by JavaScript:
@@ -563,15 +568,11 @@
 
                 <!-- Action Footer -->
                 <div class="c-card__footer">
-                  <div
-                    class="form-actions"
-                    style="width: 100%"
-                  >
+                  <div class="form-actions u-w-full">
                     <button
                       type="button"
-                      class="btn btn--primary"
+                      class="btn btn--primary u-w-full"
                       id="quoteCopySummary"
-                      style="width: 100%"
                     >
                       <span class="material-symbols-outlined">content_copy</span>
                       <span>Copy Summary</span>
@@ -584,6 +585,7 @@
               <div
                 class="c-card c-card--compact is-hidden"
                 id="driverWeekCard"
+                data-js="panel-card-drivers"
               >
                 <div class="c-header c-header--panel">
                   <h2 class="c-header__title">Driver & bus assignments</h2>
@@ -594,9 +596,15 @@
                   <div class="driver-week__wrap">
                     <table class="driver-week__table">
                       <thead>
-                        <tr id="driverWeekHeadRow"></tr>
+                        <tr
+                          id="driverWeekHeadRow"
+                          data-js="driver-week-head-row"
+                        ></tr>
                       </thead>
-                      <tbody id="driverWeekBody"></tbody>
+                      <tbody
+                        id="driverWeekBody"
+                        data-js="driver-week-body"
+                      ></tbody>
                     </table>
                   </div>
                 </div>
@@ -608,9 +616,10 @@
               <div
                 class="c-card c-card--compact is-hidden"
                 id="notesCard"
+                data-js="panel-card-notes"
               >
                 <div class="c-header c-header--panel">
-                  <h2 class="c-header__title">Weekly Notes</h2>
+                  <h2 class="c-header__title">Weekly notes</h2>
                   <div class="c-header__actions"></div>
                 </div>
 
@@ -641,9 +650,10 @@
               <div
                 class="c-card c-card--compact is-hidden"
                 id="tripInfoCard"
+                data-js="panel-card-trip-info"
               >
                 <div class="c-header c-header--panel">
-                  <h2 class="c-header__title">Trip Editor</h2>
+                  <h2 class="c-header__title">Trip editor</h2>
                   <div class="c-header__actions">
                     <span
                       id="tripIdBadge"
@@ -655,6 +665,7 @@
                 <div class="c-card__body">
                   <form
                     id="tripForm"
+                    data-js="trip-form"
                     class="form-grid"
                     target="hidden_iframe"
                     method="POST"
@@ -997,10 +1008,7 @@
                       class="is-hidden"
                       aria-label="Itinerary Content"
                     ></textarea>
-                    <div
-                      class="subsection col-12"
-                      style="padding-left: 0; padding-right: 0"
-                    >
+                    <div class="subsection col-12 u-px-0">
                       <div
                         class="cds-accordion"
                         id="tripExtrasAccordion"
@@ -1023,13 +1031,13 @@
                           </button>
                           <div
                             id="requirementsSection"
+                            data-js="trip-requirements-section"
                             class="cds-accordion__content is-hidden"
                           >
                             <div
-                              class="toggle-pill__grid"
+                              class="toggle-pill__grid u-mt-0"
                               role="group"
                               aria-label="Requirements"
-                              style="margin-top: 0"
                             >
                               <button
                                 type="button"
@@ -1132,6 +1140,7 @@
 
                           <div
                             id="assignmentsOverridesSection"
+                            data-js="trip-assignments-section"
                             class="cds-accordion__content is-hidden"
                           >
                             <div class="form-grid assignments-overrides-section">
@@ -1142,6 +1151,7 @@
                               </div>
                               <div
                                 id="busGrid"
+                                data-js="trip-bus-grid"
                                 class="col-12"
                               ></div>
                             </div>
@@ -1167,6 +1177,7 @@
 
                           <div
                             id="envelopeOverridesSection"
+                            data-js="trip-envelope-section"
                             class="cds-accordion__content is-hidden"
                           >
                             <div class="form-grid envelope-overrides-section">
@@ -1279,11 +1290,15 @@
 
             <!-- MAIN PANEL (Schedule) -->
             <div class="o-app-layout__main">
-              <div class="c-card">
+              <div
+                class="c-card"
+                data-js="schedule-main-card"
+              >
                 <!-- Conflicts badge (overlay) -->
                 <div class="schedule-badge-wrap">
                   <span
                     id="overflowBadge"
+                    data-js="schedule-conflict-badge"
                     class="badge badge--error is-hidden"
                   >
                     Conflicts detected
@@ -1291,7 +1306,10 @@
                 </div>
 
                 <!-- Agenda header: week date + prev/next navigation -->
-                <div class="agenda-header">
+                <div
+                  class="agenda-header"
+                  data-js="schedule-agenda-header"
+                >
                   <div class="c-header c-header--schedule">
                     <div class="agenda-header__date-left">
                       <button
@@ -1358,8 +1376,14 @@
                   </div>
                 </div>
 
-                <div class="schedule-grid-container schedule-grid-container--fluid">
-                  <table class="schedule-grid">
+                <div
+                  class="schedule-grid-container schedule-grid-container--fluid"
+                  data-js="schedule-grid-wrap"
+                >
+                  <table
+                    class="schedule-grid"
+                    data-js="schedule-grid-table"
+                  >
                     <colgroup>
                       <col class="schedule-grid__col-bus" />
                       <col class="schedule-grid__col-day" />
@@ -1447,9 +1471,13 @@
                       </tr>
                     </thead>
 
-                    <tbody id="agendaBody"></tbody>
+                    <tbody
+                      id="agendaBody"
+                      data-js="schedule-agenda-body"
+                    ></tbody>
                     <tbody
                       id="waitingBody"
+                      data-js="schedule-waiting-body"
                       hidden
                     ></tbody>
                   </table>
@@ -1457,15 +1485,19 @@
 
                 <div
                   id="conflictPanel"
-                  class="c-card is-hidden"
+                  class="c-card schedule-grid__conflict-panel is-hidden"
+                  data-js="schedule-conflict-panel"
                 >
-                  <div class="c-card__title">
-                    Conflicts
-                    <span class="badge badge--error">Needs attention</span>
+                  <div class="c-header c-header--panel">
+                    <h2 class="c-header__title">Conflicts</h2>
+                    <div class="c-header__actions">
+                      <span class="badge badge--error">Needs attention</span>
+                    </div>
                   </div>
                   <div class="c-card__body">
                     <div
                       id="conflictList"
+                      data-js="schedule-conflict-list"
                       class="help"
                     ></div>
                   </div>
@@ -1973,9 +2005,8 @@
       </button>
       <button
         id="ctxRemoveItineraryPdfBtn"
-        class="context-menu__item text-danger"
+        class="context-menu__item u-text-danger"
         type="button"
-        style="color: var(--color-danger)"
       >
         <span class="material-symbols-outlined">delete</span>
         <span>Delete Itinerary PDF</span>
