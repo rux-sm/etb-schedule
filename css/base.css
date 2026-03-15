@@ -43,7 +43,6 @@
 .o-app-layout__sidebar--right,
 .agenda-header,
 .modal__body,
-.card__content--scrollable,
 .schedule-grid__conflict-panel .c-card__body,
 .notes-textarea,
 .notes__textarea,
@@ -62,7 +61,6 @@
 .o-app-layout__sidebar--right > .c-card:not(.is-hidden) .c-card__body::-webkit-scrollbar,
 .agenda-header::-webkit-scrollbar,
 .modal__body::-webkit-scrollbar,
-.card__content--scrollable::-webkit-scrollbar,
 .schedule-grid__conflict-panel .c-card__body::-webkit-scrollbar,
 .notes-textarea::-webkit-scrollbar,
 .notes__textarea::-webkit-scrollbar,
@@ -597,10 +595,7 @@ samp {
   .app-header,
   .theme-toggle,
   .context-menu,
-  .modal,
-  .loading-overlay,
-  #toast,
-  #toastBackdrop {
+  .modal {
     display: none !important;
   }
 
@@ -1268,6 +1263,18 @@ textarea:focus,
 .context-item:active,
 .context-menu__item:active {
   background-color: color-mix(in srgb, var(--layer-03, var(--gray-70)), white 20%);
+}
+
+.dropdown__item--meta {
+  cursor: default;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.dropdown__item--meta:hover,
+.dropdown__item--meta:active {
+  background-color: transparent;
+  color: var(--text-secondary);
 }
 
 /* Active Selection overrides */

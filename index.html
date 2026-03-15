@@ -58,6 +58,11 @@
             id="topbarTitle"
           >
             <span class="app-header__title--prefix">Trip Schedule</span>
+            <span
+              class="app-header__version"
+              id="appVersionBadge"
+              aria-label="Application version"
+            ></span>
           </h1>
         </div>
 
@@ -180,6 +185,12 @@
                 <span class="dropdown__icon material-symbols-outlined">toggle_off</span>
                 <span>Week starts Monday</span>
               </button>
+              <hr class="dropdown__divider" />
+              <div
+                id="appVersionMenuItem"
+                class="dropdown__item dropdown__item--meta"
+                role="note"
+              ></div>
             </div>
           </div>
         </div>
@@ -1343,6 +1354,17 @@
                         </h2>
                       </div>
                     </div>
+                    <div class="agenda-header__sync-center">
+                      <span
+                        id="weekSyncStatus"
+                        class="schedule-sync-status is-idle"
+                        role="status"
+                        aria-live="polite"
+                        aria-atomic="true"
+                      >
+                        Up to date
+                      </span>
+                    </div>
                     <div class="c-header__actions">
                       <div class="weekpicker-trigger-wrap">
                         <button
@@ -1507,72 +1529,6 @@
           </div>
         </div>
       </main>
-    </div>
-
-    <!-- Loading Overlay -->
-    <div
-      id="loadingOverlay"
-      class="loading-overlay"
-      hidden
-    >
-      <div class="loading-overlay__backdrop"></div>
-
-      <div
-        class="loading-overlay__card"
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        <div
-          class="loading-overlay__title"
-          id="loadingOverlayText"
-        >
-          Loading…
-        </div>
-
-        <div class="loading-overlay__bar">
-          <div class="loading-overlay__bar-inner"></div>
-        </div>
-
-        <div
-          class="loading-overlay__sub"
-          id="loadingOverlaySub"
-        >
-          Please wait
-        </div>
-      </div>
-    </div>
-
-    <!-- Toast backdrop (blur + click-blocker) -->
-    <div
-      id="toastBackdrop"
-      class="toast-backdrop"
-      hidden
-    ></div>
-
-    <!-- Global toast -->
-    <div
-      id="toast"
-      class="toast"
-      role="status"
-      aria-live="polite"
-      aria-atomic="true"
-      hidden
-    >
-      <div class="toast-row">
-        <span
-          class="toast-icon"
-          aria-hidden="true"
-        ></span>
-        <span id="toastText"></span>
-      </div>
-
-      <div
-        class="toast-progress"
-        aria-hidden="true"
-      >
-        <div class="toast-progress__inner"></div>
-      </div>
     </div>
 
     <!-- Itinerary Modal -->
@@ -1869,6 +1825,10 @@
         aria-modal="true"
         aria-label="Trip envelope"
       >
+        <div class="c-header c-header--modal">
+          <h2 class="section-title c-header__title">Trip Envelope</h2>
+        </div>
+
         <div class="modal__body envelope-modal__body">
           <div
             id="envelopeModalToolbar"

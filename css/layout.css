@@ -34,29 +34,6 @@
   /* Allow overlays/dropdowns to escape container bounds. */
 }
 
-/* Page-level title: shared style (app header, agenda week) */
-.heading-1 {
-  font-family: var(--font-sans);
-  font-size: var(--heading-1-size);
-  font-weight: var(--heading-1-weight);
-  color: var(--heading-1-color);
-  line-height: var(--heading-1-line-height);
-  margin: 0;
-  letter-spacing: var(--heading-1-letter-spacing);
-  white-space: nowrap;
-}
-
-/* Control groups */
-.nav-controls {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-#todayBtnMobile {
-  display: none;
-}
-
 /* --- APP SHELL MOBILE --- */
 @media (max-width: 899px) {
   .app {
@@ -95,83 +72,6 @@
   .schedule-grid th:not(:first-child),
   .schedule-grid td:not(:first-child) {
     min-width: 180px;
-  }
-
-  /* Hide desktop-only toolbar buttons */
-  #notesBtn,
-  #waitingListBtn,
-  #themeToggle,
-  #todayBtn,
-  #tripInputBtn,
-  #driversBtn,
-  #printBtn,
-  #refreshBtn,
-  .week-start {
-    display: none !important;
-  }
-
-  .app-header__btn-mobile {
-    display: inline-flex;
-  }
-
-  .app-header__inner {
-    padding: 0 16px !important;
-    /* Slightly wider horizontal breathing room on mobile. */
-  }
-
-  .app-header__logo-wrap {
-    display: none !important;
-  }
-
-  .app-header__start {
-    display: flex !important;
-    align-items: center;
-    gap: 2px;
-    flex: 1;
-    min-width: 0;
-  }
-
-  .status-grid {
-    grid-template-columns: 1fr;
-    /* Stack on mobile to avoid horizontal compression. */
-    gap: 12px;
-  }
-
-  .app-header__end {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    margin-inline-start: auto;
-    flex-shrink: 0;
-  }
-
-  .nav-controls {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    margin: 0 !important;
-    flex-shrink: 0;
-    position: relative;
-    z-index: 10;
-  }
-
-  .btn--icon {
-    min-width: 32px;
-    width: 32px;
-    height: 32px;
-    position: relative;
-    z-index: 10;
-  }
-
-  .dropdown-menu,
-  .dropdown__menu {
-    inset-inline-end: -10px;
-    min-width: 180px;
-  }
-
-  .o-app-layout__main .c-card__body,
-  .c-card .c-card__body {
-    padding: 0;
   }
 }
 

@@ -77,6 +77,8 @@ if (document.readyState === "loading") {
 // 2) CONFIG
 // ======================================================
 const CONFIG = {
+  APP_NAME: "Trip Schedule",
+  APP_VERSION: "0.9.0",
   ENDPOINT:
     "https://script.google.com/macros/s/AKfycbzSsVByHnMuzdmaITv2Ht-q1hUQ0y5cVVIEzV6E-h7-1EhnVWJDYlhj5K4RhY0wldBk/exec",
   BUS_LANES: ["218", "763", "470", "133", "506", "746", "607", "897", "898", "474"],
@@ -88,6 +90,36 @@ const CONFIG = {
   CACHE_TTL_DRIVERS: 60 * 60 * 1000, // 1 hour
   AUTO_REFRESH_INTERVAL: 5 * 60 * 1000, // 5 minutes
 };
+
+function getVersionLabel() {
+  const version = String(CONFIG.APP_VERSION || "").trim();
+  if (!version) return "";
+  return `v${version}`;
+}
+
+function initAppVersionDisplay() {
+  const versionLabel = getVersionLabel();
+  const fullTitle = versionLabel ? `${CONFIG.APP_NAME} ${versionLabel}` : `${CONFIG.APP_NAME}`;
+
+  document.title = fullTitle;
+
+  const headerBadge = document.getElementById("appVersionBadge");
+  if (headerBadge) {
+    headerBadge.textContent = versionLabel;
+    headerBadge.classList.toggle("u-hidden", !versionLabel);
+  }
+
+  const menuItem = document.getElementById("appVersionMenuItem");
+  if (menuItem) {
+    menuItem.textContent = versionLabel ? `Version ${versionLabel}` : "Version";
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initAppVersionDisplay);
+} else {
+  initAppVersionDisplay();
+}
 
 const CACHE = {
   get(key) {
@@ -138,10 +170,6 @@ const CACHE = {
 const $ = (id) => document.getElementById(id);
 
 const dom = {
-  toast: $("toast"),
-  toastText: $("toastText"),
-  toastBackdrop: $("toastBackdrop"),
-
   weekStartSunBtn: $("weekStartSunBtn"),
   weekStartMonBtn: $("weekStartMonBtn"),
 
@@ -180,6 +208,7 @@ const dom = {
 
   headerWeek: $("headerWeek"), // Added for date title updates
   weekWrapper: $("dateWrapper"), // Added for width sync
+  weekSyncStatus: $("weekSyncStatus"),
   weekPicker: $("weekPicker"),
   agendaLeftBtn: $("agendaLeftBtn"),
 
@@ -369,6 +398,16 @@ const state = {
   pendingWrite: null,
   verifyFallbackTimer: null,
   toastTimer: null,
+  weekLoadSafetyTimer: null,
+  statusNoticeExpiryTimer: null,
+  activeStatusNotice: null,
+  statusNoticeToken: 0,
+  baseWeekSyncStatus: {
+    mode: "idle",
+    message: "Up to date",
+    progress: null,
+    indeterminate: false,
+  },
 
   progressCreepTimer: null,
   weekRenderDoneResolver: null,
@@ -467,6 +506,69 @@ function asStr(x) {
 function asInt(x, def = 0) {
   const n = parseInt(x, 10);
   return isNaN(n) ? def : n;
+}
+
+const MODAL_FOCUSABLE_SELECTOR =
+  'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+const modalReturnFocusMap = new WeakMap();
+
+function getFocusableIn(container) {
+  if (!container) return [];
+  return Array.from(container.querySelectorAll(MODAL_FOCUSABLE_SELECTOR)).filter((el) => {
+    if (!(el instanceof HTMLElement)) return false;
+    if (el.hidden) return false;
+    if (el.getAttribute("aria-hidden") === "true") return false;
+    return true;
+  });
+}
+
+function openModalA11y(modalEl, preferredFocusEl) {
+  if (!modalEl) return;
+  const active = document.activeElement;
+  if (active instanceof HTMLElement) {
+    modalReturnFocusMap.set(modalEl, active);
+  }
+
+  modalEl.hidden = false;
+  requestAnimationFrame(() => {
+    if (preferredFocusEl instanceof HTMLElement && !preferredFocusEl.disabled) {
+      preferredFocusEl.focus();
+      return;
+    }
+    const [first] = getFocusableIn(modalEl);
+    if (first) first.focus();
+  });
+}
+
+function closeModalA11y(modalEl) {
+  if (!modalEl) return;
+  modalEl.hidden = true;
+
+  const returnEl = modalReturnFocusMap.get(modalEl);
+  modalReturnFocusMap.delete(modalEl);
+  if (returnEl instanceof HTMLElement && document.contains(returnEl)) {
+    returnEl.focus();
+  }
+}
+
+function trapModalFocus(modalEl, event) {
+  const focusables = getFocusableIn(modalEl);
+  if (!focusables.length) return;
+
+  const first = focusables[0];
+  const last = focusables[focusables.length - 1];
+  const active = document.activeElement;
+
+  if (event.shiftKey && active === first) {
+    event.preventDefault();
+    last.focus();
+    return;
+  }
+
+  if (!event.shiftKey && active === last) {
+    event.preventDefault();
+    first.focus();
+  }
 }
 
 // ======================================================
@@ -1030,65 +1132,266 @@ window.addEventListener("unhandledrejection", (e) => {
 });
 
 // ======================================================
-// 12) TOAST + LOADING PROGRESS
+// 12) STATUS NOTICES + LOADING PROGRESS
 // ======================================================
-function setToastBackdrop(on) {
-  if (!dom.toastBackdrop) return;
-  dom.toastBackdrop.hidden = !on;
+
+function mapToastVariantToSyncMode(variant = "info") {
+  const v = String(variant || "info").toLowerCase();
+  if (v === "sync") return "sync";
+  if (v === "idle") return "idle";
+  if (v === "danger" || v === "error") return "error";
+  if (v === "warning") return "stale";
+  if (v === "loading") return "loading";
+  if (v === "success") return "idle";
+  return "sync";
+}
+
+function getToastVisualOptions(variant = "info") {
+  const v = String(variant || "info").toLowerCase();
+  if (v === "loading" || v === "sync") {
+    return { indeterminate: true, progress: null };
+  }
+  if (v === "success") {
+    return { indeterminate: false, progress: 100 };
+  }
+  return { indeterminate: false, progress: null };
+}
+
+function getHeaderStatusPriority(kind = "info", explicitPriority = null, scope = "notice") {
+  if (Number.isFinite(explicitPriority)) return Number(explicitPriority);
+
+  const key = String(kind || "info").toLowerCase();
+  const maps = {
+    notice: {
+      error: 60,
+      danger: 60,
+      loading: 50,
+      success: 40,
+      info: 30,
+      warning: 25,
+      stale: 25,
+      sync: 10,
+      idle: 0,
+    },
+    base: {
+      error: 45,
+      stale: 20,
+      loading: 15,
+      sync: 10,
+      idle: 0,
+    },
+  };
+
+  return maps[scope]?.[key] ?? 0;
+}
+
+function buildWeekSyncStatusEntry(mode = "idle", detail = "", options = {}) {
+  const textMap = {
+    idle: "Up to date",
+    sync: "Updating in background...",
+    loading: "Loading week...",
+    stale: "Showing cached data",
+    error: "Update failed",
+  };
+  const safeMode = ["idle", "sync", "loading", "stale", "error"].includes(mode) ? mode : "idle";
+  const baseText = textMap[safeMode] || textMap.idle;
+  const detailText = String(detail || "").trim();
+  const label = options.replaceMessage
+    ? detailText || baseText
+    : detailText
+      ? `${baseText} ${detailText}`
+      : baseText;
+
+  return {
+    mode: safeMode,
+    message: label,
+    indeterminate:
+      options.indeterminate != null
+        ? !!options.indeterminate
+        : safeMode === "loading" || safeMode === "sync",
+    progress: options.progress != null ? options.progress : null,
+  };
+}
+
+function renderWeekSyncStatusEntry(entry) {
+  if (!entry) return;
+  setWeekSyncStatusMessage(entry.mode, entry.message, {
+    progress: entry.progress,
+    indeterminate: entry.indeterminate,
+  });
+}
+
+function renderCurrentWeekSyncStatus() {
+  renderWeekSyncStatusEntry(state.activeStatusNotice?.entry || state.baseWeekSyncStatus);
+}
+
+function clearStatusNoticeExpiryTimer() {
+  if (!state.statusNoticeExpiryTimer) return;
+  clearTimeout(state.statusNoticeExpiryTimer);
+  state.statusNoticeExpiryTimer = null;
+}
+
+function scheduleStatusNoticeAutoExpire({ token, entry, source }) {
+  clearStatusNoticeExpiryTimer();
+
+  if (!entry) return;
+  if (!(entry.mode === "loading" || entry.mode === "sync")) return;
+
+  const timeoutMs = source === "week-load" ? 12000 : 10000;
+
+  state.statusNoticeExpiryTimer = setTimeout(() => {
+    const active = state.activeStatusNotice;
+    if (!active || active.token !== token) return;
+    if (!(active.entry?.mode === "loading" || active.entry?.mode === "sync")) return;
+
+    stopProgressCreep();
+    clearHeaderStatusNotice(token);
+    setWeekSyncStatus("idle", "", { force: true });
+  }, timeoutMs);
+}
+
+function canApplyHeaderStatusNotice(priority, source, force = false) {
+  const active = state.activeStatusNotice;
+  if (force || !active) return true;
+  if (source && active.source === source) return true;
+  return priority >= active.priority;
+}
+
+function activateHeaderStatusNotice(entry, { priority, source = "toast" } = {}) {
+  const token = ++state.statusNoticeToken;
+  state.activeStatusNotice = {
+    token,
+    priority,
+    source,
+    entry,
+  };
+  renderCurrentWeekSyncStatus();
+  scheduleStatusNoticeAutoExpire({ token, entry, source });
+  return token;
+}
+
+function clearHeaderStatusNotice(token) {
+  if (token != null && state.activeStatusNotice?.token !== token) return false;
+  state.activeStatusNotice = null;
+  clearStatusNoticeExpiryTimer();
+  renderCurrentWeekSyncStatus();
+  return true;
+}
+
+function setWeekSyncStatusVisual({ progress = null, indeterminate = false } = {}) {
+  if (!dom.weekSyncStatus) return;
+
+  const hasProgress = Number.isFinite(progress);
+  const clamped = hasProgress ? Math.max(0, Math.min(100, Number(progress))) : 0;
+
+  dom.weekSyncStatus.classList.toggle("has-progress", hasProgress);
+  dom.weekSyncStatus.classList.toggle("is-indeterminate", !!indeterminate && !hasProgress);
+  dom.weekSyncStatus.style.setProperty("--sync-progress", `${clamped}%`);
+}
+
+function setWeekSyncStatusMessage(
+  mode = "idle",
+  message = "",
+  { progress = null, indeterminate = false } = {},
+) {
+  const allowed = new Set(["idle", "sync", "loading", "stale", "error"]);
+  const safeMode = allowed.has(mode) ? mode : "idle";
+  const textMap = {
+    idle: "Up to date",
+    sync: "Updating in background...",
+    loading: "Loading week...",
+    stale: "Showing cached data",
+    error: "Update failed",
+  };
+  const label = String(message || "").trim() || textMap[safeMode];
+
+  if (!dom.weekSyncStatus) return;
+  dom.weekSyncStatus.textContent = label;
+  dom.weekSyncStatus.classList.remove("is-idle", "is-sync", "is-loading", "is-stale", "is-error");
+  dom.weekSyncStatus.classList.add(`is-${safeMode}`);
+  setWeekSyncStatusVisual({ progress, indeterminate });
+}
+
+function showHeaderStatusNotice(
+  message,
+  variant = "info",
+  {
+    sticky = false,
+    duration = 1400,
+    source = "toast",
+    priority = null,
+    progress = null,
+    indeterminate = null,
+    force = false,
+  } = {},
+) {
+  if (!dom.weekSyncStatus) return false;
+
+  const mode = mapToastVariantToSyncMode(variant);
+  const defaultVisuals = getToastVisualOptions(variant);
+  const entry = {
+    mode,
+    message: String(message || "").trim(),
+    progress: progress != null ? progress : defaultVisuals.progress,
+    indeterminate: indeterminate != null ? !!indeterminate : defaultVisuals.indeterminate,
+  };
+  const resolvedPriority = getHeaderStatusPriority(variant, priority, "notice");
+
+  if (!canApplyHeaderStatusNotice(resolvedPriority, source, force)) return false;
+
+  if (state.toastTimer) clearTimeout(state.toastTimer);
+
+  const token = activateHeaderStatusNotice(entry, { priority: resolvedPriority, source });
+
+  if (sticky) {
+    state.toastTimer = null;
+    return true;
+  }
+
+  state.toastTimer = setTimeout(
+    () => {
+      clearHeaderStatusNotice(token);
+    },
+    Math.max(0, Number(duration) || 0),
+  );
+
+  return true;
 }
 
 function toast(message, variant = "info", duration = 1400) {
-  if (!dom.toast || !dom.toastText) return;
-
-  dom.toast.dataset.variant = variant;
-  dom.toastText.textContent = message;
-  dom.toast.hidden = false;
-
-  setToastBackdrop(["loading"].includes(variant));
-
-  if (state.toastTimer) clearTimeout(state.toastTimer);
-  state.toastTimer = setTimeout(() => {
-    dom.toast.hidden = true;
-    setToastBackdrop(false);
-  }, duration);
+  showHeaderStatusNotice(message, variant, { sticky: false, duration });
 }
 
-function toastShow(message, variant = "info", { backdrop = null } = {}) {
-  if (!dom.toast || !dom.toastText) return;
-
-  dom.toast.dataset.variant = variant;
-  dom.toastText.textContent = message;
-  dom.toast.hidden = false;
-
-  const shouldBackdrop = backdrop != null ? !!backdrop : ["loading", "warning"].includes(variant);
-  setToastBackdrop(shouldBackdrop);
-
-  if (state.toastTimer) clearTimeout(state.toastTimer);
-  state.toastTimer = null;
+function toastShow(message, variant = "info", opts = {}) {
+  showHeaderStatusNotice(message, variant, { ...opts, sticky: true });
 }
 
-function toastHide(delayMs = 0) {
-  if (!dom.toast) return;
-
+function toastHide(delayMs = 0, { source = "toast" } = {}) {
   if (state.toastTimer) clearTimeout(state.toastTimer);
+
+  const token = state.activeStatusNotice?.source === source ? state.activeStatusNotice.token : null;
+  if (token == null) return;
 
   const hideNow = () => {
-    dom.toast.hidden = true;
-    setToastBackdrop(false);
+    clearHeaderStatusNotice(token);
   };
 
   if (delayMs > 0) state.toastTimer = setTimeout(hideNow, delayMs);
   else hideNow();
 }
 
-function toastProgress(pct, label) {
-  const inner = dom.toast?.querySelector(".toast-progress__inner");
-  if (!inner) return;
-
+function toastProgress(pct, label, opts = {}) {
   const clamped = Math.max(0, Math.min(100, Number(pct) || 0));
-  inner.style.width = `${clamped}%`;
-
-  if (label != null && dom.toastText) dom.toastText.textContent = label;
+  const message =
+    label != null && String(label).trim()
+      ? String(label).trim()
+      : `Loading... ${Math.floor(clamped)}%`;
+  showHeaderStatusNotice(message, "loading", {
+    ...opts,
+    sticky: true,
+    progress: clamped,
+    indeterminate: false,
+  });
 }
 
 function stopProgressCreep() {
@@ -1096,10 +1399,16 @@ function stopProgressCreep() {
   state.progressCreepTimer = null;
 }
 
-function startProgressCreep({ from = 70, to = 95, everyMs = 250, label = "Verifying… " } = {}) {
+function startProgressCreep({
+  from = 70,
+  to = 95,
+  everyMs = 250,
+  label = "Verifying… ",
+  toastOpts = {},
+} = {}) {
   stopProgressCreep();
 
-  toastProgress(from, `${label}${from}%`);
+  toastProgress(from, `${label}${from}%`, toastOpts);
   let current = from;
 
   state.progressCreepTimer = setInterval(() => {
@@ -1109,7 +1418,7 @@ function startProgressCreep({ from = 70, to = 95, everyMs = 250, label = "Verify
     const bump = Math.max(0.3, remaining * 0.12);
     current = Math.min(to, current + bump);
 
-    toastProgress(current, `${label}${Math.floor(current)}%`);
+    toastProgress(current, `${label}${Math.floor(current)}%`, toastOpts);
   }, everyMs);
 }
 
@@ -1487,6 +1796,45 @@ function updateWeekTitle() {
   }
 }
 
+function updateNotesWeekTitle() {
+  if (!dom.notesWeekTitle) return;
+
+  const { start, end } = getWeekRange();
+  const startDate = parseYMD(start);
+  const endDate = parseYMD(end);
+  if (!startDate || !endDate) {
+    dom.notesWeekTitle.textContent = "Weekly Notes";
+    return;
+  }
+
+  const sameYear = startDate.getFullYear() === endDate.getFullYear();
+  const sameMonth = sameYear && startDate.getMonth() === endDate.getMonth();
+
+  let label = "";
+  if (sameMonth) {
+    const month = startDate.toLocaleDateString("en-US", { month: "short" });
+    label = `${month} ${startDate.getDate()}-${endDate.getDate()}, ${startDate.getFullYear()}`;
+  } else if (sameYear) {
+    const startLabel = startDate.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    const endLabel = endDate.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    label = `${startLabel}-${endLabel}, ${startDate.getFullYear()}`;
+  } else {
+    const startLabel = startDate.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+    const endLabel = endDate.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+    label = `${startLabel}-${endLabel}`;
+  }
+
+  dom.notesWeekTitle.textContent = `Week ${label}`;
+}
+
 // ======================================================
 // 15) WEEK CACHE + STALE GUARDS
 // ======================================================
@@ -1626,12 +1974,9 @@ let scheduleRenderToastTimer = null;
 function showScheduleRenderToastDelayed() {
   clearTimeout(scheduleRenderToastTimer);
 
-  scheduleRenderToastTimer = setTimeout(() => {
-    if (!(dom.toast && dom.toast.hidden === false && dom.toast.dataset.variant === "loading")) {
-      toastShow("Rendering schedule…", "loading");
-      toastProgress(80, "Rendering… 80%");
-    }
-  }, 120);
+  // Header status progress is now owned by week-load/trip-load pipelines.
+  // Keep this timer for render lifecycle parity, but do not emit standalone render notices.
+  scheduleRenderToastTimer = setTimeout(() => {}, 120);
 }
 
 function hideScheduleRenderToast() {
@@ -1642,11 +1987,6 @@ function hideScheduleRenderToast() {
     const r = state.weekRenderDoneResolver;
     state.weekRenderDoneResolver = null;
     r();
-  }
-
-  if (dom.toast && dom.toast.hidden === false && dom.toast.dataset.variant === "loading") {
-    toastProgress(100, "Done ✓ 100%");
-    toastHide(350);
   }
 }
 
@@ -3380,6 +3720,7 @@ function updateWeekDates() {
   if (dom.weekPicker) dom.weekPicker.value = toLocalDateInputValue(state.currentDate);
 
   updateWeekTitle();
+  updateNotesWeekTitle();
   fitDateTitle();
 
   const today = new Date();
@@ -3442,6 +3783,13 @@ function changeWeek(direction) {
   updateWeekDates();
 }
 
+function setWeekSyncStatus(mode = "idle", detail = "", options = {}) {
+  state.baseWeekSyncStatus = buildWeekSyncStatusEntry(mode, detail, options);
+  if (!state.activeStatusNotice || options.force) {
+    renderCurrentWeekSyncStatus();
+  }
+}
+
 // ======================================================
 // 25) WEEK REFRESH PIPELINE
 // ======================================================
@@ -3457,12 +3805,16 @@ async function loadTripsForWeek(reqId) {
     applyWeekRespToState(localData);
     updateDriverWeekIfVisible();
     scheduleAgendaReflow();
+    setWeekSyncStatus("sync");
 
     // FIXED: Reveal the bars immediately if we have local data!
     setBarsHidden(false);
 
-    // Show "Updating..." toast non-intrusively
-    toastShow("Updating…", "loading", { backdrop: false });
+    // Show background refresh progress in the header without implying a full load state.
+    toastShow("Updating in background…", "sync", {
+      source: "background-sync",
+      priority: 10,
+    });
   }
 
   // 2. Always Fetch Fresh Data (Force)
@@ -3473,52 +3825,86 @@ async function loadTripsForWeek(reqId) {
   applyWeekRespToState(resp);
   updateDriverWeekIfVisible();
   scheduleAgendaReflow();
+
+  if (resp?.__stale) {
+    setWeekSyncStatus("stale");
+  }
 }
 
 async function refreshWeekData({ silent = false } = {}) {
   const reqId = ++state.weekReqId;
+  const weekLoadStatusOpts = {
+    source: "week-load",
+    priority: 45,
+    force: true,
+  };
 
   try {
     if (!silent) {
-      toastShow("Loading week… 0%", "loading", { backdrop: false });
-      toastProgress(0);
+      if (state.weekLoadSafetyTimer) clearTimeout(state.weekLoadSafetyTimer);
+      state.weekLoadSafetyTimer = setTimeout(() => {
+        if (state.activeStatusNotice?.source !== "week-load") return;
+        stopProgressCreep();
+        toastHide(0, { source: "week-load" });
+        setWeekSyncStatus("idle", "", { force: true });
+      }, 10000);
+
+      toastShow("Loading week…", "loading", weekLoadStatusOpts);
+      setWeekSyncStatus("loading");
+    } else {
+      setWeekSyncStatus("sync");
     }
 
     // Only dim/hide bars for explicit (non-silent) refreshes so that
     // background syncs don't cause visible flicker during editing.
     if (!silent) setBarsHidden(true);
 
-    if (!silent) toastProgress(10, "Preparing… 10%");
-
     clearConflictStyles();
     showConflictsPanel([]);
     dom.conflictBadge?.classList.add("is-hidden");
 
-    if (!silent) toastProgress(20, "Fetching… 20%");
-
     await loadTripsForWeek(reqId);
 
-    if (!silent) toastProgress(60, "Building schedule… 60%");
-
-    startProgressCreep({ from: 60, to: 95, label: "Loading week… " });
+    // If a newer refresh started, do not keep stale progress notices alive.
+    if (reqId !== state.weekReqId) {
+      if (!silent) toastHide(0, { source: "week-load" });
+      return;
+    }
 
     await waitForAgendaPaint();
 
-    stopProgressCreep();
+    if (reqId !== state.weekReqId) {
+      if (!silent) toastHide(0, { source: "week-load" });
+      return;
+    }
+
     if (!silent) {
-      toastProgress(100, "Done ✓ 100%");
-      toastHide(350);
+      toastHide(350, { source: "week-load" });
       toast("Up to date ✓", "success", 900);
     } else {
-      toastHide(0);
+      toastHide(0, { source: "background-sync" });
     }
+
+    const stamp = new Date().toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit",
+    });
+    setWeekSyncStatus("idle", `· Updated ${stamp}`);
 
     prefetchAdjacentWeeks();
   } catch (e) {
     stopProgressCreep();
     console.error(e);
     toast("Refresh failed", "danger", 2200);
+    setWeekSyncStatus("error");
   } finally {
+    if (!silent && state.weekLoadSafetyTimer) {
+      clearTimeout(state.weekLoadSafetyTimer);
+      state.weekLoadSafetyTimer = null;
+    }
+    if (!silent && reqId !== state.weekReqId) {
+      toastHide(0, { source: "week-load" });
+    }
     if (!silent && reqId === state.weekReqId) setBarsHidden(false);
   }
 }
@@ -3772,8 +4158,6 @@ function openDriverContactModal(tripKey) {
   const trip = state.tripByKey[tripKey];
   if (!trip) return;
 
-  state.lastFocusedElement = document.activeElement;
-
   // Retrieve assignments for the trip
   const rowA = state.assignmentsByTripKey[tripKey];
 
@@ -3874,7 +4258,7 @@ function openDriverContactModal(tripKey) {
   // Set values and show modal
   dom.driverContactBody.value = officeText;
   dom.driverReminderBody.value = reminderText;
-  dom.driverContactModal.hidden = false;
+  openModalA11y(dom.driverContactModal, dom.driverContactBody);
 }
 
 // ======================================================
@@ -4526,15 +4910,11 @@ function setTripFormFromState(tripKey) {
 async function openTripForEdit(tripKey) {
   if (isMobileOnly()) return openTripDetailsModal(tripKey);
 
-  // Loading Overlay Logic (single overlay; message set for trip-edit context)
-  const overlay = document.getElementById("loadingOverlay");
-  const bar = overlay?.querySelector(".loading-overlay__bar-inner");
-  const overlayText = document.getElementById("loadingOverlayText");
-  const overlaySub = document.getElementById("loadingOverlaySub");
-  if (overlay) overlay.hidden = false;
-  if (bar) bar.style.width = "0%";
-  if (overlayText) overlayText.textContent = "Loading Trip…";
-  if (overlaySub) overlaySub.textContent = "Please wait";
+  showHeaderStatusNotice("Loading trip…", "loading", {
+    sticky: true,
+    source: "trip-load",
+    priority: 55,
+  });
 
   dom.saveBtn.disabled = true;
 
@@ -4559,7 +4939,6 @@ async function openTripForEdit(tripKey) {
 
   try {
     const startTime = Date.now();
-    if (bar) bar.style.width = "15%";
 
     const [tripResp, assignResp] = await Promise.all([
       api.getTrip(tripKey),
@@ -4569,11 +4948,9 @@ async function openTripForEdit(tripKey) {
     // Force a minimum delay so the user feels the "loading" state (prevents instant flash)
     const elapsed = Date.now() - startTime;
     if (elapsed < 600) {
-      if (bar) bar.style.width = "40%";
       await new Promise((resolve) => setTimeout(resolve, 600 - elapsed));
     }
 
-    if (bar) bar.style.width = "70%";
     if (!tripResp?.ok) throw new Error(tripResp?.error || "Trip not found");
 
     const t = tripResp.trip || {};
@@ -4668,22 +5045,20 @@ async function openTripForEdit(tripKey) {
     syncBusSelectEmptyState();
     refreshEmptyStateUI();
 
-    if (bar) bar.style.width = "100%";
-
-    // Slight delay to show 100% before hiding
-    setTimeout(() => {
-      if (overlay) overlay.hidden = true;
-      if (overlayText) overlayText.textContent = "Loading…";
-      if (overlaySub) overlaySub.textContent = "Please wait";
-    }, 500);
+    showHeaderStatusNotice("Trip ready", "success", {
+      duration: 1200,
+      source: "trip-load",
+      priority: 55,
+    });
 
     $("destination")?.focus?.({ preventScroll: true });
   } catch (e) {
-    if (overlay) overlay.hidden = true;
-    if (overlayText) overlayText.textContent = "Loading…";
-    if (overlaySub) overlaySub.textContent = "Please wait";
+    showHeaderStatusNotice("Could not load trip", "danger", {
+      duration: 2200,
+      source: "trip-load",
+      priority: 60,
+    });
     console.error(e);
-    toast("Could not load trip", "danger", 2200);
     alert("Could not open trip for editing.");
   } finally {
     dom.saveBtn.disabled = false;
@@ -6356,6 +6731,7 @@ function wireEvents() {
     }
 
     // Construct trip from form
+    const existingTrip = state.tripByKey[key] || null;
     const optimisticTrip = {
       tripKey: key,
       destination: $("destination").value,
@@ -6376,6 +6752,8 @@ function wireEvents() {
       tripColor: $("tripColor").value,
       busesNeeded: $("busesNeeded").value,
       itinerary: dom.itineraryField.value,
+      // Preserve attached PDF URL during optimistic save/update re-renders.
+      itineraryPdfUrl: existingTrip?.itineraryPdfUrl || "",
       notes: $("notes").value,
       comments: $("comments").value,
       // Envelope-only fields (do not affect quote contact/phone/notes)
@@ -6893,7 +7271,7 @@ function generateNextDayReport(selectedDate = null) {
 
   fullHtml += `</div>`;
   dom.nextDayReportBody.innerHTML = fullHtml;
-  dom.nextDayReportModal.hidden = false;
+  openModalA11y(dom.nextDayReportModal, dom.nextDayReportDateInput || dom.printNextDayReportBtn);
 }
 
 // Close and Print handlers
@@ -6907,12 +7285,19 @@ if (dom.nextDayReportDateInput) {
 }
 if (dom.closeNextDayReportBtn) {
   dom.closeNextDayReportBtn.addEventListener("click", () => {
-    dom.nextDayReportModal.hidden = true;
+    closeModalA11y(dom.nextDayReportModal);
   });
 }
 if (dom.closeNextDayReportBackdrop) {
   dom.closeNextDayReportBackdrop.addEventListener("click", () => {
-    dom.nextDayReportModal.hidden = true;
+    closeModalA11y(dom.nextDayReportModal);
+  });
+}
+if (dom.nextDayReportModal) {
+  document.addEventListener("keydown", (e) => {
+    if (!dom.nextDayReportModal.hidden && e.key === "Escape") {
+      closeModalA11y(dom.nextDayReportModal);
+    }
   });
 }
 if (dom.printNextDayReportBtn) {
@@ -7223,7 +7608,10 @@ function generateDailyMaintenancePlan(selectedDate = null) {
 
   fullHtml += `</div>`;
   dom.dailyMaintenancePlanBody.innerHTML = fullHtml;
-  dom.dailyMaintenancePlanModal.hidden = false;
+  openModalA11y(
+    dom.dailyMaintenancePlanModal,
+    dom.dailyMaintenancePlanDateInput || dom.printDailyMaintenancePlanBtn,
+  );
 }
 
 if (dom.dailyMaintenancePlanDateInput) {
@@ -7236,33 +7624,57 @@ if (dom.dailyMaintenancePlanDateInput) {
 }
 if (dom.closeDailyMaintenancePlanBtn) {
   dom.closeDailyMaintenancePlanBtn.addEventListener("click", () => {
-    dom.dailyMaintenancePlanModal.hidden = true;
+    closeModalA11y(dom.dailyMaintenancePlanModal);
   });
 }
 if (dom.closeDailyMaintenancePlanBackdrop) {
   dom.closeDailyMaintenancePlanBackdrop.addEventListener("click", () => {
-    dom.dailyMaintenancePlanModal.hidden = true;
+    closeModalA11y(dom.dailyMaintenancePlanModal);
+  });
+}
+if (dom.dailyMaintenancePlanModal) {
+  document.addEventListener("keydown", (e) => {
+    if (!dom.dailyMaintenancePlanModal.hidden && e.key === "Escape") {
+      closeModalA11y(dom.dailyMaintenancePlanModal);
+    }
   });
 }
 
 // Driver Contact events
 if (dom.closeDriverContactBtn) {
   dom.closeDriverContactBtn.addEventListener("click", () => {
-    dom.driverContactModal.hidden = true;
+    closeModalA11y(dom.driverContactModal);
   });
 }
 if (dom.closeDriverContactBackdrop) {
   dom.closeDriverContactBackdrop.addEventListener("click", () => {
-    dom.driverContactModal.hidden = true;
+    closeModalA11y(dom.driverContactModal);
   });
 }
 if (dom.driverContactModal) {
   document.addEventListener("keydown", (e) => {
     if (!dom.driverContactModal.hidden && e.key === "Escape") {
-      dom.driverContactModal.hidden = true;
+      closeModalA11y(dom.driverContactModal);
     }
   });
 }
+
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Tab") return;
+
+  const openModal =
+    [
+      dom.envelopeModal,
+      dom.driverContactModal,
+      dom.dailyMaintenancePlanModal,
+      dom.nextDayReportModal,
+      dom.tripDetailsModal,
+      dom.itineraryModal,
+    ].find((modalEl) => modalEl && !modalEl.hidden) || null;
+
+  if (!openModal) return;
+  trapModalFocus(openModal, e);
+});
 if (dom.copyDriverContactBtn) {
   dom.copyDriverContactBtn.addEventListener("click", async () => {
     const text = dom.driverContactBody.value;

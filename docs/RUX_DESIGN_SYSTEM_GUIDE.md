@@ -1,8 +1,176 @@
 # Rux Design System Guide
 
 Generated: 2026-03-14
-Status: Working guide while the system is being simplified and defined
+Status: Baseline finalized for current app scope (Phases 1-6 complete)
+Current Version: v0.9.0 (source: `app.js` -> `CONFIG.APP_VERSION`)
 Scope: UI structure, naming, ownership, and styling standards for this app
+
+## System Feature Snapshot (Current)
+
+Use this as the quick reference for what the Rux system currently delivers in the live app.
+
+- Layout architecture
+  - Three-region workspace shell: left sidebar, main schedule surface, right sidebar
+  - Canonical layout objects: `o-app-layout*`
+  - Collapse/expand panel behavior driven by state classes and `data-js` hooks
+
+- Primitive components
+  - Header system with variants: app, panel, schedule, modal
+  - Card shell system for schedule panels and work surfaces
+  - Modal shell system standardized to backdrop/card/header/body/footer
+
+- Schedule surface
+  - Agenda header with week navigation and toolbar actions
+  - Schedule grid with sticky headers and bus/day structure
+  - Conflict badge and conflict panel integration
+
+- Sidebar feature cards
+  - Quote calculator card
+  - Driver assignment card
+  - Weekly notes card
+  - Trip editor card
+
+- Token system
+  - Spacing scale (`--space-xs` to `--space-xl`)
+  - Header/action size tokens (`--size-header-row`, `--size-header-action`, `--size-toolbar-action`)
+  - Layout tokens (`--panel-width`, `--layout-panel-gap`)
+  - Surface/border/text tokens driven by `variables.css`
+
+- Behavior contract
+  - Styling on classes
+  - Behavior on `data-js`
+  - IDs reserved for unique DOM identity, JS targeting, and accessibility labeling
+
+- Scroll behavior
+  - Vertical rails hidden on approved surfaces while preserving wheel/trackpad scroll
+  - Horizontal rails intentionally visible on schedule and driver-week wrappers
+
+- Accessibility behavior
+  - Visible keyboard focus treatment for header and toolbar actions
+  - Modal Escape close support
+  - Modal focus return to opener
+  - Modal Tab loop focus trapping for open dialog context
+
+- Print and reporting
+  - Print surfaces for schedule and envelope/report workflows
+  - Modal print contexts hide non-print shell chrome
+
+## Quick Onboarding Checklist
+
+Use this checklist before opening a PR that touches UI.
+
+- Use canonical class families only: `o-*`, `c-*`, `u-*`, `is-*`
+- Keep behavior targeting on `data-js` hooks, not styling selectors
+- Put structural flow/sizing/overflow rules in `css/layout.css`
+- Put shared primitives in `css/components/_primitives.css`
+- Put schedule and sidebar context visuals in `css/components/_schedule.css`
+- Put modal shell and modal-specific internals in `css/components/_modals.css`
+- Keep global resets, utilities, and print/global exceptions in `css/base.css`
+- Use the spacing scale (`--space-xs` to `--space-xl`) before introducing one-off values
+- Reuse header/card/modal shell patterns before creating one-off structures
+- Keep focus states visible for keyboard users on all interactive controls
+- For modal flows: support Escape close, focus return to opener, and Tab loop trap
+- Keep vertical rails hidden only on approved surfaces; preserve wheel/trackpad scroll
+- Keep horizontal rails visible only where horizontal panning is a core interaction
+- Avoid legacy selector reintroduction (for example old `card__*` families)
+- If you add a new class family, define one long-term owner file in this guide
+
+## Versioning Workflow
+
+Use a single source of truth for app version updates.
+
+### Source of truth
+
+- File: `app.js`
+- Object: `CONFIG`
+- Fields:
+  - `APP_NAME`
+  - `APP_VERSION`
+
+Update only these fields when shipping a new build.
+
+### Where version appears automatically
+
+- Browser tab title
+- App header version badge
+- Settings menu version row
+
+No additional manual edits are needed in HTML/CSS for normal version bumps.
+
+### Examples
+
+- Beta patch release
+  - `APP_VERSION: "0.9.1-beta"`
+  - Display label: `v0.9.1-beta`
+
+- First stable release
+  - `APP_VERSION: "1.0.0"`
+  - Display label: `v1.0.0`
+
+### Release bump checklist
+
+1. Update `APP_VERSION` in `app.js`
+2. Refresh the app
+3. Confirm version matches in:
+   - tab title
+   - header badge
+   - settings menu row
+4. If this is a major release, update release notes/docs in the same PR
+
+### Optimistic Save Regression Guard
+
+When rebuilding trip objects in optimistic save/update paths, preserve server-managed attachment fields from existing state unless the user explicitly changed them.
+
+- Preserve: `itineraryPdfUrl`
+- Why: prevents temporary UI regression where the itinerary PDF badge loses `has-pdf` click behavior until the next full week reload
+- Check after save without week reload:
+  - PDF badge remains clickable
+  - `attach_file` icon remains visible when PDF is attached
+
+### Cache + Optimistic Update Smoke Checklist
+
+Run this quick checklist before merging UI/data-flow changes that touch schedule rendering, cache, or optimistic state updates.
+
+1. Week navigation + instant paint
+
+- Switch to another week and back
+- Confirm cached data paints immediately
+- Confirm sync status moves through updating -> up to date
+
+2. Trip optimistic save consistency
+
+- Edit a trip and click save
+- Confirm trip bar updates immediately
+- Confirm no icon/status fields regress while waiting for background sync
+
+3. PDF attachment continuity
+
+- Attach itinerary PDF
+- Save trip without reloading week
+- Confirm itinerary badge remains clickable and opens PDF
+
+4. Notes flow under cache
+
+- Edit and save weekly notes
+- Change weeks and return
+- Confirm notes do not briefly revert to stale value
+
+5. Background refresh behavior
+
+- Wait for auto-refresh or trigger manual refresh
+- Confirm no confusing visual flicker of key status icons
+- Confirm sync status reflects success or failure clearly
+
+6. Failure fallback behavior
+
+- Simulate offline or failed fetch during refresh
+- Confirm UI shows cached/stale state intentionally
+- Confirm no destructive rollback of valid optimistic UI unless verification fails
+
+7. Cache invalidation safety
+
+- After create/update/delete, confirm current week reflects expected data
+- Confirm unrelated cache domains (for example drivers list) are not unnecessarily wiped unless intended
 
 ## Panel/Card Shell Current Standard
 
@@ -20,14 +188,11 @@ The panel/card migration is complete. Use this section as the live standard.
 - card components
   - `c-card`
   - `c-card--compact`
-  - `c-card__title`
   - `c-card__body`
   - `c-card__footer`
 
 - utilities
   - `u-hidden`
-  - `u-mobile-only`
-  - `u-scroll-y`
   - `u-w-full`
   - `u-px-0`
   - `u-mt-0`
@@ -126,13 +291,8 @@ body
 
 ```text
 body
-├── #loadingOverlay.loading-overlay
-│   ├── .loading-overlay__backdrop
-│   └── .loading-overlay__card
-├── #toastBackdrop.toast-backdrop
-├── #toast.toast
-│   ├── .toast-row
-│   └── .toast-progress
+├── .agenda-header__sync-center
+│   └── #weekSyncStatus.schedule-sync-status
 ├── .modal families
 │   ├── #itineraryModal.modal.modal--itinerary
 │   ├── #tripDetailsModal.modal.modal--trip-details
@@ -188,6 +348,12 @@ This is the preferred visualization pattern for the guide:
 - Target behavior with `data-js`
 - Avoid ID selectors for CSS
 - Use IDs only when unique document identity is required
+
+### Current accessibility behavior rule
+
+- Keep focus states visible for keyboard users on interactive controls
+- Ensure modal workflows support Escape close and return focus to opener
+- Keep keyboard Tab navigation trapped within the active modal dialog
 
 ### Scrollbar policy
 
@@ -346,13 +512,13 @@ Do not change the guide to a different file naming convention unless the actual 
   - shared UI primitives
   - cards
   - shared panel header primitive
-  - loading and toast
 
 - `css/components/_schedule.css`
   - app top header
   - schedule header
   - schedule grid
   - sidebar context styling for schedule-side panels
+  - centralized sync/notification status text in schedule header
 
 - `css/components/_modals.css`
   - modal shell
@@ -521,3 +687,210 @@ Follow this rule set moving forward:
 
 - Audit and owner mapping: `docs/HEADER_CONTAINER_AUDIT.md`
 - Full class matrix: `docs/HEADER_CONTAINER_AUDIT_FULL.csv`
+
+## Finalization Implementation Plan (Phased)
+
+This plan closes the current audit findings in controlled phases so the app can be marked design-system complete without regressions.
+
+### Phase 0 - Baseline and Guardrails
+
+Goal:
+
+- Freeze current behavior and create a before/after comparison baseline.
+
+Scope:
+
+- Capture screenshots for desktop and mobile for: app shell, right sidebar cards, main schedule, and all modal families.
+- Record current selector inventory for these files:
+  - `css/layout.css`
+  - `css/components/_modals.css`
+  - `css/components/_schedule.css`
+  - `css/components/_primitives.css`
+  - `css/base.css`
+- Add a temporary migration checklist in PR notes to track each moved selector and verify no missing styles.
+
+Deliverables:
+
+- Baseline screenshots and selector inventory attached to the implementation PR.
+
+Exit criteria:
+
+- Team can compare visual output and confirm no unknown style dependencies before refactor starts.
+
+---
+
+### Phase 1 - Modal Shell Canonicalization
+
+Goal:
+
+- Bring every modal to the canonical shell pattern.
+
+Scope:
+
+- Refactor envelope modal markup to match the standard shell:
+  - `.modal`
+  - `.modal__backdrop`
+  - `.modal__card`
+  - `.c-header.c-header--modal`
+  - `.modal__body`
+  - `.modal__foot`
+- Keep existing envelope controls and behavior IDs intact.
+- Add only minimal variant hooks needed for envelope-specific layout.
+
+Deliverables:
+
+- Envelope modal updated to canonical shell structure.
+
+Exit criteria:
+
+- Envelope modal header/body/footer structure is consistent with the existing itinerary/trip-details modal family.
+- No JS behavior regressions for open/close/print actions.
+
+---
+
+### Phase 2 - Ownership Repair for Sidebar Components
+
+Goal:
+
+- Remove non-modal component ownership from modal CSS.
+
+Scope:
+
+- Move notes and quote calculator styles out of `css/components/_modals.css`.
+- Re-home moved rules to the correct owner:
+  - `css/components/_schedule.css` for schedule/sidebar context and right-panel card visuals.
+  - `css/components/_primitives.css` only if a style is truly shared primitive behavior.
+- Keep selectors and class names unchanged during move-first step.
+
+Deliverables:
+
+- `css/components/_modals.css` contains modal-only shell/variant/content rules.
+- Notes and quote card rules live in their long-term owner file.
+
+Exit criteria:
+
+- No `#notesCard`, `.notes__*`, or `.quote-calculator*` ownership remains in `css/components/_modals.css`.
+- Visual parity confirmed against Phase 0 screenshots.
+
+---
+
+### Phase 3 - Layout Layer Purification
+
+Goal:
+
+- Enforce structural-only rules in `css/layout.css`.
+
+Scope:
+
+- Move non-structural rules out of layout owner, including:
+  - typography utility style such as `.heading-1`
+  - control/group component styling such as `.nav-controls`
+  - app-specific ID styling such as `#todayBtnMobile`
+- Re-home to component owners:
+  - `css/components/_schedule.css` for app header and schedule toolbar context.
+  - `css/base.css` only for globally reusable utilities.
+
+Deliverables:
+
+- `css/layout.css` contains layout mechanics only (flow, sizing, overflow, breakpoints, ordering).
+
+Exit criteria:
+
+- Every remaining rule in `css/layout.css` passes the structural vs visual ownership check.
+
+---
+
+### Phase 4 - Legacy Selector Cleanup
+
+Goal:
+
+- Remove stale migration leftovers now that canonical classes are stable.
+
+Scope:
+
+- Remove or replace legacy selector residue such as `.card__content--scrollable` where no longer used.
+- Confirm no live HTML references remain for removed selectors.
+- Keep compatibility only where runtime JS still depends on a fallback selector.
+
+Deliverables:
+
+- Dead selectors removed from CSS owners.
+
+Exit criteria:
+
+- No unused legacy class families remain in active CSS.
+- Canonical `o-`, `c-`, `u-`, `is-` naming remains intact and exclusive for active surfaces.
+
+---
+
+### Phase 5 - Accessibility and Interaction Hardening
+
+Goal:
+
+- Ensure focus and interaction behavior remain obvious and consistent after refactor.
+
+Scope:
+
+- Verify keyboard focus states across app header actions, modal controls, form fields, and panel controls.
+- Validate focus visibility consistency with Rux interaction standards.
+- Confirm modal escape/click-backdrop close behavior and focus return behavior.
+
+Deliverables:
+
+- Accessibility QA checklist completed for keyboard-only traversal.
+
+Exit criteria:
+
+- Focus states remain visible and consistent on desktop and mobile keyboard scenarios.
+
+---
+
+### Phase 6 - Final Verification and Lock-In
+
+Goal:
+
+- Mark the system finalized and prevent ownership drift.
+
+Scope:
+
+- Re-run the class ownership audit and modal shell conformance check.
+- Update this guide's "Current canonical classes" and "Ownership Standard" sections only if any approved additions were introduced.
+- Add a brief pull-request template checklist for:
+  - ownership placement
+  - class family consistency
+  - no new legacy selectors
+
+Deliverables:
+
+- Final audit pass with no open findings.
+- Updated guide references if needed.
+
+Exit criteria:
+
+- App is considered design-system finalized for current scope.
+
+---
+
+## Suggested Execution Order
+
+1. Phase 0
+2. Phase 1
+3. Phase 2
+4. Phase 3
+5. Phase 4
+6. Phase 5
+7. Phase 6
+
+Rationale:
+
+- Fix structure first (modal shell), then ownership, then cleanup, then QA.
+- This sequence minimizes cascading regressions and keeps each PR reviewable.
+
+## Suggested PR Breakdown
+
+1. PR A: Phase 1 only (envelope modal shell canonicalization)
+2. PR B: Phase 2 only (notes/quote ownership moves)
+3. PR C: Phase 3 and Phase 4 (layout purification + legacy cleanup)
+4. PR D: Phase 5 and Phase 6 (a11y verification + final lock-in)
+
+This keeps each change set small, testable, and easy to rollback if needed.
