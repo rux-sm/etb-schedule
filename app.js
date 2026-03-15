@@ -5311,6 +5311,7 @@ function buildPrintScheduleTwoPages() {
     total: dayColWidth * 7,
   };
 
+  printRoot.classList.add("print-mode-legal");
   printRoot.classList.remove("is-hidden");
   printRoot.style.cssText = `position:absolute;left:-9999px;visibility:hidden;width:${printCardWidth}px;`;
   void printRoot.offsetHeight;
@@ -5422,7 +5423,7 @@ function clearPrintRoot() {
   const printRoot = document.getElementById("printRoot");
   if (printRoot) {
     printRoot.innerHTML = "";
-    printRoot.classList.remove("print-mode-letter-full");
+    printRoot.classList.remove("print-mode-letter-full", "print-mode-legal");
   }
 }
 

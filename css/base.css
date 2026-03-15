@@ -703,6 +703,13 @@ samp {
     justify-content: flex-start !important;
   }
 
+  #printRoot.print-mode-legal .print-header {
+    height: 48px !important;
+    max-height: 48px !important;
+    overflow: hidden !important;
+    margin-bottom: 4px !important;
+  }
+
   .print-header .c-header--schedule {
     margin: 0 !important;
     min-height: 0 !important;
