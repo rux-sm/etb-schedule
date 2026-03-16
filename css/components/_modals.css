@@ -149,7 +149,7 @@
 .modal--itinerary .modal__card {
   font-family: var(--font-sans);
   font-size: 0.875rem;
-  max-width: calc(86ch + 2 * 12px + 2 * 12px);
+  max-width: calc(95ch + 2 * 12px + 2 * 12px);
 }
 
 .modal--itinerary .modal__body textarea {
@@ -175,7 +175,7 @@
 /* --- Variants: Trip Details Modal --- */
 .modal--trip-details .modal__card {
   font-size: 0.875rem;
-  max-width: calc(86ch + 2 * 12px + 2 * 12px);
+  max-width: calc(95ch + 2 * 12px + 2 * 12px);
 }
 
 .modal--trip-details .c-header.c-header--modal,
@@ -883,7 +883,7 @@
   width: 100%;
 }
 
-.envelope-modal__actions > .btn {
+.envelope-modal__actions>.btn {
   flex: 1;
   justify-content: center;
 }
@@ -1234,6 +1234,7 @@
 
 /* Print: hide toolbar, show only envelope pages */
 @media print {
+
   .envelope-modal__toolbar,
   .modal--envelope .c-header--modal,
   .modal__foot,

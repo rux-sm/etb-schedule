@@ -35,6 +35,7 @@
     let picrossIgnoreClick = false;
     let picrossDragVisitedCells = new Set();
     let picrossTimerIntervalId = null;
+    let picrossIsWon = false;
 
     const PICROSS_DAILY_STAGE_COMPLETED_KEY_PREFIX = "picross_daily_stage_completed_";
     const PICROSS_DAILY_RECORD_KEY_PREFIX = "picross_daily_record_";
@@ -119,7 +120,7 @@
 
       try {
         const existing = readPicrossDailyRecord(dateKey, size);
-        if (existing && Number(existing.totalMs) <= totalMs) return;
+        if (existing) return;
         localStorage.setItem(key, JSON.stringify(nextRecord));
       } catch {}
     }
@@ -225,8 +226,8 @@
       const currentStage = picrossMode === "daily" ? picrossDailyStageSize : null;
 
       dom.picrossDailyProgress.innerHTML = [
-        `<span class="picross-progress-chip${isFiveComplete ? " is-complete" : ""}${currentStage === 5 ? " is-current" : ""}">5x5 ${isFiveComplete ? "Complete" : "Pending"}</span>`,
-        `<span class="picross-progress-chip${isTenComplete ? " is-complete" : ""}${currentStage === 10 ? " is-current" : ""}">10x10 ${isTenComplete ? "Complete" : isFiveComplete ? "Unlocked" : "Locked"}</span>`,
+        `<button type="button" data-stage="5" class="picross-progress-chip${isFiveComplete ? " is-complete" : ""}${currentStage === 5 ? " is-current" : ""}">5x5 ${isFiveComplete ? "Complete" : "Pending"}</button>`,
+        `<button type="button" data-stage="10" ${!isFiveComplete ? "disabled" : ""} class="picross-progress-chip${isTenComplete ? " is-complete" : ""}${currentStage === 10 ? " is-current" : ""}">10x10 ${isTenComplete ? "Complete" : isFiveComplete ? "Unlocked" : "Locked"}</button>`,
       ].join("");
     }
 
@@ -319,6 +320,7 @@
     }
 
     function applyPicrossCellAction(target, action) {
+      if (picrossIsWon) return false;
       const coords = getPicrossCellCoords(target);
       if (!coords) return false;
 
@@ -358,6 +360,7 @@
     }
 
     function togglePicrossMark(target) {
+      if (picrossIsWon) return false;
       const coords = getPicrossCellCoords(target);
       if (!coords) return false;
 
@@ -548,8 +551,16 @@
       }
     }
 
+    function loadDailyStage(size) {
+      picrossDailyStageSize = size;
+      selectDailyPuzzleForSize(picrossDailyStageSize);
+      if (dom.picrossNextStageBtn) dom.picrossNextStageBtn.hidden = true;
+      initGame();
+    }
+
     function finalizePicrossSolve() {
       stopPicrossTimer();
+      picrossIsWon = true;
       const totalMs = getPicrossElapsedMs();
       const finalTime = formatPicrossTime(totalMs);
       const finalGrade = getPicrossGrade(totalMs);
@@ -561,18 +572,16 @@
         renderPicrossTodaySummary();
 
         if (picrossDailyStageSize === 5) {
-          picrossDailyStageSize = 10;
-          selectDailyPuzzleForSize(picrossDailyStageSize);
-          initGame();
           updatePicrossStatus(
-            `5x5 solved in ${finalTime}. Grade ${finalGrade}. Daily 10x10 unlocked.`,
+            `5x5 solved in ${finalTime}. Grade ${finalGrade}.`,
             true,
           );
+          if (dom.picrossNextStageBtn) dom.picrossNextStageBtn.hidden = false;
           return;
         }
 
         updatePicrossStatus(
-          `Daily 10x10 solved in ${finalTime}. Grade ${finalGrade}. Replay anytime today.`,
+          `Daily 10x10 solved in ${finalTime}. Grade ${finalGrade}. Replay anytime.`,
           true,
         );
         return;
@@ -761,6 +770,7 @@
 
       stopPicrossTimer();
       stopPicrossDrag();
+      picrossIsWon = false;
       picrossPlayerGrid = makePicrossGrid(solution, 0);
       picrossMarksGrid = makePicrossGrid(solution, 0);
       resetPicrossRunState();
@@ -832,6 +842,19 @@
     dom.picrossHintBtn?.addEventListener("click", applyPicrossHint);
     dom.picrossNormalModeBtn?.addEventListener("click", () => setRuleSet("normal"));
     dom.picrossFreeModeBtn?.addEventListener("click", () => setRuleSet("free"));
+
+    dom.picrossNextStageBtn?.addEventListener("click", () => {
+      loadDailyStage(10);
+    });
+
+    dom.picrossDailyProgress?.addEventListener("click", (event) => {
+      const btn = event.target.closest("button[data-stage]");
+      if (!btn || btn.disabled) return;
+      const size = Number(btn.dataset.stage);
+      if (size && size !== picrossDailyStageSize) {
+        loadDailyStage(size);
+      }
+    });
 
     return {
       initGame,
