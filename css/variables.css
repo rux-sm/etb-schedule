@@ -406,29 +406,21 @@
   --layer-02-border: var(--gray-20);
 
   /* Secondary interactive surfaces (fields, ghost buttons, nested panels) */
-  --layer-03: var(--gray-80);
+  --layer-03: var(--white);
   --layer-03-border: var(--border-default);
 
   /* Canonical control fill */
-  --field-bg: var(--white);
+  --field-bg: var(--layer-03);
   --field-border-bottom: var(--gray-20);
-
 
   --border-subtle: var(--gray-30);
   --border-default: var(--gray-50);
-  --border-strong: var(--gray-50);
-
-
-
-
-
-
-
+  --border-strong: var(--gray-60);
 
   --text-primary: var(--black);
-  --text-secondary: var(--black);
-  --text-placeholder: #9aa0a6;
-  --text-disabled: #bdc1c6;
+  --text-secondary: var(--gray-100);
+  --text-placeholder: var(--gray-50);
+  --text-disabled: var(--gray-40);
 
   /* --- 3. Compatibility aliases (temporary migration layer) --- */
   --text-muted: var(--gray-90);
@@ -455,4 +447,66 @@
   --env-ink: var(--black);
   --env-rule: var(--gray-50);
   --env-pickup: color-mix(in srgb, var(--blue) 18%, white);
+
+  /* Primary (Action/Save - Solid Blue) */
+  --btn-primary-bg: var(--blue);
+  --btn-primary-text: var(--white);
+  --btn-primary-hover: color-mix(in srgb, var(--blue) 85%, white);
+  --btn-primary-active: color-mix(in srgb, var(--blue) 70%, white);
+
+  /* Secondary (Structural/Cancel - Solid Gray matching Layer 03) */
+  --btn-secondary-bg: var(--layer-03);
+  --btn-secondary-text: var(--text-primary);
+  --btn-secondary-hover: color-mix(in srgb, var(--layer-03), black 5%);
+  --btn-secondary-active: color-mix(in srgb, var(--layer-03), black 10%);
+
+  /* Danger (Delete) */
+  --btn-danger-bg: var(--color-danger);
+  --btn-danger-text: var(--white);
+  --btn-danger-hover: color-mix(in srgb, var(--color-danger) 85%, white);
+  --btn-danger-active: color-mix(in srgb, var(--color-danger) 70%, white);
+
+  /* Success (Confirmation/Completed actions) */
+  --btn-success-bg: var(--color-success);
+  --btn-success-text: var(--white);
+  --btn-success-hover: color-mix(in srgb, var(--color-success) 85%, white);
+  --btn-success-active: color-mix(in srgb, var(--color-success) 70%, white);
+
+  /* Tertiary / Toggle Tiles (For Requirements) */
+  /* Keep ghost tiles on the same surface as form controls */
+  --btn-ghost-bg: var(--layer-03);
+  --btn-ghost-border: transparent;
+  /* Secondary text by default; interaction states can promote contrast */
+  --btn-ghost-text: var(--text-secondary);
+  --btn-ghost-hover-bg: color-mix(in srgb, var(--layer-03), white 5%);
+  --btn-ghost-active-bg: var(--layer-03);
+  --btn-ghost-active-border: var(--blue);
+
+  /* Shared button sizing */
+  --btn-padding-x: 16px;
+  --btn-min-width: 80px;
+  --btn-compact-height: 32px;
+  --btn-compact-padding-x: 12px;
+
+  /* Control buttons (icon/pagination/toolbar) */
+  --btn-pagination-size: 32px;
+  --btn-pagination-text: var(--text-primary);
+  --btn-pagination-hover-bg: var(--gray-10);
+
+  --btn-toolbar-height: 32px;
+  --btn-toolbar-min-width: 80px;
+  --btn-toolbar-padding-x: 16px;
+  --btn-toolbar-text: var(--text-primary);
+  --btn-toolbar-border: var(--gray-40);
+  --btn-toolbar-hover-bg: var(--layer-03);
+  --btn-toolbar-font-size: 14px;
+  --btn-toolbar-icon-size: 18px;
+
+  --btn-icon-bg: transparent;
+  --btn-icon-text: var(--text-secondary);
+  --btn-icon-hover-bg: color-mix(in srgb, var(--layer-03), white 8%);
+  --btn-icon-hover-text: var(--text-primary);
+  --btn-icon-active-bg: var(--color-accent);
+  --btn-icon-disabled-bg: var(--layer-03);
+  --btn-icon-disabled-text: var(--text-disabled);
 }

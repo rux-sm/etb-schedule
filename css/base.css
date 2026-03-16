@@ -1333,8 +1333,8 @@ textarea:focus,
 .select-trigger:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  border-bottom-style: dashed;
-  /* Carbon accessibility trick for disabled fields */
+  border-bottom-style: solid;
+  /* Modified from dashed per user preference */
 }
 
 .select-trigger::after {

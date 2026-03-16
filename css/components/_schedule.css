@@ -1827,146 +1827,145 @@
               border-right: 1px solid var(--gray-20) !important;
               border-bottom: 1px solid var(--gray-20) !important;
             }
-
-            .driver-week__wrap {
-              width: auto;
-              max-width: 100%;
-              overflow-x: auto;
-              overflow-y: hidden;
-              margin: 0;
-              background: var(--layer-02);
-            }
-
-            .driver-week__table {
-              width: 100%;
-              border-collapse: collapse;
-              table-layout: auto;
-              -webkit-user-select: none;
-              user-select: none;
-            }
-
-            .driver-week__table th {
-              color: var(--text-primary);
-              font-weight: 500;
-            }
-
-            .driver-week__table th,
-            .driver-week__table td {
-              padding: 6px 8px;
-              font-size: 0.75rem;
-              text-align: center;
-              white-space: nowrap;
-              cursor: pointer;
-              border-inline-end: 1px solid var(--layer-02-border);
-              border-bottom: 1px solid var(--layer-02-border);
-            }
-
-            .driver-week__table th:last-child,
-            .driver-week__table td:last-child {
-              border-inline-end: none;
-            }
-
-            .driver-week__table tr:last-child td {
-              border-bottom: none;
-            }
-
-            .driver-week__table th:first-child,
-            .driver-week__table td:first-child {
-              width: 90px;
-              text-align: start;
-              padding-inline-start: 6px;
-              color: var(--text-primary);
-              font-weight: 400;
-            }
-
-            .driver-week__table th:first-child {
-              font-weight: 500;
-              text-transform: uppercase;
-              letter-spacing: 0.02em;
-            }
-
-            .driver-week__count {
-              font-weight: 400;
-              color: var(--text-primary);
-            }
-
-
-
-            .driver-week__cell--unavailable {
-              background: var(--red) !important;
-              color: var(--text-primary) !important;
-            }
-
-            .driver-week__cell--on {
-              background: var(--color-accent);
-              color: var(--text-primary);
-            }
-
-            /* --- 5. Rigid Bus Assignment --- */
-            /* Bus panel: disabled until Buses (1–10) selected */
-            #busPanel.is-disabled {
-              pointer-events: none;
-              opacity: 0.6;
-            }
-
-            #busGrid.bus-assign,
-            .bus-assign-header {
-              display: grid;
-              grid-template-columns: 64px 1fr 1fr;
-              column-gap: 12px;
-            }
-
-            #busGrid.bus-assign {
-              row-gap: 10px;
-              align-items: start;
-            }
-
-            .assignments-overrides-section {
-              row-gap: 0;
-            }
-
-            .bus-assign-header {
-              margin-bottom: 4px;
-            }
-
-            .bus-assign-header .field-label {
-              margin-bottom: 0;
-              font-size: 0.6875rem;
-              font-weight: 500;
-              color: var(--text-muted);
-              letter-spacing: 0.04em;
-            }
-
-            /* Driver + Status block: driver on top, status below (Carbon-style grouped layout) */
-            .bus-assign__driver-block {
-              display: flex;
-              flex-direction: column;
-              gap: 4px;
-              min-width: 0;
-            }
-
-            .bus-assign__driver-block .select-dropdown:first-child,
-            .bus-assign__driver-block>select:first-child {
-              flex: 1;
-              min-width: 0;
-            }
-
-            .bus-assign__status-wrap {
-              flex-shrink: 0;
-            }
-
-            .bus-assign__status-cell {
-              min-width: 0;
-              width: 100%;
-            }
-
-            .bus-assign__status-cell .select-trigger {
-              font-size: 0.6875rem;
-              padding-inline: 6px;
-              min-height: 28px;
-            }
-
-            /* Standardized status pattern - apply colors directly from semantic tokens */
-            /* Consolidate bus grid definition */
-
           }
+
+          .driver-week__wrap {
+            width: auto;
+            max-width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            margin: 0;
+            background: var(--layer-02);
+          }
+
+          .driver-week__table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: auto;
+            -webkit-user-select: none;
+            user-select: none;
+          }
+
+          .driver-week__table th {
+            color: var(--text-primary);
+            font-weight: 500;
+          }
+
+          .driver-week__table th,
+          .driver-week__table td {
+            padding: 6px 8px;
+            font-size: 0.75rem;
+            text-align: center;
+            white-space: nowrap;
+            cursor: pointer;
+            border-inline-end: 1px solid var(--layer-02-border);
+            border-bottom: 1px solid var(--layer-02-border);
+          }
+
+          .driver-week__table th:last-child,
+          .driver-week__table td:last-child {
+            border-inline-end: none;
+          }
+
+          .driver-week__table tr:last-child td {
+            border-bottom: none;
+          }
+
+          .driver-week__table th:first-child,
+          .driver-week__table td:first-child {
+            width: 90px;
+            text-align: start;
+            padding-inline-start: 6px;
+            color: var(--text-primary);
+            font-weight: 400;
+          }
+
+          .driver-week__table th:first-child {
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+          }
+
+          .driver-week__count {
+            font-weight: 400;
+            color: var(--text-primary);
+          }
+
+
+
+          .driver-week__cell--unavailable {
+            background: var(--red) !important;
+            color: var(--text-primary) !important;
+          }
+
+          .driver-week__cell--on {
+            background: var(--color-accent);
+            color: var(--text-primary);
+          }
+
+          /* --- 5. Rigid Bus Assignment --- */
+          /* Bus panel: disabled until Buses (1–10) selected */
+          #busPanel.is-disabled {
+            pointer-events: none;
+            opacity: 0.6;
+          }
+
+          #busGrid.bus-assign,
+          .bus-assign-header {
+            display: grid;
+            grid-template-columns: 64px 1fr 1fr;
+            column-gap: 12px;
+          }
+
+          #busGrid.bus-assign {
+            row-gap: 10px;
+            align-items: start;
+          }
+
+          .assignments-overrides-section {
+            row-gap: 0;
+          }
+
+          .bus-assign-header {
+            margin-bottom: 4px;
+          }
+
+          .bus-assign-header .field-label {
+            margin-bottom: 0;
+            font-size: 0.6875rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            letter-spacing: 0.04em;
+          }
+
+          /* Driver + Status block: driver on top, status below (Carbon-style grouped layout) */
+          .bus-assign__driver-block {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+          }
+
+          .bus-assign__driver-block .select-dropdown:first-child,
+          .bus-assign__driver-block>select:first-child {
+            flex: 1;
+            min-width: 0;
+          }
+
+          .bus-assign__status-wrap {
+            flex-shrink: 0;
+          }
+
+          .bus-assign__status-cell {
+            min-width: 0;
+            width: 100%;
+          }
+
+          .bus-assign__status-cell .select-trigger {
+            font-size: 0.6875rem;
+            padding-inline: 6px;
+            min-height: 28px;
+          }
+
+          /* Standardized status pattern - apply colors directly from semantic tokens */
+          /* Consolidate bus grid definition */
