@@ -56,9 +56,11 @@ button:focus-visible,
   background-color: var(--btn-primary-bg);
   color: var(--btn-primary-text);
 }
+
 .btn--primary:hover {
   background-color: var(--btn-primary-hover);
 }
+
 .btn--primary:active {
   background-color: var(--btn-primary-active);
 }
@@ -68,9 +70,11 @@ button:focus-visible,
   background-color: var(--btn-secondary-bg);
   color: var(--btn-secondary-text);
 }
+
 .btn--secondary:hover {
   background-color: var(--btn-secondary-hover);
 }
+
 .btn--secondary:active {
   background-color: var(--btn-secondary-active);
 }
@@ -80,9 +84,11 @@ button:focus-visible,
   background-color: var(--btn-danger-bg);
   color: var(--btn-danger-text);
 }
+
 .btn--danger:hover {
   background-color: var(--btn-danger-hover);
 }
+
 .btn--danger:active {
   background-color: var(--btn-danger-active);
 }
@@ -263,6 +269,7 @@ label .label-link {
   cursor: pointer;
   display: inline;
 }
+
 label .label-link:hover {
   text-decoration: underline;
 }
@@ -456,7 +463,7 @@ label .label-link:hover {
   line-height: 1;
   position: absolute;
   top: 48%;
-  color: color-mix(in srgb, var(--yellow) 100%, white);
+  color: color-mix(in srgb, var(--alert-yellow) 100%, white);
   transform: translateY(-50%);
   text-shadow: var(--text-shadow);
 }

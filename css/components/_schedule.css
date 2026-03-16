@@ -1,15 +1,31 @@
           #printRoot.print-mode-legal .c-header.c-header--schedule {
-            border-top: none !important;
-            border-bottom: none !important;
-          }
-        #printRoot.print-mode-legal .print-header {
-          border-top: none !important;
-          border-bottom: none !important;
-        }
+  border-top: none !important;
+  border-bottom: none !important;
+  height: 40px !important;
+}
+#printRoot.print-mode-legal .print-header {
+  border-top: none !important;
+  border-bottom: none !important;
+  height: 40px !important;
+}
 
     #printRoot.print-mode-legal .print-table .schedule-grid__header-cell {
       border-top: 1px solid transparent !important;
     }
+
+.print-header-logo-img {
+  display: block !important;
+  height: 24px !important;
+  width: auto !important;
+  margin-right: 12px !important;
+  flex-shrink: 0 !important;
+}
+
+#printRoot.print-mode-legal .agenda-header__date-left {
+  overflow: visible !important;
+  display: flex !important;
+  align-items: center !important;
+}
 /* ==========================================================================
    APP HEADER - CARBON UI SHELL (48px)
    ========================================================================== */
@@ -1739,7 +1755,8 @@
     top: 0 !important;
     box-sizing: border-box !important;
     border: 1px solid var(--gray-20) !important;
-    padding: 3px 5px !important;
+    border-left: 4px solid var(--tripbar-color) !important;
+    padding: 3px 5px 3px 2px !important;
     border-radius: 0px !important;
     z-index: 10;
     font-size: 9pt !important;
@@ -1945,6 +1962,5 @@
 /* Standardized status pattern - apply colors directly from semantic tokens */
 /* Consolidate bus grid definition */
 
-
-
-/* ==========================================================================
+}
+

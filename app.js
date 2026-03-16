@@ -78,7 +78,7 @@ if (document.readyState === "loading") {
 // ======================================================
 const CONFIG = {
   APP_NAME: "Trip Schedule",
-  APP_VERSION: "0.9.0",
+  APP_VERSION: "0.9.1",
   ENDPOINT:
     "https://script.google.com/macros/s/AKfycbzSsVByHnMuzdmaITv2Ht-q1hUQ0y5cVVIEzV6E-h7-1EhnVWJDYlhj5K4RhY0wldBk/exec",
   BUS_LANES: ["218", "763", "470", "133", "506", "746", "607", "897", "898", "474"],
@@ -143,12 +143,12 @@ const CACHE = {
         expiry: Date.now() + ttlMs,
       };
       localStorage.setItem(key, JSON.stringify(payload));
-    } catch {}
+    } catch { }
   },
   remove(key) {
     try {
       localStorage.removeItem(key);
-    } catch {}
+    } catch { }
   },
   clearAll() {
     try {
@@ -160,7 +160,7 @@ const CACHE = {
           localStorage.removeItem(k);
         }
       });
-    } catch {}
+    } catch { }
   },
 };
 
@@ -498,7 +498,7 @@ function clamp(n, min, max) {
 function safeUUID() {
   try {
     return crypto.randomUUID();
-  } catch {}
+  } catch { }
   return `tk_${Date.now()}_${Math.floor(Math.random() * 1e9)}`;
 }
 
@@ -1736,7 +1736,7 @@ function applyWeekStart(isMonday) {
 
   try {
     localStorage.setItem("weekStartMonday", state.weekStartsOnMonday ? "1" : "0");
-  } catch {}
+  } catch { }
 
   syncWeekStartUI();
 
@@ -1983,7 +1983,7 @@ function prefetchAdjacentWeeks() {
 
     // ✅ FIX: Calculate Monday for the adjacent week
     const { notesKey } = getWeekRange(targetDate); // We will update getWeekRange to support a date arg
-    fetchWeekDataCached(start, end, notesKey).catch(() => {});
+    fetchWeekDataCached(start, end, notesKey).catch(() => { });
   }
 }
 
@@ -1997,7 +1997,7 @@ function showScheduleRenderToastDelayed() {
 
   // Header status progress is now owned by week-load/trip-load pipelines.
   // Keep this timer for render lifecycle parity, but do not emit standalone render notices.
-  scheduleRenderToastTimer = setTimeout(() => {}, 120);
+  scheduleRenderToastTimer = setTimeout(() => { }, 120);
 }
 
 function hideScheduleRenderToast() {
@@ -4238,11 +4238,11 @@ function openDriverContactModal(tripKey) {
   const dDate = trip.departureDate ? parseYMD(trip.departureDate) : null;
   const dDateStr = dDate
     ? dDate.toLocaleDateString("en-US", {
-        weekday: "long",
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      })
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    })
     : "the upcoming date";
   const destName = trip.destination || "your destination";
 
@@ -5330,15 +5330,17 @@ function buildPrintScheduleTwoPages() {
       headerClone.classList.add("print-header");
       headerClone
         .querySelectorAll(
-          ".c-header__actions, .agenda-header__date-left .btn--icon, .weekpicker-trigger-wrap",
+          ".c-header__actions, .agenda-header__date-left .btn--icon, .agenda-header__date-left .btn--icon-pagination, .weekpicker-trigger-wrap, .agenda-header__sync-center, .agenda-header__date-right",
         )
         .forEach((el) => el.remove());
-      const topbarLogo = document.querySelector(".app-header__logo-wrap");
-      const headerInner = headerClone.querySelector(".c-header--schedule");
-      if (topbarLogo && headerInner) {
-        const logoClone = topbarLogo.cloneNode(true);
-        logoClone.classList.add("print-header-logo");
-        headerInner.insertBefore(logoClone, headerInner.firstChild);
+
+      const dateLeft = headerClone.querySelector(".agenda-header__date-left");
+      if (dateLeft) {
+        const logoImg = document.createElement("img");
+        logoImg.src = "logo.png";
+        logoImg.className = "print-header-logo-img";
+        logoImg.alt = "Logo";
+        dateLeft.insertBefore(logoImg, dateLeft.firstChild);
       }
       card.appendChild(headerClone);
     } else {
@@ -5401,15 +5403,15 @@ function buildPrintScheduleFullLetter() {
           <tr>
             <th class="schedule-grid__col-bus">Bus</th>
             ${dates
-              .map((d, i) => {
-                const dObj = parseYMD(d);
-                const dayStr = dObj
-                  ? dObj.toLocaleDateString("en-US", { weekday: "short" })
-                  : dayIds[i];
-                const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
-                return `<th class="schedule-grid__col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
-              })
-              .join("")}
+      .map((d, i) => {
+        const dObj = parseYMD(d);
+        const dayStr = dObj
+          ? dObj.toLocaleDateString("en-US", { weekday: "short" })
+          : dayIds[i];
+        const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
+        return `<th class="schedule-grid__col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
+      })
+      .join("")}
           </tr>
         </thead>
         <tbody>
@@ -6961,11 +6963,11 @@ function wireEvents() {
     // clear all cached week data (both in-memory and persistent).
     try {
       state.weekCache.clear();
-    } catch {}
+    } catch { }
 
     try {
       CACHE.clearAll();
-    } catch {}
+    } catch { }
   }
 
   dom.tripDetailsModal?.addEventListener("click", (e) => {
@@ -7880,7 +7882,7 @@ if (dom.printDailyMaintenancePlanBtn) {
   ${SELECTORS.scheduleGridWrapHook}.is-loading-bars .schedule-grid__trip-bar { opacity: 0.18; pointer-events: none; }
 `;
     document.head.appendChild(style);
-  } catch {}
+  } catch { }
 
   setSidePanelMode("off");
   enforceDesktopEditing();
