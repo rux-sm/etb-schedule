@@ -13,8 +13,8 @@ button,
 
   /* Lock height to perfectly match your form inputs */
   height: var(--input-height, 40px);
-  min-width: 80px;
-  padding: 0 16px;
+  min-width: var(--btn-min-width, 80px);
+  padding: 0 var(--btn-padding-x, 16px);
 
   /* Carbon Strict Geometry */
   border: 1px solid transparent;
@@ -38,7 +38,7 @@ button,
 button:focus-visible,
 .btn:focus-visible,
 .toggle-pill:focus-visible {
-  outline: 2px solid var(--blue) !important;
+  outline: 2px solid var(--focus-ring-color) !important;
   outline-offset: -2px !important;
   border-color: transparent !important;
 }
@@ -84,29 +84,89 @@ button:focus-visible,
   background-color: var(--btn-danger-hover);
 }
 .btn--danger:active {
-  background-color: color-mix(in srgb, var(--btn-danger-bg) 70%, black);
+  background-color: var(--btn-danger-active);
+}
+
+/* ── Success Button (Clipboard/Done Feedback) ─────────────── */
+.btn--success {
+  background-color: var(--btn-success-bg);
+  color: var(--btn-success-text);
+}
+
+.btn--success:hover {
+  background-color: var(--btn-success-hover);
+}
+
+.btn--success:active {
+  background-color: var(--btn-success-active);
 }
 
 /* ── Danger Ghost Button (Delete in Footer/Context) ────────── */
 .btn--danger.btn--ghost {
   background-color: transparent;
-  color: var(--red); /* Red 50 */
+  color: var(--color-danger);
   border-color: transparent;
 }
 
 .btn--danger.btn--ghost:hover {
-  background-color: var(--alert-red) !important; /* Red 60 */
+  /* Red 60 */
+  background-color: var(--color-danger) !important;
   color: var(--white) !important;
 }
 
 .btn--danger.btn--ghost:active {
-  background-color: color-mix(in srgb, var(--alert-red) 85%, black) !important;
+  background-color: color-mix(in srgb, var(--color-danger) 85%, black) !important;
   color: var(--white) !important;
+}
+
+/* Compact size used by modal/footer utility buttons */
+.btn--compact {
+  height: var(--btn-compact-height);
+  min-width: 0;
+  padding: 0 var(--btn-compact-padding-x);
+}
+
+/* Pagination icon control buttons */
+.btn--icon-pagination {
+  width: var(--btn-pagination-size);
+  height: var(--btn-pagination-size);
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  color: var(--btn-pagination-text);
+}
+
+.btn--icon-pagination:hover {
+  background-color: var(--btn-pagination-hover-bg);
+}
+
+.btn--icon-pagination .material-symbols-outlined {
+  margin-right: 0;
+}
+
+/* Toolbar ghost controls */
+.btn--toolbar {
+  height: var(--btn-toolbar-height);
+  min-width: var(--btn-toolbar-min-width);
+  padding-inline: var(--btn-toolbar-padding-x);
+  background-color: transparent;
+  border: 1px solid var(--btn-toolbar-border);
+  color: var(--btn-toolbar-text);
+  font-size: var(--btn-toolbar-font-size);
+}
+
+.btn--toolbar:hover {
+  background-color: var(--btn-toolbar-hover-bg);
+}
+
+.btn--toolbar .material-symbols-outlined {
+  font-size: var(--btn-toolbar-icon-size);
 }
 
 .btn:disabled,
 .btn[aria-disabled="true"] {
-  background-color: var(--surface-3) !important;
+  background-color: var(--layer-03) !important;
   color: var(--text-disabled) !important;
   cursor: not-allowed;
   pointer-events: none;
@@ -157,7 +217,8 @@ button:focus-visible,
 
 .toggle-pill:hover {
   background-color: var(--btn-ghost-hover-bg);
-  color: var(--text-primary); /* Brightens the text slightly on hover */
+  /* Brightens the text slightly on hover */
+  color: var(--text-primary);
 }
 
 .toggle-pill[aria-pressed="true"],
@@ -189,7 +250,7 @@ label .label-link {
   border: none;
   padding: 0;
   margin-inline-start: 6px;
-  color: var(--accent);
+  color: var(--color-accent);
   font-size: inherit;
   font-weight: 400;
   text-decoration: none;
@@ -223,7 +284,7 @@ label .label-link:hover {
   padding: 0;
   border: none;
   border-radius: 8px;
-  background: var(--surface-container-high);
+  background: var(--layer-03);
   color: var(--text-muted);
   cursor: pointer;
   opacity: 0.5;
@@ -236,7 +297,7 @@ label .label-link:hover {
 
 .btn-close-card:hover {
   opacity: 1;
-  background: var(--surface-container-lowest);
+  background: var(--layer-01);
 }
 
 .btn-close-card:active {
@@ -271,8 +332,8 @@ label .label-link:hover {
 /* BEM: .badge--primary, .badge--error */
 .badge-primary,
 .badge--primary {
-  background: color-mix(in srgb, var(--accent) 0%, transparent);
-  color: var(--accent);
+  background: color-mix(in srgb, var(--color-accent) 0%, transparent);
+  color: var(--color-accent);
   border: 1px solid transparent;
   vertical-align: middle;
   text-shadow: none;
@@ -327,7 +388,7 @@ label .label-link:hover {
   font-variation-settings:
     "FILL" var(--icon-tripbar-fill, 1),
     "opsz" var(--icon-tripbar-opsz, 20);
-  color: color-mix(in srgb, var(--text) 100%, white);
+  color: color-mix(in srgb, var(--text-primary) 100%, white);
   text-shadow: var(--text-shadow);
   background: transparent;
   border-radius: var(--tripbar-badge-radius);
@@ -408,11 +469,11 @@ label .label-link:hover {
 
 /* ── 7. Header Icon Button ────────────────────────────────── */
 .icon-btn {
-  background: transparent !important;
+  background: var(--btn-icon-bg) !important;
   border: none !important;
   box-shadow: none !important;
   padding: 0 !important;
-  color: var(--text-secondary);
+  color: var(--btn-icon-text);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -428,18 +489,18 @@ label .label-link:hover {
 
 .icon-btn:hover {
   box-shadow: none !important;
-  background: var(--surface-container-highest) !important;
-  color: var(--text);
+  background: var(--btn-icon-hover-bg) !important;
+  color: var(--btn-icon-hover-text);
 }
 
 .icon-btn:active {
   box-shadow: none !important;
-  background: var(--accent) !important;
+  background: var(--btn-icon-active-bg) !important;
 }
 
 .icon-btn:disabled {
-  color: var(--color-text-disabled);
-  background: var(--surface-container-high) !important;
+  color: var(--btn-icon-disabled-text);
+  background: var(--btn-icon-disabled-bg) !important;
   cursor: not-allowed;
   pointer-events: none;
 }
@@ -450,7 +511,7 @@ label .label-link:hover {
    ========================================================================== */
 
 .c-card {
-  background: var(--surface-2);
+  background: var(--layer-02);
   /* More premium, rounded corners like the 'Create' button */
   /* box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.5); */
   border: none !important;
@@ -503,17 +564,17 @@ label .label-link:hover {
   border-top: 3px solid transparent;
   border-bottom: 3px solid transparent;
   background: transparent;
-  color: var(--text);
+  color: var(--text-primary);
   cursor: pointer;
   transition: background-color 110ms;
 }
 
 .c-header__action:hover {
-  background-color: var(--surface-3);
+  background-color: var(--layer-03);
 }
 
 .c-header__action:active {
-  background-color: var(--surface-3);
+  background-color: var(--layer-03);
 }
 
 .c-header__action:focus-visible {
@@ -522,7 +583,7 @@ label .label-link:hover {
 }
 
 .c-header__action[aria-pressed="true"] {
-  border-bottom-color: var(--accent);
+  border-bottom-color: var(--color-accent);
 }
 
 .c-header__action .material-symbols-outlined {
@@ -543,8 +604,8 @@ label .label-link:hover {
   width: 100%;
   flex-shrink: 0;
   padding: 0 var(--space-lg);
-  border-bottom: 1px solid var(--layer-02-border);
-  background-color: var(--layer-03);
+  border-bottom: 1px solid var(--border-subtle);
+  background-color: var(--layer-02);
 }
 
 .c-header.c-header--panel .c-header__title {
@@ -566,7 +627,7 @@ label .label-link:hover {
 }
 
 .c-header.c-header--panel .c-header__action {
-  color: var(--text);
+  color: var(--text-primary);
 }
 
 .c-header.c-header--panel .c-header__action:hover {
@@ -574,12 +635,12 @@ label .label-link:hover {
 }
 
 .c-header.c-header--panel .c-header__action:active {
-  background-color: var(--surface-3);
+  background-color: var(--layer-03);
 }
 
 .c-header.c-header--panel .c-header__action[aria-pressed="true"] {
   background-color: var(--red);
-  border-bottom-color: var(--accent);
+  border-bottom-color: var(--color-accent);
 }
 
 .c-card__body {
@@ -602,8 +663,8 @@ label .label-link:hover {
   flex-wrap: wrap;
   padding: 16px;
   margin-top: 0;
-  border-top: 1px solid var(--layer-02-border);
-  background: var(--layer-03);
+  border-top: 1px solid var(--border-subtle);
+  background: var(--layer-02);
   border-radius: 0;
   /* Match card radius if visible */
 }
@@ -633,8 +694,10 @@ label .label-link:hover {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 48px; /* Standardized to Carbon 48px hit area */
-  padding: 0 8px; /* Matches form-grid internal alignment */
+  /* Standardized to Carbon 48px hit area */
+  height: 48px;
+  /* Matches form-grid internal alignment */
+  padding: 0 8px;
   margin: 0;
   background: transparent;
   border: none;
@@ -662,7 +725,8 @@ label .label-link:hover {
 }
 
 .cds-accordion__title .material-symbols-outlined {
-  font-size: 1.125rem; /* 18px */
+  /* 18px */
+  font-size: 1.125rem;
   color: var(--text-secondary);
 }
 

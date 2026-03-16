@@ -2,37 +2,14 @@
   color-scheme: dark;
 
   /* ==========================================================================
-   * 1. COLOR PALETTE
-   * IBM Carbon Gray scale + semantic hues (single source of truth)
+   * 1. FOUNDATIONS
+   * Raw palette tokens. These are the only hard-coded color values.
    * ========================================================================== */
 
-  /* --- Semantic Hues (Dark Mode — Carbon Tone 50) --- */
-  --blue: #4589ff;
-  /* Blue 50  */
-  --red: #fa4d56;
-  /* Red 50   */
-  --purple: #a56eff;
-  /* Purple 50 */
-  --yellow: #f1c21b;
-  /* Yellow 30 */
-  --teal: #009d9a;
-  /* Teal 50  */
-  --orange: #ff832b;
-  /* Orange 40 */
-  --pink: #ee5396;
-  /* Magenta 50 */
-  --green: #24a148;
-  /* Green 50 */
-
-  /* --- Alert Colors (IBM Carbon) --- */
-  --alert-red: #da1e28;
-  --alert-green: #24a148;
-  --alert-orange: #ff832b;
-  --alert-yellow: #f1c21b;
-  --alert-cyan: #3ddbd9;
-
-  /* --- Grays (IBM Carbon) --- */
+  /* Simple base palette names (primary source of truth) */
   --black: #000000;
+  --white: #ffffff;
+
   --gray-100: #161616;
   --gray-90: #262626;
   --gray-80: #393939;
@@ -43,41 +20,75 @@
   --gray-30: #c6c6c6;
   --gray-20: #e0e0e0;
   --gray-10: #f4f4f4;
-  --white: #ffffff;
+
+  --blue: #4589ff;
+  --red: #fa4d56;
+  --purple: #a56eff;
+  --yellow: #f1c21b;
+  --teal: #009d9a;
+  --orange: #ff832b;
+  --pink: #ee5396;
+  --green: #24a148;
+  --cyan: #3ddbd9;
+  --indigo: #6929c4;
+  --brown: #8f5f3a;
 
   /* ==========================================================================
-   * 2. THEME TOKENS — The IBM Carbon Way (Gray 100 Theme)
+   * 2. CANONICAL RUX TOKENS
+   * Apply these families moving forward: color, layer, border, text, space, size.
    * ========================================================================== */
 
-  /* The absolute floor of the app */
-  --background: var(--gray-100);
+  --color-accent: var(--blue);
+  --color-danger: var(--red);
+  --color-success: var(--green);
+  --color-warning: var(--yellow);
+  --color-info: var(--cyan);
 
-  /* UI Shell (Header bar) - Carbon maps the UI Shell base color to the background token */
-  --layer-ui-shell: var(--black); /* Keeping your black preference for the header */
-  --layer-ui-shell-border: var(--gray-80);
-  /* Layer 01 – Primary components resting directly on the background (schedule grid, main cards) */
-  --layer-01: var(--gray-100);
-  --layer-01-border-subtle: var(--gray-80);
-  --layer-01-border: var(--gray-80);
+  --border-subtle: var(--gray-80);
+  --border-default: var(--gray-70);
+  --border-strong: var(--gray-60);
 
-  /* Layer 02 – Components resting on Layer 01 (side panels, secondary nested cards) */
-  --layer-02: var(--gray-90);
-  --layer-02-border-subtle: var(--gray-80);
-  --layer-02-border: var(--gray-70);
-
-  /* Layer 03 – Elevated overlays (menus, dropdowns, modals) */
-  --layer-03: var(--gray-80);
-  --layer-03-border-subtle: var(--gray-70);
-  --layer-03-border: var(--gray-60);
-
-  /* --- Text Colors --- */
   --text-primary: var(--white);
   --text-secondary: var(--gray-30);
   --text-placeholder: var(--gray-40);
   --text-disabled: var(--gray-50);
 
+  /* ==========================================================================
+   * 3. STATUS & STATE
+   * Derived status semantics and temporary compatibility aliases.
+   * ========================================================================== */
+
+  --color-danger-soft: color-mix(in srgb, var(--red) 20%, transparent);
+  --color-conflict-accent: var(--color-danger);
+  --color-conflict-bg: color-mix(in srgb, var(--color-danger) 25%, transparent);
+  --color-status-pending: var(--color-danger);
+  --color-status-ok: var(--color-success);
+  --color-status-assigned: var(--color-warning);
+  --color-status-blue: var(--color-accent);
+
+  /* ==========================================================================
+   * 4. THEME TOKENS
+   * Layer-first contract for components.
+   * Keep these semantic and themeable; avoid hard-coding grays in components.
+   * ========================================================================== */
+
+  /* App shell surface */
+  --layer-ui-shell: var(--gray-100);
+
+  /* High-emphasis panels/cards */
+  --layer-01: var(--black);
+  --layer-01-border: var(--border-subtle);
+
+  /* Default container surface */
+  --layer-02: var(--gray-90);
+  --layer-02-border: var(--border-subtle);
+
+  /* Secondary interactive surfaces (fields, ghost buttons, nested panels) */
+  --layer-03: var(--gray-80);
+  --layer-03-border: var(--border-default);
+
+  /* Canonical control fill */
   --field-bg: var(--layer-03);
-  --field-hover-bg: color-mix(in srgb, var(--field-bg), white 10%);
   --field-border-bottom: var(--layer-03-border);
 
   /* Primary (Action/Save - Solid Blue) */
@@ -93,38 +104,57 @@
   --btn-secondary-active: color-mix(in srgb, var(--layer-03), white 20%);
 
   /* Danger (Delete) */
-  --btn-danger-bg: var(--alert-red);
+  --btn-danger-bg: var(--color-danger);
   --btn-danger-text: var(--white);
-  --btn-danger-hover: color-mix(in srgb, var(--alert-red) 85%, black);
+  --btn-danger-hover: color-mix(in srgb, var(--color-danger) 85%, black);
+  --btn-danger-active: color-mix(in srgb, var(--color-danger) 70%, black);
+
+  /* Success (Confirmation/Completed actions) */
+  --btn-success-bg: var(--color-success);
+  --btn-success-text: var(--white);
+  --btn-success-hover: color-mix(in srgb, var(--color-success) 85%, black);
+  --btn-success-active: color-mix(in srgb, var(--color-success) 70%, black);
 
   /* Tertiary / Toggle Tiles (For Requirements) */
-  --btn-ghost-bg: var(--layer-03); /* Matches your input backgrounds perfectly */
+  /* Keep ghost tiles on the same surface as form controls */
+  --btn-ghost-bg: var(--layer-03);
   --btn-ghost-border: transparent;
-  --btn-ghost-text: var(--text-secondary); /* Dimmed until clicked */
+  /* Secondary text by default; interaction states can promote contrast */
+  --btn-ghost-text: var(--text-secondary);
   --btn-ghost-hover-bg: color-mix(in srgb, var(--layer-03), white 10%);
   --btn-ghost-active-bg: var(--layer-03);
   --btn-ghost-active-border: var(--blue);
 
-  /* ==========================================================================
-   * 3. STATUS & STATE
-   * Functional color assignments for semantics
-   * ========================================================================== */
+  /* Shared button sizing */
+  --btn-padding-x: 16px;
+  --btn-min-width: 80px;
+  --btn-compact-height: 32px;
+  --btn-compact-padding-x: 12px;
 
-  --accent: var(--blue);
-  --color-primary: var(--blue);
-  --color-primary-hover: color-mix(in srgb, var(--blue) 88%, black);
-  --color-primary-active: color-mix(in srgb, var(--blue) 76%, black);
-  --color-on-primary: var(--white);
-  --color-danger: var(--red);
-  --color-conflict-accent: var(--red);
-  --color-conflict-bg: color-mix(in srgb, var(--red) 25%, transparent);
-  --color-status-pending: var(--red);
-  --color-status-ok: var(--green);
-  --color-status-assigned: var(--yellow);
-  --color-status-blue: var(--blue);
+  /* Control buttons (icon/pagination/toolbar) */
+  --btn-pagination-size: 32px;
+  --btn-pagination-text: var(--text-primary);
+  --btn-pagination-hover-bg: var(--gray-90);
+
+  --btn-toolbar-height: 32px;
+  --btn-toolbar-min-width: 80px;
+  --btn-toolbar-padding-x: 16px;
+  --btn-toolbar-text: var(--text-primary);
+  --btn-toolbar-border: var(--layer-01-border);
+  --btn-toolbar-hover-bg: var(--layer-03);
+  --btn-toolbar-font-size: 14px;
+  --btn-toolbar-icon-size: 18px;
+
+  --btn-icon-bg: transparent;
+  --btn-icon-text: var(--text-secondary);
+  --btn-icon-hover-bg: color-mix(in srgb, var(--layer-03), white 15%);
+  --btn-icon-hover-text: var(--text-primary);
+  --btn-icon-active-bg: var(--color-accent);
+  --btn-icon-disabled-bg: var(--layer-03);
+  --btn-icon-disabled-text: var(--text-disabled);
 
   /* ==========================================================================
-   * 4. TYPOGRAPHY
+   * 6. TYPOGRAPHY
    * Font stacks + type scale
    * ========================================================================== */
 
@@ -135,20 +165,20 @@
     ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
     monospace;
 
-  --heading-1-size: 20px;
-  --heading-1-weight: 600;
+  --heading-1-size: 14px;
+  --heading-1-weight: 400;
   --heading-1-line-height: 1.3;
-  --heading-1-letter-spacing: 0;
-  --heading-1-color: var(--text);
+  --heading-1-letter-spacing: 0.2px;
+  --heading-1-color: var(--text-primary);
 
   --heading-2-size: 18px;
   --heading-2-weight: 400;
   --heading-2-line-height: 1.25;
   --heading-2-letter-spacing: 0;
-  --heading-2-color: var(--text);
+  --heading-2-color: var(--text-primary);
 
   /* ==========================================================================
-   * 5. SPACING & LAYOUT
+   * 7. SPACING & LAYOUT
    * Sizing, gaps, widths, structural dimensions
    * ========================================================================== */
 
@@ -161,18 +191,6 @@
   --panel-width: 400px;
   --layout-panel-gap: var(--space-xl);
   --card-padding: 16px;
-  --card-footer-padding-y: 12px;
-  --card-footer-padding-x: 16px;
-  --card-footer-min-height: 40px;
-  --bar-height: 40px;
-  --topbar-height: 48px;
-  --topbar-border: var(--layer-ui-shell-border);
-  --topbar-action-hover: color-mix(in srgb, var(--layer-ui-shell), white 20%);
-  --topbar-action-active: color-mix(in srgb, var(--layer-ui-shell), white 30%);
-  --topbar-active-accent: #0f62fe; /* Carbon Blue 60 — active indicator (intentionally distinct from --blue / Blue 50) */
-  --topbar-title-size: 16px;
-  --topbar-title-weight: 400;
-  --topbar-divider-color: var(--layer-ui-shell-border);
   --size-header-row: 48px;
   --size-header-action: 48px;
   --size-toolbar-action: 32px;
@@ -180,92 +198,62 @@
   --bus-col-w: 34px;
   --week-picker-height: 32px;
   --day-row-h: 34px;
-  --schedule-edge-inset-left: 16px;
   --schedule-edge-inset-right: 16px;
-  /* Matches schedule-grid-container scrollbar width for agenda-header alignment */
-  --scrollbar-gutter-width: 8px;
 
   /* Day Header */
-  --day-header-date-color: var(--text);
+  --day-header-date-color: var(--text-primary);
   --day-header-date-size: 14px;
   --day-header-date-weight: 600;
   --day-header-date-letter-spacing: 0;
   --day-header-date-line-height: 1;
-  --day-header-name-color: var(--text);
+  --day-header-name-color: var(--text-primary);
   --day-header-name-size: 14px;
   --day-header-name-weight: 400;
   --day-header-name-letter-spacing: 0;
   --day-header-name-line-height: 1;
 
-  /* Today Indicator */
-  --today-indicator-bg: var(--accent);
-  --today-indicator-text: var(--white);
-
   /* Bus Column */
-  --bus-num-color: var(--text);
+  --bus-num-color: var(--text-primary);
   --bus-num-size: 14px;
   --bus-num-weight: 500;
   --bus-num-letter-spacing: 0;
   --bus-num-line-height: 1;
   --bus-lift-color: var(--blue);
-  --bus-sleeper-color: var(--text);
-  --bus-col-text: var(--text);
+  --bus-sleeper-color: var(--text-primary);
 
   /* ==========================================================================
-   * 6. ELEVATION & EFFECTS
+   * 8. ELEVATION & EFFECTS
    * Shadows, overlays, text-shadows
    * ========================================================================== */
 
   --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.4);
   --elevation-hover: 0 10px 20px rgba(0, 0, 0, 0.4), 0 6px 6px rgba(0, 0, 0, 0.5);
   --text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-  --date-picker-filter: none;
-  --agenda-header-bg: rgb(31 32 33);
+  --overlay-hover: rgba(0, 0, 0, 0.05);
 
-  /* Surface tokens — dark-mode definitions (canonical layer aliases)
-   * These satisfy components that reference --surface-* and --border.
-   * Light theme overrides these in [data-theme="light"] below. */
-  --app-bg: var(--background);
-  --surface-0: var(--background);
-  --surface-1: var(--layer-01);
-  --surface-2: var(--layer-02);
-  --surface-3: var(--layer-03);
-  --surface-4: var(--gray-70);
-  --border: var(--layer-02-border);
-  --border-strong: var(--layer-03-border);
-  --grid-line: var(--layer-02-border-subtle);
-  --text: var(--text-primary);
+  /* Compatibility aliases still in active use */
+  --border: var(--border-default);
   --text-muted: var(--text-secondary);
-
-  /* Surface container aliases (used by newer components) */
-  --surface-container-lowest: var(--background);
-  --surface-container: var(--surface-2);
-  --surface-container-high: var(--surface-3);
-  --surface-container-highest: var(--surface-4);
+  --bus-accent-color: var(--layer-01);
+  --sync-progress: 0%;
+  --waiting-list-dynamic-height: var(--schedule-row-height);
 
   /* ==========================================================================
-   * 7. INTERACTIVE
-   * Buttons, inputs, focus, overlays
+   * 9. INTERACTIVE
+    * Buttons, inputs, focus
    * ========================================================================== */
 
-  --overlay-hover: rgba(0, 0, 0, 0.05);
-  --overlay-active: rgba(0, 0, 0, 0.1);
   --focus-ring-color: #4589ff;
-  --focus-ring: inset 0 0 0 2px #4589ff;
+  --focus-ring: inset 0 0 0 2px var(--focus-ring-color);
 
-  --control-height: 30px;
-  --control-height-icon: 28px;
-  --control-padding-x: 16px;
-  --control-radius: 8px;
   --control-radius-icon: 8px;
-  --input-height: 32px; /* IBM Carbon v11 Small variant standard */
+  /* Small control height baseline */
+  --input-height: 32px;
   --input-padding-x: 6px;
   --input-font-size: 0.875rem;
-  --input-font-weight: 300;
-  --input-border-radius: 0px;
 
   /* ==========================================================================
-   * 8. COMPONENT — Trip Bar
+   * 10. COMPONENT — Trip Bar
    * All trip-bar geometry, typography, and icons
    * ========================================================================== */
 
@@ -276,6 +264,13 @@
   --tripbar-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 
   --tripbar-color: var(--blue);
+  --tripbar-badge-text-color: var(--white);
+  --tripbar-r1-color: var(--white);
+  --tripbar-r2-color: var(--gray-20);
+  --tripbar-r4-color: var(--white);
+  --tripbar-r5-color: var(--white);
+  --tripbar-r6-color: var(--gray-20);
+  --tripbar-r7-color: var(--white);
   --tripbar-hover-brightness-from: 1.05;
   --tripbar-hover-brightness-to: 1.15;
   --tripbar-hover-saturate-from: 1;
@@ -329,14 +324,11 @@
   --tripbar-r7-letter-spacing: 0.02em;
 
   /* Icons */
-  --tripbar-icon-size: 14px;
   --tripbar-mini-badge: 14px;
   --tripbar-badge-radius: 0;
   --tripbar-danger-size: 16px;
   --tripbar-danger-font: 0.6875rem;
   --tripbar-danger-offset: 4px;
-  --tripbar-arrow-size: 1.125rem;
-  --tripbar-arrow-offset: 4px;
   --tripbar-multi-badge-font-size: 0.625rem;
   --tripbar-multi-bus-indent: 0px;
   --icon-bus-size: 18px;
@@ -349,26 +341,35 @@
   --icon-arrow-size: 1.125rem;
   --icon-arrow-offset: 4px;
   --icon-btn-size: 32px;
-  --icon-bus-lift-light: #2196f3;
+
+  /* Envelope / print sheet tokens */
+  --env-ink: var(--text-primary);
+  --env-rule: var(--border);
+  --env-border: 1px;
+  --env-pad: 0.25in;
+  --env-panel-pad: 0.375in;
+  --env-section-gap: 0.125in;
+  --env-label-size: 0.625rem;
+  --env-tiny-size: 0.5625rem;
+  --env-pickup: color-mix(in srgb, var(--blue) 12%, transparent);
 
   /* ==========================================================================
-   * 9. Z-INDEX
+   * 11. Z-INDEX
    * Layering stack
    * ========================================================================== */
 
   --z-dropdown: 1000;
   --z-modal: 10100;
+  --print-scale: 1;
 }
 
 /* ==========================================================================
- * LIGHT THEME OVERRIDES
- * ========================================================================/* ==========================================================================
  * LIGHT THEME OVERRIDES
  * ========================================================================== */
 [data-theme="light"] {
   color-scheme: light;
 
-  /* --- 1. Palette (New Scratch Palette) --- */
+  /* --- 1. Foundation overrides (simple base tokens) --- */
   --blue: #0062ff;
   --red: #da1e28;
   --green: #198038;
@@ -378,44 +379,49 @@
   --purple: #8a3ffc;
   --pink: #d02670;
 
-  /* --- 2. Surfaces (Phase 1) --- */
-  --app-bg: var(--white);
-  /* Soft gray background */
-  --surface-0: var(--gray-30);
-  /* White (Header) */
-  --surface-1: var(--white);
-  /* White (Main Content) */
-  --surface-2: var(--gray-30);
-  /* Soft gray (Sidebars) */
-  --surface-3: var(--gray-20);
-  /* White (Elevated/Cards) */
-  --surface-4: var(--gray-40);
-  /* Light gray (Hover states/Tertiary) */
+  /* --- 2. Canonical Rux theme overrides --- */
 
-  --color-input-bg: var(--gray-20);
-  --color-input-border: var(--gray-20);
-  --color-input-border-hover: var(--gray-30);
+  --background: var(--gray-30);
+  --layer-ui-shell: var(--white);
+  --layer-01: var(--gray-30);
+  --layer-02: var(--gray-30);
+  --layer-03: var(--gray-20);
 
-  --text: var(--black);
-  --text-secondary: var(--black);
-  --text-muted: var(--gray-90);
-  --placeholder: #9aa0a6;
-  --color-text-disabled: #bdc1c6;
-
-  --border: var(--gray-50);
-  --grid-line: var(--gray-30);
+  --border-subtle: var(--gray-30);
+  --border-default: var(--gray-50);
   --border-strong: var(--gray-50);
+  --layer-01-border: var(--border-subtle);
+  --layer-02-border: var(--border-default);
+  --layer-03-border: var(--border-strong);
+
+  --text-primary: var(--black);
+  --text-secondary: var(--black);
+  --text-placeholder: #9aa0a6;
+  --text-disabled: #bdc1c6;
+
+  /* --- 3. Compatibility aliases (temporary migration layer) --- */
+  --text-muted: var(--gray-90);
+  --border: var(--border-default);
+  --color-danger-soft: color-mix(in srgb, var(--red) 14%, white);
+  --bus-accent-color: var(--layer-02);
+  --sync-progress: 0%;
+  --waiting-list-dynamic-height: var(--schedule-row-height);
 
   --elevation-1: 0 2px 4px rgba(0, 0, 0, 0.05);
   --elevation-hover: 0 8px 16px rgba(0, 0, 0, 0.1);
   --text-shadow: none;
-  --date-picker-filter: none;
-  --agenda-header-bg: #f4f4f4;
 
   --overlay-hover: rgba(0, 0, 0, 0.04);
-  --overlay-active: rgba(0, 0, 0, 0.08);
-
-  --today-indicator-bg: var(--blue);
-  --today-indicator-text: #ffffff;
   --tripbar-bg-mix-percent: 15%;
+  --tripbar-badge-text-color: var(--white);
+  --tripbar-r1-color: var(--white);
+  --tripbar-r2-color: color-mix(in srgb, var(--white) 90%, black 10%);
+  --tripbar-r4-color: var(--white);
+  --tripbar-r5-color: var(--white);
+  --tripbar-r6-color: color-mix(in srgb, var(--white) 90%, black 10%);
+  --tripbar-r7-color: var(--white);
+
+  --env-ink: var(--black);
+  --env-rule: var(--gray-50);
+  --env-pickup: color-mix(in srgb, var(--blue) 18%, white);
 }

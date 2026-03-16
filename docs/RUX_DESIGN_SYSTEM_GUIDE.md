@@ -75,6 +75,26 @@ Use this checklist before opening a PR that touches UI.
 - Avoid legacy selector reintroduction (for example old `card__*` families)
 - If you add a new class family, define one long-term owner file in this guide
 
+## Token Commenting Standard
+
+Use comments to clarify intent, not to restate obvious token names.
+
+1. Keep section headers as the primary documentation in [css/variables.css](css/variables.css).
+2. Add token-level comments only when a token is easy to misuse or has non-obvious behavior.
+3. Prefer short intent labels over long Current/Recommended narratives.
+4. Put audits, migration notes, and usage inventories in this guide instead of inline token comments.
+5. If a comment is longer than one line, move that detail to docs and keep the token file lean.
+
+Example style:
+
+```css
+/* Default container surface */
+--layer-02: var(--gray-100);
+
+/* Structural borders for layer-02 containers */
+--layer-02-border: var(--border-subtle);
+```
+
 ## Versioning Workflow
 
 Use a single source of truth for app version updates.
@@ -404,6 +424,32 @@ These are the standards to keep across the app.
 - Focus states must be obvious
 - Hover and active states should be subtle and consistent
 
+### Button API
+
+Use one canonical button system across the app.
+
+- Base class: `.btn`
+- Semantic variants: `.btn--primary`, `.btn--secondary`, `.btn--danger`, `.btn--ghost`, `.btn--success`
+- Size and control variants: `.btn--compact`, `.btn--toolbar`, `.btn--icon-pagination`
+
+Composition rules:
+
+- Every button variant must include `.btn` in markup.
+- Variants are additive, for example: `.btn btn--primary`, `.btn btn--danger btn--ghost`.
+- Avoid standalone legacy button classes that bypass `.btn`.
+
+Ownership rules:
+
+- Shared button behavior and variant visuals belong in `css/components/_primitives.css`.
+- Context/layout placement for button groups belongs in owner files such as `css/components/_schedule.css`, `css/components/_modals.css`, or `css/layout.css`.
+- Do not duplicate variant color/state styling in context files.
+
+Token rules:
+
+- Button colors, hover, active, focus, and sizing must be driven by tokens in `css/variables.css`.
+- Avoid hard-coded color values inside button variant selectors.
+- If a new button variant is needed, add tokens first, then add the variant in primitives.
+
 ### Spacing
 
 Use a small spacing scale and stay on it.
@@ -625,6 +671,41 @@ Add tokens only when they are reused enough to matter.
 ### Avoid token bloat
 
 Do not create tokens for values used only once unless they are part of a planned system.
+
+### Single Maintainer Workflow
+
+Use this lightweight process so one person can keep token quality high without overhead.
+
+1. Add new values only in canonical token families first
+
+- Canonical families:
+  - `--color-*`
+  - `--surface-*`
+  - `--border-*`
+  - `--text-*`
+  - `--space-*`
+  - `--size-*`
+
+2. Treat compatibility aliases as temporary only
+
+- Do not introduce new alias names once canonical tokens exist.
+- If a migration alias is needed, map it to a canonical token and mark it for removal in the same cleanup cycle.
+
+3. Prefer semantic names over component names
+
+- Prefer `--color-danger` over one-off names tied to a single screen.
+- Prefer `--surface-elevated` over context-specific names where possible.
+
+4. Keep the token file as single source of truth
+
+- Hard-coded color hex values should live only in foundation palette tokens.
+- Components should consume semantic/canonical tokens, not raw palette values.
+
+5. Use a simple release check for token changes
+
+- Run a full variable resolution audit: no missing tokens.
+- Verify dark and light theme render parity on app shell, schedule, and modals.
+- Remove aliases that are no longer referenced.
 
 ## Cleanup Strategy
 

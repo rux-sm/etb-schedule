@@ -6,7 +6,6 @@
 .app-header__branding {
   display: flex;
   align-items: center;
-  padding-left: 16px;
   height: 100%;
 }
 
@@ -15,7 +14,7 @@
   align-items: center;
   height: 100%;
   position: relative;
-  padding-right: 12px;
+  padding-right: var(--space-lg);
 }
 
 /* The Carbon Vertical Divider */
@@ -35,20 +34,22 @@
 
 /* --- Typography --- */
 .app-header__title {
-  margin-left: 12px;
-  font-size: 20px;
-  line-height: 1;
-  color: var(--text);
+  margin-left: var(--space-lg);
+  font-size: var(--heading-1-size);
+  line-height: var(--heading-1-line-height);
+  color: var(--heading-1-color);
+  letter-spacing: var(--heading-1-letter-spacing);
   white-space: nowrap;
   display: flex;
   gap: 4px;
+  font-weight: var(--heading-1-weight);
 }
 
-.app-header__title--prefix {
+.app-header__title--org {
   font-weight: 400;
 }
 
-.app-header__title--product {
+.app-header__title--name {
   font-weight: 600;
 }
 
@@ -67,19 +68,7 @@
   top: 0;
   z-index: 1000;
   background-color: var(--layer-ui-shell);
-  border-bottom: 1px solid var(--layer-ui-shell-border);
-}
-
-/* --- Global Actions (Tiled) --- */
-.c-header.c-header--app .c-header__actions {
-  padding-inline-end: var(--schedule-edge-inset-right);
-}
-
-/* Desktop: no panel-gap compensation needed — main header spans full viewport including sidebars */
-
-/* ── Header Action Button (App header variant over shared c-header action) ── */
-.c-header.c-header--app .c-header__action {
-  color: var(--text);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 /* Hover — Carbon Gray 80 */
@@ -95,7 +84,7 @@
 /* Panel-is-open indicator — The Carbon Way */
 .c-header.c-header--app .c-header__action[aria-pressed="true"] {
   background-color: var(--gray-70);
-  border-bottom-color: var(--accent);
+  border-bottom-color: var(--color-accent);
   /* Swaps transparent for Blue */
 }
 
@@ -219,7 +208,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--layer-01);
+  background-color: var(--layer-ui-shell);
   border-bottom: none;
   width: 100%;
   height: 48px;
@@ -284,8 +273,8 @@
   font-size: 14px;
   line-height: 1;
   text-shadow: var(--text-shadow);
-  color: var(--text);
-  background: var(--surface-2);
+  color: var(--text-primary);
+  background: transparent;
   white-space: nowrap;
   max-width: min(46vw, 520px);
   overflow: hidden;
@@ -297,7 +286,7 @@
   position: absolute;
   inset: 0 auto 0 0;
   width: var(--sync-progress);
-  background: color-mix(in srgb, var(--accent), transparent 0%);
+  background: color-mix(in srgb, var(--color-accent), transparent 0%);
   opacity: 0;
   transition:
     width 220ms ease,
@@ -326,14 +315,14 @@
 }
 
 .schedule-sync-status.is-idle {
-  color: var(--text);
+  color: var(--text-primary);
   border-color: var(--layer-01-border);
 }
 
 .schedule-sync-status.is-sync,
 .schedule-sync-status.is-loading {
-  color: var(--text);
-  border-color: color-mix(in srgb, var(--accent), var(--layer-01-border) 45%);
+  color: var(--text-primary);
+  border-color: color-mix(in srgb, var(--color-accent), var(--layer-01-border) 45%);
 }
 
 .schedule-sync-status.is-stale {
@@ -378,67 +367,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-}
-
-/* --- 32×32 Icon Pagination Arrows --- */
-.btn--icon-pagination {
-  all: unset;
-  box-sizing: border-box;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 32px;
-  height: 32px;
-  border-radius: 0;
-
-  cursor: pointer;
-  color: var(--text);
-  transition: background-color 0.2s;
-}
-
-.btn--icon-pagination:hover {
-  background-color: var(--gray-90);
-}
-
-.btn--icon-pagination:focus-visible {
-  outline: 2px solid var(--blue);
-  outline-offset: -2px;
-}
-
-/* --- 32px Ghost Text Toolbar Buttons --- */
-.btn--toolbar {
-  all: unset;
-  box-sizing: border-box;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-
-  height: 32px;
-  min-width: 80px;
-  padding-inline: 16px;
-  border-radius: 0;
-
-  background-color: transparent;
-  border: 1px solid var(--layer-01-border);
-  color: var(--text);
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.btn--toolbar:hover {
-  background-color: var(--surface-3);
-}
-
-.btn--toolbar:focus-visible {
-  outline: 2px solid var(--blue);
-  outline-offset: -2px;
-}
-
-.btn--toolbar .material-symbols-outlined {
-  font-size: 18px;
 }
 
 .agenda-header__icon-group {
@@ -493,26 +421,26 @@
 /* Specific text colors and weights - Let spans just be text! */
 .agenda-header__week-date .wk-month,
 .agenda-header__week-date .wk-month-end {
-  font-weight: 600;
-  color: var(--accent);
-  letter-spacing: 0.2px;
+  font-weight: 400;
+  color: var(--color-accent);
+  letter-spacing: 0;
   margin-right: 4px;
 }
 
 .agenda-header__week-date .wk-dates {
-  font-weight: 600;
-  color: var(--text);
+  font-weight: 400;
+  color: var(--text-primary);
   margin-right: 4px;
 }
 
 .agenda-header__week-date .wk-sep {
-  color: var(--text);
-  font-weight: 600;
+  color: var(--text-primary);
+  font-weight: 400;
   margin-right: 4px;
 }
 
 .agenda-header__week-date .wk-year {
-  font-weight: 500;
+  font-weight: 400;
   color: var(--text-secondary);
 }
 
@@ -548,11 +476,11 @@
 }
 
 .o-app-layout__sidebar--left {
-  border-right: 1px solid var(--layer-02-border);
+  border-right: 1px solid var(--layer-02);
 }
 
 .o-app-layout__sidebar--right {
-  border-left: 1px solid var(--layer-02-border);
+  border-left: 1px solid var(--layer-02);
 }
 
 .o-app-layout__main > .c-card {
@@ -599,7 +527,7 @@
   min-height: 200px;
   max-height: 100%;
   background: var(--field-bg);
-  color: var(--text);
+  color: var(--text-primary);
   border-radius: 2px;
   padding: 6px 6px;
   font-size: 0.875rem;
@@ -639,7 +567,7 @@
 
 /* Quote calculator panel */
 .quote-calculator {
-  background-color: var(--surface-2);
+  background-color: var(--layer-02);
   border: 1px solid var(--border);
   color: var(--white);
   font-variant-numeric: tabular-nums;
@@ -647,7 +575,7 @@
 }
 
 .quote-calculator .c-card__body {
-  background-color: var(--surface-2);
+  background-color: var(--layer-02);
   padding: 0 16px;
   display: flex;
   flex-direction: column;
@@ -686,7 +614,7 @@
 
 .quote-calculator__input:focus,
 .quote-calculator__select:focus {
-  border-color: var(--color-primary);
+  border-color: var(--color-accent);
 }
 
 .quote-calculator__days {
@@ -731,7 +659,7 @@
 }
 
 .quote-calculator__day-remove:hover {
-  color: var(--danger-color);
+  color: var(--color-danger);
   background: rgba(255, 255, 255, 0.06);
 }
 
@@ -755,7 +683,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--surface-2);
+  background-color: var(--layer-02);
   /* Lighter background to contrast against the dark card surface */
   transition: 0.4s;
   border-radius: 18px;
@@ -768,13 +696,13 @@
   width: 14px;
   left: 2px;
   bottom: 2px;
-  background-color: var(--text);
+  background-color: var(--text-primary);
   transition: 0.4s;
   border-radius: 50%;
 }
 
 .quote-calculator input:checked + .toggle-slider {
-  background-color: var(--color-primary);
+  background-color: var(--color-accent);
 }
 
 .quote-calculator input:checked + .toggle-slider:before {
@@ -805,8 +733,8 @@
 .quote-calculator__add-day-btn {
   width: 100%;
   margin-top: 16px;
-  background-color: var(--surface-2);
-  color: var(--text);
+  background-color: var(--layer-02);
+  color: var(--text-primary);
   border: none;
   border-radius: 0;
   padding: 8px 16px;
@@ -820,7 +748,7 @@
 }
 
 .quote-calculator__add-day-btn:hover {
-  background-color: var(--surface-3);
+  background-color: var(--layer-03);
 }
 
 .quote-calculator__add-day-btn .material-symbols-outlined {
@@ -834,7 +762,7 @@
 }
 
 .quote-calculator__select-mini {
-  background: var(--surface-2);
+  background: var(--layer-02);
   border: 1px solid var(--border-subtle);
   border-radius: 0px;
   color: var(--text-primary);
@@ -851,7 +779,7 @@
 
 .quote-calculator__summary {
   padding: 0 !important;
-  background: var(--surface-2);
+  background: var(--layer-02);
   border-top: 1px solid var(--border);
   margin-top: auto;
   display: flex;
@@ -878,7 +806,7 @@
 .quote-summary__value {
   font-size: 14px;
   font-weight: 600;
-  color: var(--text);
+  color: var(--text-primary);
   text-align: right;
   display: flex;
   align-items: center;
@@ -908,7 +836,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 16px;
-  background: var(--surface-2);
+  background: var(--layer-02);
   border-top: none;
   border-bottom: none !important;
 }
@@ -932,28 +860,34 @@
 
 /* Outer Boundaries */
 .schedule-grid {
-  border-inline-start: 1px solid var(--layer-01-border);
+  border-inline-start: 1px solid var(--gray-90);
   /* Left boundary */
 }
 
 .schedule-grid__header-cell {
-  border-top: 1px solid var(--layer-01-border);
+  border-top: 1px solid var(--gray-90);
   /* Top boundary */
 }
 
 .schedule-grid__header-cell:last-child,
 .schedule-grid__cell:last-child {
-  border-inline-end: 1px solid var(--layer-01-border);
+  border-inline-end: 1px solid var(--gray-90);
   /* Right boundary */
 }
 
 /* Inner Gridlines */
 .schedule-grid__header-cell,
 .schedule-grid__cell {
-  border-inline-end: 1px solid var(--layer-01-border);
+  border-inline-end: 1px solid var(--gray-90);
   /* Vertical tracking lines */
-  border-bottom: 1px solid var(--layer-01-border);
+  border-bottom: 1px solid var(--gray-90);
   /* Horizontal tracking lines */
+}
+
+/* Bottom outer boundary */
+.schedule-grid tbody tr:last-child > .schedule-grid__cell,
+.schedule-grid tbody tr:last-child > .schedule-grid__bus-cell {
+  border-bottom: 1px solid var(--gray-90);
 }
 
 /* ==========================================================================
@@ -987,13 +921,13 @@
 #waitingBody tr.waiting-list-row td,
 .waiting-list-row td {
   background-color: var(--layer-01) !important;
-  border-top: none;
+  border-top: 1px solid var(--gray-90);
   vertical-align: top;
 }
 
 .waiting-list-row .schedule-grid__bus-cell {
   background-color: var(--layer-01) !important;
-  border-top: 1px solid var(--layer-01-border);
+  border-top: 1px solid var(--gray-90);
   color: var(--text-muted);
   font-size: 0.6875rem;
   /* 11px */
@@ -1095,11 +1029,21 @@
 }
 
 .schedule-grid__header-cell--today {
-  /* Only accent the date number (no full-cell highlight) */
-  background: var(--accent);
-  overflow: hidden;
-  border: var(--grid-line);
+  background: var(--layer-01);
+  border: 1px solid var(--gray-90);
+}
+
+.schedule-grid__header-cell--today .schedule-grid__day-date {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: var(--color-accent);
+  color: var(-text);
+  border-radius: 0;
   text-shadow: var(--text-shadow);
+  font-weight: 600;
 }
 
 
@@ -1226,7 +1170,7 @@
 
 /* Bus cell highlight: only when hovering bus indicator (not when trip bar overlaps due to sticky) */
 .schedule-grid__row--has-bus-color>.schedule-grid__cell:first-child:has(.schedule-grid__bus-indicator:hover) {
-  background-color: var(--bus-accent-color, var(--layer-01));
+  background-color: var(--bus-accent-color);
 }
 
 .schedule-grid__bus-icons {
@@ -1373,9 +1317,9 @@
   --tripbar-r4-color: var(--yellow);
   /* Bright Neon Lemon */
   --tripbar-r5-color: var(--tripbar-color);
-  --tripbar-r6-color: var(--alert-cyan);
+  --tripbar-r6-color: var(--cyan);
   /* Bright Coral */
-  --tripbar-r7-color: var(--text);
+  --tripbar-r7-color: var(--text-primary);
 
   --tripbar-badge-text-color: color-mix(in srgb, var(--red) 80%, white);
   --tripbar-badge-text-bg: color-mix(in srgb, #FFFFFF 50%, transparent);
@@ -1429,7 +1373,7 @@
   }
 
   &.unconfirmed {
-    --tripbar-color: var(--tripbar-unconfirmed-color, var(--red));
+    --tripbar-color: var(--color-danger);
 
   }
 
@@ -1443,7 +1387,7 @@
   }
 
   &.color-gray {
-    --tripbar-color: var(--gray);
+    --tripbar-color: var(--gray-60);
   }
 
   &.color-purple {
@@ -1683,7 +1627,7 @@
 .schedule-grid__trip-bar__mini-badge.has-pdf:hover,
 .schedule-grid__trip-bar__mini-badge.has-action:hover {
   transform: scale(1.15);
-  color: var(--text);
+  color: var(--text-primary);
   background-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -1846,7 +1790,7 @@
   overflow-x: auto;
   overflow-y: hidden;
   margin: 0;
-  background: var(--surface-2);
+  background: var(--layer-02);
 }
 
 .driver-week__table {
@@ -1858,7 +1802,7 @@
 }
 
 .driver-week__table th {
-  color: var(--text);
+  color: var(--text-primary);
   font-weight: 500;
 }
 
@@ -1887,7 +1831,7 @@
   width: 90px;
   text-align: start;
   padding-inline-start: 6px;
-  color: var(--text);
+  color: var(--text-primary);
   font-weight: 400;
 }
 
@@ -1899,19 +1843,19 @@
 
 .driver-week__count {
   font-weight: 400;
-  color: var(--text);
+  color: var(--text-primary);
 }
 
 
 
 .driver-week__cell--unavailable {
   background: var(--red)!important;
-  color: var(--text) !important;
+  color: var(--text-primary) !important;
 }
 
 .driver-week__cell--on {
-  background: var(--accent);
-  color: var(--text);
+  background: var(--color-accent);
+  color: var(--text-primary);
 }
 
 /* --- 5. Rigid Bus Assignment --- */
