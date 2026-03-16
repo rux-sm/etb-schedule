@@ -33,6 +33,11 @@
   --indigo: #6929c4;
   --brown: #8f5f3a;
 
+  --alert-yellow: #f1c21b;
+  --alert-red: #fa4d56;
+  --alert-green: #24a148;
+  --alert-blue: #3ddbd9;
+
   /* ==========================================================================
    * 2. CANONICAL RUX TOKENS
    * Apply these families moving forward: color, layer, border, text, space, size.
@@ -77,7 +82,7 @@
 
   /* High-emphasis panels/cards */
   --layer-01: var(--black);
-  --layer-01-border: var(--border-subtle);
+  --layer-01-border: var(--gray-90);
 
   /* Default container surface */
   --layer-02: var(--gray-90);
@@ -243,7 +248,7 @@
     * Buttons, inputs, focus
    * ========================================================================== */
 
-  --focus-ring-color: #4589ff;
+  --focus-ring-color: var(--accent);
   --focus-ring: inset 0 0 0 2px var(--focus-ring-color);
 
   --control-radius-icon: 8px;
@@ -308,6 +313,7 @@
   --tripbar-r4-font-weight: 500;
   --tripbar-r4-line-height: 13px;
   --tripbar-r4-letter-spacing: -0.02em;
+  
   /* Row 5: Status Icons */
   --tripbar-r5-row-height: 14px;
   /* Row 6: Notes */
@@ -379,20 +385,43 @@
   --purple: #8a3ffc;
   --pink: #d02670;
 
+  --alert-yellow: var(--primary-text);
+  --alert-red: #da1e28;
+  --alert-green: #198038;
+  --alert-blue: #8a3ffc;
+
   /* --- 2. Canonical Rux theme overrides --- */
 
-  --background: var(--gray-30);
-  --layer-ui-shell: var(--white);
-  --layer-01: var(--gray-30);
-  --layer-02: var(--gray-30);
-  --layer-03: var(--gray-20);
+  /* App shell surface */
+  --layer-ui-shell: var(--gray-20);
+
+  /* High-emphasis panels/cards */
+  --layer-01: var(--white);
+  --layer-01-border: var(--gray-20);
+
+  /* Default container surface */
+  --layer-02: var(--gray-10);
+  --layer-02-border: var(--gray-20);
+
+  /* Secondary interactive surfaces (fields, ghost buttons, nested panels) */
+  --layer-03: var(--gray-80);
+  --layer-03-border: var(--border-default);
+
+  /* Canonical control fill */
+  --field-bg: var(--white);
+  --field-border-bottom: var(--gray-20);
+
 
   --border-subtle: var(--gray-30);
   --border-default: var(--gray-50);
   --border-strong: var(--gray-50);
-  --layer-01-border: var(--border-subtle);
-  --layer-02-border: var(--border-default);
-  --layer-03-border: var(--border-strong);
+
+  
+
+
+
+
+
 
   --text-primary: var(--black);
   --text-secondary: var(--black);

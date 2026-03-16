@@ -1,3 +1,15 @@
+          #printRoot.print-mode-legal .c-header.c-header--schedule {
+            border-top: none !important;
+            border-bottom: none !important;
+          }
+        #printRoot.print-mode-legal .print-header {
+          border-top: none !important;
+          border-bottom: none !important;
+        }
+
+    #printRoot.print-mode-legal .print-table .schedule-grid__header-cell {
+      border-top: 1px solid transparent !important;
+    }
 /* ==========================================================================
    APP HEADER - CARBON UI SHELL (48px)
    ========================================================================== */
@@ -860,34 +872,34 @@
 
 /* Outer Boundaries */
 .schedule-grid {
-  border-inline-start: 1px solid var(--gray-90);
+  border-inline-start: 1px solid var(--layer-01-border);
   /* Left boundary */
 }
 
 .schedule-grid__header-cell {
-  border-top: 1px solid var(--gray-90);
+  border-top: 1px solid var(--layer-01-border);
   /* Top boundary */
 }
 
 .schedule-grid__header-cell:last-child,
 .schedule-grid__cell:last-child {
-  border-inline-end: 1px solid var(--gray-90);
+  border-inline-end: 1px solid var(--layer-01-border);
   /* Right boundary */
 }
 
 /* Inner Gridlines */
 .schedule-grid__header-cell,
 .schedule-grid__cell {
-  border-inline-end: 1px solid var(--gray-90);
+  border-inline-end: 1px solid var(--layer-01-border);
   /* Vertical tracking lines */
-  border-bottom: 1px solid var(--gray-90);
+  border-bottom: 1px solid var(--layer-01-border);
   /* Horizontal tracking lines */
 }
 
 /* Bottom outer boundary */
 .schedule-grid tbody tr:last-child > .schedule-grid__cell,
 .schedule-grid tbody tr:last-child > .schedule-grid__bus-cell {
-  border-bottom: 1px solid var(--gray-90);
+  border-bottom: 1px solid var(--layer-01-border);
 }
 
 /* ==========================================================================
@@ -921,13 +933,13 @@
 #waitingBody tr.waiting-list-row td,
 .waiting-list-row td {
   background-color: var(--layer-01) !important;
-  border-top: 1px solid var(--gray-90);
+  /*border-top: 1px solid var(--layer-01-border);*/
   vertical-align: top;
 }
 
 .waiting-list-row .schedule-grid__bus-cell {
   background-color: var(--layer-01) !important;
-  border-top: 1px solid var(--gray-90);
+  border-top: 1px solid var(--layer-01-border);
   color: var(--text-muted);
   font-size: 0.6875rem;
   /* 11px */
@@ -1030,7 +1042,7 @@
 
 .schedule-grid__header-cell--today {
   background: var(--layer-01);
-  border: 1px solid var(--gray-90);
+  /*border: 1px solid var(--red);*/
 }
 
 .schedule-grid__header-cell--today .schedule-grid__day-date {
@@ -1040,7 +1052,7 @@
   width: 24px;
   height: 24px;
   background: var(--color-accent);
-  color: var(-text);
+  color: var(--white);
   border-radius: 0;
   text-shadow: var(--text-shadow);
   font-weight: 600;
@@ -1314,10 +1326,10 @@
   --tripbar-r1-color: var(--tripbar-color);
   --tripbar-r2-color: var(--tripbar-color);
   --tripbar-r3-color: var(--tripbar-color);
-  --tripbar-r4-color: var(--yellow);
+  --tripbar-r4-color: var(--alert-yellow);
   /* Bright Neon Lemon */
   --tripbar-r5-color: var(--tripbar-color);
-  --tripbar-r6-color: var(--cyan);
+  --tripbar-r6-color: var(--alert-blue);
   /* Bright Coral */
   --tripbar-r7-color: var(--text-primary);
 
@@ -1703,8 +1715,8 @@
 /* Print overrides (migrated from _legacy-grid.css) */
 @media print {
   #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar {
-    border-radius: 2px !important;
-    border: 1px solid rgba(0, 0, 0, 0.4) !important;
+    border-radius: 0px !important;
+    border: 1px solid var(--gray-20) !important;
   }
 
   #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__drivers,
@@ -1726,7 +1738,7 @@
     height: 100% !important;
     top: 0 !important;
     box-sizing: border-box !important;
-    border: 1px solid rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid var(--gray-20) !important;
     padding: 3px 5px !important;
     border-radius: 0px !important;
     z-index: 10;
@@ -1777,13 +1789,21 @@
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
-}
-
-/* ==========================================================================
-   13) DRIVER / STATUS PANELS
-   BEM: .driver-week (block), .driver-week__wrap, .driver-week__table, .driver-week__cell--on, etc.
-   ========================================================================== */
-/* Match Trip Editor: horizontal spacing from .card-content padding only; vertical margin for header/content separation */
+    /* Legal print: lighter grid borders */
+    #printRoot.print-mode-legal .print-table td,
+    #printRoot.print-mode-legal .print-table {
+      border-top: 1px solid var(--gray-20) !important;
+      border-left: 1px solid var(--gray-20) !important;
+    }
+    #printRoot.print-mode-legal .print-table td,
+    #printRoot.print-mode-legal .print-table th {
+      border-top: none !important;
+      border-left: none !important;
+      border-inline-start: none !important;
+      border-inline-end: none !important;
+      border-right: 1px solid var(--gray-20) !important;
+      border-bottom: 1px solid var(--gray-20) !important;
+    }
 .driver-week__wrap {
   width: auto;
   max-width: 100%;
