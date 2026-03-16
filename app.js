@@ -5577,12 +5577,25 @@ function closeCellContextMenu() {
   activeCellContext = null;
 }
 
-// Auto-close menus on mouse leave
-dom.ctxMenu?.addEventListener("mouseleave", closeTripContextMenu);
-dom.cellCtxMenu?.addEventListener("mouseleave", closeCellContextMenu);
+// ── Central Management for Floating Menus (Context & Custom Dropdowns) ─────────
+function closeAllFloatingMenus() {
+  closeTripContextMenu();
+  closeCellContextMenu();
+  // Dispatch custom event to close any "glass select" dropdowns
+  window.dispatchEvent(new CustomEvent("close-all-floating-menus"));
+}
+
+// Auto-close menus on Escape
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    closeAllFloatingMenus();
+  }
+});
 
 function showTripContextMenu(x, y, tripKey) {
   if (!dom.ctxMenu) return;
+
+  closeAllFloatingMenus();
 
   activeContextTripKey = tripKey;
 
@@ -5619,6 +5632,7 @@ function showTripContextMenu(x, y, tripKey) {
 }
 
 function showCellContextMenu(x, y, busId, dateStr) {
+  closeAllFloatingMenus();
   // console.log("showCellContextMenu called", { x, y, busId, dateStr, menu: dom.cellCtxMenu });
   if (!dom.cellCtxMenu) {
     console.error("cellCtxMenu DOM element not found!");
@@ -5797,15 +5811,17 @@ function wireDelegatedBarEvents() {
     // Needs to be loaded in the editor for saveBtn.click() to save this specific trip
     const wasOpenKey = dom.tripKey?.value;
     if (wasOpenKey !== activeContextTripKey) {
-      toast("Loading trip to remove PDF...", "info", 1000);
+      toastShow("Loading trip to remove PDF...", "loading", { indeterminate: true, source: "pdf-delete" });
       await openTripForEdit(activeContextTripKey);
     }
 
+    toastShow("Deleting PDF...", "loading", { indeterminate: true, source: "pdf-delete" });
     trip.itineraryPdfUrl = ""; // Clear from local state
 
     // Trigger save process
     state.tripFormDirty = true;
     dom.saveBtn.click();
+    // No need to manually hide "Deleting PDF..." here, as the save process's "Saving..." notice will replace it.
   });
 
   dom.itineraryPdfInput?.addEventListener("change", async (e) => {
@@ -5831,7 +5847,7 @@ function wireDelegatedBarEvents() {
       url.searchParams.set("action", "uploadItineraryPdf");
       url.searchParams.set("tripKey", tripKey);
 
-      toast("Uploading itinerary…", "info", 1500);
+      toastShow("Uploading PDF...", "loading", { indeterminate: true, source: "pdf-upload" });
 
       // Read file as Base64 Data URL
       const reader = new FileReader();
@@ -5880,9 +5896,11 @@ function wireDelegatedBarEvents() {
         scheduleAgendaReflow();
       }
 
-      toast("Itinerary PDF uploaded.", "success", 1800);
+      toastHide(0, { source: "pdf-upload" });
+      toast("PDF Uploaded ✓", "success", 1800);
     } catch (err) {
       console.error(err);
+      toastHide(0, { source: "pdf-upload" });
       toast(`Could not upload itinerary PDF: ${err.message || err}`, "danger", 3500);
     } finally {
       state.pendingItineraryTripKey = null;
@@ -6018,6 +6036,9 @@ function wrapSelectInGlassDropdown(sel, opts) {
   menu.className = "dropdown__menu";
   menu.setAttribute("role", "listbox");
   menu.hidden = true;
+
+  // Mutually Exclusive: Close when any other floating menu opens
+  window.addEventListener("close-all-floating-menus", closeMenu);
 
   function getSelectedText() {
     const opt = sel.options[sel.selectedIndex];
@@ -6157,6 +6178,7 @@ function wrapSelectInGlassDropdown(sel, opts) {
   trigger.addEventListener("click", (e) => {
     e.stopPropagation();
     if (menu.hidden) {
+      closeAllFloatingMenus();
       if (rebuildMenuOnOpen) populateMenu();
       menu.hidden = false;
       // Flip menu above trigger if near bottom edge (avoids card resize / page scroll)

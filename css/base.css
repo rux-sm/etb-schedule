@@ -1177,13 +1177,22 @@ textarea:focus,
 }
 
 .context-menu {
-  top: 0;
-  inset-inline-start: 0;
+  position: absolute;
+  z-index: var(--z-dropdown);
+  min-width: 180px;
+  background-color: var(--layer-02);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--elevation-context);
+  padding: 4px 0;
+  animation: menuPopIn var(--transition-fast);
+}
+
+.context-menu[hidden] {
+  display: none;
 }
 
 .dropdown-menu[hidden],
-.dropdown__menu[hidden],
-.context-menu[hidden] {
+.dropdown__menu[hidden] {
   display: none;
 }
 
@@ -1237,8 +1246,8 @@ textarea:focus,
   cursor: pointer;
 
   transition:
-    background-color 0.11s ease,
-    color 0.11s ease;
+    background-color var(--transition-fast),
+    color var(--transition-fast);
 }
 
 .dropdown-icon,
