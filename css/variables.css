@@ -38,6 +38,8 @@
   --alert-green: #24a148;
   --alert-blue: #3ddbd9;
 
+  --header-seperator: var(--border-default);
+
   /* ==========================================================================
    * 2. CANONICAL RUX TOKENS
    * Apply these families moving forward: color, layer, border, text, space, size.
@@ -313,7 +315,7 @@
   --tripbar-r4-font-weight: 500;
   --tripbar-r4-line-height: 13px;
   --tripbar-r4-letter-spacing: -0.02em;
-  
+
   /* Row 5: Status Icons */
   --tripbar-r5-row-height: 14px;
   /* Row 6: Notes */
@@ -416,7 +418,7 @@
   --border-default: var(--gray-50);
   --border-strong: var(--gray-50);
 
-  
+
 
 
 
