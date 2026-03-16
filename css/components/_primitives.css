@@ -147,6 +147,10 @@ button:focus-visible,
 
 /* Toolbar ghost controls */
 .btn--toolbar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   height: var(--btn-toolbar-height);
   min-width: var(--btn-toolbar-min-width);
   padding-inline: var(--btn-toolbar-padding-x);
@@ -162,6 +166,8 @@ button:focus-visible,
 
 .btn--toolbar .material-symbols-outlined {
   font-size: var(--btn-toolbar-icon-size);
+  margin-right: 0;
+  line-height: 1;
 }
 
 .btn:disabled,
