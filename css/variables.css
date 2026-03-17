@@ -1,4 +1,12 @@
 :root {
+  /* Header Action Button Tokens */
+  --header-action-bg: var(--gray-90);
+  --header-action-hover-bg: color-mix(in srgb, var(--gray-90), white 10%);
+  --header-action-active-bg: color-mix(in srgb, var(--gray-90), white 20%);
+  --header-action-color: var(--white);
+  --header-action-size: 40px;
+  --header-action-radius: 4px;
+  --header-action-icon-size: 1.5rem;
   color-scheme: dark;
 
   /* ==========================================================================
@@ -93,22 +101,26 @@
   /* Secondary interactive surfaces (fields, ghost buttons, nested panels) */
   --layer-03: var(--gray-80);
   --layer-03-border: var(--border-default);
+  --layer-03-hover: var(--gray-70);
 
   /* Canonical control fill */
-  --field-bg: var(--layer-03);
+  --field-bg: var(--gray-70);
   --field-border-bottom: var(--layer-03-border);
 
   /* Primary (Action/Save - Solid Blue) */
   --btn-primary-bg: var(--blue);
-  --btn-primary-text: var(--white);
+  --btn-primary-text: var(--text-primary); /* Dark text for WCAG compliance on Blue 50 */
   --btn-primary-hover: color-mix(in srgb, var(--blue) 85%, black);
   --btn-primary-active: color-mix(in srgb, var(--blue) 70%, black);
 
   /* Secondary (Structural/Cancel - Solid Gray matching Layer 03) */
   --btn-secondary-bg: var(--layer-03);
   --btn-secondary-text: var(--white);
-  --btn-secondary-hover: color-mix(in srgb, var(--layer-03), white 10%);
-  --btn-secondary-active: color-mix(in srgb, var(--layer-03), white 20%);
+  --btn-secondary-hover: color-mix(in srgb, var(--layer-03) 90%, white 10%);
+  /* Hovers lighter */
+  --btn-secondary-active: color-mix(in srgb, var(--layer-03) 70%, black 30%);
+  /* Clicks darker (presses in) */
+  --btn-secondary-disabled: var(--layer-02);
 
   /* Danger (Delete) */
   --btn-danger-bg: var(--color-danger);
@@ -117,20 +129,12 @@
   --btn-danger-active: color-mix(in srgb, var(--color-danger) 70%, black);
 
   /* Success (Confirmation/Completed actions) */
-  --btn-success-bg: var(--color-success);
-  --btn-success-text: var(--white);
-  --btn-success-hover: color-mix(in srgb, var(--color-success) 85%, black);
-  --btn-success-active: color-mix(in srgb, var(--color-success) 70%, black);
 
-  /* Tertiary / Toggle Tiles (For Requirements) */
-  /* Keep ghost tiles on the same surface as form controls */
-  --btn-ghost-bg: var(--layer-03);
-  --btn-ghost-border: transparent;
-  /* Secondary text by default; interaction states can promote contrast */
-  --btn-ghost-text: var(--text-secondary);
-  --btn-ghost-hover-bg: color-mix(in srgb, var(--layer-03), white 10%);
-  --btn-ghost-active-bg: var(--layer-03);
-  --btn-ghost-active-border: var(--blue);
+  /* Ghost / Tertiary (Header Actions, Toolbar, Pagination) */
+  --btn-ghost-bg: transparent;
+  --btn-ghost-text: var(--text-primary);
+  --btn-ghost-hover-bg: color-mix(in srgb, var(--white) 10%, transparent);
+  --btn-ghost-active-bg: color-mix(in srgb, var(--white) 20%, transparent);
 
   /* Shared button sizing */
   --btn-padding-x: 16px;
@@ -138,27 +142,24 @@
   --btn-compact-height: 32px;
   --btn-compact-padding-x: 12px;
 
-  /* Control buttons (icon/pagination/toolbar) */
+  /* Control buttons (pagination/toolbar) */
   --btn-pagination-size: 32px;
-  --btn-pagination-text: var(--text-primary);
-  --btn-pagination-hover-bg: var(--gray-90);
-
   --btn-toolbar-height: 32px;
   --btn-toolbar-min-width: 80px;
   --btn-toolbar-padding-x: 16px;
-  --btn-toolbar-text: var(--text-primary);
-  --btn-toolbar-border: var(--layer-01-border);
-  --btn-toolbar-hover-bg: var(--layer-03);
+  --btn-toolbar-border: var(--gray-100);
   --btn-toolbar-font-size: 14px;
   --btn-toolbar-icon-size: 18px;
+  --btn-toolbar-hover-bg: var(--gray-90);
+  --btn-toolbar-shadow-hover: 0px 4px 12px rgba(0, 0, 0, 1);
 
-  --btn-icon-bg: transparent;
-  --btn-icon-text: var(--text-secondary);
-  --btn-icon-hover-bg: color-mix(in srgb, var(--layer-03), white 15%);
-  --btn-icon-hover-text: var(--text-primary);
-  --btn-icon-active-bg: var(--color-accent);
-  --btn-icon-disabled-bg: var(--layer-03);
-  --btn-icon-disabled-text: var(--text-disabled);
+  /* Toggle Pills / Requirements Tiles (Tertiary) */
+  --toggle-pill-bg: var(--layer-03);
+  --toggle-pill-border: transparent;
+  --toggle-pill-text: var(--text-secondary);
+  --toggle-pill-hover-bg: color-mix(in srgb, var(--layer-03), white 10%);
+  --toggle-pill-active-bg: var(--color-accent);
+  --toggle-pill-active-border: var(--blue);
 
   /* ==========================================================================
    * 6. TYPOGRAPHY
@@ -270,8 +271,8 @@
   --tripbar-height: 100px;
   --tripbar-radius: 0px;
   --tripbar-lane-step: 0px;
-  --tripbar-bg-mix-percent: 20%;
-  --tripbar-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  --tripbar-bg-mix-percent: 25%;
+  --tripbar-text-shadow: 0 1px 2px rgba(0, 0, 0, 1);
 
   --tripbar-color: var(--blue);
   --tripbar-badge-text-color: var(--white);
@@ -332,7 +333,7 @@
   --tripbar-r7-row-height: 14px;
   --tripbar-r7-font-weight: 700;
   --tripbar-r7-line-height: 14px;
-  --tripbar-r7-letter-spacing: 0.02em;
+  --tripbar-r7-letter-spacing: 0.05em;
 
   /* Icons */
   --tripbar-mini-badge: 14px;

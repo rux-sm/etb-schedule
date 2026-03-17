@@ -1,8 +1,33 @@
+/* ========================================================================== 
+   GLOBAL SELECT/OPTION & FOCUS STYLES FOR DARK THEME
+   ========================================================================== */
+
+/* Style all <option> tags globally for dark theme consistency */
+option {
+  background: var(--layer-02) !important;
+  color: var(--text-primary) !important;
+  padding: 8px 12px;
+  font-family: var(--font-sans);
+  font-size: var(--input-font-size, 0.875rem);
+}
+
+/* Global focus-visible state for select and input */
+select:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--focus-ring-color);
+  outline-offset: -2px;
+}
 /* ==========================================================================
    2-GENERIC / RESET
    Browser resets, box-sizing, custom scrollbars
    ========================================================================== */
 
+/* Global button reset */
+button {
+  all: unset;
+  box-sizing: border-box;
+  font-family: inherit;
+}
 /* ── SCROLLBARS — Hide vertical, keep horizontal where intended ───────── */
 /* Main schedule horizontal scrollbar remains visible */
 .schedule-grid-container::-webkit-scrollbar,
@@ -1024,7 +1049,7 @@ textarea,
   background-color: var(--field-bg);
   border: none;
   /* Strip native borders */
-  border-bottom: 1px solid var(--field-border-bottom);
+  /*border-bottom: 1px solid var(--field-border-bottom); */
   border-radius: 0;
   /* Strictly square */
 
@@ -1083,7 +1108,7 @@ select.select--centered {
 
 /* --- 5. CUSTOM DROPDOWN BUTTONS (.select-trigger) --- */
 .select-trigger {
-  padding: 0 16px 0 var(--input-padding-x);
+  padding: 0 var(--input-padding-x);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1231,8 +1256,10 @@ textarea:focus,
   width: 100%;
   padding: 0 16px;
 
-  /* Carbon highly condensed height (32px) to support your data density */
-  height: 32px;
+  /* Carbon standard height (40px) to match input heights and provide better touch targets */
+  height: 40px;
+  flex-shrink: 0;
+  box-sizing: border-box;
 
   border: none;
   border-radius: 0px;
@@ -1335,7 +1362,7 @@ textarea:focus,
   /* Inherits from the contextual layers we set up in the main input CSS */
   background-color: var(--field-bg);
   border: 1px solid transparent;
-  border-bottom: 1px solid var(--field-border-bottom);
+  /*border-bottom: 1px solid var(--field-border-bottom);*/
   color: var(--text-primary);
 }
 

@@ -78,7 +78,7 @@ if (document.readyState === "loading") {
 // ======================================================
 const CONFIG = {
   APP_NAME: "Trip Schedule",
-  APP_VERSION: "0.9.1",
+  APP_VERSION: "0.9.2",
   ENDPOINT:
     "https://script.google.com/macros/s/AKfycbzSsVByHnMuzdmaITv2Ht-q1hUQ0y5cVVIEzV6E-h7-1EhnVWJDYlhj5K4RhY0wldBk/exec",
   BUS_LANES: ["218", "763", "470", "133", "506", "746", "607", "897", "898", "474"],
@@ -143,12 +143,12 @@ const CACHE = {
         expiry: Date.now() + ttlMs,
       };
       localStorage.setItem(key, JSON.stringify(payload));
-    } catch { }
+    } catch {}
   },
   remove(key) {
     try {
       localStorage.removeItem(key);
-    } catch { }
+    } catch {}
   },
   clearAll() {
     try {
@@ -160,7 +160,7 @@ const CACHE = {
           localStorage.removeItem(k);
         }
       });
-    } catch { }
+    } catch {}
   },
 };
 
@@ -498,7 +498,7 @@ function clamp(n, min, max) {
 function safeUUID() {
   try {
     return crypto.randomUUID();
-  } catch { }
+  } catch {}
   return `tk_${Date.now()}_${Math.floor(Math.random() * 1e9)}`;
 }
 
@@ -1736,7 +1736,7 @@ function applyWeekStart(isMonday) {
 
   try {
     localStorage.setItem("weekStartMonday", state.weekStartsOnMonday ? "1" : "0");
-  } catch { }
+  } catch {}
 
   syncWeekStartUI();
 
@@ -1983,7 +1983,7 @@ function prefetchAdjacentWeeks() {
 
     // ✅ FIX: Calculate Monday for the adjacent week
     const { notesKey } = getWeekRange(targetDate); // We will update getWeekRange to support a date arg
-    fetchWeekDataCached(start, end, notesKey).catch(() => { });
+    fetchWeekDataCached(start, end, notesKey).catch(() => {});
   }
 }
 
@@ -1997,7 +1997,7 @@ function showScheduleRenderToastDelayed() {
 
   // Header status progress is now owned by week-load/trip-load pipelines.
   // Keep this timer for render lifecycle parity, but do not emit standalone render notices.
-  scheduleRenderToastTimer = setTimeout(() => { }, 120);
+  scheduleRenderToastTimer = setTimeout(() => {}, 120);
 }
 
 function hideScheduleRenderToast() {
@@ -3605,7 +3605,7 @@ function makeDriverStatusSelect(name) {
     opt.textContent = o.label;
     sel.appendChild(opt);
   });
-  sel.value = ""; // Default to blank; will be set to Pending during assignments
+  sel.value = "Pending"; // Default to Pending; ensures consistency before visibility toggles
   return sel;
 }
 
@@ -3614,6 +3614,19 @@ function syncBusSelectEmptyState() {
     const v = (el.value ?? "").trim();
     const cell = el.closest(".select-dropdown") || el;
     cell.classList.toggle("is-empty", !v || v === "None");
+
+    // Hide status dropdown if no driver is selected
+    if (
+      el.name &&
+      (el.name.includes("_driver1") || el.name.includes("_driver2")) &&
+      !el.name.endsWith("Status")
+    ) {
+      const block = el.closest(".bus-assign__driver-block");
+      const statusWrap = block?.querySelector(".bus-assign__status-wrap");
+      if (statusWrap) {
+        statusWrap.classList.toggle("is-hidden", !v || v === "None");
+      }
+    }
   });
 }
 
@@ -3630,7 +3643,7 @@ function refreshBusSelectOptions() {
 
 function updateBusRowVisibility() {
   const raw = Number(dom.busesNeeded.value);
-  const n = raw > 0 ? Math.min(10, raw) : 1;
+  const n = raw > 0 ? Math.min(10, raw) : 0;
 
   state.busRows.forEach((r, idx) => {
     const show = idx < n;
@@ -4238,11 +4251,11 @@ function openDriverContactModal(tripKey) {
   const dDate = trip.departureDate ? parseYMD(trip.departureDate) : null;
   const dDateStr = dDate
     ? dDate.toLocaleDateString("en-US", {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    })
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
     : "the upcoming date";
   const destName = trip.destination || "your destination";
 
@@ -5403,15 +5416,15 @@ function buildPrintScheduleFullLetter() {
           <tr>
             <th class="schedule-grid__col-bus">Bus</th>
             ${dates
-      .map((d, i) => {
-        const dObj = parseYMD(d);
-        const dayStr = dObj
-          ? dObj.toLocaleDateString("en-US", { weekday: "short" })
-          : dayIds[i];
-        const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
-        return `<th class="schedule-grid__col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
-      })
-      .join("")}
+              .map((d, i) => {
+                const dObj = parseYMD(d);
+                const dayStr = dObj
+                  ? dObj.toLocaleDateString("en-US", { weekday: "short" })
+                  : dayIds[i];
+                const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
+                return `<th class="schedule-grid__col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
+              })
+              .join("")}
           </tr>
         </thead>
         <tbody>
@@ -5811,7 +5824,10 @@ function wireDelegatedBarEvents() {
     // Needs to be loaded in the editor for saveBtn.click() to save this specific trip
     const wasOpenKey = dom.tripKey?.value;
     if (wasOpenKey !== activeContextTripKey) {
-      toastShow("Loading trip to remove PDF...", "loading", { indeterminate: true, source: "pdf-delete" });
+      toastShow("Loading trip to remove PDF...", "loading", {
+        indeterminate: true,
+        source: "pdf-delete",
+      });
       await openTripForEdit(activeContextTripKey);
     }
 
@@ -6047,8 +6063,15 @@ function wrapSelectInGlassDropdown(sel, opts) {
 
   function getSelectedIcon() {
     const opt = sel.options[sel.selectedIndex];
-    if (opt && statusId && statusIds.has(statusId)) {
-      return getStatusIcon(statusId, opt.value);
+    if (opt) {
+      // Primary status fields: use statusId
+      if (statusId && statusIds.has(statusId)) {
+        return getStatusIcon(statusId, opt.value);
+      }
+      // Bus grid status selects: name ends with 'Status'
+      if (sel.name && sel.name.endsWith("Status")) {
+        return getStatusIcon("driverStatus", opt.value);
+      }
     }
     return "";
   }
@@ -6089,7 +6112,10 @@ function wrapSelectInGlassDropdown(sel, opts) {
       iconSpan.style.marginRight = "8px";
       iconSpan.style.fontSize = "18px";
 
-      const colorClass = getStatusColorClass(statusId, lcValue);
+      const colorClass = getStatusColorClass(
+        statusId || (sel.name && sel.name.endsWith("Status") ? "driverStatus" : null),
+        lcValue,
+      );
       if (colorClass) {
         iconSpan.classList.add(colorClass);
       }
@@ -6123,13 +6149,16 @@ function wrapSelectInGlassDropdown(sel, opts) {
       const v = String(opt.value).trim();
       const lcValue = v.toLowerCase();
       // Add icon if applicable to the dropdown options
-      if (statusId && statusIds.has(statusId) && v) {
-        const itemIconName = getStatusIcon(statusId, lcValue);
+      const isStatusField =
+        (statusId && statusIds.has(statusId)) || (sel.name && sel.name.endsWith("Status"));
+      if (isStatusField && v) {
+        const itemStatusId = statusId || "driverStatus";
+        const itemIconName = getStatusIcon(itemStatusId, lcValue);
         if (itemIconName) {
           const iconSpan = document.createElement("span");
           iconSpan.className = "material-symbols-outlined dropdown-icon";
 
-          const colorClass = getStatusColorClass(statusId, lcValue);
+          const colorClass = getStatusColorClass(itemStatusId, lcValue);
           if (colorClass) {
             iconSpan.classList.add(colorClass);
           }
@@ -6139,14 +6168,20 @@ function wrapSelectInGlassDropdown(sel, opts) {
         }
       }
 
-      const textNode = document.createTextNode(opt.textContent.trim());
-      btn.appendChild(textNode);
+      const itemTextSpan = document.createElement("span");
+      itemTextSpan.textContent = opt.textContent.trim();
+      btn.appendChild(itemTextSpan);
 
       btn.addEventListener("click", () => {
         sel.value = opt.value;
         sel.dispatchEvent(new Event("change", { bubbles: true }));
         updateTrigger();
         closeMenu();
+
+        // If this is part of the bus grid, sync the empty states (e.g., hide/show status)
+        if (sel.closest(".bus-assign")) {
+          syncBusSelectEmptyState();
+        }
       });
       menu.appendChild(btn);
     });
@@ -6234,7 +6269,12 @@ function initGlassSelects() {
 
   // Bus assignment and driver selects (dynamic options, rebuild menu on open)
   dom.busGrid?.querySelectorAll("select").forEach((sel) => {
-    wrapSelectInGlassDropdown(sel, { rebuildMenuOnOpen: true, cellClass: "bus-assign__cell" });
+    const isStatus = sel.name && sel.name.endsWith("Status");
+    wrapSelectInGlassDropdown(sel, {
+      rebuildMenuOnOpen: true,
+      cellClass: isStatus ? "bus-assign__status-cell" : "bus-assign__cell",
+      statusId: isStatus ? "driverStatus" : null,
+    });
   });
 }
 
@@ -6985,11 +7025,11 @@ function wireEvents() {
     // clear all cached week data (both in-memory and persistent).
     try {
       state.weekCache.clear();
-    } catch { }
+    } catch {}
 
     try {
       CACHE.clearAll();
-    } catch { }
+    } catch {}
   }
 
   dom.tripDetailsModal?.addEventListener("click", (e) => {
@@ -7904,7 +7944,7 @@ if (dom.printDailyMaintenancePlanBtn) {
   ${SELECTORS.scheduleGridWrapHook}.is-loading-bars .schedule-grid__trip-bar { opacity: 0.18; pointer-events: none; }
 `;
     document.head.appendChild(style);
-  } catch { }
+  } catch {}
 
   setSidePanelMode("off");
   enforceDesktopEditing();
@@ -8038,4 +8078,44 @@ function fitDateTitle() {
 
 window.addEventListener("resize", fitDateTitle);
 // Also call on load just in case
+window.addEventListener("load", fitDateTitle);
+window.addEventListener("load", fitDateTitle);
+// ======================================================
+function fitDateTitle() {
+  const title = document.querySelector(".week-heading");
+  if (!title) return;
+
+  // Reset to max size first to check overflow
+  title.style.fontSize = "";
+
+  // Only run if overflow/scrollWidth > clientWidth
+  // But wait, ellipsis hides overflow. We compare scrollWidth > clientWidth
+  // Force a small delay to let bold/layout settle? usually safe immediately.
+
+  if (window.innerWidth >= 900) return; // Only for mobile layout
+
+  let size = 22; // Start max
+  const minSize = 12;
+
+  // Check if ScrollWidth > ClientWidth
+  // Note: scrollWidth typically equals clientWidth if overflow:hidden + whitespace:nowrap is set unless content is actually clipped.
+  // Wait, if text-overflow: ellipsis is active, scrollWidth might report the full width?
+  // Let's assume clamping makes it fit. If scrollWidth > clientWidth, text is overflowing.
+
+  // First, clear inline style to let CSS clamp work
+  title.style.fontSize = "";
+
+  if (title.scrollWidth > title.clientWidth) {
+    size = parseFloat(window.getComputedStyle(title).fontSize);
+
+    while (title.scrollWidth > title.clientWidth && size > minSize) {
+      size--;
+      title.style.fontSize = size + "px";
+    }
+  }
+}
+
+window.addEventListener("resize", fitDateTitle);
+// Also call on load just in case
+window.addEventListener("load", fitDateTitle);
 window.addEventListener("load", fitDateTitle);

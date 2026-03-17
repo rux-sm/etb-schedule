@@ -1,9 +1,66 @@
 /* ==========================================================================
+   DROPDOWN MENU 
+   ========================================================================== */
+
+.dropdown__menu {
+  /* ... keep your existing absolute positioning, background, borders, etc ... */
+  /* The Fix: Force the container to expand to its widest content */
+  width: max-content;
+  min-width: 200px; /* Keeps a nice minimum width so very short menus don't look awkwardly narrow */
+}
+
+/* Unify dropdown__item for button, div, or any element */
+.dropdown__item,
+.dropdown__item[role="note"] {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  flex-shrink: 0;
+  padding: 0 16px;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  text-align: left;
+  box-sizing: border-box;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.11s ease;
+}
+
+/* Make meta/info items visually consistent but less prominent */
+.dropdown__item--meta,
+.dropdown__item[role="note"] {
+  color: var(--text-secondary);
+  font-style: italic;
+  cursor: default;
+  background: none;
+}
+
+.dropdown__item:hover,
+.dropdown__item:focus-visible {
+  background-color: var(--layer-03-hover);
+  outline: none;
+}
+
+.dropdown__icon {
+  font-size: 1.125rem;
+  margin-right: 12px;
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+
+/* Force the text span to stay on a single line */
+.dropdown__item span:not(.dropdown__icon) {
+  white-space: nowrap;
+  line-height: 1;
+}
+/* ==========================================================================
    5-COMPONENTS / BUTTONS & CONTROLS (IBM Carbon Refactor)
    Buttons, chips, toggles, segmented controls
    ========================================================================== */
 
-button,
 .btn,
 .theme-toggle,
 .seg__btn {
@@ -34,10 +91,10 @@ button,
     color 0.11s ease;
 }
 
-/* ── Focus Ring (Unified for ALL buttons) ────────────────────── */
-button:focus-visible,
+/* ── Focus Ring (Unified for ALL controls) ────────────────────── */
 .btn:focus-visible,
-.toggle-pill:focus-visible {
+.toggle-pill:focus-visible,
+.c-header__action:focus-visible {
   outline: 2px solid var(--focus-ring-color) !important;
   outline-offset: -2px !important;
   border-color: transparent !important;
@@ -139,12 +196,16 @@ button:focus-visible,
   min-width: 0;
   padding: 0;
   border: none;
-  background-color: transparent;
-  color: var(--btn-pagination-text);
+  background-color: var(--btn-ghost-bg);
+  color: var(--btn-ghost-text);
 }
 
 .btn--icon-pagination:hover {
-  background-color: var(--btn-pagination-hover-bg);
+  background-color: var(--btn-ghost-hover-bg);
+}
+
+.btn--icon-pagination:active {
+  background-color: var(--btn-ghost-active-bg);
 }
 
 .btn--icon-pagination .material-symbols-outlined {
@@ -160,14 +221,20 @@ button:focus-visible,
   height: var(--btn-toolbar-height);
   min-width: var(--btn-toolbar-min-width);
   padding-inline: var(--btn-toolbar-padding-x);
-  background-color: transparent;
+  background-color: var(--btn-ghost-bg);
   border: 1px solid var(--btn-toolbar-border);
-  color: var(--btn-toolbar-text);
+  color: var(--btn-ghost-text);
   font-size: var(--btn-toolbar-font-size);
 }
 
 .btn--toolbar:hover {
   background-color: var(--btn-toolbar-hover-bg);
+  box-shadow: var(--btn-toolbar-shadow-hover);
+}
+
+.btn--toolbar:active {
+  background-color: var(--btn-toolbar-active-bg);
+  box-shadow: var(--btn-toolbar-shadow-active);
 }
 
 .btn--toolbar .material-symbols-outlined {
@@ -178,7 +245,7 @@ button:focus-visible,
 
 .btn:disabled,
 .btn[aria-disabled="true"] {
-  background-color: var(--layer-03) !important;
+  background-color: var(--layer-02) !important;
   color: var(--text-disabled) !important;
   cursor: not-allowed;
   pointer-events: none;
@@ -188,17 +255,6 @@ button:focus-visible,
    REQUIREMENTS TOGGLES (.toggle-pill)
    Carbon Tertiary/Ghost Button Logic
    ========================================================================== */
-
-.toggle-pill-grid-label,
-.toggle-pill__label {
-  grid-column: 1 / -1;
-  font-size: 0.75rem;
-  font-weight: 400;
-  color: var(--text-muted);
-  letter-spacing: 0.02em;
-  text-transform: capitalize;
-  margin-bottom: 4px;
-}
 
 .toggle-pill {
   display: inline-flex;
@@ -215,10 +271,10 @@ button:focus-visible,
   -webkit-user-select: none;
   user-select: none;
 
-  /* The Fix: Solid background, transparent border */
-  background-color: var(--btn-ghost-bg);
-  color: var(--btn-ghost-text);
-  border: 1px solid var(--btn-ghost-border);
+  /* Use the new dedicated tokens */
+  background-color: var(--toggle-pill-bg);
+  color: var(--toggle-pill-text);
+  border: 1px solid var(--toggle-pill-border);
 
   transition:
     background-color 0.11s ease,
@@ -228,21 +284,18 @@ button:focus-visible,
 }
 
 .toggle-pill:hover {
-  background-color: var(--btn-ghost-hover-bg);
-  /* Brightens the text slightly on hover */
+  background-color: var(--toggle-pill-hover-bg);
   color: var(--text-primary);
 }
 
 .toggle-pill[aria-pressed="true"],
 .toggle-pill.is-active {
-  background-color: var(--btn-ghost-active-bg);
-  border-color: var(--btn-ghost-active-border);
+  background-color: var(--toggle-pill-active-bg);
+  border-color: var(--toggle-pill-active-border);
   color: var(--white);
-  font-weight: 600;
+  font-weight: 400;
 
-  /* Carbon trick: Use an inset box-shadow to make the blue border 
-     look 2px thick without shifting the grid layout */
-  box-shadow: inset 0 0 0 1px var(--btn-ghost-active-border);
+  box-shadow: inset 0 0 0 1px var(--toggle-pill-active-border);
 }
 
 .toggle-pill .toggle-pill__icon {
@@ -287,41 +340,6 @@ label .label-link:hover {
   z-index: 5;
 }
 
-/* Card Close Button (Moved from legacy UI components) */
-.btn-close-card {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  border: none;
-  border-radius: 8px;
-  background: var(--layer-03);
-  color: var(--text-muted);
-  cursor: pointer;
-  opacity: 0.5;
-  margin-right: none;
-  /* padding size is 8px */
-  transition:
-    opacity 160ms ease,
-    background 160ms ease;
-}
-
-.btn-close-card:hover {
-  opacity: 1;
-  background: var(--layer-01);
-}
-
-.btn-close-card:active {
-  transform: none;
-}
-
-.btn-close-card .material-symbols-outlined {
-  font-size: 1.125rem;
-  /* 18px */
-}
-
 /* ==========================================================================
    5-COMPONENTS / BADGES
    Small status indicators and counters
@@ -333,7 +351,6 @@ label .label-link:hover {
   justify-content: center;
   padding: 0;
   font-size: 14px;
-  /* 16px */
   font-weight: 400;
   border-radius: 0px;
   height: 24px;
@@ -342,34 +359,14 @@ label .label-link:hover {
   vertical-align: middle;
 }
 
-/* BEM: .badge--primary, .badge--error */
-.badge-primary,
-.badge--primary {
-  background: color-mix(in srgb, var(--color-accent) 0%, transparent);
-  color: var(--color-accent);
-  border: 1px solid transparent;
-  vertical-align: middle;
-  text-shadow: none;
+.badge-primary {
+  text-shadow: var(--text-shadow);
 }
 
-.badge-error,
-.badge--error {
-  background: color-mix(in srgb, var(--color-danger) 33%, transparent);
-  color: var(--color-danger);
-  border: 1px solid var(--color-danger);
-  text-shadow: none;
-}
-
-/* ==========================================================================
-   5-COMPONENTS / ICONS
-   Reusable icon classes for Material Symbols across all contexts.
-   Each class sets font-variation-settings, font-size, and layout.
-   ========================================================================== */
-
-/* ── 1. Bus Column Icons (lift & sleeper) ─────────────────── */
-.icon-bus {
+.icon-bus--sleeper {
+  color: var(--bus-sleeper-color);
+  text-shadow: var(--text-shadow);
   font-size: var(--icon-bus-size, 18px);
-  line-height: 1;
   font-variation-settings:
     "FILL" var(--icon-bus-fill, 1),
     "opsz" var(--icon-bus-opsz, 20);
@@ -378,14 +375,11 @@ label .label-link:hover {
 .icon-bus--lift {
   color: var(--bus-lift-color);
   text-shadow: var(--text-shadow);
+  font-size: var(--icon-bus-size, 18px);
+  font-variation-settings:
+    "FILL" var(--icon-bus-fill, 1),
+    "opsz" var(--icon-bus-opsz, 20);
 }
-
-.icon-bus--sleeper {
-  color: var(--bus-sleeper-color);
-  text-shadow: var(--text-shadow);
-}
-
-/* Light mode icon shadow overrides removed */
 
 /* ── 2. Trip Bar Req Icons ────────────────────────────────── */
 .icon-req {
@@ -480,44 +474,6 @@ label .label-link:hover {
   animation: arrow-right-bounce 0.75s infinite ease-in-out;
 }
 
-/* ── 7. Header Icon Button ────────────────────────────────── */
-.icon-btn {
-  background: var(--btn-icon-bg) !important;
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-  color: var(--btn-icon-text);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--control-radius-icon) !important;
-  width: var(--icon-btn-size, var(--week-picker-height));
-  height: var(--icon-btn-size, var(--week-picker-height));
-  min-width: 0 !important;
-  cursor: pointer;
-  transition:
-    filter 0.15s ease,
-    background-color 0.15s ease;
-}
-
-.icon-btn:hover {
-  box-shadow: none !important;
-  background: var(--btn-icon-hover-bg) !important;
-  color: var(--btn-icon-hover-text);
-}
-
-.icon-btn:active {
-  box-shadow: none !important;
-  background: var(--btn-icon-active-bg) !important;
-}
-
-.icon-btn:disabled {
-  color: var(--btn-icon-disabled-text);
-  background: var(--btn-icon-disabled-bg) !important;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
 /* ==========================================================================
    5-COMPONENTS / CARDS
    Base card component and its internal elements (BEM)
@@ -525,15 +481,11 @@ label .label-link:hover {
 
 .c-card {
   background: var(--layer-02);
-  /* More premium, rounded corners like the 'Create' button */
-  /* box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.5); */
-  border: none !important;
   min-width: 0;
   border-inline-start: none;
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  /* Ensure content follows rounded corners */
 }
 
 .c-card--compact {
@@ -548,7 +500,6 @@ label .label-link:hover {
   height: var(--size-header-row);
   width: 100%;
   flex-shrink: 0;
-  padding: 0 var(--space-lg);
 }
 
 .c-header__title {
@@ -583,16 +534,11 @@ label .label-link:hover {
 }
 
 .c-header__action:hover {
-  background-color: var(--layer-03);
+  background-color: var(--layer-02);
 }
 
 .c-header__action:active {
-  background-color: var(--layer-03);
-}
-
-.c-header__action:focus-visible {
-  outline: 2px solid #ffffff;
-  outline-offset: -2px;
+  background-color: var(--layer-01);
 }
 
 .c-header__action[aria-pressed="true"] {
@@ -604,8 +550,8 @@ label .label-link:hover {
     "FILL" 0,
     "wght" 400,
     "GRAD" 0,
-    "opsz" 24;
-  font-size: 24px;
+    "opsz" 200;
+  font-size: 20px;
 }
 
 /* --- Side Panel Headers (Carbon UI Shell Inspired) --- */
@@ -679,7 +625,6 @@ label .label-link:hover {
   border-top: 1px solid var(--border-subtle);
   background: var(--layer-02);
   border-radius: 0;
-  /* Match card radius if visible */
 }
 
 .c-card__footer:empty {
@@ -695,7 +640,6 @@ label .label-link:hover {
   display: flex;
   flex-direction: column;
   width: 100%;
-  /* Removed border-top and margin-top to allow tight fit in subsection */
 }
 
 .cds-accordion__item {
@@ -707,9 +651,7 @@ label .label-link:hover {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  /* Standardized to Carbon 48px hit area */
   height: 48px;
-  /* Matches form-grid internal alignment */
   padding: 0 8px;
   margin: 0;
   background: transparent;
@@ -726,11 +668,6 @@ label .label-link:hover {
   background-color: var(--layer-03);
 }
 
-.cds-accordion__heading:focus-visible {
-  outline: 2px solid var(--focus-ring-color);
-  outline-offset: -2px;
-}
-
 .cds-accordion__title {
   display: flex;
   align-items: center;
@@ -738,7 +675,6 @@ label .label-link:hover {
 }
 
 .cds-accordion__title .material-symbols-outlined {
-  /* 18px */
   font-size: 1.125rem;
   color: var(--text-secondary);
 }
