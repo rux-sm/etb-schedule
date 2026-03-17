@@ -6,7 +6,8 @@
   /* ... keep your existing absolute positioning, background, borders, etc ... */
   /* The Fix: Force the container to expand to its widest content */
   width: max-content;
-  min-width: 200px; /* Keeps a nice minimum width so very short menus don't look awkwardly narrow */
+  min-width: 200px;
+  /* Keeps a nice minimum width so very short menus don't look awkwardly narrow */
 }
 
 /* Unify dropdown__item for button, div, or any element */
@@ -56,6 +57,7 @@
   white-space: nowrap;
   line-height: 1;
 }
+
 /* ==========================================================================
    5-COMPONENTS / BUTTONS & CONTROLS (IBM Carbon Refactor)
    Buttons, chips, toggles, segmented controls
@@ -198,6 +200,10 @@
   border: none;
   background-color: var(--btn-ghost-bg);
   color: var(--btn-ghost-text);
+  text-rendering: optimizeLegibility;
+  text-shadow:
+    0px 2px 2px rgba(0, 0, 0, 1),
+    0px 4px 6px rgba(0, 0, 0, 0.8);
 }
 
 .btn--icon-pagination:hover {
@@ -225,6 +231,10 @@
   border: 1px solid var(--btn-toolbar-border);
   color: var(--btn-ghost-text);
   font-size: var(--btn-toolbar-font-size);
+  text-rendering: optimizeLegibility;
+  text-shadow:
+    0px 2px 2px rgba(0, 0, 0, 1),
+    0px 4px 6px rgba(0, 0, 0, 0.8);
 }
 
 .btn--toolbar:hover {

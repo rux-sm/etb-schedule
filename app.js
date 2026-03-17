@@ -78,7 +78,7 @@ if (document.readyState === "loading") {
 // ======================================================
 const CONFIG = {
   APP_NAME: "Trip Schedule",
-  APP_VERSION: "0.9.2",
+  APP_VERSION: "0.9.3",
   ENDPOINT:
     "https://script.google.com/macros/s/AKfycbzSsVByHnMuzdmaITv2Ht-q1hUQ0y5cVVIEzV6E-h7-1EhnVWJDYlhj5K4RhY0wldBk/exec",
   BUS_LANES: ["218", "763", "470", "133", "506", "746", "607", "897", "898", "474"],
@@ -143,12 +143,12 @@ const CACHE = {
         expiry: Date.now() + ttlMs,
       };
       localStorage.setItem(key, JSON.stringify(payload));
-    } catch {}
+    } catch { }
   },
   remove(key) {
     try {
       localStorage.removeItem(key);
-    } catch {}
+    } catch { }
   },
   clearAll() {
     try {
@@ -160,7 +160,7 @@ const CACHE = {
           localStorage.removeItem(k);
         }
       });
-    } catch {}
+    } catch { }
   },
 };
 
@@ -498,7 +498,7 @@ function clamp(n, min, max) {
 function safeUUID() {
   try {
     return crypto.randomUUID();
-  } catch {}
+  } catch { }
   return `tk_${Date.now()}_${Math.floor(Math.random() * 1e9)}`;
 }
 
@@ -969,6 +969,7 @@ async function fetchAPI(fn, params = {}, timeoutMs = CONFIG.JSONP_TIMEOUT) {
     {
       tries: 3,
       baseDelayMs: 500,
+      totalTimeoutMs: 60000, // Total timeout for all tries (3 * 20s = 60s)
       shouldRetry: (err) => {
         // Don't retry client errors (4xx)
         if (err.status && err.status >= 400 && err.status < 500) return false;
@@ -990,7 +991,7 @@ async function withRetry(
     baseDelayMs = 350,
     maxDelayMs = 2000,
     jitter = 0.25,
-    totalTimeoutMs = 15000,
+    totalTimeoutMs = 30000,
     shouldRetry = (err) => true,
   } = {},
 ) {
@@ -1052,11 +1053,29 @@ const api = {
   },
 
   getTrip(tripKey) {
-    return fetchAPI("getTrip", { tripKey });
+    return withRetry(
+      async () => {
+        const resp = await fetchAPI("getTrip", { tripKey });
+        if (resp && resp.ok === false) {
+          throw new Error(resp.error || "Trip not found");
+        }
+        return resp;
+      },
+      { tries: 2, totalTimeoutMs: 65000 },
+    );
   },
 
   getBusAssignments(tripKey) {
-    return fetchAPI("getBusAssignments", { tripKey });
+    return withRetry(
+      async () => {
+        const resp = await fetchAPI("getBusAssignments", { tripKey });
+        if (resp && resp.ok === false) {
+          throw new Error(resp.error || "Assignments not found");
+        }
+        return resp;
+      },
+      { tries: 2, totalTimeoutMs: 65000 },
+    );
   },
 
   toggleUnavailability(driverName, dateYmd) {
@@ -1736,7 +1755,7 @@ function applyWeekStart(isMonday) {
 
   try {
     localStorage.setItem("weekStartMonday", state.weekStartsOnMonday ? "1" : "0");
-  } catch {}
+  } catch { }
 
   syncWeekStartUI();
 
@@ -1983,7 +2002,7 @@ function prefetchAdjacentWeeks() {
 
     // ✅ FIX: Calculate Monday for the adjacent week
     const { notesKey } = getWeekRange(targetDate); // We will update getWeekRange to support a date arg
-    fetchWeekDataCached(start, end, notesKey).catch(() => {});
+    fetchWeekDataCached(start, end, notesKey).catch(() => { });
   }
 }
 
@@ -1997,7 +2016,7 @@ function showScheduleRenderToastDelayed() {
 
   // Header status progress is now owned by week-load/trip-load pipelines.
   // Keep this timer for render lifecycle parity, but do not emit standalone render notices.
-  scheduleRenderToastTimer = setTimeout(() => {}, 120);
+  scheduleRenderToastTimer = setTimeout(() => { }, 120);
 }
 
 function hideScheduleRenderToast() {
@@ -4251,11 +4270,11 @@ function openDriverContactModal(tripKey) {
   const dDate = trip.departureDate ? parseYMD(trip.departureDate) : null;
   const dDateStr = dDate
     ? dDate.toLocaleDateString("en-US", {
-        weekday: "long",
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      })
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    })
     : "the upcoming date";
   const destName = trip.destination || "your destination";
 
@@ -5416,15 +5435,15 @@ function buildPrintScheduleFullLetter() {
           <tr>
             <th class="schedule-grid__col-bus">Bus</th>
             ${dates
-              .map((d, i) => {
-                const dObj = parseYMD(d);
-                const dayStr = dObj
-                  ? dObj.toLocaleDateString("en-US", { weekday: "short" })
-                  : dayIds[i];
-                const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
-                return `<th class="schedule-grid__col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
-              })
-              .join("")}
+      .map((d, i) => {
+        const dObj = parseYMD(d);
+        const dayStr = dObj
+          ? dObj.toLocaleDateString("en-US", { weekday: "short" })
+          : dayIds[i];
+        const dateStr = dObj ? `${dObj.getMonth() + 1}/${dObj.getDate()}` : d;
+        return `<th class="schedule-grid__col-day">${escHtml(dayStr)} ${escHtml(dateStr)}</th>`;
+      })
+      .join("")}
           </tr>
         </thead>
         <tbody>
@@ -7025,11 +7044,11 @@ function wireEvents() {
     // clear all cached week data (both in-memory and persistent).
     try {
       state.weekCache.clear();
-    } catch {}
+    } catch { }
 
     try {
       CACHE.clearAll();
-    } catch {}
+    } catch { }
   }
 
   dom.tripDetailsModal?.addEventListener("click", (e) => {
@@ -7944,7 +7963,7 @@ if (dom.printDailyMaintenancePlanBtn) {
   ${SELECTORS.scheduleGridWrapHook}.is-loading-bars .schedule-grid__trip-bar { opacity: 0.18; pointer-events: none; }
 `;
     document.head.appendChild(style);
-  } catch {}
+  } catch { }
 
   setSidePanelMode("off");
   enforceDesktopEditing();

@@ -30,7 +30,9 @@
   --gray-10: #f4f4f4;
 
   --blue: #4589ff;
+  /* blue 50 */
   --red: #fa4d56;
+  /* red 50 */
   --purple: #a56eff;
   --yellow: #f1c21b;
   --teal: #009d9a;
@@ -41,10 +43,49 @@
   --indigo: #6929c4;
   --brown: #8f5f3a;
 
-  --alert-yellow: #f1c21b;
+  /* ==========================================================================
+   *  50 Palette
+   * ========================================================================== */
+  --blu-50: #4589ff;
+  --red-50: #fa4d56;
+  --pur-50: #a56eff;
+  --yel-50: #b28600;
+  --tea-50: #009d9a;
+  --org-50: #eb6200;
+  --pnk-50: #ee5396;
+  --grn-50: #24a148;
+  --cyn-50: #1192e8;
+  --ind-50: #8a3ffc;
+  --brn-50: #a56a3f;
+
+  /* ==========================================================================
+   *  60 Palette
+   * ========================================================================== */
+  --blu-60: #0f62fe;
+  --red-60: #da1e28;
+  --pur-60: #8a3ffc;
+  --yel-60: #8e6a00;
+  --tea-60: #007d79;
+  --org-60: #ba4e00;
+  --pnk-60: #d12771;
+  --grn-60: #198038;
+  --cyn-60: #0072c3;
+  --ind-60: #6929c4;
+  --brn-60: #8f5f3a;
+
+  /* ==========================================================================
+   *  Alert Palette
+   * ========================================================================== */
+  --alert-yel: #f1c21b;
+  --alert-org: #ff832b;
+  --alert-grn: #42bd65;
   --alert-red: #fa4d56;
-  --alert-green: #24a148;
-  --alert-blue: #3ddbd9;
+  --alert-blu: #4589ff;
+  --alert-cyn: #33b1ff;
+  --alert-tea: #08bdba;
+
+
+
 
   --header-seperator: var(--border-default);
 
@@ -53,11 +94,11 @@
    * Apply these families moving forward: color, layer, border, text, space, size.
    * ========================================================================== */
 
-  --color-accent: var(--blue);
-  --color-danger: var(--red);
-  --color-success: var(--green);
-  --color-warning: var(--yellow);
-  --color-info: var(--cyan);
+  --color-accent: var(--blu-60);
+  --color-danger: var(--alert-red);
+  --color-success: var(--alert-grn);
+  --color-warning: var(--alert-yel);
+  --color-secondary: var(--alert-blu);
 
   --border-subtle: var(--gray-80);
   --border-default: var(--gray-70);
@@ -73,13 +114,13 @@
    * Derived status semantics and temporary compatibility aliases.
    * ========================================================================== */
 
-  --color-danger-soft: color-mix(in srgb, var(--red) 20%, transparent);
+  --color-danger-soft: color-mix(in srgb, var(--red-60) 20%, transparent);
   --color-conflict-accent: var(--color-danger);
   --color-conflict-bg: color-mix(in srgb, var(--color-danger) 25%, transparent);
   --color-status-pending: var(--color-danger);
   --color-status-ok: var(--color-success);
   --color-status-assigned: var(--color-warning);
-  --color-status-blue: var(--color-accent);
+  --color-status-blue: var(--color-secondary);
 
   /* ==========================================================================
    * 4. THEME TOKENS
@@ -89,6 +130,8 @@
 
   /* App shell surface */
   --layer-ui-shell: var(--gray-100);
+  --layer-00: var(--gray-90);
+  --layer-00-border: var(--gray-80);
 
   /* High-emphasis panels/cards */
   --layer-01: var(--black);
@@ -108,13 +151,14 @@
   --field-border-bottom: var(--layer-03-border);
 
   /* Primary (Action/Save - Solid Blue) */
-  --btn-primary-bg: var(--blue);
-  --btn-primary-text: var(--text-primary); /* Dark text for WCAG compliance on Blue 50 */
-  --btn-primary-hover: color-mix(in srgb, var(--blue) 85%, black);
-  --btn-primary-active: color-mix(in srgb, var(--blue) 70%, black);
+  --btn-primary-bg: var(--blu-60);
+  --btn-primary-text: var(--text-primary);
+  /* Dark text for WCAG compliance on Blue 50 */
+  --btn-primary-hover: color-mix(in srgb, var(--blu-60) 85%, black);
+  --btn-primary-active: color-mix(in srgb, var(--blu-60) 70%, black);
 
   /* Secondary (Structural/Cancel - Solid Gray matching Layer 03) */
-  --btn-secondary-bg: var(--layer-03);
+  --btn-secondary-bg: var(--gray-60);
   --btn-secondary-text: var(--white);
   --btn-secondary-hover: color-mix(in srgb, var(--layer-03) 90%, white 10%);
   /* Hovers lighter */
@@ -316,16 +360,16 @@
   /* Row 4: Time */
   --tripbar-r4-font-size: 0.6875rem;
   --tripbar-r4-row-height: 13px;
-  --tripbar-r4-font-weight: 500;
+  --tripbar-r4-font-weight: 700;
   --tripbar-r4-line-height: 13px;
-  --tripbar-r4-letter-spacing: -0.02em;
+  --tripbar-r4-letter-spacing: 0.05em;
 
   /* Row 5: Status Icons */
   --tripbar-r5-row-height: 14px;
   /* Row 6: Notes */
   --tripbar-r6-font-size: 0.625rem;
   --tripbar-r6-row-height: 12px;
-  --tripbar-r6-font-weight: 500;
+  --tripbar-r6-font-weight: 400;
   --tripbar-r6-line-height: 12px;
   --tripbar-r6-letter-spacing: 0.02em;
   /* Row 7: Drivers */

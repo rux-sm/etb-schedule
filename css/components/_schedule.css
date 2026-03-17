@@ -60,6 +60,8 @@
 .app-header__logo-img {
   height: 22px;
   width: auto;
+  /* Tighter blur (1px) and slightly offset down (2px) */
+  filter: drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.8));
 }
 
 /* --- Typography --- */
@@ -97,8 +99,8 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  background-color: var(--layer-ui-shell);
-  border-bottom: 1px solid var(--gray-90);
+  background-color: var(--layer-00);
+  border-bottom: 1px solid var(--layer-00-border);
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
 }
 
@@ -126,6 +128,7 @@
 }
 
 @media (max-width: 899px) {
+
   /* Hide desktop-only toolbar buttons */
   #notesBtn,
   #waitingListBtn,
@@ -434,23 +437,39 @@
   color: var(--color-accent);
   letter-spacing: 0;
   margin-right: 4px;
+  text-rendering: optimizeLegibility;
+  text-shadow:
+    0px 2px 2px rgba(0, 0, 0, 1),
+    0px 4px 6px rgba(0, 0, 0, 0.8);
 }
 
 .agenda-header__week-date .wk-dates {
   font-weight: 400;
   color: var(--text-primary);
   margin-right: 4px;
+  text-rendering: optimizeLegibility;
+  text-shadow:
+    0px 2px 2px rgba(0, 0, 0, 1),
+    0px 4px 6px rgba(0, 0, 0, 0.8);
 }
 
 .agenda-header__week-date .wk-sep {
   color: var(--text-primary);
   font-weight: 400;
   margin-right: 4px;
+  text-rendering: optimizeLegibility;
+  text-shadow:
+    0px 2px 2px rgba(0, 0, 0, 1),
+    0px 4px 6px rgba(0, 0, 0, 0.8);
 }
 
 .agenda-header__week-date .wk-year {
   font-weight: 400;
   color: var(--text-secondary);
+  text-rendering: optimizeLegibility;
+  text-shadow:
+    0px 2px 2px rgba(0, 0, 0, 1),
+    0px 4px 6px rgba(0, 0, 0, 0.8);
 }
 
 /* ==========================================================================
@@ -490,9 +509,10 @@
 }
 
 /* Main schedule area layer */
-.o-app-layout__main > .c-card {
+.o-app-layout__main>.c-card {
   border-radius: 0;
-  background: var(--layer-01); /* Your pure black background */
+  background: var(--layer-01);
+  /* Your pure black background */
 }
 
 /* ==========================================================================
@@ -500,19 +520,19 @@
    ========================================================================== */
 
 /* Shared Card Backgrounds */
-.o-app-layout__sidebar--left > .c-card:not(.is-hidden),
-.o-app-layout__sidebar--right > .c-card:not(.is-hidden) {
+.o-app-layout__sidebar--left>.c-card:not(.is-hidden),
+.o-app-layout__sidebar--right>.c-card:not(.is-hidden) {
   background-color: var(--layer-02);
 }
 
 /* Left Sidebar Card - Casts shadow right, highlight border right */
-.o-app-layout__sidebar--left > .c-card:not(.is-hidden) {
+.o-app-layout__sidebar--left>.c-card:not(.is-hidden) {
   box-shadow: 4px 0px 16px rgba(0, 0, 0, 0.6);
   border-right: 1px solid var(--gray-80);
 }
 
 /* Right Sidebar Card - Casts shadow left, highlight border left */
-.o-app-layout__sidebar--right > .c-card:not(.is-hidden) {
+.o-app-layout__sidebar--right>.c-card:not(.is-hidden) {
   box-shadow: -4px 0px 16px rgba(0, 0, 0, 0.6);
   border-left: 1px solid var(--gray-80);
 }
@@ -522,8 +542,8 @@
    ========================================================================== */
 
 /* Shared Sidebar Typography & Body Padding */
-.o-app-layout__sidebar--left > .c-card:not(.is-hidden) .c-card__body,
-.o-app-layout__sidebar--right > .c-card:not(.is-hidden) .c-card__body {
+.o-app-layout__sidebar--left>.c-card:not(.is-hidden) .c-card__body,
+.o-app-layout__sidebar--right>.c-card:not(.is-hidden) .c-card__body {
   font-size: 0.75rem;
   font-weight: 400;
   color: var(--text-muted);
@@ -531,8 +551,8 @@
 }
 
 /* Shared Sidebar Footer Padding */
-.o-app-layout__sidebar--left > .c-card:not(.is-hidden) .c-card__footer,
-.o-app-layout__sidebar--right > .c-card:not(.is-hidden) .c-card__footer {
+.o-app-layout__sidebar--left>.c-card:not(.is-hidden) .c-card__footer,
+.o-app-layout__sidebar--right>.c-card:not(.is-hidden) .c-card__footer {
   padding: var(--space-lg);
 }
 
@@ -728,11 +748,11 @@
   border-radius: 50%;
 }
 
-.quote-calculator input:checked + .toggle-slider {
+.quote-calculator input:checked+.toggle-slider {
   background-color: var(--color-accent);
 }
 
-.quote-calculator input:checked + .toggle-slider:before {
+.quote-calculator input:checked+.toggle-slider:before {
   transform: translateX(14px);
 }
 
@@ -903,8 +923,8 @@
 }
 
 /* Bottom outer boundary */
-.schedule-grid tbody tr:last-child > .schedule-grid__cell,
-.schedule-grid tbody tr:last-child > .schedule-grid__bus-cell {
+.schedule-grid tbody tr:last-child>.schedule-grid__cell,
+.schedule-grid tbody tr:last-child>.schedule-grid__bus-cell {
   border-bottom: 1px solid var(--gray-100);
 }
 
@@ -1188,13 +1208,12 @@
   text-shadow: var(--text-shadow);
 }
 
-.schedule-grid__row--has-bus-color > .schedule-grid__cell:first-child {
+.schedule-grid__row--has-bus-color>.schedule-grid__cell:first-child {
   transition: background-color 0.15s ease;
 }
 
 /* Bus cell highlight: only when hovering bus indicator (not when trip bar overlaps due to sticky) */
-.schedule-grid__row--has-bus-color
-  > .schedule-grid__cell:first-child:has(.schedule-grid__bus-indicator:hover) {
+.schedule-grid__row--has-bus-color>.schedule-grid__cell:first-child:has(.schedule-grid__bus-indicator:hover) {
   background-color: var(--bus-accent-color);
 }
 
@@ -1243,7 +1262,7 @@
   overflow-y: auto;
 }
 
-.schedule-grid__conflict-panel .conflict-group + .conflict-group {
+.schedule-grid__conflict-panel .conflict-group+.conflict-group {
   margin-top: 14px;
 }
 
@@ -1269,10 +1288,7 @@
 .schedule-grid__trip-bar {
   display: grid;
   grid-template-rows:
-    var(--tripbar-r1-row-height) var(--tripbar-r2-row-height) var(--tripbar-r3-row-height)
-    var(--tripbar-r4-row-height) var(--tripbar-r5-row-height) var(--tripbar-r6-row-height) var(
-      --tripbar-r7-row-height
-    );
+    var(--tripbar-r1-row-height) var(--tripbar-r2-row-height) var(--tripbar-r3-row-height) var(--tripbar-r4-row-height) var(--tripbar-r5-row-height) var(--tripbar-r6-row-height) var(--tripbar-r7-row-height);
   row-gap: var(--tripbar-row-gap);
   container-type: inline-size;
   align-content: center;
@@ -1340,14 +1356,14 @@
   --tripbar-r1-color: var(--tripbar-color);
   --tripbar-r2-color: var(--tripbar-color);
   --tripbar-r3-color: var(--tripbar-color);
-  --tripbar-r4-color: var(--alert-yellow);
+  --tripbar-r4-color: var(--alert-yel);
   /* Bright Neon Lemon */
   --tripbar-r5-color: var(--tripbar-color);
-  --tripbar-r6-color: var(--alert-blue);
+  --tripbar-r6-color: color-mix(in srgb, var(--alert-org) 75%, white);
   /* Bright Coral */
   --tripbar-r7-color: var(--text-primary);
 
-  --tripbar-badge-text-color: color-mix(in srgb, var(--red) 80%, white);
+  --tripbar-badge-text-color: color-mix(in srgb, var(--red-50) 75%, white);
   --tripbar-badge-text-bg: color-mix(in srgb, #ffffff 50%, transparent);
   --tripbar-status-pending-bg: color-mix(in srgb, var(--color-status-pending) 50%, transparent);
   --tripbar-status-pending-color: color-mix(in srgb, var(--color-status-pending) 25%, black);
@@ -1355,13 +1371,11 @@
 
   &.out-of-service {
     --tripbar-color: var(--color-danger);
-    background: repeating-linear-gradient(
-      -45deg,
-      color-mix(in srgb, var(--color-danger) 8%, transparent),
-      color-mix(in srgb, var(--color-danger) 8%, transparent) 8px,
-      color-mix(in srgb, var(--color-danger) 16%, transparent) 8px,
-      color-mix(in srgb, var(--color-danger) 16%, transparent) 16px
-    );
+    background: repeating-linear-gradient(-45deg,
+        color-mix(in srgb, var(--color-danger) 8%, transparent),
+        color-mix(in srgb, var(--color-danger) 8%, transparent) 8px,
+        color-mix(in srgb, var(--color-danger) 16%, transparent) 8px,
+        color-mix(in srgb, var(--color-danger) 16%, transparent) 16px);
     border: 1px dashed color-mix(in srgb, var(--color-danger) 40%, transparent);
     border-left: 4px solid var(--color-danger);
 
@@ -1401,47 +1415,47 @@
   }
 
   &.unconfirmed {
-    --tripbar-color: var(--color-danger);
+    --tripbar-color: var(--red-50);
   }
 
   &.color-green {
-    --tripbar-color: var(--green);
+    --tripbar-color: var(--grn-50);
   }
 
   &.color-yellow {
-    --tripbar-color: var(--yellow);
+    --tripbar-color: var(--yel-50);
   }
 
   &.color-gray {
-    --tripbar-color: var(--gray-60);
+    --tripbar-color: var(--gray-50);
   }
 
   &.color-purple {
-    --tripbar-color: var(--purple);
+    --tripbar-color: var(--pur-50);
   }
 
   &.color-pink {
-    --tripbar-color: var(--pink);
+    --tripbar-color: var(--pnk-50);
   }
 
   &.color-orange {
-    --tripbar-color: var(--orange);
+    --tripbar-color: var(--org-50);
   }
 
   &.color-teal {
-    --tripbar-color: var(--teal);
+    --tripbar-color: var(--tea-50);
   }
 
   &.color-cyan {
-    --tripbar-color: var(--cyan);
+    --tripbar-color: var(--cyn-50);
   }
 
   &.color-indigo {
-    --tripbar-color: var(--indigo);
+    --tripbar-color: var(--ind-50);
   }
 
   &.color-brown {
-    --tripbar-color: var(--brown);
+    --tripbar-color: var(--brn-50);
   }
 }
 
@@ -1725,22 +1739,10 @@
     border: 1px solid var(--gray-20) !important;
   }
 
-  #printRoot.print-mode-letter-full
-    .print-table
-    .schedule-grid__trip-bar
-    .schedule-grid__trip-bar__drivers,
-  #printRoot.print-mode-letter-full
-    .print-table
-    .schedule-grid__trip-bar
-    .schedule-grid__trip-bar__contact,
-  #printRoot.print-mode-letter-full
-    .print-table
-    .schedule-grid__trip-bar
-    .schedule-grid__trip-bar__status-row,
-  #printRoot.print-mode-letter-full
-    .print-table
-    .schedule-grid__trip-bar
-    .schedule-grid__trip-bar__pre-drivers {
+  #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__drivers,
+  #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__contact,
+  #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__status-row,
+  #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__pre-drivers {
     display: none !important;
   }
 
@@ -1792,10 +1794,7 @@
     font-size: 8pt !important;
   }
 
-  .print-table
-    .schedule-grid__trip-bar
-    .schedule-grid__trip-bar__drivers
-    .schedule-grid__trip-bar__driver,
+  .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__drivers .schedule-grid__trip-bar__driver,
   .print-table .schedule-grid__trip-bar__pre-drivers {
     font-size: 8pt !important;
   }
@@ -1946,7 +1945,7 @@
 }
 
 .bus-assign__driver-block .select-dropdown:first-child,
-.bus-assign__driver-block > select:first-child {
+.bus-assign__driver-block>select:first-child {
   flex: 1;
   min-width: 0;
 }
