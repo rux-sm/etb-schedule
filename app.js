@@ -78,7 +78,7 @@ if (document.readyState === "loading") {
 // ======================================================
 const CONFIG = {
   APP_NAME: "Trip Schedule",
-  APP_VERSION: "0.9.3",
+  APP_VERSION: "0.9.4",
   ENDPOINT:
     "https://script.google.com/macros/s/AKfycbzSsVByHnMuzdmaITv2Ht-q1hUQ0y5cVVIEzV6E-h7-1EhnVWJDYlhj5K4RhY0wldBk/exec",
   BUS_LANES: ["218", "763", "470", "133", "506", "746", "607", "897", "898", "474"],
