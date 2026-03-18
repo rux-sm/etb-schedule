@@ -3,16 +3,35 @@
    ========================================================================== */
 
 .dropdown__menu {
-  /* ... keep your existing absolute positioning, background, borders, etc ... */
-  /* The Fix: Force the container to expand to its widest content */
-  width: max-content;
+  position: absolute;
+  z-index: var(--z-dropdown);
   min-width: 200px;
-  /* Keeps a nice minimum width so very short menus don't look awkwardly narrow */
+  width: max-content;
+  padding: 8px 0;
+  margin: 2px 0 0;
+  font-size: 0.875rem;
+  text-align: left;
+  list-style: none;
+  background-color: var(--lvl-03);
+  background-clip: padding-box;
+  border: 1px solid var(--lvl-03-border);
+  border-radius: 0;
+  box-shadow: var(--elevation-3);
+  max-height: 300px;
+  overflow-y: auto;
+
+  /* Hiding scrollbar while maintaining scroll functionality */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Chrome, Safari and Opera */
+.dropdown__menu::-webkit-scrollbar {
+  display: none;
 }
 
 /* Unify dropdown__item for button, div, or any element */
-.dropdown__item,
-.dropdown__item[role="note"] {
+.dropdown__item {
   display: flex;
   align-items: center;
   width: 100%;
@@ -31,8 +50,7 @@
 }
 
 /* Make meta/info items visually consistent but less prominent */
-.dropdown__item--meta,
-.dropdown__item[role="note"] {
+.dropdown__item--meta{
   color: var(--text-secondary);
   font-style: italic;
   cursor: default;
@@ -41,7 +59,7 @@
 
 .dropdown__item:hover,
 .dropdown__item:focus-visible {
-  background-color: var(--layer-03-hover);
+  background-color: var(--layer-04);
   outline: none;
 }
 
@@ -63,37 +81,45 @@
    Buttons, chips, toggles, segmented controls
    ========================================================================== */
 
-.btn,
-.theme-toggle,
-.seg__btn {
+/* ── 1. Base Button & Control Styles ────────────────────────────────────── */
+
+/* ── 1. Base Button & Control Styles ────────────────────────────────────── */
+
+.btn {
+  /* Layout */
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  /* Lock height to perfectly match your form inputs */
+  gap: 8px; /* Replaces margin-right on the icon */
+  
   height: var(--input-height, 40px);
   min-width: var(--btn-min-width, 80px);
   padding: 0 var(--btn-padding-x, 16px);
-
-  /* Carbon Strict Geometry */
-  border: 1px solid transparent;
-  border-radius: 0px;
-
+  
+  /* Typography */
   font-family: var(--font-sans);
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1;
   text-decoration: none;
   white-space: nowrap;
+  
+  /* Visuals */
+  border: 1px solid transparent;
+  border-radius: 0px; 
   cursor: pointer;
-
+  
+  /* Transitions */
   transition:
-    background-color 0.11s ease,
-    border-color 0.11s ease,
-    color 0.11s ease;
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
 }
 
-/* ── Focus Ring (Unified for ALL controls) ────────────────────── */
+/* ── 2. Focus & Icon Utilities ──────────────────────────────────────────── */
+
 .btn:focus-visible,
 .toggle-pill:focus-visible,
 .c-header__action:focus-visible {
@@ -102,96 +128,75 @@
   border-color: transparent !important;
 }
 
-/* ── Icons Inside Buttons ────────────────────────────────────── */
 .btn .material-symbols-outlined,
 .toggle-pill__icon {
-  font-size: 1.125rem;
+  font-size: 18px;
   font-weight: 400;
-  margin-right: 8px;
+  line-height: 1; /* Locks the icon height to its exact font-size */
+  
+  /* Material Symbols Font Controls */
+  font-weight: var(--btn-icon-wght, 400); /* Fallback */
+  font-variation-settings:
+    'FILL' var(--btn-icon-fill, 0),
+    'wght' var(--btn-icon-wght, 400),
+    'GRAD' var(--btn-icon-grad, -25), /* Negative slant for better readability at small sizes */
+    'opsz' var(--btn-icon-opsz, 20); /* I see you use 20 opsz elsewhere! */
 }
 
-/* ── Primary Button (Save, Copy Summary) ──────────────────────────── */
+/* ── 3. Primary Variants ────────────────────────────────────────────────── */
+
+/* Primary (Save, Copy Summary) */
 .btn--primary {
   background-color: var(--btn-primary-bg);
   color: var(--btn-primary-text);
+  box-shadow: var(--btn-shadow-inset);
 }
-
 .btn--primary:hover {
   background-color: var(--btn-primary-hover);
 }
-
 .btn--primary:active {
   background-color: var(--btn-primary-active);
+  /* Replaces 'none' with the physical pushed-in shadow */
+  box-shadow: var(--btn-shadow-active);
 }
-
-/* ── Secondary Button (Cancel, Clear) ──────────────────────── */
+/* Secondary (Cancel, Clear) */
 .btn--secondary {
   background-color: var(--btn-secondary-bg);
   color: var(--btn-secondary-text);
+  box-shadow: var(--btn-shadow-inset);
 }
-
 .btn--secondary:hover {
   background-color: var(--btn-secondary-hover);
 }
-
 .btn--secondary:active {
   background-color: var(--btn-secondary-active);
+  box-shadow: var(--btn-shadow-active);
 }
 
-/* ── Danger Button (Delete) ────────────────────────────────── */
+/* Danger (Delete) */
 .btn--danger {
-  background-color: var(--btn-danger-bg);
+  background-color: var(--btn-danger-bg); /* Fixed bug: was using active token */
   color: var(--btn-danger-text);
+  box-shadow: var(--btn-shadow-inset);
 }
-
 .btn--danger:hover {
   background-color: var(--btn-danger-hover);
 }
-
 .btn--danger:active {
   background-color: var(--btn-danger-active);
+  box-shadow: var(--btn-shadow-active);
 }
 
-/* ── Success Button (Clipboard/Done Feedback) ─────────────── */
-.btn--success {
-  background-color: var(--btn-success-bg);
-  color: var(--btn-success-text);
-}
+/* ── 4. Size Modifiers ──────────────────────────────────────────────────── */
 
-.btn--success:hover {
-  background-color: var(--btn-success-hover);
-}
-
-.btn--success:active {
-  background-color: var(--btn-success-active);
-}
-
-/* ── Danger Ghost Button (Delete in Footer/Context) ────────── */
-.btn--danger.btn--ghost {
-  background-color: transparent;
-  color: var(--color-danger);
-  border-color: transparent;
-}
-
-.btn--danger.btn--ghost:hover {
-  /* Red 60 */
-  background-color: var(--color-danger) !important;
-  color: var(--white) !important;
-}
-
-.btn--danger.btn--ghost:active {
-  background-color: color-mix(in srgb, var(--color-danger) 85%, black) !important;
-  color: var(--white) !important;
-}
-
-/* Compact size used by modal/footer utility buttons */
 .btn--compact {
   height: var(--btn-compact-height);
   min-width: 0;
   padding: 0 var(--btn-compact-padding-x);
 }
 
-/* Pagination icon control buttons */
+/* ── 5. Specialized Buttons (Pagination, Toolbar) ───────────────────────── */
+
 .btn--icon-pagination {
   width: var(--btn-pagination-size);
   height: var(--btn-pagination-size);
@@ -201,24 +206,18 @@
   background-color: var(--btn-ghost-bg);
   color: var(--btn-ghost-text);
   text-rendering: optimizeLegibility;
-  text-shadow:
-    0px 2px 2px rgba(0, 0, 0, 1),
-    0px 4px 6px rgba(0, 0, 0, 0.8);
+  text-shadow: 0px 2px 2px rgba(0, 0, 0, 1), 0px 4px 6px rgba(0, 0, 0, 0.8);
 }
-
 .btn--icon-pagination:hover {
   background-color: var(--btn-ghost-hover-bg);
 }
-
 .btn--icon-pagination:active {
   background-color: var(--btn-ghost-active-bg);
 }
-
 .btn--icon-pagination .material-symbols-outlined {
   margin-right: 0;
 }
 
-/* Toolbar ghost controls */
 .btn--toolbar {
   display: inline-flex;
   align-items: center;
@@ -232,31 +231,29 @@
   color: var(--btn-ghost-text);
   font-size: var(--btn-toolbar-font-size);
   text-rendering: optimizeLegibility;
-  text-shadow:
-    0px 2px 2px rgba(0, 0, 0, 1),
-    0px 4px 6px rgba(0, 0, 0, 0.8);
+  text-shadow: 0px 2px 2px rgba(0, 0, 0, 1), 0px 4px 6px rgba(0, 0, 0, 0.8);
 }
-
 .btn--toolbar:hover {
   background-color: var(--btn-toolbar-hover-bg);
   box-shadow: var(--btn-toolbar-shadow-hover);
 }
-
 .btn--toolbar:active {
   background-color: var(--btn-toolbar-active-bg);
   box-shadow: var(--btn-toolbar-shadow-active);
 }
-
 .btn--toolbar .material-symbols-outlined {
   font-size: var(--btn-toolbar-icon-size);
   margin-right: 0;
   line-height: 1;
 }
 
+/* ── 6. Disabled State ──────────────────────────────────────────────────── */
+
 .btn:disabled,
 .btn[aria-disabled="true"] {
-  background-color: var(--layer-02) !important;
+  background-color: var(--lvl-02) !important;
   color: var(--text-disabled) !important;
+  box-shadow: none;
   cursor: not-allowed;
   pointer-events: none;
 }
@@ -267,50 +264,64 @@
    ========================================================================== */
 
 .toggle-pill {
+  /* Layout */
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
+  gap: 8px; 
   height: var(--input-height, 40px);
-  padding: 0 16px;
-
+  padding: 0 var(--btn-padding-x, 16px); 
+  
+  /* Typography */
+  font-family: var(--font-sans); 
   font-size: 0.875rem;
   font-weight: 400;
+  line-height: 1; 
+  white-space: nowrap; 
+  user-select: none;
+  -webkit-user-select: none;
+  
+  /* Visuals */
   border-radius: 0px;
   cursor: pointer;
-  -webkit-user-select: none;
-  user-select: none;
-
-  /* Use the new dedicated tokens */
-  background-color: var(--toggle-pill-bg);
+  background-color: var(--toggle-pill-bg); /* FIXED */
   color: var(--toggle-pill-text);
-  border: 1px solid var(--toggle-pill-border);
-
-  transition:
-    background-color 0.11s ease,
-    border-color 0.11s ease,
-    color 0.11s ease,
-    box-shadow 0.11s ease;
+  border: 1px solid var(--toggle-pill-border); 
+  box-shadow: var(--btn-shadow-inset);
+  
+  /* Transitions */
+  transition: 
+    background-color var(--transition-fast), 
+    border-color var(--transition-fast), 
+    color var(--transition-fast), 
+    box-shadow var(--transition-fast);
 }
 
+/* ── Toggle Pill States ────────────────────────────────────────────────── */
+
 .toggle-pill:hover {
-  background-color: var(--toggle-pill-hover-bg);
-  color: var(--text-primary);
+  background-color: color-mix(in srgb, var(--toggle-pill-bg) 85%, black);
+  color: var(--gra-10);
 }
 
 .toggle-pill[aria-pressed="true"],
 .toggle-pill.is-active {
-  background-color: var(--toggle-pill-active-bg);
-  border-color: var(--toggle-pill-active-border);
-  color: var(--white);
-  font-weight: 400;
-
-  box-shadow: inset 0 0 0 1px var(--toggle-pill-active-border);
+  background-color: var(--toggle-pill-active-bg); 
+  border-color: transparent; /* FIXED: Removes fuzzy halo */
+  color: var(--gra-10);
+  
+  /* FIXED: All shadows combined into one physical "pressed" effect */
+  box-shadow: var(--btn-shadow-active);    /* 2. Deep inner shadow pressing it into the screen */
+  
+  /* Fill the icon to show it is "occupied" */
+  --btn-icon-fill: 1; 
 }
+
+/* ── Icon Behavior ─────────────────────────────────────────────────────── */
 
 .toggle-pill .toggle-pill__icon {
   opacity: 0.7;
-  transition: opacity 0.11s ease;
+  transition: opacity var(--transition-fast), font-variation-settings var(--transition-fast);
 }
 
 .toggle-pill:hover .toggle-pill__icon,
@@ -318,36 +329,21 @@
 .toggle-pill.is-active .toggle-pill__icon {
   opacity: 1;
 }
-
-/* --- Inline label link & Layout Utils (Retained from original) --- */
-label .label-link {
-  background: none;
-  border: none;
-  padding: 0;
-  margin-inline-start: 6px;
-  color: var(--color-accent);
-  font-size: inherit;
-  font-weight: 400;
-  text-decoration: none;
-  cursor: pointer;
-  display: inline;
-}
-
-label .label-link:hover {
-  text-decoration: underline;
-}
+/* ==========================================================================
+   MISC UTILITIES
+   ========================================================================== */
 
 .bus-icons {
   position: absolute;
   left: 50%;
   bottom: 4px;
-  transform: translateX(-50%);
+  z-index: 5;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 1px;
-  z-index: 5;
+  transform: translateX(-50%);
 }
 
 /* ==========================================================================
@@ -369,7 +365,7 @@ label .label-link:hover {
   vertical-align: middle;
 }
 
-.badge-primary {
+.badge--primary {
   text-shadow: var(--text-shadow);
 }
 
@@ -573,8 +569,8 @@ label .label-link:hover {
   width: 100%;
   flex-shrink: 0;
   padding: 0 var(--space-lg);
-  border-bottom: 1px solid var(--border-subtle);
-  background-color: var(--layer-02);
+  border-bottom: 1px solid transparent;
+  background-color: var(--lvl-02);
 }
 
 .c-header.c-header--panel .c-header__title {
@@ -591,7 +587,6 @@ label .label-link:hover {
   text-shadow:
     0px 2px 2px rgba(0, 0, 0, 1),
     0px 4px 6px rgba(0, 0, 0, 0.8);
-
 }
 
 .c-header.c-header--panel .c-header__actions {
@@ -612,7 +607,7 @@ label .label-link:hover {
 }
 
 .c-header.c-header--panel .c-header__action:hover {
-  background-color: var(--red);
+  background-color: color-mix(in srgb, var(--gra-02) 85%, white);
 }
 
 .c-header.c-header--panel .c-header__action:active {
@@ -620,7 +615,7 @@ label .label-link:hover {
 }
 
 .c-header.c-header--panel .c-header__action[aria-pressed="true"] {
-  background-color: var(--red);
+  background-color: color-mix(in srgb, var(--gra-02) 70%, white);
   border-bottom-color: var(--color-accent);
 }
 
@@ -644,8 +639,8 @@ label .label-link:hover {
   flex-wrap: wrap;
   padding: 16px;
   margin-top: 0;
-  border-top: 1px solid var(--border-subtle);
-  background: var(--layer-02);
+  border-top: 1px solid transparent;
+  background: var(--lvl-02);
   border-radius: 0;
 }
 
@@ -687,7 +682,7 @@ label .label-link:hover {
 }
 
 .cds-accordion__heading:hover {
-  background-color: var(--layer-03);
+  background-color: var(--lvl-03);
 }
 
 .cds-accordion__title {

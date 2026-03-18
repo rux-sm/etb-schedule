@@ -4,7 +4,7 @@
 
 /* Style all <option> tags globally for dark theme consistency */
 option {
-  background: var(--layer-02) !important;
+  background: var(--lvl-03) !important;
   color: var(--text-primary) !important;
   padding: 8px 12px;
   font-family: var(--font-sans);
@@ -170,7 +170,7 @@ body {
   line-height: 1.5;
   letter-spacing: 0.02em;
   color: var(--text-primary);
-  background: var(--layer-ui-shell);
+  background: var(--lvl-01); /* Base behind schedule */
   transition:
     background-color 200ms ease,
     color 200ms ease;
@@ -618,7 +618,6 @@ samp {
 
   .app,
   .app-header,
-  .theme-toggle,
   .context-menu,
   .modal {
     display: none !important;
@@ -1042,29 +1041,36 @@ textarea,
   box-sizing: border-box;
 
   height: var(--input-height, 40px);
-  /* Carbon standard is typically 40px */
   padding: 0 var(--input-padding-x, 16px);
 
-  /* Carbon Style: Solid background, square corners, bottom border only */
-  background-color: var(--field-bg);
-  border: none;
-  /* Strip native borders */
-  /*border-bottom: 1px solid var(--field-border-bottom); */
-  border-radius: 0;
-  /* Strictly square */
+  /* --- Token Application --- */
 
-  font-size: var(--input-font-size, 0.875rem);
-  font-weight: 400;
-  /* Carbon uses standard weight for input text */
-  color: var(--text-primary);
+  /* Use the deepest neutral for the 'well' effect */
+  background-color: var(--field-bg);
+
+  /* VS Code Style: Full border using the border-default */
+  border: 1px solid var(--field-border);
+
+  /* Apply corrected Inset Shadow Token */
+  box-shadow: var(--field-shadow-inset);
+
+  /* Strictly square for that Carbon/Pro look */
+  border-radius: 0;
+
+  /* Text Tokens */
+  font-size: var(--input-font-size);
+  font-weight: var(--input-weight);
+  color: var(--text-primary); /* High-emphasis light text */
   text-align: left;
 
   outline: none;
-  cursor: pointer;
+  cursor: text; /* Changed from pointer to text for better UX on inputs */
 
+  /* Standard transitions */
   transition:
     background-color 0.11s cubic-bezier(0.2, 0, 0.38, 0.9),
-    outline 0.11s;
+    border-color 0.11s,
+    box-shadow 0.11s;
 }
 
 /* --- 2. PLAIN TEXT INPUTS — override cursor only --- */
@@ -1079,6 +1085,21 @@ input[type="date"],
 input[type="time"],
 input[type="number"] {
   appearance: none;
+}
+
+/* Make calendar and time icons white in dark mode (WebKit, Chromium, Edge, Safari) */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  color: var(--text-placeholder);
+  opacity: 1;
+  background: transparent;
+}
+
+/* Firefox (limited support, may not work) */
+input[type="date"]::-moz-calendar-picker-indicator,
+input[type="time"]::-moz-calendar-picker-indicator {
+  color: white;
+  opacity: 1;
 }
 
 /* --- 4. NATIVE SELECT DROPDOWNS --- */
@@ -1106,15 +1127,7 @@ select.select--centered {
   padding-left: 32px;
 }
 
-/* --- 5. CUSTOM DROPDOWN BUTTONS (.select-trigger) --- */
-.select-trigger {
-  padding: 0 var(--input-padding-x);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-align: left;
-  /* Align left to match standard inputs */
-}
+/* .select-trigger base styles consolidated in SECTION 1 */
 
 /* --- 6. TEXTAREAS --- */
 textarea {
@@ -1134,12 +1147,14 @@ textarea::placeholder {
   opacity: 1;
 }
 
-/* Carbon hover effect: slightly lighter background */
+/* --- HOVER — slightly lighter background using tokens --- */
 input:hover,
 select:hover,
 textarea:hover,
 .select-trigger:hover {
-  background-color: color-mix(in srgb, var(--field-bg), white 10%);
+  /* Instead of color-mix, we jump one step up in your neutral scale */
+  background-color: var(--field-bg-hover);
+  border-color: var(--field-border);
 }
 
 /* --- 8. FOCUS — unified for ALL field types --- */
@@ -1148,11 +1163,16 @@ select:focus,
 textarea:focus,
 .select-trigger:focus {
   /* Carbon signature focus: 2px inset blue outline */
-  outline: 2px solid var(--blue);
+  /* We use your Focus Token (Outer Glow) + the Inset Shadow for depth */
+  box-shadow: var(--shadow-focus), var(--shadow-inset-top);
+
+  /* To mimic the "2px inset blue outline" without shifting layout: */
+  outline: 2px solid var(--blu-60); /* Your Brand Blue */
   outline-offset: -2px;
-  /* Pulls the outline inside so layout doesn't shift */
-  border-bottom-color: transparent;
-  /* Hide bottom border when outline is active */
+
+  /* Ensure the background stays stable */
+  background-color: var(--lvl-02);
+  border-color: transparent;
 }
 
 /* ==========================================================================
@@ -1176,18 +1196,27 @@ textarea:focus,
   padding: 0;
 
   /* Force to Layer 03 (Highest elevation, lightest background) */
-  background-color: var(--layer-03, var(--gray-70));
-  border: 1px solid var(--border-subtle);
+  background-color: var(--lvl-03);
+  border: 1px solid var(--lvl-03-border);
   border-radius: 0px;
   /* Strictly square */
 
   /* Carbon uses a very subtle shadow for floating menus, relying more on border contrast */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 
-  overflow: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
   animation: menuPopIn 120ms cubic-bezier(0.2, 0, 0.38, 0.9);
   display: flex;
   flex-direction: column;
+}
+
+.dropdown-menu::-webkit-scrollbar,
+.dropdown__menu::-webkit-scrollbar,
+.context-menu::-webkit-scrollbar {
+  display: none;
 }
 
 .dropdown-menu,
@@ -1205,8 +1234,8 @@ textarea:focus,
   position: absolute;
   z-index: var(--z-dropdown);
   min-width: 180px;
-  background-color: var(--layer-02);
-  border: 1px solid var(--border-subtle);
+  background-color: var(--lvl-03);
+  border: 1px solid var(--lvl-03-border);
   box-shadow: var(--elevation-context);
   padding: 4px 0;
   animation: menuPopIn var(--transition-fast);
@@ -1241,7 +1270,7 @@ textarea:focus,
   border: 0;
   height: 1px;
   margin: 4px 0;
-  background-color: var(--border-subtle);
+  background-color: var(--lvl-03-border);
 }
 
 /* --- Menu Items --- */
@@ -1296,7 +1325,7 @@ textarea:focus,
 .dropdown__item:hover,
 .context-item:hover,
 .context-menu__item:hover {
-  background-color: color-mix(in srgb, var(--layer-03, var(--gray-70)), white 10%);
+  background-color: var(--lvl-04);
   color: var(--text-primary);
 }
 
@@ -1305,7 +1334,7 @@ textarea:focus,
 .dropdown__item:active,
 .context-item:active,
 .context-menu__item:active {
-  background-color: color-mix(in srgb, var(--layer-03, var(--gray-70)), white 20%);
+  background-color: var(--lvl-03);
 }
 
 .dropdown__item--meta {
@@ -1316,7 +1345,7 @@ textarea:focus,
 
 .dropdown__item--meta:hover,
 .dropdown__item--meta:active {
-  background-color: transparent;
+  background-color: var(--lvl-04);
   color: var(--text-secondary);
 }
 
@@ -1359,11 +1388,7 @@ textarea:focus,
   min-width: 0;
   text-align: left;
 
-  /* Inherits from the contextual layers we set up in the main input CSS */
-  background-color: var(--field-bg);
-  border: 1px solid transparent;
-  /*border-bottom: 1px solid var(--field-border-bottom);*/
-  color: var(--text-primary);
+  /* Geometry and Colors inherited from SHARED BASE in Section 1 */
 }
 
 .select-trigger:disabled {
