@@ -4,10 +4,13 @@
 @import "layout.css";
 
 /* Core UI primitives (buttons, cards, headers, icons, toast, loading) */
-@import "components/_primitives.css";
+@import "button.css";
+@import "form.css";
+@import "dropdown.css";
+@import "primitives.css";
 
 /* Schedule view (grid, nav, panels, agenda) */
-@import "components/_schedule.css";
+@import "schedule.css";
 
 /* Modals and Forms (envelope, notes, calculator) */
-@import "components/_modals.css";
+@import "modals.css";

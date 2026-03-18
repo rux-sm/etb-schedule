@@ -95,9 +95,6 @@
   color: var(--text-primary);
 }
 
-.c-header.c-header--modal .form-control {
-  width: auto;
-}
 
 .modal__body {
   flex: 1 1 auto;
@@ -152,25 +149,6 @@
   max-width: calc(95ch + 2 * 12px + 2 * 12px);
 }
 
-.modal--itinerary .modal__body textarea {
-  flex: 1 1 auto;
-  min-height: 0;
-  width: 100%;
-  resize: none;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 8px 12px;
-  font-family: var(--font-mono);
-  font-size: 0.875rem;
-  line-height: 1.5;
-  letter-spacing: normal;
-  font-variant-numeric: normal;
-  white-space: pre-wrap;
-  color: var(--text-secondary);
-  background: var(--layer-03);
-  border: 1px solid var(--border);
-  border-radius: 0;
-}
 
 /* --- Variants: Trip Details Modal --- */
 .modal--trip-details .modal__card {
@@ -463,16 +441,6 @@
   }
 }
 
-/* Modal specific inputs */
-#itineraryModalField {
-  text-align: center;
-}
-
-#itineraryModalField:focus {
-  outline: none;
-  border-color: var(--color-accent);
-  box-shadow: var(--focus-ring);
-}
 
 /* --- Trip Details: content structure (BEM: .trip-details__*) --- */
 /* Wrapper: flex column for status grid + divider + scroll block */
@@ -530,13 +498,6 @@
   word-break: break-word;
 }
 
-.trip-details__meta-grid .toggle-pill-grid-label {
-  grid-column: auto;
-  margin-bottom: 0;
-  font-size: 0.6875rem;
-  letter-spacing: 0.04em;
-  text-transform: none;
-}
 
 .detail-value.status-pending,
 .trip-details__value.status-pending {
@@ -563,33 +524,6 @@
   margin-top: 8px;
 }
 
-/* Scrollable read-only itinerary block (manifest text); same look as Itinerary textarea */
-.detail-text.detail-itinerary-scroll,
-.trip-details__itinerary-scroll {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  overflow-x: auto;
-  font-family: var(--font-mono);
-  font-size: 0.875rem;
-  white-space: pre;
-  color: var(--text-secondary);
-  background: var(--layer-03);
-  padding: 12px;
-  line-height: 1.5;
-  letter-spacing: normal;
-  font-variant-numeric: normal;
-  border: 1px solid var(--border);
-  border-radius: 0;
-  text-align: center;
-  width: 100%;
-  max-width: 100%;
-
-  @media (max-width: 899px) {
-    min-height: 120px;
-    font-size: 11px;
-  }
-}
 
 /* Focus states handled by global focus rules */
 

@@ -1,0 +1,349 @@
+
+/* ==========================================================================
+   MISC UTILITIES
+   ========================================================================== */
+
+.bus-icons {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  transform: translateX(-50%);
+}
+
+/* ==========================================================================
+   5-COMPONENTS / BADGES
+   Small status indicators and counters
+   ========================================================================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 400;
+  border-radius: 0px;
+  height: 24px;
+  line-height: normal;
+  letter-spacing: 0;
+  vertical-align: middle;
+}
+
+.badge--primary {
+  text-shadow: var(--text-shadow);
+}
+
+.icon-bus--sleeper {
+  color: var(--bus-sleeper-color);
+  text-shadow: var(--text-shadow);
+  font-size: var(--icon-bus-size, 18px);
+  font-variation-settings:
+    "FILL" var(--icon-bus-fill, 1),
+    "opsz" var(--icon-bus-opsz, 20);
+}
+
+.icon-bus--lift {
+  color: var(--bus-lift-color);
+  text-shadow: var(--text-shadow);
+  font-size: var(--icon-bus-size, 18px);
+  font-variation-settings:
+    "FILL" var(--icon-bus-fill, 1),
+    "opsz" var(--icon-bus-opsz, 20);
+}
+
+/* ── 2. Trip Bar Req Icons ────────────────────────────────── */
+.icon-req {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tripbar-mini-badge);
+  height: var(--tripbar-mini-badge);
+  min-width: var(--tripbar-mini-badge);
+  min-height: var(--tripbar-mini-badge);
+  font-size: var(--icon-tripbar-size, 14px);
+  line-height: 1;
+  font-variation-settings:
+    "FILL" var(--icon-tripbar-fill, 1),
+    "opsz" var(--icon-tripbar-opsz, 20);
+  color: color-mix(in srgb, var(--text-primary) 100%, white);
+  text-shadow: var(--text-shadow);
+  background: transparent;
+  border-radius: var(--tripbar-badge-radius);
+}
+
+/* ── 3. Status Mini-Badge (container) ─────────────────────── */
+.icon-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--icon-status-size, 14px);
+  height: var(--icon-status-size, 14px);
+  min-width: var(--icon-status-size, 14px);
+  min-height: var(--icon-status-size, 14px);
+  flex-shrink: 0;
+  border-radius: var(--tripbar-badge-radius);
+  text-shadow: var(--text-shadow);
+}
+
+/* ── 4. Badge Glyph (icon inside a status badge) ──────────── */
+.icon-badge-glyph {
+  display: block;
+  font-size: var(--icon-tripbar-size, 14px);
+  line-height: 1;
+  font-variation-settings:
+    "FILL" var(--icon-tripbar-fill, 1),
+    "opsz" var(--icon-tripbar-opsz, 20);
+}
+
+/* ── 5. Invoice Badge Text ────────────────────────────────── */
+.icon-invoice-text {
+  font-size: 12px;
+  font-weight: 400;
+  font-family: var(--font-mono);
+  line-height: 14px;
+  letter-spacing: 0.02em;
+  text-shadow: var(--text-shadow);
+  width: auto;
+  min-width: 48px;
+  min-height: var(--tripbar-mini-badge);
+  padding: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  box-sizing: border-box;
+}
+
+/* ── 6. Continuation Arrow (trip bar extends past week) ────── */
+.icon-arrow,
+.schedule-grid__trip-bar.cont-left::before,
+.schedule-grid__trip-bar.cont-right::after {
+  font-family: "Material Symbols Outlined";
+  font-size: var(--icon-arrow-size, 1.125rem);
+  font-variation-settings:
+    "FILL" var(--icon-tripbar-fill, 1),
+    "opsz" var(--icon-tripbar-opsz, 20);
+  line-height: 1;
+  position: absolute;
+  top: 48%;
+  color: color-mix(in srgb, var(--alert-yel) 100%, white);
+  transform: translateY(-50%);
+  text-shadow: var(--text-shadow);
+}
+
+.icon-arrow--left,
+.schedule-grid__trip-bar.cont-left::before {
+  inset-inline-start: var(--icon-arrow-offset, 4px);
+  animation: arrow-left-bounce 0.75s infinite ease-in-out;
+}
+
+.icon-arrow--right,
+.schedule-grid__trip-bar.cont-right::after {
+  inset-inline-end: var(--icon-arrow-offset, 4px);
+  animation: arrow-right-bounce 0.75s infinite ease-in-out;
+}
+
+/* ==========================================================================
+   5-COMPONENTS / CARDS
+   Base card component and its internal elements (BEM)
+   ========================================================================== */
+
+.c-card {
+  background: var(--layer-02);
+  min-width: 0;
+  border-inline-start: none;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.c-card--compact {
+  padding: 0;
+}
+
+/* --- Shared Header Primitive (Carbon-lite scaffold) --- */
+.c-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--size-header-row);
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.c-header__title {
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.c-header__actions {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+
+/* --- Side Panel Headers (Carbon UI Shell Inspired) --- */
+.c-header.c-header--panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--size-header-row);
+  width: 100%;
+  flex-shrink: 0;
+  padding: 0 var(--space-lg);
+  border-bottom: 1px solid transparent;
+  background-color: var(--lvl-02);
+}
+
+.c-header.c-header--panel .c-header__title {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  font-size: var(--heading-2-size);
+  font-weight: var(--heading-2-weight);
+  line-height: var(--heading-2-line-height) !important;
+  letter-spacing: var(--heading-2-letter-spacing);
+  color: var(--heading-2-color);
+  white-space: nowrap;
+  text-rendering: optimizeLegibility;
+  text-shadow:
+    0px 2px 2px rgba(0, 0, 0, 1),
+    0px 4px 6px rgba(0, 0, 0, 0.8);
+}
+
+.c-header.c-header--panel .c-header__actions {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.c-header__actions span.material-symbols-outlined {
+  text-rendering: optimizeLegibility;
+  text-shadow:
+    0px 2px 2px rgba(0, 0, 0, 1),
+    0px 4px 6px rgba(0, 0, 0, 0.8);
+}
+
+.c-header.c-header--panel .c-header__action {
+  color: var(--text-primary);
+}
+
+.c-header.c-header--panel .c-header__action:hover {
+  background-color: color-mix(in srgb, var(--gra-02) 85%, white);
+}
+
+.c-header.c-header--panel .c-header__action:active {
+  background-color: var(--layer-03);
+}
+
+.c-header.c-header--panel .c-header__action[aria-pressed="true"] {
+  background-color: color-mix(in srgb, var(--gra-02) 70%, white);
+  border-bottom-color: var(--color-accent);
+}
+
+.c-card__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* Optional card footer */
+.c-card__footer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 16px;
+  margin-top: 0;
+  border-top: 1px solid transparent;
+  background: var(--lvl-02);
+  border-radius: 0;
+}
+
+.c-card__footer:empty {
+  min-height: 0;
+  padding: 4px;
+  border-top: none;
+}
+
+/* ==========================================================================
+   ACCORDION (IBM Carbon Style)
+   ========================================================================== */
+.cds-accordion {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.cds-accordion__item {
+  border-bottom: 1px solid var(--layer-02-border);
+}
+
+.cds-accordion__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 48px;
+  padding: 0 8px;
+  margin: 0;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background-color 0.11s ease;
+}
+
+.cds-accordion__heading:hover {
+  background-color: var(--lvl-03);
+}
+
+.cds-accordion__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cds-accordion__title .material-symbols-outlined {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+}
+
+.cds-accordion__arrow {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  transition: transform 0.11s ease;
+}
+
+/* Rotate chevron when expanded */
+.cds-accordion__heading[aria-expanded="true"] .cds-accordion__arrow {
+  transform: rotate(180deg);
+}
+
+.cds-accordion__content {
+  padding: 16px 8px;
+  background-color: transparent;
+}
+
+/* Utilize your existing is-hidden class */
+.cds-accordion__content.is-hidden {
+  display: none;
+}

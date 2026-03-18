@@ -2,32 +2,13 @@
    GLOBAL SELECT/OPTION & FOCUS STYLES FOR DARK THEME
    ========================================================================== */
 
-/* Style all <option> tags globally for dark theme consistency */
-option {
-  background: var(--lvl-03) !important;
-  color: var(--text-primary) !important;
-  padding: 8px 12px;
-  font-family: var(--font-sans);
-  font-size: var(--input-font-size, 0.875rem);
-}
 
 /* Global focus-visible state for select and input */
-select:focus-visible,
-input:focus-visible {
-  outline: 2px solid var(--focus-ring-color);
-  outline-offset: -2px;
-}
 /* ==========================================================================
    2-GENERIC / RESET
    Browser resets, box-sizing, custom scrollbars
    ========================================================================== */
 
-/* Global button reset */
-button {
-  all: unset;
-  box-sizing: border-box;
-  font-family: inherit;
-}
 /* ── SCROLLBARS — Hide vertical, keep horizontal where intended ───────── */
 /* Main schedule horizontal scrollbar remains visible */
 .schedule-grid-container::-webkit-scrollbar,
@@ -198,8 +179,7 @@ h6 {
 
 input,
 select,
-textarea,
-button {
+textarea {
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;

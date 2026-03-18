@@ -1,0 +1,88 @@
+/* ==========================================================================
+   DROPDOWN MENU 
+   ========================================================================== */
+
+.dropdown__menu {
+  position: absolute;
+  z-index: var(--z-dropdown);
+  min-width: 200px;
+  width: max-content;
+  padding: 8px 0;
+  margin: 2px 0 0;
+  font-size: 0.875rem;
+  text-align: left;
+  list-style: none;
+  background-color: var(--lvl-03);
+  background-clip: padding-box;
+  border: 1px solid var(--lvl-03-border);
+  border-radius: 0;
+  box-shadow: var(--elevation-3);
+  max-height: 300px;
+  overflow-y: auto;
+
+  /* Hiding scrollbar while maintaining scroll functionality */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+}
+
+/* Chrome, Safari and Opera */
+.dropdown__menu::-webkit-scrollbar {
+  display: none;
+}
+
+/* Unify dropdown__item for button, div, or any element */
+.dropdown__item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  flex-shrink: 0;
+  padding: 0 16px;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  text-align: left;
+  box-sizing: border-box;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.11s ease;
+}
+
+/* Make meta/info items visually consistent but less prominent */
+.dropdown__item--meta {
+  color: var(--text-secondary);
+  font-style: italic;
+  cursor: default;
+  background: none;
+}
+
+.dropdown__item:hover,
+.dropdown__item:focus-visible {
+  background-color: var(--lvl-04);
+  outline: none;
+}
+
+.dropdown__icon {
+  font-size: 1.125rem;
+  margin-right: 12px;
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+
+/* Force the text span to stay on a single line */
+.dropdown__item span:not(.dropdown__icon) {
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* Style all <option> tags globally for dark theme consistency */
+option {
+  background: var(--lvl-03) !important;
+  color: var(--text-primary) !important;
+  padding: 8px 12px;
+  font-family: var(--font-sans);
+  font-size: var(--input-font-size, 0.875rem);
+}
