@@ -63,8 +63,8 @@
 .o-app-layout__sidebar--left .c-card__body::-webkit-scrollbar,
 .o-app-layout__sidebar--right .c-card__body::-webkit-scrollbar,
 .o-app-layout__sidebar--right::-webkit-scrollbar,
-.o-app-layout__sidebar--left > .c-card:not(.is-hidden) .c-card__body::-webkit-scrollbar,
-.o-app-layout__sidebar--right > .c-card:not(.is-hidden) .c-card__body::-webkit-scrollbar,
+.o-app-layout__sidebar--left>.c-card:not(.is-hidden) .c-card__body::-webkit-scrollbar,
+.o-app-layout__sidebar--right>.c-card:not(.is-hidden) .c-card__body::-webkit-scrollbar,
 .agenda-header::-webkit-scrollbar,
 .modal__body::-webkit-scrollbar,
 .schedule-grid__conflict-panel .c-card__body::-webkit-scrollbar,
@@ -151,7 +151,8 @@ body {
   line-height: 1.5;
   letter-spacing: 0.02em;
   color: var(--text-primary);
-  background: var(--lvl-01); /* Base behind schedule */
+  background: var(--lvl-00);
+  /* Base behind schedule */
   transition:
     background-color 200ms ease,
     color 200ms ease;
@@ -282,16 +283,14 @@ samp {
     box-shadow:
       0 0 8px color-mix(in srgb, var(--tripbar-color) 20%, transparent),
       0 2px 8px rgba(0, 0, 0, 0.2);
-    filter: brightness(var(--tripbar-hover-brightness-from))
-      saturate(var(--tripbar-hover-saturate-from));
+    filter: brightness(var(--tripbar-hover-brightness-from)) saturate(var(--tripbar-hover-saturate-from));
   }
 
   to {
     box-shadow:
       0 0 24px color-mix(in srgb, var(--tripbar-color) 60%, transparent),
       0 6px 16px rgba(0, 0, 0, 0.5);
-    filter: brightness(var(--tripbar-hover-brightness-to))
-      saturate(var(--tripbar-hover-saturate-to));
+    filter: brightness(var(--tripbar-hover-brightness-to)) saturate(var(--tripbar-hover-saturate-to));
   }
 }
 
@@ -332,6 +331,7 @@ samp {
 }
 
 @keyframes jello {
+
   0%,
   11.1%,
   100% {
@@ -392,6 +392,7 @@ samp {
 }
 
 @keyframes arrow-left-bounce {
+
   0%,
   100% {
     transform: translate(0, -50%);
@@ -403,6 +404,7 @@ samp {
 }
 
 @keyframes arrow-right-bounce {
+
   0%,
   100% {
     transform: translate(0, -50%);
@@ -678,15 +680,9 @@ samp {
   }
 
   /* Legal print: hide itinerary, contact, driver status icons to make room for others */
-  .print-table
-    .schedule-grid__trip-bar__status-badges
-    > .schedule-grid__trip-bar__mini-badge:nth-child(3),
-  .print-table
-    .schedule-grid__trip-bar__status-badges
-    > .schedule-grid__trip-bar__mini-badge:nth-child(4),
-  .print-table
-    .schedule-grid__trip-bar__status-badges
-    > .schedule-grid__trip-bar__mini-badge:nth-child(5) {
+  .print-table .schedule-grid__trip-bar__status-badges>.schedule-grid__trip-bar__mini-badge:nth-child(3),
+  .print-table .schedule-grid__trip-bar__status-badges>.schedule-grid__trip-bar__mini-badge:nth-child(4),
+  .print-table .schedule-grid__trip-bar__status-badges>.schedule-grid__trip-bar__mini-badge:nth-child(5) {
     display: none !important;
   }
 
@@ -1040,11 +1036,13 @@ textarea,
   /* Text Tokens */
   font-size: var(--input-font-size);
   font-weight: var(--input-weight);
-  color: var(--text-primary); /* High-emphasis light text */
+  color: var(--text-primary);
+  /* High-emphasis light text */
   text-align: left;
 
   outline: none;
-  cursor: text; /* Changed from pointer to text for better UX on inputs */
+  cursor: text;
+  /* Changed from pointer to text for better UX on inputs */
 
   /* Standard transitions */
   transition:
@@ -1147,7 +1145,8 @@ textarea:focus,
   box-shadow: var(--shadow-focus), var(--shadow-inset-top);
 
   /* To mimic the "2px inset blue outline" without shifting layout: */
-  outline: 2px solid var(--blu-60); /* Your Brand Blue */
+  outline: 2px solid var(--blu-60);
+  /* Your Brand Blue */
   outline-offset: -2px;
 
   /* Ensure the background stays stable */
@@ -1216,7 +1215,7 @@ textarea:focus,
   min-width: 180px;
   background-color: var(--lvl-03);
   border: 1px solid var(--lvl-03-border);
-  box-shadow: var(--elevation-context);
+  box-shadow: var(--card-shadow-context);
   padding: 4px 0;
   animation: menuPopIn var(--transition-fast);
 }
@@ -1450,7 +1449,7 @@ select.is-empty:not(:focus),
 }
 
 /* --- 10. LABELS --- */
-.form-group > label,
+.form-group>label,
 .field-label {
   display: block;
   width: 100%;
@@ -1525,13 +1524,14 @@ select.is-empty:not(:focus),
   width: 100%;
 }
 
-.form-actions > .btn {
+.form-actions>.btn {
   flex: 1;
   min-width: 80px;
   justify-content: center;
 }
 
 @container form-grid (max-width: 350px) {
+
   .col-2,
   .col-4,
   .col-5,
@@ -1550,6 +1550,7 @@ select.is-empty:not(:focus),
 }
 
 @media (max-width: 600px) {
+
   .form-grid .col-2,
   .form-grid .col-4,
   .form-grid .col-5,

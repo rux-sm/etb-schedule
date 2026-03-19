@@ -1,21 +1,32 @@
 :root {
   color-scheme: dark;
 
-  --gra-00: hsl(210, 3%, 0%);   /* OLED Floor: Deepest shadows, modal underlays, or true black app background. */
-  --gra-01: hsl(210, 3%, 8%);   /* Main Schedule Canvas: The dark base for your calendar grid. */
-  --gra-02: hsl(210, 3%, 13%);  /* Elevated Panels: Trip Editor sidebar background. Gives a seamless "floating" feel. */
-  
+  --gra-00: hsl(210, 5%, 0%);
+  /* OLED Floor: Deepest shadows, modal underlays, or true black app background. */
+  --gra-01: hsl(210, 5%, 6%);
+  /* Main Schedule Canvas: The dark base for your calendar grid. */
+  --gra-02: hsl(210, 5%, 12%);
+  /* Elevated Panels: Trip Editor sidebar background. Gives a seamless "floating" feel. */
+
   /* --- THE STRUCTURE (Borders & Interactive Elements) --- */
-  --gra-03: hsl(210, 3%, 16%);  /* Ghost Dividers: Subtle calendar grid lines and standard input field borders. */
-  --gra-04: hsl(210, 3%, 24%);  /* High Elevation & Hovers: Dropdown menu backgrounds, text input fill, button hover states. */
-  
+  --gra-03: hsl(210, 5%, 12%);
+  /* Ghost Dividers: Subtle calendar grid lines and standard input field borders. */
+  --gra-04: hsl(210, 5%, 24%);
+  /* High Elevation & Hovers: Dropdown menu backgrounds, text input fill, button hover states. */
+
   /* --- THE TYPOGRAPHY (Icons & Text Hierarchy) --- */
-  --gra-05: hsl(210, 2%, 39%);  /* Muted/Disabled: Placeholder text in forms, inactive icons, disabled "Save" buttons. */
-  --gra-06: hsl(210, 2%, 56%);  /* The Mid-Gray Anchor: Form field labels (e.g., "Comments", "Notes") that shouldn't distract. */
-  --gra-07: hsl(210, 2%, 75%);  /* Secondary Info: Bus numbers (218, 763), times (3:00 AM), and sub-labels. Passes WCAG AA. */
-  --gra-08: hsl(210, 2%, 88%);  /* Soft Emphasis: Hover states for secondary text or icons. */
-  --gra-09: hsl(210, 2%, 94%);  /* Off-White Text: Great for primary text that needs to avoid blooming on dark backgrounds. */
-  --gra-10: hsl(210, 2%, 100%); /* Absolute White: High-priority headings, active trip titles, and primary icons. */
+  --gra-05: hsl(210, 5%, 39%);
+  /* Muted/Disabled: Placeholder text in forms, inactive icons, disabled "Save" buttons. */
+  --gra-06: hsl(210, 5%, 56%);
+  /* The Mid-Gray Anchor: Form field labels (e.g., "Comments", "Notes") that shouldn't distract. */
+  --gra-07: hsl(210, 5%, 75%);
+  /* Secondary Info: Bus numbers (218, 763), times (3:00 AM), and sub-labels. Passes WCAG AA. */
+  --gra-08: hsl(210, 5%, 88%);
+  /* Soft Emphasis: Hover states for secondary text or icons. */
+  --gra-09: hsl(210, 5%, 94%);
+  /* Off-White Text: Great for primary text that needs to avoid blooming on dark backgrounds. */
+  --gra-10: hsl(210, 5%, 100%);
+  /* Absolute White: High-priority headings, active trip titles, and primary icons. */
 
 
   --lvl-00: var(--gra-00);
@@ -26,7 +37,7 @@
   --lvl-05: var(--gra-05);
 
   --lvl-00-border: var(--gra-01);
-  --lvl-01-border: var(--gra-02);
+  --lvl-01-border: var(--gra-03);
   --lvl-02-border: var(--gra-03);
   --lvl-03-border: var(--gra-04);
   --lvl-04-border: var(--gra-05);
@@ -36,23 +47,49 @@
   --field-bg-hover: var(--gra-02);
   --field-border: var(--gra-03);
 
-  --field-shadow-inset: 
-    inset 0 2px 4px rgba(0, 0, 0, 0.6), /* Deeper internal shadow at the top */
-    0 1px 0 rgba(255, 255, 255, 0.12);  /* Subtle light catching the bottom outside lip */
+  --field-shadow-inset:
+    inset 0 2px 4px rgba(0, 0, 0, 0.9),
+    /* Deeper internal shadow at the top */
+    0 1px 0 rgba(255, 255, 255, 0.12);
+  /* Subtle light catching the bottom outside lip */
 
-/* Base 3D Button Drop Shadow */
-  --btn-shadow-inset: 
-    0 4px 6px rgba(0, 0, 0, 0.6), 
+  /* Base 3D Button Drop Shadow */
+  --btn-shadow-inset:
+    0 4px 6px rgba(0, 0, 0, 0.9),
     inset 0 1px 0 rgba(255, 255, 255, 0.12);
 
-  /* The "Pressed" Physical State (Solid Buttons) */
-  --btn-shadow-active: 
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12), 
-    inset 0 3px 6px rgba(0, 0, 0, 0.6);
-
   /* The "Soft Pressed" State (Ghost Buttons / Toggles) */
-  --btn-ghost-shadow-active: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+  --btn-shadow-active:
+    inset 0 3px 6px rgba(0, 0, 0, 0.9),
+    /* Deeper dark shadow at the top inside */
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  /* Faint light catching the bottom inside lip */
 
+  --btn-ghost-shadow-active: inset 0 2px 4px rgba(0, 0, 0, 0.9);
+
+  /* Base 3D Card Drop Shadow */
+  --card-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+
+  /* Card Hover */
+  --card-shadow-hover:
+    0 8px 24px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+  /* Context/Dropdown (Highest Elevation) */
+  --card-shadow-context:
+    0 12px 32px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+
+  /* Directional Shadows for Sidebars */
+  --card-shadow-left:
+    -8px 4px 12px -4px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+
+  --card-shadow-right:
+    8px 4px 12px -4px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
 
   /* Primary (Action/Save) */
   --btn-primary-bg: var(--blu-60);
@@ -65,8 +102,10 @@
   /* Secondary (Cancel/Structural) */
   --btn-secondary-bg: var(--gra-04);
   --btn-secondary-text: var(--gra-10);
-  --btn-secondary-hover: color-mix(in srgb, var(--gra-04) 85%, black); /* Lightens slightly to pop off dark backgrounds */
-  --btn-secondary-active: color-mix(in srgb, var(--gra-04) 70%, black); /* Drops down for the click */
+  --btn-secondary-hover: color-mix(in srgb, var(--gra-04) 85%, black);
+  /* Lightens slightly to pop off dark backgrounds */
+  --btn-secondary-active: color-mix(in srgb, var(--gra-04) 70%, black);
+  /* Drops down for the click */
   --btn-secondary-disabled: var(--lvl-02);
   --btn-secondary-border: transparent;
 
@@ -81,28 +120,34 @@
   /* Ghost Buttons (Pagination, standard icon buttons) */
   --btn-ghost-bg: transparent;
   --btn-ghost-text: var(--text-primary);
-  --btn-ghost-hover-bg: color-mix(in srgb, var(--white) 10%, transparent);
-  --btn-ghost-active-bg: color-mix(in srgb, var(--white) 20%, transparent);
+  --btn-ghost-hover-bg: color-mix(in srgb, var(--gra-10) 10%, transparent);
+  --btn-ghost-active-bg: color-mix(in srgb, var(--gra-10) 20%, transparent);
 
   /* Control Buttons (Toolbar) */
-  --btn-toolbar-hover-bg: color-mix(in srgb, var(--white) 10%, transparent);
-  --btn-toolbar-active-bg: color-mix(in srgb, var(--white) 20%, transparent);
-  --btn-toolbar-shadow-hover: 0px 4px 12px rgba(0, 0, 0, 0.6);
-  --btn-toolbar-shadow-active: none;
+  --btn-toolbar-hover-bg: color-mix(in srgb, var(--gra-10) 10%, transparent);
+  --btn-toolbar-active-bg: color-mix(in srgb, var(--gra-10) 20%, transparent);
+
+  /* Maps directly to your global physical system */
+  --btn-toolbar-shadow-hover: var(--btn-shadow-inset);
+  --btn-toolbar-shadow-active: var(--btn-ghost-shadow-active);
 
   /* Header Action Buttons */
-  --header-action-bg: var(--gra-03); /* Swapped var(--gray-90) to your custom gray palette */
-  --header-action-hover-bg: color-mix(in srgb, var(--gra-03) 85%, white); /* Lightens base background */
+  --header-action-bg: var(--gra-03);
+  /* Swapped var(--gray-90) to your custom gray palette */
+  --header-action-hover-bg: color-mix(in srgb, var(--gra-03) 85%, white);
+  /* Lightens base background */
   --header-action-active-bg: color-mix(in srgb, var(--gra-03) 70%, white);
   --header-action-color: var(--white);
 
   /* Toggle Pills / Requirements Tiles */
-  --toggle-pill-bg: var(--gra-04); /* Swapped var(--layer-03) to your custom gray palette */
+  --toggle-pill-bg: var(--gra-04);
+  /* Swapped var(--layer-03) to your custom gray palette */
   --toggle-pill-border: transparent;
   --toggle-pill-text: var(--text-secondary);
   --toggle-pill-hover-bg: color-mix(in srgb, var(--gra-02) 85%, white);
   --toggle-pill-active-bg: var(--color-accent);
-  --toggle-pill-active-border: var(--blu-60); /* Fixed from --blue to match your palette */
+  --toggle-pill-active-border: var(--blu-60);
+  /* Fixed from --blue to match your palette */
 
 
   /* ==========================================================================
@@ -162,9 +207,9 @@
   --border-strong: var(--gray-60);
 
   --text-primary: var(--white);
-  --text-secondary: var(--gray-30);
-  --text-placeholder: var(--gray-40);
-  --text-disabled: var(--gray-50);
+  --text-secondary: var(--gra-07);
+  --text-placeholder: var(--gra-05);
+  --text-disabled: var(--gra-05);
   --header-seperator: var(--border-default);
 
   /* ==========================================================================
@@ -261,9 +306,6 @@
    * Shadows, overlays, text-shadows
    * ========================================================================== */
 
-  --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.4);
-  --elevation-hover: 0 10px 20px rgba(0, 0, 0, 0.4), 0 6px 6px rgba(0, 0, 0, 0.5);
-  --elevation-context: 0 4px 12px rgba(0, 0, 0, 0.3);
   --text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   --overlay-hover: rgba(0, 0, 0, 0.05);
 
@@ -298,7 +340,7 @@
   --tripbar-height: 100px;
   --tripbar-radius: 0px;
   --tripbar-lane-step: 0px;
-  --tripbar-bg-mix-percent: 25%;
+  --tripbar-bg-mix-percent: 20%;
   --tripbar-text-shadow: 0 1px 2px rgba(0, 0, 0, 1);
 
   --tripbar-color: var(--blu-50);
@@ -436,10 +478,6 @@
   --bus-accent-color: var(--layer-02);
   --sync-progress: 0%;
   --waiting-list-dynamic-height: var(--schedule-row-height);
-
-  --elevation-1: 0 2px 4px rgba(0, 0, 0, 0.05);
-  --elevation-hover: 0 8px 16px rgba(0, 0, 0, 0.1);
-  --text-shadow: none;
 
   --overlay-hover: rgba(0, 0, 0, 0.04);
   --tripbar-bg-mix-percent: 15%;

@@ -1,40 +1,40 @@
 /* ==========================================================================
-   BUTTONS & CONTROLS (Consolidated)
+   BUTTONS & CONTROLS (Consolidated & Organized)
    ========================================================================== */
 
-/* Global button reset */
+/* ── 1. Resets & Core Base ──────────────────────────────────────────────── */
+
 button {
   all: unset;
   box-sizing: border-box;
   font-family: inherit;
 }
 
-/* ── 1. Base Button & Control Styles ────────────────────────────────────── */
-
-.btn {
+.btn,
+.toggle-pill {
   /* Layout */
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px; /* Replaces margin-right on the icon */
-  
-  height: var(--input-height, 40px);
-  min-width: var(--btn-min-width, 80px);
-  padding: 0 var(--btn-padding-x, 16px);
-  
+  gap: 8px;
+  height: 32px;
+  padding: 0 16px;
+
   /* Typography */
   font-family: var(--font-sans);
-  font-size: 0.875rem;
+  font-size: 14px;
   font-weight: 400;
   line-height: 1;
   text-decoration: none;
   white-space: nowrap;
-  
+  user-select: none;
+  -webkit-user-select: none;
+
   /* Visuals */
   border: 1px solid transparent;
-  border-radius: 0px; 
+  border-radius: 0px;
   cursor: pointer;
-  
+
   /* Transitions */
   transition:
     background-color var(--transition-fast),
@@ -44,7 +44,11 @@ button {
     transform var(--transition-fast);
 }
 
-/* ── 2. Focus & Icon Utilities ──────────────────────────────────────────── */
+.btn {
+  min-width: var(--btn-min-width, 80px);
+}
+
+/* ── 2. Focus, Icons & Global States ────────────────────────────────────── */
 
 .btn:focus-visible,
 .toggle-pill:focus-visible,
@@ -55,21 +59,30 @@ button {
 }
 
 .btn .material-symbols-outlined,
-.toggle-pill__icon {
+.toggle-pill__icon,
+.c-header__action .material-symbols-outlined {
   font-size: 18px;
   font-weight: 400;
-  line-height: 1; /* Locks the icon height to its exact font-size */
-  
-  /* Material Symbols Font Controls */
-  font-weight: var(--btn-icon-wght, 400); /* Fallback */
+  line-height: 1;
   font-variation-settings:
     'FILL' var(--btn-icon-fill, 0),
     'wght' var(--btn-icon-wght, 400),
-    'GRAD' var(--btn-icon-grad, -25), /* Negative slant for better readability at small sizes */
-    'opsz' var(--btn-icon-opsz, 20); /* I see you use 20 opsz elsewhere! */
+    'GRAD' var(--btn-icon-grad, -25),
+    'opsz' var(--btn-icon-opsz, 20);
 }
 
-/* ── 3. Primary Variants ────────────────────────────────────────────────── */
+.btn:disabled,
+.btn[aria-disabled="true"],
+.toggle-pill:disabled,
+.toggle-pill[aria-disabled="true"] {
+  background-color: var(--lvl-02) !important;
+  color: var(--text-disabled) !important;
+  box-shadow: none !important;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── 3. Core Button Variants ────────────────────────────────────────────── */
 
 /* Primary (Save, Copy Summary) */
 .btn--primary {
@@ -77,23 +90,27 @@ button {
   color: var(--btn-primary-text);
   box-shadow: var(--btn-shadow-inset);
 }
+
 .btn--primary:hover {
   background-color: var(--btn-primary-hover);
 }
+
 .btn--primary:active {
   background-color: var(--btn-primary-active);
-  /* Replaces 'none' with the physical pushed-in shadow */
   box-shadow: var(--btn-shadow-active);
 }
+
 /* Secondary (Cancel, Clear) */
 .btn--secondary {
   background-color: var(--btn-secondary-bg);
   color: var(--btn-secondary-text);
   box-shadow: var(--btn-shadow-inset);
 }
+
 .btn--secondary:hover {
   background-color: var(--btn-secondary-hover);
 }
+
 .btn--secondary:active {
   background-color: var(--btn-secondary-active);
   box-shadow: var(--btn-shadow-active);
@@ -101,165 +118,101 @@ button {
 
 /* Danger (Delete) */
 .btn--danger {
-  background-color: var(--btn-danger-bg); /* Fixed bug: was using active token */
+  background-color: var(--btn-danger-bg);
   color: var(--btn-danger-text);
   box-shadow: var(--btn-shadow-inset);
 }
+
 .btn--danger:hover {
   background-color: var(--btn-danger-hover);
 }
+
 .btn--danger:active {
   background-color: var(--btn-danger-active);
   box-shadow: var(--btn-shadow-active);
 }
 
-/* ── 4. Size Modifiers ──────────────────────────────────────────────────── */
-
+/* Size Modifiers */
 .btn--compact {
   height: var(--btn-compact-height);
   min-width: 0;
   padding: 0 var(--btn-compact-padding-x);
 }
 
-/* ── 5. Specialized Buttons (Pagination, Toolbar) ───────────────────────── */
+/* ── 4. Specialized Components ──────────────────────────────────────────── */
 
+/* Toolbar & Pagination Shared logic */
+.btn--toolbar,
 .btn--icon-pagination {
-  width: var(--btn-pagination-size);
-  height: var(--btn-pagination-size);
-  min-width: 0;
-  padding: 0;
-  border: none;
-  background-color: var(--btn-ghost-bg);
-  color: var(--btn-ghost-text);
   text-rendering: optimizeLegibility;
   text-shadow: 0px 2px 2px rgba(0, 0, 0, 1), 0px 4px 6px rgba(0, 0, 0, 0.8);
 }
-.btn--icon-pagination:hover {
-  background-color: var(--btn-ghost-hover-bg);
-}
-.btn--icon-pagination:active {
-  background-color: var(--btn-ghost-active-bg);
-}
-.btn--icon-pagination .material-symbols-outlined {
-  margin-right: 0;
-}
 
+/* Toolbar Buttons */
 .btn--toolbar {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: var(--btn-toolbar-height);
-  min-width: var(--btn-toolbar-min-width);
-  padding-inline: var(--btn-toolbar-padding-x);
+  height: 32px;
+  min-width: 80px;
+  padding: 0 16px;
   background-color: var(--btn-ghost-bg);
   border: 1px solid var(--btn-toolbar-border);
-  color: var(--btn-ghost-text);
-  font-size: var(--btn-toolbar-font-size);
-  text-rendering: optimizeLegibility;
-  text-shadow: 0px 2px 2px rgba(0, 0, 0, 1), 0px 4px 6px rgba(0, 0, 0, 0.8);
+  color: var(--primary-text);
+  font-size: 14px;
 }
+
 .btn--toolbar:hover {
-  background-color: var(--btn-toolbar-hover-bg);
+  background-color: var(--btn-ghost-hover-bg);
   box-shadow: var(--btn-toolbar-shadow-hover);
 }
+
 .btn--toolbar:active {
   background-color: var(--btn-toolbar-active-bg);
   box-shadow: var(--btn-toolbar-shadow-active);
 }
+
 .btn--toolbar .material-symbols-outlined {
   font-size: var(--btn-toolbar-icon-size);
   margin-right: 0;
   line-height: 1;
 }
 
-/* ── 6. Disabled State ──────────────────────────────────────────────────── */
-
-.btn:disabled,
-.btn[aria-disabled="true"] {
-  background-color: var(--lvl-02) !important;
-  color: var(--text-disabled) !important;
+/* Pagination Buttons - Base (Resting / Flat) */
+.btn--icon-pagination {
+  width: 32px;
+  height: 32px;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background-color: var(--btn-ghost-bg);
+  color: var(--btn-ghost-text);
   box-shadow: none;
-  cursor: not-allowed;
-  pointer-events: none;
+  /* Explicitly flat */
+  transition: all var(--transition-fast);
 }
 
-/* ==========================================================================
-   REQUIREMENTS TOGGLES (.toggle-pill)
-   Carbon Tertiary/Ghost Button Logic
-   ========================================================================== */
-
-.toggle-pill {
-  /* Layout */
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px; 
-  height: var(--input-height, 40px);
-  padding: 0 var(--btn-padding-x, 16px); 
-  
-  /* Typography */
-  font-family: var(--font-sans); 
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1; 
-  white-space: nowrap; 
-  user-select: none;
-  -webkit-user-select: none;
-  
-  /* Visuals */
-  border-radius: 0px;
-  cursor: pointer;
-  background-color: var(--toggle-pill-bg); /* FIXED */
-  color: var(--toggle-pill-text);
-  border: 1px solid var(--toggle-pill-border); 
+/* Hover (Raised / Materialized) */
+.btn--icon-pagination:hover {
+  background-color: var(--btn-ghost-hover-bg);
+  /* Uses your standard inset shadow so it visually matches your primary buttons when hovered */
   box-shadow: var(--btn-shadow-inset);
-  
-  /* Transitions */
-  transition: 
-    background-color var(--transition-fast), 
-    border-color var(--transition-fast), 
-    color var(--transition-fast), 
-    box-shadow var(--transition-fast);
 }
 
-/* ── Toggle Pill States ────────────────────────────────────────────────── */
-
-.toggle-pill:hover {
-  background-color: color-mix(in srgb, var(--toggle-pill-bg) 85%, black);
-  color: var(--gra-10);
+/* Active (Pressed / Depressed) */
+.btn--icon-pagination:active {
+  background-color: var(--btn-ghost-active-bg);
+  /* Pulls the dedicated ghost active shadow you already defined in variables.css */
+  box-shadow: var(--btn-ghost-shadow-active);
 }
 
-.toggle-pill[aria-pressed="true"],
-.toggle-pill.is-active {
-  background-color: var(--toggle-pill-active-bg); 
-  border-color: transparent; /* FIXED: Removes fuzzy halo */
-  color: var(--gra-10);
-  
-  /* FIXED: All shadows combined into one physical "pressed" effect */
-  box-shadow: var(--btn-shadow-active);    /* 2. Deep inner shadow pressing it into the screen */
-  
-  /* Fill the icon to show it is "occupied" */
-  --btn-icon-fill: 1; 
+.btn--icon-pagination .material-symbols-outlined {
+  margin-right: 0;
 }
 
-/* ── Icon Behavior ─────────────────────────────────────────────────────── */
-
-.toggle-pill .toggle-pill__icon {
-  opacity: 0.7;
-  transition: opacity var(--transition-fast), font-variation-settings var(--transition-fast);
-}
-
-.toggle-pill:hover .toggle-pill__icon,
-.toggle-pill[aria-pressed="true"] .toggle-pill__icon,
-.toggle-pill.is-active .toggle-pill__icon {
-  opacity: 1;
-}
-
-/* ── Header Action Buttons (Carbon-ish) ────────────────────────────────── */
-
+/* Header actions (Carbon style) */
 .c-header__action {
-  all: unset;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -278,11 +231,11 @@ button {
 }
 
 .c-header__action:hover {
-  background-color: var(--layer-03);
+  background-color: var(--lvl-03);
 }
 
 .c-header__action:active {
-  background-color: var(--layer-01);
+  background-color: var(--lvl-02);
 }
 
 .c-header__action[aria-pressed="true"] {
@@ -290,10 +243,59 @@ button {
 }
 
 .c-header__action .material-symbols-outlined {
-  font-variation-settings:
-    "FILL" 0,
-    "wght" 400,
-    "GRAD" 0,
-    "opsz" 200;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 200;
   font-size: 20px;
+}
+
+/* ── 5. Requirements Toggles (.toggle-pill) ────────────────────────────── */
+
+.toggle-pill {
+  background-color: var(--toggle-pill-bg);
+  color: var(--btn-secondary-text);
+  border: 1px solid var(--toggle-pill-border);
+  box-shadow: var(--btn-shadow-inset);
+}
+
+.toggle-pill:hover {
+  background-color: color-mix(in srgb, var(--toggle-pill-bg) 85%, black);
+  color: var(--gra-10);
+}
+
+.toggle-pill:active {
+  background-color: var(--toggle-pill-active-bg);
+  box-shadow: var(--btn-shadow-active);
+}
+
+.toggle-pill[aria-pressed="true"],
+.toggle-pill.is-active {
+  background-color: var(--toggle-pill-active-bg);
+  border-color: transparent;
+  color: var(--gra-10);
+  box-shadow: var(--btn-shadow-active);
+  --btn-icon-fill: 1;
+}
+
+/* Toggle Pill Icon Behavior */
+.toggle-pill .toggle-pill__icon {
+  opacity: 0.7;
+  transition: opacity var(--transition-fast), font-variation-settings var(--transition-fast);
+}
+
+.toggle-pill:hover .toggle-pill__icon,
+.toggle-pill:active .toggle-pill__icon,
+.toggle-pill[aria-pressed="true"] .toggle-pill__icon,
+.toggle-pill.is-active .toggle-pill__icon {
+  opacity: 1;
+}
+
+/* ── 6. Layout-Context Utilities (Mobile/Responsive) ─────────────────────── */
+
+@media (max-width: 899px) {
+  .btn--icon {
+    min-width: 32px;
+    width: 32px;
+    height: 32px;
+    position: relative;
+    z-index: 10;
+  }
 }

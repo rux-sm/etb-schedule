@@ -16,7 +16,7 @@
   background-clip: padding-box;
   border: 1px solid var(--lvl-03-border);
   border-radius: 0;
-  box-shadow: var(--elevation-3);
+  box-shadow: var(--card-shadow-context);
   max-height: 300px;
   overflow-y: auto;
 
