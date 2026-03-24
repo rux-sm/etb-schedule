@@ -5,11 +5,11 @@
   --base-01: rgb(22, 23, 26);
   --base-02: rgb(32, 33, 36);
   --base-03: rgb(42, 43, 46);
-  --base-04: rgb(53, 54, 56);
-  --base-05: rgb(63, 64, 66);
+  --base-04: rgb(72, 73, 76);
+  --base-05: rgb(73, 74, 76);
   --base-06: rgb(73, 74, 76);
   --base-07: rgb(83, 84, 86);
-  --base-08: rgb(223, 224, 226);
+  --base-08: rgb(200, 200, 200);
   --base-09: rgb(239, 240, 240);
   --base-10: rgb(255, 255, 255);
 
@@ -205,7 +205,7 @@
   --border-strong: var(--gray-60);
 
   --text-primary: var(--base-10);
-  --text-secondary: var(--base-07);
+  --text-secondary: var(--base-08);
   --text-placeholder: var(--base-05);
   --text-disabled: var(--base-05);
   --header-seperator: var(--border-default);

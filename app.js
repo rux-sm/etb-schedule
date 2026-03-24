@@ -2568,8 +2568,111 @@ function _renderAgendaInner() {
     }
   }
 
+  // ---- Handoff detection: find days where one trip ends and another begins on same bus ----
+  function snapToQuarter(frac) {
+    if (frac < 0.375) return 0.25;
+    if (frac < 0.625) return 0.50;
+    return 0.75;
+  }
+
+  function timeToFrac(timeStr) {
+    if (!timeStr) return null;
+    const [h, m] = timeStr.split(":").map(Number);
+    if (!Number.isFinite(h) || !Number.isFinite(m)) return null;
+    return (h * 60 + m) / 1440;
+  }
+
+  const busDayArrivals = {};   // "busId:dayIdx" → [{frac, tripKey, isSingleDay}]
+  const busDayDepartures = {}; // "busId:dayIdx" → [{frac, tripKey, isSingleDay}]
+
+  for (const t of visibleTrips) {
+    const tDepY = ymd(t._dep);
+    const tArrY = ymd(t._arr);
+    const tIsSD = tDepY === tArrY;
+    const tStart = tDepY < weekStart ? weekStart : tDepY;
+    const tEnd   = tArrY > weekEnd   ? weekEnd   : tArrY;
+    const tSi = weekIndex.get(tStart);
+    const tEi = weekIndex.get(tEnd);
+    if (tSi == null || tEi == null) continue;
+    const tAssigns = state.assignmentsByTripKey[String(t.tripKey)] || [];
+    for (const ta of tAssigns) {
+      const tBusId = String(ta.busId || "").trim();
+      if (!tBusId || tBusId === "WAITING_LIST") continue;
+      if (t.arrivalTime) {
+        const frac = timeToFrac(t.arrivalTime);
+        if (frac != null)
+          (busDayArrivals[`${tBusId}:${tEi}`] ||= []).push({ frac, tripKey: t.tripKey, isSingleDay: tIsSD });
+      }
+      if (t.departureTime) {
+        const frac = timeToFrac(t.departureTime);
+        if (frac != null)
+          (busDayDepartures[`${tBusId}:${tSi}`] ||= []).push({ frac, tripKey: t.tripKey, isSingleDay: tIsSD });
+      }
+    }
+  }
+
+  const handoffByBus = {};
+
+  for (const key of Object.keys(busDayArrivals)) {
+    if (!busDayDepartures[key]) continue;
+    const colonIdx = key.lastIndexOf(":");
+    const hBusId = key.slice(0, colonIdx);
+    const dayIdx = Number(key.slice(colonIdx + 1));
+    const arrs = busDayArrivals[key];
+    const deps = busDayDepartures[key];
+
+    let bestArrFrac = -Infinity, bestArrIsSD = false, bestArrTripKey = null;
+    let bestDepFrac = Infinity,  bestDepIsSD = false, bestDepTripKey = null;
+    let hasValidPair = false;
+
+    for (const arr of arrs) {
+      for (const dep of deps) {
+        if (arr.tripKey === dep.tripKey) continue; // skip self-match (single-day trips)
+        if (arr.frac > dep.frac) continue;          // times overlap — not a handoff
+        hasValidPair = true;
+        if (arr.frac > bestArrFrac) { bestArrFrac = arr.frac; bestArrIsSD = arr.isSingleDay; bestArrTripKey = arr.tripKey; }
+        if (dep.frac < bestDepFrac) { bestDepFrac = dep.frac; bestDepIsSD = dep.isSingleDay; bestDepTripKey = dep.tripKey; }
+      }
+    }
+    if (!hasValidPair) continue;
+
+    let arrFrac = snapToQuarter(bestArrFrac);
+    let depFrac = snapToQuarter(bestDepFrac);
+
+    if (bestArrIsSD && bestDepIsSD) {
+      arrFrac = 0.5; depFrac = 0.5;
+    } else if (bestArrIsSD) {
+      arrFrac = 0.75; depFrac = Math.max(depFrac, 0.75);
+    } else if (bestDepIsSD) {
+      depFrac = 0.25; arrFrac = Math.min(arrFrac, 0.25);
+    } else if (arrFrac > depFrac) {
+      arrFrac = 0.5; depFrac = 0.5;
+    }
+
+    handoffByBus[hBusId] ||= {};
+    handoffByBus[hBusId][dayIdx] = { arrFrac, depFrac, arrTripKey: bestArrTripKey, depTripKey: bestDepTripKey };
+  }
+  // ---- End handoff detection ----
+
+  // Remove handoff days from synchronous conflict counts — handoff pairs don't actually conflict.
+  if (cellCounts) {
+    for (const [hBusId, days] of Object.entries(handoffByBus)) {
+      for (const [dayStr, ho] of Object.entries(days)) {
+        const key = `${hBusId}|${dayStr}`;
+        if (!cellCounts[key] || cellCounts[key] <= 1) continue;
+        const items = cellItems?.[key] || [];
+        const keep = items.filter(it => it.tripKey !== ho.arrTripKey && it.tripKey !== ho.depTripKey);
+        const removed = items.length - keep.length;
+        if (removed > 0) {
+          cellCounts[key] = Math.max(0, cellCounts[key] - removed);
+          if (cellItems) cellItems[key] = keep;
+        }
+      }
+    }
+  }
+
   const lanesByBus = {};
-  function allocateLane(busId, startIdx, endIdx) {
+  function allocateLane(busId, startIdx, endIdx, exceptDay = -1) {
     lanesByBus[busId] ||= [];
     const lanes = lanesByBus[busId];
 
@@ -2577,19 +2680,21 @@ function _renderAgendaInner() {
       const occ = lanes[li];
       let ok = true;
       for (let d = startIdx; d <= endIdx; d++) {
-        if (occ[d]) {
-          ok = false;
-          break;
-        }
+        if (d === exceptDay) continue;
+        if (occ[d]) { ok = false; break; }
       }
       if (ok) {
-        for (let d = startIdx; d <= endIdx; d++) occ[d] = true;
+        for (let d = startIdx; d <= endIdx; d++) {
+          if (d !== exceptDay) occ[d] = true;
+        }
         return li;
       }
     }
 
     const newOcc = Array(7).fill(false);
-    for (let d = startIdx; d <= endIdx; d++) newOcc[d] = true;
+    for (let d = startIdx; d <= endIdx; d++) {
+      if (d !== exceptDay) newOcc[d] = true;
+    }
     lanes.push(newOcc);
     return lanes.length - 1;
   }
@@ -2638,7 +2743,11 @@ function _renderAgendaInner() {
         rowIdx = state.busRowIndex.get(busId);
         if (rowIdx === undefined) continue;
         bars = barsByRowIdx.get(rowIdx);
-        lane = allocateLane(busId, startIdx, endIdx);
+        // If this trip is the "departing" trip in a handoff on its first day,
+        // skip that day in lane allocation so it shares lane 0 with the arriving trip.
+        const isHandoffDepTrip = depY >= weekStart &&
+          handoffByBus[busId]?.[startIdx]?.depTripKey === t.tripKey;
+        lane = allocateLane(busId, startIdx, endIdx, isHandoffDepTrip ? startIdx : -1);
       }
 
       if (!bars) continue;
@@ -3058,18 +3167,57 @@ function _renderAgendaInner() {
 
       positionBarWithinOverlay(bar, bars, col, startIdx, endIdx);
 
-      // Half-day truncation: shorten bar to 50% of last column if trip returns 4AM–11:59AM
-      const isHalfDayReturn =
-        !isActualSingleDay &&
-        isEndDay &&
-        !!arrTime &&
-        arrTime >= "04:00" &&
-        arrTime < "12:00";
-      bar.classList.toggle("half-day-return", isHalfDayReturn);
-      if (isHalfDayReturn) {
-        const currentWidth = parseFloat(bar.style.width) || 0;
-        const lastColW = col.widths[endIdx] ?? 0;
-        bar.style.width = `${Math.max(0, currentWidth - lastColW / 2)}px`;
+      // Handoff split: proportional allocation when another trip starts/ends on the same bus
+      // on this day. Takes priority over the fixed half-day logic for the shared day.
+      const busHandoff = handoffByBus[busId];
+      const endHandoff   = busHandoff?.[endIdx];
+      const startHandoff = busHandoff?.[startIdx];
+      const activeHandoffEnd   = endHandoff   && isEndDay   && endHandoff.arrTripKey   === t.tripKey;
+      const activeHandoffStart = startHandoff && isStartDay && startHandoff.depTripKey === t.tripKey;
+
+      if (activeHandoffEnd) {
+        const clip = (1 - endHandoff.arrFrac) * (col.widths[endIdx] ?? 0);
+        bar.style.width = `${Math.max(0, (parseFloat(bar.style.width) || 0) - clip)}px`;
+        bar.dataset.handoffArr = String(endHandoff.arrFrac);
+      } else {
+        delete bar.dataset.handoffArr;
+        // Half-day truncation: shorten bar to 50% of last column if trip returns 4AM–11:59AM
+        const isHalfDayReturn =
+          !isActualSingleDay &&
+          isEndDay &&
+          !!arrTime &&
+          arrTime >= "04:00" &&
+          arrTime < "12:00";
+        bar.classList.toggle("half-day-return", isHalfDayReturn);
+        if (isHalfDayReturn) {
+          const currentWidth = parseFloat(bar.style.width) || 0;
+          const lastColW = col.widths[endIdx] ?? 0;
+          bar.style.width = `${Math.max(0, currentWidth - lastColW / 2)}px`;
+        }
+      }
+
+      if (activeHandoffStart) {
+        const shift = startHandoff.depFrac * (col.widths[startIdx] ?? 0);
+        bar.style.left  = `${(parseFloat(bar.style.left) || 0) + shift}px`;
+        bar.style.width = `${Math.max(0, (parseFloat(bar.style.width) || 0) - shift)}px`;
+        bar.dataset.handoffDep = String(startHandoff.depFrac);
+      } else {
+        delete bar.dataset.handoffDep;
+        // Half-day departure: shift bar right by 50% of first column if trip departs after 6PM
+        const isHalfDayDepart =
+          !isActualSingleDay &&
+          isStartDay &&
+          !!depTime &&
+          depTime >= "18:00";
+        bar.classList.toggle("half-day-depart", isHalfDayDepart);
+        if (isHalfDayDepart) {
+          const firstColW = col.widths[startIdx] ?? 0;
+          const half = firstColW / 2;
+          const currentLeft = parseFloat(bar.style.left) || 0;
+          const currentWidth = parseFloat(bar.style.width) || 0;
+          bar.style.left = `${currentLeft + half}px`;
+          bar.style.width = `${Math.max(0, currentWidth - half)}px`;
+        }
       }
 
       /* Tooltip removed by user request (modal is used instead) */
@@ -3202,6 +3350,21 @@ function _renderAgendaInner() {
               driver2: a.driver2 && a.driver2 !== "None" ? a.driver2 : "—",
               trip: t,
             });
+          }
+        }
+      }
+
+      // Remove handoff days from deferred conflict counts
+      for (const [hBusId, days] of Object.entries(handoffByBus)) {
+        for (const [dayStr, ho] of Object.entries(days)) {
+          const key = `${hBusId}|${dayStr}`;
+          if (!cc[key] || cc[key] <= 1) continue;
+          const items = ci[key] || [];
+          const keep = items.filter(it => it.tripKey !== ho.arrTripKey && it.tripKey !== ho.depTripKey);
+          const removed = items.length - keep.length;
+          if (removed > 0) {
+            cc[key] = Math.max(0, cc[key] - removed);
+            ci[key] = keep;
           }
         }
       }
@@ -5319,16 +5482,36 @@ function buildPrintScheduleTwoPages() {
         const eidx = Number(bar.dataset.eidx);
         if (!Number.isFinite(sidx) || !Number.isFinite(eidx)) return;
         positionBarWithinOverlay(bar, bars, col, sidx, eidx, { insetL: 0, insetR: 0 });
-        // Re-apply half-day truncation after repositioning
-        if (bar.classList.contains("half-day-return")) {
+        // Re-apply handoff arrival clip (takes priority over half-day)
+        const handoffArrStr = bar.dataset.handoffArr;
+        const handoffDepStr = bar.dataset.handoffDep;
+        if (handoffArrStr) {
+          const frac = parseFloat(handoffArrStr);
+          const clip = (1 - frac) * (col.widths[eidx] ?? 0);
+          bar.style.width = `${Math.max(0, (parseFloat(bar.style.width) || 0) - clip)}px`;
+        } else if (bar.classList.contains("half-day-return")) {
           const lastColW = col.widths[eidx] ?? 0;
           const curW = parseFloat(bar.style.width) || 0;
           bar.style.width = `${Math.max(0, curW - lastColW / 2)}px`;
         }
-        const left = bar.style.left;
-        const w = bar.style.width;
-        if (left) bar.style.left = `${Math.round(parseFloat(left))}px`;
-        if (w) bar.style.width = `${Math.round(parseFloat(w))}px`;
+        // Re-apply handoff departure shift (takes priority over half-day)
+        if (handoffDepStr) {
+          const frac = parseFloat(handoffDepStr);
+          const shift = frac * (col.widths[sidx] ?? 0);
+          bar.style.left  = `${(parseFloat(bar.style.left) || 0) + shift}px`;
+          bar.style.width = `${Math.max(0, (parseFloat(bar.style.width) || 0) - shift)}px`;
+        } else if (bar.classList.contains("half-day-depart")) {
+          const firstColW = col.widths[sidx] ?? 0;
+          const half = firstColW / 2;
+          const curLeft = parseFloat(bar.style.left) || 0;
+          const curW = parseFloat(bar.style.width) || 0;
+          bar.style.left = `${curLeft + half}px`;
+          bar.style.width = `${Math.max(0, curW - half)}px`;
+        }
+        const rawLeft = parseFloat(bar.style.left) || 0;
+        const rawW = parseFloat(bar.style.width) || 0;
+        bar.style.left = `${Math.round(rawLeft)}px`;
+        bar.style.width = `${Math.round(rawW)}px`;
       });
     });
   }
@@ -5417,22 +5600,45 @@ function buildPrintScheduleTwoPages() {
   printRoot.appendChild(makeTableForRows(0, 5));
   printRoot.appendChild(makeTableForRows(5, 10));
 
-  const printCardWidth = 1320;
-  const busColWidth = 34;
-  const effectivePrintW = 1296;
-  const borderAllowance = 22;
-  const dayColTotal = effectivePrintW - busColWidth - borderAllowance;
-  const dayColWidth = dayColTotal / 7;
-  const colMetrics = {
-    starts: Array.from({ length: 7 }, (_, i) => i * dayColWidth),
-    widths: Array(7).fill(dayColWidth),
-    total: dayColWidth * 7,
-  };
+  const printCardWidth = 1440;
 
+  // Force layout before measuring so getBoundingClientRect() returns accurate values
   printRoot.classList.add("print-mode-legal");
   printRoot.classList.remove("is-hidden");
   printRoot.style.cssText = `position:absolute;left:-9999px;visibility:hidden;width:${printCardWidth}px;`;
   void printRoot.offsetHeight;
+
+  // Measure actual rendered column widths from the DOM.
+  // Use a body row (same rows where bars live) as the baseline — mirrors getColMetricsCached.
+  function measurePrintCols(table) {
+    const tbody = table?.querySelector("tbody:not([hidden])");
+    const firstBodyRow = tbody?.rows?.[0];
+    if (!firstBodyRow || firstBodyRow.cells.length < 8) return null;
+    const baseLeft = firstBodyRow.cells[1].getBoundingClientRect().left;
+    const starts = [], widths = [];
+    let total = 0;
+    for (let i = 1; i <= 7; i++) {
+      const cell = firstBodyRow.cells[i];
+      if (!cell) continue;
+      const rect = cell.getBoundingClientRect();
+      starts.push(rect.left - baseLeft);
+      widths.push(rect.width);
+      total += rect.width;
+    }
+    return starts.length === 7 ? { starts, widths, total } : null;
+  }
+
+  const firstTable = printRoot.querySelector(".print-table");
+  const colMetrics = measurePrintCols(firstTable) ?? (() => {
+    // Fallback to hard-coded values if DOM measurement fails
+    const dayColWidth = (1296 - 34 - 22) / 7;
+    return {
+      starts: Array.from({ length: 7 }, (_, i) => i * dayColWidth),
+      widths: Array(7).fill(dayColWidth),
+      total: dayColWidth * 7,
+    };
+  })();
+
   printRoot.querySelectorAll(".print-table").forEach((t) => repositionBarsForPrint(t, colMetrics));
   printRoot.style.setProperty("--print-scale", String(computePrintScale()));
   printRoot.classList.add("is-hidden");

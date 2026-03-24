@@ -843,14 +843,14 @@
    Injected via JS when printing a 2-page landscape layout
    ========================================================================== */
 .schedule-grid__row--notes {
-  height: 20px !important;
-  max-height: 20px !important;
-  min-height: 20px !important;
+  height: 24px !important;
+  max-height: 24px !important;
+  min-height: 24px !important;
   background-color: var(--white);
 }
 
 .schedule-grid__row--notes .schedule-grid__cell {
-  height: 20px !important;
+  height: 24px !important;
 }
 
 .schedule-grid__row--notes .schedule-grid__bus-cell {
@@ -1222,10 +1222,12 @@
   will-change: filter,
     box-shadow;
   background: color-mix(in srgb, var(--tripbar-color) var(--tripbar-bg-mix-percent), transparent);
-
+  backdrop-filter: blur(20px);
+  /* Required for Safari support */
+  -webkit-backdrop-filter: blur(20px);
 
   /* 3. Soften the edge */
-  border: 1px solid color-mix(in srgb, var(--tripbar-color) 0%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tripbar-color) 50%, transparent);
   border-left: 4px solid var(--tripbar-color);
 }
 
