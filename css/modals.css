@@ -206,16 +206,6 @@
   gap: 6px;
 }
 
-.picross-mode-btn {
-  min-width: 72px;
-}
-
-.picross-mode-btn.is-active {
-  background: var(--color-accent);
-  border-color: color-mix(in srgb, var(--color-accent), black 24%);
-  color: var(--white);
-}
-
 .picross-stats {
   display: inline-flex;
   flex-wrap: wrap;

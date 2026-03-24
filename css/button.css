@@ -1,5 +1,18 @@
 /* ==========================================================================
-   BUTTONS & CONTROLS (Consolidated & Organized)
+   BUTTONS & CONTROLS
+   ==========================================================================
+   Sections (in order):
+    #1  button, .btn          — element reset + shared base
+    #2  Global States         — :focus-visible  icons  :disabled
+    #3  .btn--accent          — :hover  :active
+    #4  .btn--default         — :hover  :active
+    #5  .btn--danger          — :hover  :active
+    #6  .btn--compact         — size modifier (height, padding)
+    #7  .btn--ghost           — :hover  :active
+    #8  .btn--icon            — :hover  :active  [aria-pressed]  .material-symbols-outlined
+    #9  .btn--toggle          — :hover  :active  [aria-pressed]  .is-active  __icon  -grid
+    #10 Form Actions          — .form-actions  --footer  __group
+    #11 Responsive            — @media max-width: 899px
    ========================================================================== */
 
 /* ── 1. Resets & Core Base ──────────────────────────────────────────────── */
@@ -11,7 +24,7 @@ button {
 }
 
 .btn,
-.toggle-pill {
+.btn--toggle {
   /* Layout */
   display: inline-flex;
   align-items: center;
@@ -45,25 +58,23 @@ button {
 }
 
 .btn {
+  /* Layout */
   min-width: var(--btn-min-width, 80px);
 }
 
 /* ── 2. Focus, Icons & Global States ────────────────────────────────────── */
 
 .btn:focus-visible,
-.toggle-pill:focus-visible,
-.c-header__action:focus-visible {
+.btn--toggle:focus-visible,
+.btn--icon:focus-visible {
   outline: 2px solid var(--focus-ring-color) !important;
   outline-offset: -2px !important;
   border-color: transparent !important;
 }
 
 .btn .material-symbols-outlined,
-.toggle-pill__icon,
-.c-header__action .material-symbols-outlined {
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 1;
+.btn--toggle__icon {
+  font-size: var(--btn-icon-size);
   font-variation-settings:
     'FILL' var(--btn-icon-fill, 0),
     'wght' var(--btn-icon-wght, 400),
@@ -73,8 +84,10 @@ button {
 
 .btn:disabled,
 .btn[aria-disabled="true"],
-.toggle-pill:disabled,
-.toggle-pill[aria-disabled="true"] {
+.btn--toggle:disabled,
+.btn--toggle[aria-disabled="true"],
+.btn--icon:disabled,
+.btn--icon[aria-disabled="true"] {
   background-color: var(--lvl-02) !important;
   color: var(--text-disabled) !important;
   box-shadow: none !important;
@@ -82,42 +95,46 @@ button {
   pointer-events: none;
 }
 
-/* ── 3. Core Button Variants ────────────────────────────────────────────── */
+/* ── 3. Accent (Save, Copy, Print) ──────────────────────────────────────── */
 
-/* Primary (Save, Copy Summary) */
-.btn--primary {
+.btn--accent {
+  /* Visuals */
   background-color: var(--btn-primary-bg);
   color: var(--btn-primary-text);
   box-shadow: var(--btn-shadow-inset);
 }
 
-.btn--primary:hover {
+.btn--accent:hover {
   background-color: var(--btn-primary-hover);
 }
 
-.btn--primary:active {
+.btn--accent:active {
   background-color: var(--btn-primary-active);
   box-shadow: var(--btn-shadow-active);
 }
 
-/* Secondary (Cancel, Clear) */
-.btn--secondary {
+/* ── 4. Default (Cancel, Clear) ─────────────────────────────────────────── */
+
+.btn--default {
+  /* Visuals */
   background-color: var(--btn-secondary-bg);
   color: var(--btn-secondary-text);
   box-shadow: var(--btn-shadow-inset);
 }
 
-.btn--secondary:hover {
+.btn--default:hover {
   background-color: var(--btn-secondary-hover);
 }
 
-.btn--secondary:active {
+.btn--default:active {
   background-color: var(--btn-secondary-active);
   box-shadow: var(--btn-shadow-active);
 }
 
-/* Danger (Delete) */
+/* ── 5. Danger (Delete) ─────────────────────────────────────────────────── */
+
 .btn--danger {
+  /* Visuals */
   background-color: var(--btn-danger-bg);
   color: var(--btn-danger-text);
   box-shadow: var(--btn-shadow-inset);
@@ -132,87 +149,43 @@ button {
   box-shadow: var(--btn-shadow-active);
 }
 
-/* Size Modifiers */
+/* ── 6. Compact (Size Modifier) ─────────────────────────────────────────── */
+
 .btn--compact {
+  /* Layout */
   height: var(--btn-compact-height);
   min-width: 0;
   padding: 0 var(--btn-compact-padding-x);
 }
 
-/* ── 4. Specialized Components ──────────────────────────────────────────── */
+/* ── 7. Ghost (Prev, Next, Week, Today) ─────────────────────────────────── */
 
-/* Toolbar & Pagination Shared logic */
-.btn--toolbar,
-.btn--icon-pagination {
+.btn--ghost {
+  /* Typography */
   text-rendering: optimizeLegibility;
-  text-shadow: 0px 2px 2px rgba(0, 0, 0, 1), 0px 4px 6px rgba(0, 0, 0, 0.8);
-}
+  text-shadow: var(--btn-ghost-text-shadow);
 
-/* Toolbar Buttons */
-.btn--toolbar {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  height: 32px;
-  min-width: 80px;
-  padding: 0 16px;
+  /* Visuals */
   background-color: var(--btn-ghost-bg);
-  border: 1px solid var(--btn-toolbar-border);
-  color: var(--primary-text);
-  font-size: 14px;
-}
-
-.btn--toolbar:hover {
-  background-color: var(--btn-ghost-hover-bg);
-  box-shadow: var(--btn-toolbar-shadow-hover);
-}
-
-.btn--toolbar:active {
-  background-color: var(--btn-toolbar-active-bg);
-  box-shadow: var(--btn-toolbar-shadow-active);
-}
-
-.btn--toolbar .material-symbols-outlined {
-  font-size: var(--btn-toolbar-icon-size);
-  margin-right: 0;
-  line-height: 1;
-}
-
-/* Pagination Buttons - Base (Resting / Flat) */
-.btn--icon-pagination {
-  width: 32px;
-  height: 32px;
-  min-width: 0;
-  padding: 0;
-  border: none;
-  background-color: var(--btn-ghost-bg);
+  border-color: var(--btn-ghost-border);
   color: var(--btn-ghost-text);
-  box-shadow: none;
-  /* Explicitly flat */
-  transition: all var(--transition-fast);
-}
-
-/* Hover (Raised / Materialized) */
-.btn--icon-pagination:hover {
-  background-color: var(--btn-ghost-hover-bg);
-  /* Uses your standard inset shadow so it visually matches your primary buttons when hovered */
   box-shadow: var(--btn-shadow-inset);
 }
 
-/* Active (Pressed / Depressed) */
-.btn--icon-pagination:active {
+.btn--ghost:hover {
+  background-color: var(--btn-ghost-hover-bg);
+  box-shadow: var(--btn-shadow-inset);
+}
+
+.btn--ghost:active {
   background-color: var(--btn-ghost-active-bg);
-  /* Pulls the dedicated ghost active shadow you already defined in variables.css */
-  box-shadow: var(--btn-ghost-shadow-active);
+  box-shadow: var(--btn-shadow-active-sm);
 }
 
-.btn--icon-pagination .material-symbols-outlined {
-  margin-right: 0;
-}
+/* ── 8. Nav (48×48, app header — Trip, Drivers, Settings…) ──────────────── */
 
-/* Header actions (Carbon style) */
-.c-header__action {
+.btn--icon {
+  /* Layout */
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -221,81 +194,122 @@ button {
   height: var(--size-header-action);
   min-width: var(--size-header-action);
   padding: 0;
+
+  /* Visuals */
   border: 1px solid transparent;
   border-top: 3px solid transparent;
   border-bottom: 3px solid transparent;
-  background: transparent;
+  background-color: transparent;
   color: var(--text-primary);
   cursor: pointer;
-  transition: background-color 110ms;
+  box-shadow: var(--btn-shadow-inset);
+
+  /* Transitions */
+  transition: background-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.c-header__action:hover {
+.btn--icon:hover {
   background-color: var(--lvl-03);
 }
 
-.c-header__action:active {
+.btn--icon:active {
   background-color: var(--lvl-02);
+  box-shadow: var(--btn-shadow-active-sm);
 }
 
-.c-header__action[aria-pressed="true"] {
+.btn--icon[aria-pressed="true"] {
   border-bottom-color: var(--color-accent);
 }
 
-.c-header__action .material-symbols-outlined {
-  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 200;
-  font-size: 20px;
+.btn--icon .material-symbols-outlined {
+  font-variation-settings: 'FILL' var(--btn-icon-fill, 0), 'wght' var(--btn-icon-wght, 400), 'GRAD' 0, 'opsz' 200;
+  font-size: var(--btn-icon-nav-size);
 }
 
-/* ── 5. Requirements Toggles (.toggle-pill) ────────────────────────────── */
+/* ── 9. Toggle (Requirements) ───────────────────────────────────────────── */
 
-.toggle-pill {
-  background-color: var(--toggle-pill-bg);
-  color: var(--btn-secondary-text);
-  border: 1px solid var(--toggle-pill-border);
+.btn--toggle {
+  /* Visuals */
+  background-color: var(--btn-toggle-bg);
+  color: var(--btn-toggle-text);
+  border-color: var(--btn-toggle-border);
   box-shadow: var(--btn-shadow-inset);
 }
 
-.toggle-pill:hover {
-  background-color: color-mix(in srgb, var(--toggle-pill-bg) 85%, black);
-  color: var(--gra-10);
+.btn--toggle:hover {
+  background-color: var(--btn-toggle-hover-bg);
 }
 
-.toggle-pill:active {
-  background-color: var(--toggle-pill-active-bg);
+.btn--toggle:active {
+  background-color: var(--btn-toggle-active-bg);
   box-shadow: var(--btn-shadow-active);
 }
 
-.toggle-pill[aria-pressed="true"],
-.toggle-pill.is-active {
-  background-color: var(--toggle-pill-active-bg);
+.btn--toggle[aria-pressed="true"],
+.btn--toggle.is-active {
+  background-color: var(--btn-toggle-active-bg);
   border-color: transparent;
-  color: var(--gra-10);
+  color: var(--btn-primary-text);
   box-shadow: var(--btn-shadow-active);
   --btn-icon-fill: 1;
 }
 
-/* Toggle Pill Icon Behavior */
-.toggle-pill .toggle-pill__icon {
-  opacity: 0.7;
+/* Toggle button icon */
+.btn--toggle .btn--toggle__icon {
+  opacity: var(--btn-toggle-icon-opacity);
   transition: opacity var(--transition-fast), font-variation-settings var(--transition-fast);
 }
 
-.toggle-pill:hover .toggle-pill__icon,
-.toggle-pill:active .toggle-pill__icon,
-.toggle-pill[aria-pressed="true"] .toggle-pill__icon,
-.toggle-pill.is-active .toggle-pill__icon {
+.btn--toggle:hover .btn--toggle__icon,
+.btn--toggle:active .btn--toggle__icon,
+.btn--toggle[aria-pressed="true"] .btn--toggle__icon,
+.btn--toggle.is-active .btn--toggle__icon {
   opacity: 1;
 }
 
-/* ── 6. Layout-Context Utilities (Mobile/Responsive) ─────────────────────── */
+/* Toggle button grid layout */
+.btn--toggle-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px !important;
+  margin-top: 12px;
+  padding: 0;
+}
 
-@media (max-width: 899px) {
-  .btn--icon {
-    min-width: 32px;
-    width: 32px;
-    height: 32px;
-    position: relative;
-    z-index: 10;
-  }
+/* ── 10. Form Action Containers ─────────────────────────────────────────── */
+
+.form-actions {
+  /* Layout */
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.form-actions>.btn {
+  flex: 1;
+}
+
+/* Trip editor footer: Delete (left) | Clear + Save (right) */
+.form-actions--footer {
+  /* Layout */
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 8px;
+  padding: 0;
+}
+
+.form-actions__group {
+  /* Layout */
+  display: flex !important;
+  gap: 8px;
+  width: 100%;
+}
+
+.form-actions__group .btn {
+  flex: 1;
+}
+
+.form-actions--footer>.btn--danger {
+  width: 100%;
 }

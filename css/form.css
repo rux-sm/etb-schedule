@@ -1,8 +1,8 @@
 /* ==========================================================================
-   FORM CONTROLS (Consolidated)
+   FORM CONTROLS
    ========================================================================== */
 
-/* ── 1. Global Reset & Basic Typography ───────────────────────────────── */
+/* ── 1. Reset & Typography Inheritance ──────────────────────────────────── */
 
 input,
 select,
@@ -12,22 +12,258 @@ textarea {
   line-height: inherit;
 }
 
-/* Global focus-visible state for select and input */
+/* ── 2. Shared Base Styles ───────────────────────────────────────────────── */
+/* All field types share these — carbon/pro: full border, square corners, inset shadow */
+
+input,
+select,
+textarea,
+.select-trigger {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  height: var(--input-height, 40px);
+  padding: 0 var(--input-padding-x);
+  background-color: var(--field-bg);
+  border: 1px solid var(--field-border);
+  box-shadow: var(--field-shadow-inset);
+  border-radius: 4px;
+  font-size: var(--input-font-size);
+  font-weight: var(--input-weight);
+  color: var(--text-primary);
+  text-align: left;
+  outline: none;
+  cursor: text;
+  transition:
+    background-color 0.11s cubic-bezier(0.2, 0, 0.38, 0.9),
+    border-color 0.11s,
+    box-shadow 0.11s;
+}
+
+/* ── 3. Input Type Variants ──────────────────────────────────────────────── */
+
+/* Text inputs — explicit cursor */
+input[type="text"],
+input[type="tel"],
+input[type="number"] {
+  cursor: text;
+}
+
+/* Date / Time / Number — strip native chrome */
+input[type="date"],
+input[type="time"],
+input[type="number"] {
+  appearance: none;
+}
+
+/* Calendar & time icons — white in dark mode (WebKit/Chromium) */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  color: var(--text-placeholder);
+  opacity: 1;
+  background: transparent;
+}
+
+/* Firefox (limited support) */
+input[type="date"]::-moz-calendar-picker-indicator,
+input[type="time"]::-moz-calendar-picker-indicator {
+  color: white;
+  opacity: 1;
+}
+
+/* Global calendar/time picker icon */
+::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.85;
+  cursor: pointer;
+  padding: 4px;
+}
+
+::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+/* ── 4. Native Select ────────────────────────────────────────────────────── */
+
+select {
+  padding: 0 40px 0 var(--input-padding-x);
+  -webkit-appearance: none;
+  appearance: none;
+  color-scheme: dark;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 14px;
+  line-height: 1;
+  padding-top: 0;
+  padding-bottom: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+select.select--centered {
+  text-align: center;
+  padding-left: 32px;
+}
+
+/* ── 5. Textarea ─────────────────────────────────────────────────────────── */
+
+textarea {
+  min-height: var(--input-height, 40px);
+  height: auto;
+  padding: 11px var(--input-padding-x);
+  resize: vertical;
+  line-height: 1.4;
+  cursor: text;
+}
+
+/* ── 6. Placeholder, Hover & Focus States ───────────────────────────────── */
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-placeholder);
+  opacity: 1;
+}
+
+input:hover,
+select:hover,
+textarea:hover,
+.select-trigger:hover {
+  background-color: var(--field-bg-hover);
+  border-color: var(--field-border);
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.select-trigger:focus {
+  box-shadow: var(--shadow-focus), var(--shadow-inset-top);
+  outline: 2px solid var(--blu-60);
+  outline-offset: -2px;
+  background-color: var(--lvl-02);
+  border-color: transparent;
+}
+
 select:focus-visible,
 input:focus-visible {
   outline: 2px solid var(--focus-ring-color);
   outline-offset: -2px;
 }
 
-/* ── 2. Reusable Component Primitives ─────────────────────────────────── */
+/* ── 7. Custom Select Widget (.select-dropdown / .select-trigger) ─────────── */
+
+.select-dropdown {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.select-dropdown .dropdown__menu {
+  inset-inline-start: 0;
+  inset-inline-end: 0;
+  min-width: 100%;
+}
+
+#busGrid .select-dropdown .dropdown__menu {
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+/* Trigger: a button styled to look like an input */
+.select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-width: 0;
+  text-align: left;
+}
+
+.select-trigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-bottom-style: solid;
+}
+
+/* Chevron pseudo-element */
+.select-trigger::after {
+  content: "";
+  width: 14px;
+  height: 14px;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+/* Open state — same focus ring as inputs */
+.select-trigger.is-open {
+  outline: 2px solid var(--blue);
+  outline-offset: -2px;
+  border-bottom-color: transparent;
+}
+
+/* Visually-hidden native fallback for a11y */
+.select-dropdown .select-native {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* Status icon colors inside select triggers */
+.dropdown-icon.status-pending  { color: var(--color-status-pending); }
+.dropdown-icon.status-ok       { color: var(--color-status-ok); }
+.dropdown-icon.status-assigned { color: var(--color-status-assigned); }
+.dropdown-icon.status-blue     { color: var(--color-status-blue); }
+
+/* ── 8. Empty State ──────────────────────────────────────────────────────── */
+
+input[type="date"].is-empty:not(:focus)::-webkit-datetime-edit,
+input[type="time"].is-empty:not(:focus)::-webkit-datetime-edit {
+  color: var(--text-placeholder);
+}
+
+select.is-empty:not(:focus),
+.select-trigger.is-empty {
+  color: var(--text-placeholder);
+}
+
+/* ── 9. Labels ───────────────────────────────────────────────────────────── */
+
+.form-grid label,
+.form-group > label,
+.field-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  line-height: 1.25;
+  margin-bottom: 4px !important;
+  letter-spacing: 0.02em;
+  width: 100%;
+}
+
+/* Label text inside trip details grid rows */
+.trip-details__label {
+  grid-column: auto;
+  margin-bottom: 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+/* ── 10. Specific Field Variants ─────────────────────────────────────────── */
 
 .form-control {
   width: auto;
 }
 
-/* ── 3. Specific Field Variants ───────────────────────────────────────── */
-
-/* Modal specific inputs */
+/* Itinerary modal input */
 #itineraryModalField {
   text-align: center;
 }
@@ -38,7 +274,7 @@ input:focus-visible {
   box-shadow: var(--focus-ring);
 }
 
-/* Itinerary Modal Textarea */
+/* Itinerary modal textarea */
 .modal--itinerary .modal__body textarea {
   flex: 1 1 auto;
   min-height: 0;
@@ -59,7 +295,7 @@ input:focus-visible {
   border-radius: 0;
 }
 
-/* Trip Details Itinerary Scroll (Read-only view) */
+/* Trip details — read-only itinerary scroll */
 .detail-text.detail-itinerary-scroll,
 .trip-details__itinerary-scroll {
   flex: 1;
@@ -82,12 +318,106 @@ input:focus-visible {
   max-width: 100%;
 }
 
-/* ── 4. Form Labels & Layout Grid Context ────────────────────────────────── */
+/* ── 11. Form Grid Layout ────────────────────────────────────────────────── */
 
-.toggle-pill-grid-label {
-  grid-column: auto;
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  width: 100%;
+  gap: 16px 8px;
+  align-items: start;
+}
+
+/* Reset stray margins on all grid children */
+.form-group,
+.col-2,
+.col-4,
+.col-5,
+.col-6,
+.col-8,
+.col-12 {
+  margin-top: 0;
   margin-bottom: 0;
-  font-size: 0.6875rem;
-  letter-spacing: 0.04em;
-  text-transform: none;
+}
+
+/* Column spans */
+.col-2  { grid-column: span 2; }
+.col-4  { grid-column: span 4; }
+.col-5  { grid-column: span 5; }
+.col-6  { grid-column: span 6; }
+.col-8  { grid-column: span 8; }
+.col-12 { grid-column: span 12; }
+
+/* Compact height for inputs inside the form grid */
+.form-grid input,
+.form-grid select,
+.form-grid textarea,
+.form-control {
+  width: 100%;
+  height: 32px;
+  box-sizing: border-box;
+}
+
+/* Section dividers */
+.subsection {
+  grid-column: span 12;
+  border-top: 1px solid var(--border-subtle);
+  margin-top: 0;
+  padding-top: 0;
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  height: min-content;
+}
+
+.subsection-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px 8px;
+}
+
+hr.form-divider {
+  grid-column: span 12;
+  border: 0;
+  border-top: 1px solid var(--border-subtle);
+  margin: 0;
+  padding: 0;
+}
+
+/* ── 12. Responsive ──────────────────────────────────────────────────────── */
+
+@container form-grid (max-width: 350px) {
+  .col-2,
+  .col-4,
+  .col-5,
+  .col-6,
+  .col-8 {
+    grid-column: span 12;
+  }
+
+  .subsection-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 600px) {
+  .form-grid .col-2,
+  .form-grid .col-4,
+  .form-grid .col-5,
+  .form-grid .col-6,
+  .form-grid .col-8 {
+    grid-column: span 12;
+  }
+
+  .form-grid .subsection-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid .form-actions {
+    justify-content: flex-start;
+  }
 }

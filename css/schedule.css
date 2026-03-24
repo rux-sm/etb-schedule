@@ -1,3 +1,14 @@
+@media print {
+  #printRoot.print-mode-legal .print-table thead tr:first-child th {
+    border-top: 1px solid #d3d3d3 !important;
+  }
+}
+@media print {
+  #printRoot.print-mode-legal .print-table .schedule-grid__trip-bar.cont-left::before,
+  #printRoot.print-mode-legal .print-table .schedule-grid__trip-bar.cont-right::after {
+    color: #111 !important;
+  }
+}
 #printRoot.print-mode-legal .c-header.c-header--schedule {
   border-top: none !important;
   border-bottom: none !important;
@@ -216,7 +227,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--lvl-00);
+  background-color: var(0);
   border-bottom: none;
   width: 100%;
   height: 48px;
@@ -847,33 +858,6 @@
 }
 
 /* ==========================================================================
-   WAITING LIST ROW
-   ========================================================================== */
-.waiting-list-row {
-  height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
-  min-height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
-  max-height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
-}
-
-#waitingBody tr.waiting-list-row td,
-.waiting-list-row td {
-  background-color: var(--lvl-00) !important;
-  /*border-top: 1px solid var(--layer-01-border);*/
-  vertical-align: top;
-}
-
-.waiting-list-row .schedule-grid__bus-cell {
-  background-color: var(--lvl-00) !important;
-  border-top: 1px solid var(--lvl-01-border);
-  color: var(--text-muted);
-  font-size: 0.6875rem;
-  /* 11px */
-}
-
-.waiting-list-row .schedule-grid__bus-indicator .material-symbols-outlined {
-  font-size: 24px;
-}
-
 /* ==========================================================================
    SCHEDULE GRID STRUCTURE & LAYOUT
    ========================================================================== */
@@ -882,6 +866,7 @@
   width: 100%;
   min-width: 1436px;
   height: auto;
+  background: var(--lvl-01);
   table-layout: fixed;
   border-collapse: separate;
   border-spacing: 0;
@@ -906,7 +891,7 @@
 }
 
 .schedule-grid__header-cell {
-  background: var(--lvl-00);
+  background: var(--lvl-01);
   padding: 0;
   height: var(--day-row-h);
   position: sticky;
@@ -926,7 +911,7 @@
   position: sticky;
   inset-inline-start: 0;
   z-index: 3000 !important;
-  background: var(--lvl-00);
+  background: var(--lvl-01);
   min-width: var(--bus-col-w);
   max-width: var(--bus-col-w);
   width: var(--bus-col-w);
@@ -965,7 +950,7 @@
 }
 
 .schedule-grid__header-cell--today {
-  background: var(--lvl-00);
+  background: var(--lvl-01);
   /*border: 1px solid var(--red);*/
 }
 
@@ -987,7 +972,6 @@
   max-height: var(--schedule-row-height) !important;
   min-height: var(--schedule-row-height) !important;
   position: relative;
-  overflow: hidden;
 }
 
 .schedule-grid__row-bars {
@@ -998,8 +982,40 @@
   height: 100%;
   pointer-events: none;
   z-index: 5;
-  overflow: hidden;
-  /* Ensure bars never overflow into adjacent rows */
+  /* overflow: hidden; removed to allow hover effects and full border visibility */
+  /* Ensure bars never overflow into adjacent rows - handled by sizing */
+}
+
+/* ==========================================================================
+   WAITING LIST ROW (ELEVATED PRIORITY)
+   ========================================================================== */
+.waiting-list-row {
+  height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
+  min-height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
+  max-height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
+}
+
+#waitingBody tr.waiting-list-row td,
+.waiting-list-row td {
+  background-color: var(--lvl-01) !important;
+  vertical-align: top;
+  height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
+  min-height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
+  max-height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
+}
+
+.waiting-list-row .schedule-grid__bus-cell {
+  background-color: var(--lvl-01) !important;
+  border-top: 1px solid var(--lvl-01-border);
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+  text-align: center;
+  width: var(--bus-col-w);
+}
+
+.waiting-list-row .schedule-grid__bus-indicator .material-symbols-outlined {
+  color: var(--text-muted);
+  font-size: 1.25rem;
 }
 
 .schedule-grid__cell {
@@ -1027,7 +1043,7 @@
   z-index: 500;
   pointer-events: none;
   /* pass through so sticky overlay doesn't steal trip bar hover */
-  background: var(--lvl-00);
+  background: var(--lvl-01);
   font-size: var(--bus-num-size);
   /* 14px */
   font-weight: var(--bus-num-weight);
@@ -1185,7 +1201,8 @@
   position: absolute;
   z-index: 501;
   /* above sticky bus cell (500) so trip bar receives hover when overlapping */
-  height: var(--tripbar-height);
+  height: var(--tripbar-height) !important;
+  max-height: var(--tripbar-height) !important;
   box-sizing: border-box;
   padding: var(--tripbar-padding-y) var(--tripbar-padding-x);
   font-variant-numeric: tabular-nums;
@@ -1197,10 +1214,10 @@
   pointer-events: auto;
   transition:
     box-shadow var(--transition-fast),
-    filter var(--transition-fast);
+    filter var(--transition-fast),
+    border-color var(--transition-fast);
 
-  /* Keeps the bar flush on the canvas when resting */
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
 
   will-change: filter,
     box-shadow;
@@ -1208,18 +1225,18 @@
 
 
   /* 3. Soften the edge */
-  border: 1px solid color-mix(in srgb, var(--tripbar-color) 50%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tripbar-color) 0%, transparent);
   border-left: 4px solid var(--tripbar-color);
 }
 
 .schedule-grid__trip-bar:hover {
   /* Elevates the bar above adjacent rows to prevent clipping */
   z-index: 20;
-
+  border: 1px solid color-mix(in srgb, var(--tripbar-color) 100%, transparent);
+  border-left: 4px solid var(--tripbar-color);
   /* The physical lighting stack */
   box-shadow:
-    /* 1. The signature top rim-light (brighter because it's closer to the light source) */
-    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+
 
     /* 2. The physical elevation drop shadow (deep and dark) */
     0 8px 16px rgba(0, 0, 0, 0.9),
@@ -1267,11 +1284,11 @@
   --tripbar-r4-color: var(--alert-yel);
   /* Bright Neon Lemon */
   --tripbar-r5-color: var(--tripbar-color);
-  --tripbar-r6-color: color-mix(in srgb, var(--alert-grn) 75%, var(--gra-10));
+  --tripbar-r6-color: color-mix(in srgb, var(--alert-yel) 50%, var(--gra-10));
   /* Bright Coral */
   --tripbar-r7-color: var(--text-primary);
 
-  --tripbar-badge-text-color: color-mix(in srgb, var(--red-50) 75%, var(--gra-10));
+  --tripbar-badge-text-color: color-mix(in srgb, var(--red-50) 80%, var(--gra-10));
   --tripbar-badge-text-bg: color-mix(in srgb, #ffffff 50%, transparent);
   --tripbar-status-pending-bg: color-mix(in srgb, var(--color-status-pending) 50%, transparent);
   --tripbar-status-pending-color: color-mix(in srgb, var(--color-status-pending) 25%, var(--gra-00));
@@ -1589,7 +1606,7 @@
   font-weight: var(--tripbar-r6-font-weight);
   line-height: var(--tripbar-r6-line-height);
   letter-spacing: var(--tripbar-r6-letter-spacing);
-  text-transform: lowercase;
+  text-transform: uppercase;
   color: var(--tripbar-r6-color);
   text-shadow: var(--text-shadow);
   white-space: nowrap;
@@ -1642,6 +1659,28 @@
 
 /* Print overrides (migrated from _legacy-grid.css) */
 @media print {
+      #printRoot.print-mode-legal .print-table .schedule-grid__trip-bar {
+        --tripbar-r6-color: #d60000 !important;
+      }
+      #printRoot.print-mode-legal .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__multi-badge {
+        color: #111 !important;
+      }
+    #printRoot.print-mode-legal .schedule-grid__row--notes,
+    #printRoot.print-mode-legal .schedule-grid__row--notes .schedule-grid__cell {
+      color: #d60000 !important;
+      font-weight: bold !important;
+    }
+  #printRoot.print-mode-legal .schedule-grid__trip-bar__row--6 {
+    color: #d60000 !important;
+    font-weight: bold !important;
+  }
+  #printRoot.print-mode-legal .print-table .schedule-grid__trip-bar__time {
+    background: none !important;
+    color: #111 !important;
+    font-weight: bold !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+  }
   #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar {
     border-radius: 0px !important;
     border: 1px solid var(--gray-20) !important;
@@ -1719,21 +1758,16 @@
     print-color-adjust: exact !important;
   }
 
-  /* Legal print: lighter grid borders */
-  #printRoot.print-mode-legal .print-table td,
-  #printRoot.print-mode-legal .print-table {
-    border-top: 1px solid var(--lvl-01-border) !important;
-    border-left: 1px solid var(--lvl-01-border) !important;
-  }
-
+  /* Legal print: all borders exactly 1px, prevent double borders */
+  #printRoot.print-mode-legal .print-table,
   #printRoot.print-mode-legal .print-table td,
   #printRoot.print-mode-legal .print-table th {
-    border-top: none !important;
-    border-left: none !important;
-    border-inline-start: none !important;
-    border-inline-end: none !important;
-    border-right: 1px solid var(--lvl-01-border) !important;
-    border-bottom: 1px solid var(--lvl-01-border) !important;
+    border: 1px solid #d3d3d3 !important;
+    border-collapse: collapse !important;
+    box-sizing: border-box !important;
+  }
+  #printRoot.print-mode-legal .print-table {
+    border-spacing: 0 !important;
   }
 }
 

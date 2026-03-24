@@ -1,33 +1,17 @@
 :root {
   color-scheme: dark;
 
-  --gra-00: hsl(210, 5%, 0%);
-  /* OLED Floor: Deepest shadows, modal underlays, or true black app background. */
-  --gra-01: hsl(210, 5%, 6%);
-  /* Main Schedule Canvas: The dark base for your calendar grid. */
-  --gra-02: hsl(210, 5%, 12%);
-  /* Elevated Panels: Trip Editor sidebar background. Gives a seamless "floating" feel. */
-
-  /* --- THE STRUCTURE (Borders & Interactive Elements) --- */
-  --gra-03: hsl(210, 5%, 12%);
-  /* Ghost Dividers: Subtle calendar grid lines and standard input field borders. */
-  --gra-04: hsl(210, 5%, 24%);
-  /* High Elevation & Hovers: Dropdown menu backgrounds, text input fill, button hover states. */
-
-  /* --- THE TYPOGRAPHY (Icons & Text Hierarchy) --- */
-  --gra-05: hsl(210, 5%, 39%);
-  /* Muted/Disabled: Placeholder text in forms, inactive icons, disabled "Save" buttons. */
-  --gra-06: hsl(210, 5%, 56%);
-  /* The Mid-Gray Anchor: Form field labels (e.g., "Comments", "Notes") that shouldn't distract. */
-  --gra-07: hsl(210, 5%, 75%);
-  /* Secondary Info: Bus numbers (218, 763), times (3:00 AM), and sub-labels. Passes WCAG AA. */
+  --gra-00: rgb(0,0,0);
+  --gra-01: rgb(22, 23, 26);
+  --gra-02: rgb(32, 33, 36);
+  --gra-03: rgb(42, 43, 46);
+  --gra-04: rgb(43, 44, 46);
+  --gra-05: rgb(53, 54, 56);
+  --gra-06: rgb(63, 64, 66);
+  --gra-07: rgb(73, 74, 76);
   --gra-08: hsl(210, 5%, 88%);
-  /* Soft Emphasis: Hover states for secondary text or icons. */
   --gra-09: hsl(210, 5%, 94%);
-  /* Off-White Text: Great for primary text that needs to avoid blooming on dark backgrounds. */
   --gra-10: hsl(210, 5%, 100%);
-  /* Absolute White: High-priority headings, active trip titles, and primary icons. */
-
 
   --lvl-00: var(--gra-00);
   --lvl-01: var(--gra-01);
@@ -48,24 +32,23 @@
   --field-border: var(--gra-03);
 
   --field-shadow-inset:
-    inset 0 2px 4px rgba(0, 0, 0, 0.9),
+    inset 0 2px 4px rgba(0, 0, 0, 0.9);
     /* Deeper internal shadow at the top */
-    0 1px 0 rgba(255, 255, 255, 0.12);
-  /* Subtle light catching the bottom outside lip */
+
 
   /* Base 3D Button Drop Shadow */
   --btn-shadow-inset:
-    0 4px 6px rgba(0, 0, 0, 0.9),
+    0 4px 6px rgba(0, 0, 0, 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.12);
 
   /* The "Soft Pressed" State (Ghost Buttons / Toggles) */
   --btn-shadow-active:
-    inset 0 3px 6px rgba(0, 0, 0, 0.9),
+    inset 0 3px 6px rgba(0, 0, 0, 0.9);
     /* Deeper dark shadow at the top inside */
-    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
-  /* Faint light catching the bottom inside lip */
 
-  --btn-ghost-shadow-active: inset 0 2px 4px rgba(0, 0, 0, 0.9);
+
+  --btn-shadow-active-sm: 
+  inset 0 2px 4px rgba(0, 0, 0, 0.9);
 
   /* Base 3D Card Drop Shadow */
   --card-shadow:
@@ -92,7 +75,7 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.12);
 
   /* Primary (Action/Save) */
-  --btn-primary-bg: var(--blu-60);
+  --btn-primary-bg: var(--color-accent);
   --btn-primary-text: var(--gra-10);
   --btn-primary-hover: color-mix(in srgb, var(--blu-60) 85%, black);
   --btn-primary-active: color-mix(in srgb, var(--blu-60) 70%, black);
@@ -100,7 +83,7 @@
   --btn-primary-border: transparent;
 
   /* Secondary (Cancel/Structural) */
-  --btn-secondary-bg: var(--gra-04);
+  --btn-secondary-bg: var(--gra-40);
   --btn-secondary-text: var(--gra-10);
   --btn-secondary-hover: color-mix(in srgb, var(--gra-04) 85%, black);
   /* Lightens slightly to pop off dark backgrounds */
@@ -110,7 +93,7 @@
   --btn-secondary-border: transparent;
 
   /* Danger (Delete) */
-  --btn-danger-bg: var(--red-60);
+  --btn-danger-bg: var(--red-40);
   --btn-danger-text: var(--gra-10);
   --btn-danger-hover: color-mix(in srgb, var(--red-60) 85%, black);
   --btn-danger-active: color-mix(in srgb, var(--red-60) 70%, black);
@@ -119,9 +102,14 @@
 
   /* Ghost Buttons (Pagination, standard icon buttons) */
   --btn-ghost-bg: transparent;
+  --btn-ghost-border: var(--gra-06);
   --btn-ghost-text: var(--text-primary);
   --btn-ghost-hover-bg: color-mix(in srgb, var(--gra-10) 10%, transparent);
   --btn-ghost-active-bg: color-mix(in srgb, var(--gra-10) 20%, transparent);
+  --btn-ghost-icon-size: 18px;
+  --btn-ghost-text-shadow: 0px 2px 2px rgba(0, 0, 0, 1), 0px 4px 6px rgba(0, 0, 0, 0.8);
+  --btn-icon-size: 16px;
+  --btn-icon-nav-size: 24px;
 
   /* Control Buttons (Toolbar) */
   --btn-toolbar-hover-bg: color-mix(in srgb, var(--gra-10) 10%, transparent);
@@ -129,7 +117,7 @@
 
   /* Maps directly to your global physical system */
   --btn-toolbar-shadow-hover: var(--btn-shadow-inset);
-  --btn-toolbar-shadow-active: var(--btn-ghost-shadow-active);
+  --btn-toolbar-shadow-active: var(--btn-shadow-active-sm);
 
   /* Header Action Buttons */
   --header-action-bg: var(--gra-03);
@@ -139,22 +127,25 @@
   --header-action-active-bg: color-mix(in srgb, var(--gra-03) 70%, white);
   --header-action-color: var(--white);
 
-  /* Toggle Pills / Requirements Tiles */
-  --toggle-pill-bg: var(--gra-04);
+  /* Toggle Buttons / Requirements Tiles */
+  --btn-toggle-bg: var(--gra-04);
   /* Swapped var(--layer-03) to your custom gray palette */
-  --toggle-pill-border: transparent;
-  --toggle-pill-text: var(--text-secondary);
-  --toggle-pill-hover-bg: color-mix(in srgb, var(--gra-02) 85%, white);
-  --toggle-pill-active-bg: var(--color-accent);
-  --toggle-pill-active-border: var(--blu-60);
+  --btn-toggle-border: transparent;
+  --btn-toggle-text: var(--text-secondary);
+  --btn-toggle-hover-bg: color-mix(in srgb, var(--gra-02) 85%, white);
+  --btn-toggle-active-bg: var(--color-accent);
+  --btn-toggle-active-border: var(--blu-60);
   /* Fixed from --blue to match your palette */
+  --btn-toggle-icon-opacity: 0.7;
 
 
   /* ==========================================================================
-   *  50 Palette - Trip Bar Background Colors
+   *  M3 50 Palette - Trip Bar Background Colors
    * ========================================================================== */
-  --blu-50: #4589ff;
-  --red-50: #fa4d56;
+  --blu-50: #3271EA;
+  /* m3 blue 50 */
+  --red-50: #DB372D;
+  /* m3 red 50 */
   --pur-50: #a56eff;
   --yel-50: #b28600;
   --tea-50: #009d9a;
@@ -164,21 +155,28 @@
   --cyn-50: #1192e8;
   --ind-50: #8a3ffc;
   --brn-50: #a56a3f;
+  --gra-50: rgba(229, 233, 246, 0.25);
 
   /* ==========================================================================
-   *  60 Palette - UI and Buttons
+   *  M3 40 Palette - UI and Buttons
    * ========================================================================== */
-  --blu-60: #0f62fe;
-  --red-60: #da1e28;
-  --pur-60: #8a3ffc;
-  --yel-60: #8e6a00;
+  --blu-40: rgb(21, 88, 188);
+  /* atlassian blue 800 */
+  --red-40: rgb(174, 46, 36);
+  /* atlassian red 800 */
+  --pur-60: #7438D2;
+  --yel-60: #8F4E06;
   --tea-60: #007d79;
-  --org-60: #ba4e00;
-  --pnk-60: #d12771;
-  --grn-60: #198038;
-  --cyn-60: #0072c3;
+  --org-60: #9A4600;
+  --pnk-60: #B60D6E;
+  --grn-60: #006C35;
+  --cyn-60: #00687C;
   --ind-60: #6929c4;
   --brn-60: #8f5f3a;
+  --gra-40: rgb(80, 82, 88);
+  /* atlassian neutral800 */
+
+
 
   /* ==========================================================================
    *  Alert Palette - Badges, Icons & Highlights
@@ -196,7 +194,7 @@
    * Apply these families moving forward: color, layer, border, text, space, size.
    * ========================================================================== */
 
-  --color-accent: var(--blu-60);
+  --color-accent: var(--blu-50);
   --color-danger: var(--alert-red);
   --color-success: var(--alert-grn);
   --color-warning: var(--alert-yel);
@@ -339,8 +337,8 @@
 
   --tripbar-height: 100px;
   --tripbar-radius: 0px;
-  --tripbar-lane-step: 0px;
-  --tripbar-bg-mix-percent: 20%;
+  --tripbar-lane-step: 100px;
+  --tripbar-bg-mix-percent: 25%;
   --tripbar-text-shadow: 0 1px 2px rgba(0, 0, 0, 1);
 
   --tripbar-color: var(--blu-50);
@@ -520,18 +518,22 @@
   /* Tertiary / Toggle Tiles (For Requirements) */
   /* Keep ghost tiles on the same surface as form controls */
   --btn-ghost-bg: var(--layer-03);
-  --btn-ghost-border: transparent;
+  --btn-ghost-border: var(--gray-40);
   /* Secondary text by default; interaction states can promote contrast */
-  --btn-ghost-text: var(--text-secondary);
+  --btn-ghost-text: var(--text-primary);
   --btn-ghost-hover-bg: color-mix(in srgb, var(--layer-03), white 5%);
   --btn-ghost-active-bg: var(--layer-03);
   --btn-ghost-active-border: var(--blue);
+  --btn-ghost-icon-size: 18px;
+  --btn-ghost-text-shadow: none;
 
   /* Shared button sizing */
   --btn-padding-x: 16px;
   --btn-min-width: 80px;
   --btn-compact-height: 32px;
   --btn-compact-padding-x: 12px;
+  --btn-icon-size: 24px;
+  --btn-icon-nav-size: 24px;
 
   /* Control buttons (icon/pagination/toolbar) */
   --btn-pagination-size: 32px;

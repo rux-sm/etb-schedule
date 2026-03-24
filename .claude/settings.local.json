@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -rn \"btn--\\\\|toggle-pill\\\\b\\\\|c-header__action\\\\b\\\\|picross-mode-btn\" '/Users/sergiomercado/Library/Mobile Documents/com~apple~CloudDocs/Projects/etb/etb_trip_schedule/' --include=*.html)"
+    ]
+  }
+}

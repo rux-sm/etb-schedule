@@ -728,7 +728,7 @@ function setRequirementTogglesFromTrip(t = {}) {
 }
 
 function resetRequirementToggles() {
-  document.querySelectorAll(".toggle-pill").forEach((btn) => {
+  document.querySelectorAll(".btn--toggle").forEach((btn) => {
     btn.setAttribute("aria-pressed", "false");
   });
 }
@@ -2455,7 +2455,7 @@ function renderAgenda() {
       dom.agendaBody.innerHTML = `
         <tr><td colspan="8" class="schedule-error__cell">
           <div class="schedule-error__message">Failed to render schedule</div>
-          <button onclick="location.reload()" class="btn btn--primary">Reload Page</button>
+          <button onclick="location.reload()" class="btn btn--accent">Reload Page</button>
         </td></tr>
       `;
     }
@@ -3075,7 +3075,10 @@ function _renderAgendaInner() {
 
     // Waiting list row grows to fit stacked trips; others use single row height
     const isWaitingList = busId === "WAITING_LIST";
-    const effectiveRowH = isWaitingList ? Math.max(1, laneCount) * rowH : rowH;
+    
+    // FIX: Using 'step' (110px) instead of 'rowH' (100px) for the waiting list height
+    // to ensure there is enough vertical room for the stacked bars + their gaps.
+    const effectiveRowH = isWaitingList ? Math.max(1, laneCount) * step : rowH;
     const maxTop = Math.max(0, effectiveRowH - barH - 1); // -1 for safety margin
 
     if (isWaitingList) {
@@ -3093,7 +3096,7 @@ function _renderAgendaInner() {
       const lane = Number(bar.dataset.lane);
       if (!Number.isFinite(lane)) continue;
 
-      let topPx = top0 + lane * step;
+      let topPx = isWaitingList ? (lane * step) : (top0 + lane * step);
       // Clamp to ensure bar stays within its row bounds
       topPx = Math.max(0, Math.min(topPx, maxTop));
       bar.style.top = `${Math.round(topPx)}px`; // <— snap
@@ -4084,7 +4087,7 @@ function renderTripDetailsModalFromData(t, assigns) {
     const wrapClass = itemClass
       ? `trip-details__grid-item ${itemClass}`
       : "trip-details__grid-item";
-    return `<div class="${wrapClass}"><span class="toggle-pill-grid-label">${label}:</span> <span class="trip-details__value">${display}</span></div>`;
+    return `<div class="${wrapClass}"><span class="trip-details__label">${label}:</span> <span class="trip-details__value">${display}</span></div>`;
   }
 
   function getDetailStatusClass(fieldId, val) {
@@ -4122,11 +4125,11 @@ function renderTripDetailsModalFromData(t, assigns) {
     const valueSpan = cls
       ? `<span class="trip-details__value ${cls}">${display}</span>`
       : `<span class="trip-details__value">${display}</span>`;
-    return `<div class="${wrapClass}"><span class="toggle-pill-grid-label">${label}:</span> ${valueSpan}</div>`;
+    return `<div class="${wrapClass}"><span class="trip-details__label">${label}:</span> ${valueSpan}</div>`;
   }
 
   function section(title) {
-    return `<div class="trip-details__section-title toggle-pill-grid-label">${title}</div>`;
+    return `<div class="trip-details__section-title trip-details__label">${title}</div>`;
   }
 
   html += `<div class="trip-details__meta-grid detail-status-grid">`;
@@ -5362,7 +5365,7 @@ function buildPrintScheduleTwoPages() {
       headerClone.classList.add("print-header");
       headerClone
         .querySelectorAll(
-          ".c-header__actions, .agenda-header__date-left .btn--icon, .agenda-header__date-left .btn--icon-pagination, .weekpicker-trigger-wrap, .agenda-header__sync-center, .agenda-header__date-right",
+          ".c-header__actions, .agenda-header__date-left .btn--ghost, .weekpicker-trigger-wrap, .agenda-header__sync-center, .agenda-header__date-right",
         )
         .forEach((el) => el.remove());
 
@@ -7073,8 +7076,8 @@ function wireEvents() {
     updateWeekDates();
   });
 
-  // Toggle pills — click toggles aria-pressed
-  document.querySelectorAll(".toggle-pill").forEach((btn) => {
+  // Toggle buttons — click toggles aria-pressed
+  document.querySelectorAll(".btn--toggle").forEach((btn) => {
     btn.addEventListener("click", () => {
       const pressed = btn.getAttribute("aria-pressed") === "true";
       btn.setAttribute("aria-pressed", pressed ? "false" : "true");

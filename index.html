@@ -39,28 +39,28 @@
       </div>
 
       <div class="c-header__actions">
-        <button id="tripInputBtn" class="c-header__action" title="Trip editor">
+        <button id="tripInputBtn" class="btn--icon" title="Trip editor">
           <span class="material-symbols-outlined">add</span>
         </button>
-        <button id="driversBtn" class="c-header__action" title="Driver assignments">
+        <button id="driversBtn" class="btn--icon" title="Driver assignments">
           <span class="material-symbols-outlined">groups</span>
         </button>
-        <button id="quoteBtn" class="c-header__action" title="Quote calculator">
+        <button id="quoteBtn" class="btn--icon" title="Quote calculator">
           <span class="material-symbols-outlined">calculate</span>
         </button>
 
         </button>
-        <button id="notesBtn" class="c-header__action" title="Weekly notes">
+        <button id="notesBtn" class="btn--icon" title="Weekly notes">
           <span class="material-symbols-outlined">sticky_note_2</span>
-          <button id="waitingListBtn" class="c-header__action" title="Waiting list">
+          <button id="waitingListBtn" class="btn--icon" title="Waiting list">
             <span class="material-symbols-outlined">low_priority</span>
 
           </button>
-          <button id="todayBtnMobile" class="c-header__action u-hidden" title="Today" aria-label="Today">
+          <button id="todayBtnMobile" class="btn--icon u-hidden" title="Today" aria-label="Today">
             <span class="material-symbols-outlined">today</span>
           </button>
           <div class="dropdown">
-            <button id="settingsBtn" class="c-header__action" type="button" aria-haspopup="true" aria-expanded="false"
+            <button id="settingsBtn" class="btn--icon" type="button" aria-haspopup="true" aria-expanded="false"
               title="Settings" aria-label="Settings">
               <span class="material-symbols-outlined">settings</span>
             </button>
@@ -132,7 +132,7 @@
               <div class="c-header c-header--panel">
                 <h2 class="c-header__title">Quote Calculator</h2>
                 <div class="c-header__actions">
-                  <button id="quoteInfoBtn" class="c-header__action" type="button"
+                  <button id="quoteInfoBtn" class="btn--icon" type="button"
                     aria-label="View Calculator Rules & Logic" title="Rules & Logic">
                     <span class="material-symbols-outlined">info</span>
                   </button>
@@ -361,7 +361,7 @@
               <!-- Action Footer -->
               <div class="c-card__footer">
                 <div class="form-actions u-w-full">
-                  <button type="button" class="btn btn--primary u-w-full" id="quoteCopySummary">
+                  <button type="button" class="btn btn--accent u-w-full" id="quoteCopySummary">
                     <span class="material-symbols-outlined">content_copy</span>
                     <span>Copy Summary</span>
                   </button>
@@ -406,7 +406,7 @@
 
               <div class="c-card__footer">
                 <div class="form-actions">
-                  <button type="button" class="btn btn--primary" id="saveNotesBtn">
+                  <button type="button" class="btn btn--accent" id="saveNotesBtn">
                     Save Notes
                   </button>
                 </div>
@@ -601,33 +601,33 @@
                         </button>
                         <div id="requirementsSection" data-js="trip-requirements-section"
                           class="cds-accordion__content is-hidden">
-                          <div class="toggle-pill__grid u-mt-0" role="group" aria-label="Requirements">
-                            <button type="button" class="toggle-pill" id="req56Pass" aria-pressed="false">
+                          <div class="btn--toggle-grid u-mt-0" role="group" aria-label="Requirements">
+                            <button type="button" class="btn--toggle" id="req56Pass" aria-pressed="false">
                               <span class="toggle-pill__icon material-symbols-outlined"
                                 aria-hidden="true">tatami_seat</span>
                               56 Pax
                             </button>
-                            <button type="button" class="toggle-pill" id="reqSleeper" aria-pressed="false">
+                            <button type="button" class="btn--toggle" id="reqSleeper" aria-pressed="false">
                               <span class="toggle-pill__icon material-symbols-outlined"
                                 aria-hidden="true">airline_seat_flat</span>
                               Sleeper
                             </button>
-                            <button type="button" class="toggle-pill" id="reqLift" aria-pressed="false">
+                            <button type="button" class="btn--toggle" id="reqLift" aria-pressed="false">
                               <span class="toggle-pill__icon material-symbols-outlined"
                                 aria-hidden="true">accessible</span>
                               Lift
                             </button>
-                            <button type="button" class="toggle-pill" id="reqRelief" aria-pressed="false">
+                            <button type="button" class="btn--toggle" id="reqRelief" aria-pressed="false">
                               <span class="toggle-pill__icon material-symbols-outlined"
                                 aria-hidden="true">warning</span>
                               Relief
                             </button>
-                            <button type="button" class="toggle-pill" id="reqCoDriver" aria-pressed="false">
+                            <button type="button" class="btn--toggle" id="reqCoDriver" aria-pressed="false">
                               <span class="toggle-pill__icon material-symbols-outlined"
                                 aria-hidden="true">person_add</span>
                               Co-Driver
                             </button>
-                            <button type="button" class="toggle-pill" id="reqHotel" aria-pressed="false">
+                            <button type="button" class="btn--toggle" id="reqHotel" aria-pressed="false">
                               <span class="toggle-pill__icon material-symbols-outlined"
                                 aria-hidden="true">apartment</span>
                               Hotel
@@ -714,11 +714,11 @@
                     Delete
                   </button>
                   <div class="form-actions__group">
-                    <button type="button" class="btn btn--secondary" id="newBtn">
+                    <button type="button" class="btn btn--default" id="newBtn">
                       <span class="material-symbols-outlined">restart_alt</span>
                       Clear
                     </button>
-                    <button type="submit" class="btn btn--primary" id="saveBtn" form="tripForm">
+                    <button type="submit" class="btn btn--accent" id="saveBtn" form="tripForm">
                       <span class="material-symbols-outlined">save</span>
                       Save
                     </button>
@@ -745,12 +745,14 @@
               <div class="agenda-header" data-js="schedule-agenda-header">
                 <div class="c-header c-header--schedule">
                   <div class="agenda-header__date-left">
-                    <button id="prevWeekBtn" class="btn btn--icon-pagination" type="button" aria-label="Previous Week"
+                    <button id="prevWeekBtn" class="btn btn--ghost" type="button" aria-label="Previous Week"
                       title="Previous Week">
                       <span class="material-symbols-outlined">arrow_back_ios_new</span>
+                      Prev
                     </button>
-                    <button id="nextWeekBtn" class="btn btn--icon-pagination" type="button" aria-label="Next Week"
+                    <button id="nextWeekBtn" class="btn btn--ghost" type="button" aria-label="Next Week"
                       title="Next Week">
+                      Next
                       <span class="material-symbols-outlined">arrow_forward_ios</span>
                     </button>
                     <div id="dateWrapper" class="date-picker-wrapper">
@@ -767,7 +769,7 @@
                   </div>
                   <div class="c-header__actions">
                     <div class="weekpicker-trigger-wrap">
-                      <button id="agendaLeftBtn" class="btn btn--toolbar" type="button" aria-label="Select week"
+                      <button id="agendaLeftBtn" class="btn btn--ghost" type="button" aria-label="Select week"
                         title="Select week">
                         <span class="material-symbols-outlined">calendar_month</span>
                         Week
@@ -775,7 +777,7 @@
                       <input type="date" id="weekPicker" class="weekpicker weekpicker-trigger-input"
                         aria-label="Select week" />
                     </div>
-                    <button id="todayBtn" class="btn btn--toolbar" type="button" aria-label="Today" title="Today">
+                    <button id="todayBtn" class="btn btn--ghost" type="button" aria-label="Today" title="Today">
                       <span class="material-symbols-outlined">calendar_today</span>
                       Today
                     </button>
@@ -889,7 +891,7 @@
       </div>
 
       <div class="modal__foot">
-        <button id="itineraryCopyBtn" class="btn btn--primary btn--compact" type="button">
+        <button id="itineraryCopyBtn" class="btn btn--accent btn--compact" type="button">
           Copy
         </button>
         <button id="itinerarySaveBtn" class="btn btn--compact" type="button" aria-label="Close">
@@ -935,7 +937,7 @@
       </div>
 
       <div class="modal__foot">
-        <button id="printNextDayReportBtn" class="btn btn--primary btn--compact" type="button">
+        <button id="printNextDayReportBtn" class="btn btn--accent btn--compact" type="button">
           Print
         </button>
         <button id="closeNextDayReportBtn" class="btn btn--compact" type="button" aria-label="Close">
@@ -960,7 +962,7 @@
       </div>
 
       <div class="modal__foot">
-        <button id="printDailyMaintenancePlanBtn" class="btn btn--primary btn--compact" type="button">
+        <button id="printDailyMaintenancePlanBtn" class="btn btn--accent btn--compact" type="button">
           Print
         </button>
         <button id="closeDailyMaintenancePlanBtn" class="btn btn--compact" type="button" aria-label="Close">
@@ -985,7 +987,7 @@
         <div class="flex-column driver-contact__section">
           <div class="flex-between">
             <label class="envelope-modal__label">Driver Contact Information</label>
-            <button id="copyDriverContactBtn" class="btn btn--primary btn--compact" type="button">
+            <button id="copyDriverContactBtn" class="btn btn--accent btn--compact" type="button">
               Copy Driver Contact Info
             </button>
           </div>
@@ -998,7 +1000,7 @@
         <div class="flex-column driver-contact__section">
           <div class="flex-between">
             <label class="envelope-modal__label">Trip Reminder</label>
-            <button id="copyDriverReminderBtn" class="btn btn--primary btn--compact" type="button">
+            <button id="copyDriverReminderBtn" class="btn btn--accent btn--compact" type="button">
               Copy Trip Reminder
             </button>
           </div>
@@ -1052,7 +1054,7 @@
           <button id="envelopeYellowBtn" class="btn btn--compact" type="button">
             Yellow
           </button>
-          <button id="envelopePrintBtn" class="btn btn--primary btn--compact" type="button">
+          <button id="envelopePrintBtn" class="btn btn--accent btn--compact" type="button">
             Print
           </button>
         </div>
@@ -1074,10 +1076,10 @@
         <p id="picrossPuzzleMeta" class="picross-puzzle-meta" aria-live="polite"></p>
         <div class="picross-toolbar">
           <div class="picross-rule-toggle" role="group" aria-label="Picross rule set">
-            <button id="picrossNormalModeBtn" class="btn btn--compact picross-mode-btn" type="button">
+            <button id="picrossNormalModeBtn" class="btn btn--compact" type="button">
               Normal
             </button>
-            <button id="picrossFreeModeBtn" class="btn btn--compact picross-mode-btn" type="button">
+            <button id="picrossFreeModeBtn" class="btn btn--compact" type="button">
               Free
             </button>
           </div>
@@ -1101,7 +1103,7 @@
           <div id="picrossGrid" class="picross-grid" role="grid" aria-label="Picross puzzle grid"></div>
         </div>
         <p id="picrossStatus" class="picross-status" aria-live="polite"></p>
-        <button id="picrossNextStageBtn" class="btn btn--primary u-w-full" type="button" hidden>
+        <button id="picrossNextStageBtn" class="btn btn--accent u-w-full" type="button" hidden>
           Play 10x10 Puzzle
         </button>
       </div>
@@ -1116,7 +1118,7 @@
         <button id="picrossHintBtn" class="btn btn--compact" type="button">
           Hint
         </button>
-        <button id="picrossResetBtn" class="btn btn--primary btn--compact" type="button">
+        <button id="picrossResetBtn" class="btn btn--accent btn--compact" type="button">
           Reset
         </button>
         <button id="closePicrossBtn" class="btn btn--compact" type="button" aria-label="Close">
@@ -1228,7 +1230,7 @@
       </div>
 
       <div class="modal__foot">
-        <button id="quoteInfoCloseBtn" class="btn btn--primary btn--compact" type="button" aria-label="Close">
+        <button id="quoteInfoCloseBtn" class="btn btn--accent btn--compact" type="button" aria-label="Close">
           Got it
         </button>
       </div>
