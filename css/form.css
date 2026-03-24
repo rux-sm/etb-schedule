@@ -13,7 +13,7 @@ textarea {
 }
 
 /* ── 2. Shared Base Styles ───────────────────────────────────────────────── */
-/* All field types share these — carbon/pro: full border, square corners, inset shadow */
+/* All field types share these — full border, square corners, drop shadow */
 
 input,
 select,
@@ -26,7 +26,7 @@ textarea,
   padding: 0 var(--input-padding-x);
   background-color: var(--field-bg);
   border: 1px solid var(--field-border);
-  box-shadow: var(--field-shadow-inset);
+  box-shadow: var(--field-shadow);
   border-radius: 4px;
   font-size: var(--input-font-size);
   font-weight: var(--input-weight);
@@ -131,24 +131,20 @@ select:hover,
 textarea:hover,
 .select-trigger:hover {
   background-color: var(--field-bg-hover);
-  border-color: var(--field-border);
+  border-color: var(--base-07);
 }
 
 input:focus,
 select:focus,
 textarea:focus,
-.select-trigger:focus {
-  box-shadow: var(--shadow-focus), var(--shadow-inset-top);
-  outline: 2px solid var(--blu-60);
-  outline-offset: -2px;
-  background-color: var(--lvl-02);
-  border-color: transparent;
-}
-
+.select-trigger:focus,
+input:focus-visible,
 select:focus-visible,
-input:focus-visible {
-  outline: 2px solid var(--focus-ring-color);
-  outline-offset: -2px;
+textarea:focus-visible,
+.select-trigger:focus-visible {
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 2px var(--focus-ring-color), var(--field-shadow);
 }
 
 /* ── 7. Custom Select Widget (.select-dropdown / .select-trigger) ─────────── */

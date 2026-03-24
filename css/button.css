@@ -3,7 +3,7 @@
    ==========================================================================
    Sections (in order):
     #1  button, .btn          — element reset + shared base
-    #2  Global States         — :focus-visible  icons  :disabled
+    #2  Global States         — :focus-visible + icons + :disabled
     #3  .btn--accent          — :hover  :active
     #4  .btn--default         — :hover  :active
     #5  .btn--danger          — :hover  :active

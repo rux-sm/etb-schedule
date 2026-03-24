@@ -3055,6 +3055,20 @@ function _renderAgendaInner() {
 
       positionBarWithinOverlay(bar, bars, col, startIdx, endIdx);
 
+      // Half-day truncation: shorten bar to 50% of last column if trip returns 4AM–11:59AM
+      const isHalfDayReturn =
+        !isActualSingleDay &&
+        isEndDay &&
+        !!arrTime &&
+        arrTime >= "04:00" &&
+        arrTime < "12:00";
+      bar.classList.toggle("half-day-return", isHalfDayReturn);
+      if (isHalfDayReturn) {
+        const currentWidth = parseFloat(bar.style.width) || 0;
+        const lastColW = col.widths[endIdx] ?? 0;
+        bar.style.width = `${Math.max(0, currentWidth - lastColW / 2)}px`;
+      }
+
       /* Tooltip removed by user request (modal is used instead) */
       // const itin = clipText(t.itinerary, 1200);
       // const namePhone = [name, phone].filter(Boolean).join(" • ");

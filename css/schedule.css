@@ -1284,14 +1284,14 @@
   --tripbar-r4-color: var(--alert-yel);
   /* Bright Neon Lemon */
   --tripbar-r5-color: var(--tripbar-color);
-  --tripbar-r6-color: color-mix(in srgb, var(--alert-yel) 50%, var(--gra-10));
+  --tripbar-r6-color: color-mix(in srgb, var(--alert-yel) 50%, var(--base-10));
   /* Bright Coral */
   --tripbar-r7-color: var(--text-primary);
 
-  --tripbar-badge-text-color: color-mix(in srgb, var(--red-50) 80%, var(--gra-10));
+  --tripbar-badge-text-color: color-mix(in srgb, var(--red-50) 80%, var(--base-10));
   --tripbar-badge-text-bg: color-mix(in srgb, #ffffff 50%, transparent);
   --tripbar-status-pending-bg: color-mix(in srgb, var(--color-status-pending) 50%, transparent);
-  --tripbar-status-pending-color: color-mix(in srgb, var(--color-status-pending) 25%, var(--gra-00));
+  --tripbar-status-pending-color: color-mix(in srgb, var(--color-status-pending) 25%, var(--base-00));
   --tripbar-status-ok-bg: color-mix(in srgb, var(--color-status-ok) 0%, transparent);
 
   &.out-of-service {
@@ -1301,7 +1301,7 @@
         color-mix(in srgb, var(--color-danger) 8%, transparent) 8px,
         color-mix(in srgb, var(--color-danger) 16%, transparent) 8px,
         color-mix(in srgb, var(--color-danger) 16%, transparent) 16px);
-    border: 1px dashed color-mix(in srgb, var(--color-danger) 40%, var(--gra-00));
+    border: 1px dashed color-mix(in srgb, var(--color-danger) 40%, var(--base-00));
     border-left: 4px solid var(--color-danger);
 
     /* Overrides for crisp text and recessed look */

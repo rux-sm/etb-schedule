@@ -1,40 +1,40 @@
 :root {
   color-scheme: dark;
 
-  --gra-00: rgb(0,0,0);
-  --gra-01: rgb(22, 23, 26);
-  --gra-02: rgb(32, 33, 36);
-  --gra-03: rgb(42, 43, 46);
-  --gra-04: rgb(43, 44, 46);
-  --gra-05: rgb(53, 54, 56);
-  --gra-06: rgb(63, 64, 66);
-  --gra-07: rgb(73, 74, 76);
-  --gra-08: hsl(210, 5%, 88%);
-  --gra-09: hsl(210, 5%, 94%);
-  --gra-10: hsl(210, 5%, 100%);
+  --base-00: rgb(0,0,0);
+  --base-01: rgb(22, 23, 26);
+  --base-02: rgb(32, 33, 36);
+  --base-03: rgb(42, 43, 46);
+  --base-04: rgb(53, 54, 56);
+  --base-05: rgb(63, 64, 66);
+  --base-06: rgb(73, 74, 76);
+  --base-07: rgb(83, 84, 86);
+  --base-08: rgb(223, 224, 226);
+  --base-09: rgb(239, 240, 240);
+  --base-10: rgb(255, 255, 255);
 
-  --lvl-00: var(--gra-00);
-  --lvl-01: var(--gra-01);
-  --lvl-02: var(--gra-02);
-  --lvl-03: var(--gra-03);
-  --lvl-04: var(--gra-04);
-  --lvl-05: var(--gra-05);
+  --lvl-00: var(--base-00);
+  --lvl-01: var(--base-01);
+  --lvl-02: var(--base-02);
+  --lvl-03: var(--base-03);
+  --lvl-04: var(--base-04);
+  --lvl-05: var(--base-05);
 
-  --lvl-00-border: var(--gra-01);
-  --lvl-01-border: var(--gra-03);
-  --lvl-02-border: var(--gra-03);
-  --lvl-03-border: var(--gra-04);
-  --lvl-04-border: var(--gra-05);
-  --lvl-05-border: var(--gra-06);
+  --lvl-00-border: var(--base-01);
+  --lvl-01-border: var(--base-03);
+  --lvl-02-border: var(--base-03);
+  --lvl-03-border: var(--base-04);
+  --lvl-04-border: var(--base-05);
+  --lvl-05-border: var(--base-06);
 
-  --field-bg: var(--gra-01);
-  --field-bg-hover: var(--gra-02);
-  --field-border: var(--gra-03);
+  --field-bg: var(--base-04);
+  --field-bg-hover: var(--base-02);
+  --field-border: var(--base-04);
 
-  --field-shadow-inset:
-    inset 0 2px 4px rgba(0, 0, 0, 0.9);
-    /* Deeper internal shadow at the top */
-
+  /* Field Drop Shadow */
+  --field-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.5),
+    0 1px 2px rgba(0, 0, 0, 0.3);
 
   /* Base 3D Button Drop Shadow */
   --btn-shadow-inset:
@@ -76,25 +76,25 @@
 
   /* Primary (Action/Save) */
   --btn-primary-bg: var(--color-accent);
-  --btn-primary-text: var(--gra-10);
+  --btn-primary-text: var(--base-10);
   --btn-primary-hover: color-mix(in srgb, var(--blu-60) 85%, black);
   --btn-primary-active: color-mix(in srgb, var(--blu-60) 70%, black);
   --btn-primary-disabled: var(--lvl-02);
   --btn-primary-border: transparent;
 
   /* Secondary (Cancel/Structural) */
-  --btn-secondary-bg: var(--gra-40);
-  --btn-secondary-text: var(--gra-10);
-  --btn-secondary-hover: color-mix(in srgb, var(--gra-04) 85%, black);
+  --btn-secondary-bg: var(--base-40);
+  --btn-secondary-text: var(--base-10);
+  --btn-secondary-hover: color-mix(in srgb, var(--base-04) 85%, black);
   /* Lightens slightly to pop off dark backgrounds */
-  --btn-secondary-active: color-mix(in srgb, var(--gra-04) 70%, black);
+  --btn-secondary-active: color-mix(in srgb, var(--base-04) 70%, black);
   /* Drops down for the click */
   --btn-secondary-disabled: var(--lvl-02);
   --btn-secondary-border: transparent;
 
   /* Danger (Delete) */
   --btn-danger-bg: var(--red-40);
-  --btn-danger-text: var(--gra-10);
+  --btn-danger-text: var(--base-10);
   --btn-danger-hover: color-mix(in srgb, var(--red-60) 85%, black);
   --btn-danger-active: color-mix(in srgb, var(--red-60) 70%, black);
   --btn-danger-disabled: var(--layer-02);
@@ -102,37 +102,37 @@
 
   /* Ghost Buttons (Pagination, standard icon buttons) */
   --btn-ghost-bg: transparent;
-  --btn-ghost-border: var(--gra-06);
+  --btn-ghost-border: var(--base-06);
   --btn-ghost-text: var(--text-primary);
-  --btn-ghost-hover-bg: color-mix(in srgb, var(--gra-10) 10%, transparent);
-  --btn-ghost-active-bg: color-mix(in srgb, var(--gra-10) 20%, transparent);
+  --btn-ghost-hover-bg: color-mix(in srgb, var(--base-10) 10%, transparent);
+  --btn-ghost-active-bg: color-mix(in srgb, var(--base-10) 20%, transparent);
   --btn-ghost-icon-size: 18px;
   --btn-ghost-text-shadow: 0px 2px 2px rgba(0, 0, 0, 1), 0px 4px 6px rgba(0, 0, 0, 0.8);
   --btn-icon-size: 16px;
   --btn-icon-nav-size: 24px;
 
   /* Control Buttons (Toolbar) */
-  --btn-toolbar-hover-bg: color-mix(in srgb, var(--gra-10) 10%, transparent);
-  --btn-toolbar-active-bg: color-mix(in srgb, var(--gra-10) 20%, transparent);
+  --btn-toolbar-hover-bg: color-mix(in srgb, var(--base-10) 10%, transparent);
+  --btn-toolbar-active-bg: color-mix(in srgb, var(--base-10) 20%, transparent);
 
   /* Maps directly to your global physical system */
   --btn-toolbar-shadow-hover: var(--btn-shadow-inset);
   --btn-toolbar-shadow-active: var(--btn-shadow-active-sm);
 
   /* Header Action Buttons */
-  --header-action-bg: var(--gra-03);
+  --header-action-bg: var(--base-03);
   /* Swapped var(--gray-90) to your custom gray palette */
-  --header-action-hover-bg: color-mix(in srgb, var(--gra-03) 85%, white);
+  --header-action-hover-bg: color-mix(in srgb, var(--base-03) 85%, white);
   /* Lightens base background */
-  --header-action-active-bg: color-mix(in srgb, var(--gra-03) 70%, white);
+  --header-action-active-bg: color-mix(in srgb, var(--base-03) 70%, white);
   --header-action-color: var(--white);
 
   /* Toggle Buttons / Requirements Tiles */
-  --btn-toggle-bg: var(--gra-04);
+  --btn-toggle-bg: var(--base-04);
   /* Swapped var(--layer-03) to your custom gray palette */
   --btn-toggle-border: transparent;
   --btn-toggle-text: var(--text-secondary);
-  --btn-toggle-hover-bg: color-mix(in srgb, var(--gra-02) 85%, white);
+  --btn-toggle-hover-bg: color-mix(in srgb, var(--base-02) 85%, white);
   --btn-toggle-active-bg: var(--color-accent);
   --btn-toggle-active-border: var(--blu-60);
   /* Fixed from --blue to match your palette */
@@ -155,7 +155,7 @@
   --cyn-50: #1192e8;
   --ind-50: #8a3ffc;
   --brn-50: #a56a3f;
-  --gra-50: rgba(229, 233, 246, 0.25);
+  --base-50: rgba(229, 233, 246, 0.25);
 
   /* ==========================================================================
    *  M3 40 Palette - UI and Buttons
@@ -173,7 +173,7 @@
   --cyn-60: #00687C;
   --ind-60: #6929c4;
   --brn-60: #8f5f3a;
-  --gra-40: rgb(80, 82, 88);
+  --base-40: rgb(80, 82, 88);
   /* atlassian neutral800 */
 
 
@@ -204,10 +204,10 @@
   --border-default: var(--gray-70);
   --border-strong: var(--gray-60);
 
-  --text-primary: var(--white);
-  --text-secondary: var(--gra-07);
-  --text-placeholder: var(--gra-05);
-  --text-disabled: var(--gra-05);
+  --text-primary: var(--base-10);
+  --text-secondary: var(--base-07);
+  --text-placeholder: var(--base-05);
+  --text-disabled: var(--base-05);
   --header-seperator: var(--border-default);
 
   /* ==========================================================================
@@ -468,6 +468,11 @@
   --text-secondary: var(--gray-100);
   --text-placeholder: var(--gray-50);
   --text-disabled: var(--gray-40);
+
+  /* Field Drop Shadow */
+  --field-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.15),
+    0 1px 2px rgba(0, 0, 0, 0.1);
 
   /* --- 3. Compatibility aliases (temporary migration layer) --- */
   --text-muted: var(--gray-90);
