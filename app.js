@@ -2964,12 +2964,15 @@ function _renderAgendaInner() {
         "color-gray",
         "color-violet", // Keep for legacy cleanup
         "out-of-service",
+        "one-way",
       );
       const tripColor = String(t.tripColor || "")
         .trim()
         .toLowerCase();
       if (tripColor === "out of service") {
         bar.classList.add("out-of-service");
+      } else if (tripColor === "one-way") {
+        bar.classList.add("one-way");
       } else if (tripColor) {
         bar.classList.add(`color-${tripColor}`);
       }
@@ -5316,6 +5319,12 @@ function buildPrintScheduleTwoPages() {
         const eidx = Number(bar.dataset.eidx);
         if (!Number.isFinite(sidx) || !Number.isFinite(eidx)) return;
         positionBarWithinOverlay(bar, bars, col, sidx, eidx, { insetL: 0, insetR: 0 });
+        // Re-apply half-day truncation after repositioning
+        if (bar.classList.contains("half-day-return")) {
+          const lastColW = col.widths[eidx] ?? 0;
+          const curW = parseFloat(bar.style.width) || 0;
+          bar.style.width = `${Math.max(0, curW - lastColW / 2)}px`;
+        }
         const left = bar.style.left;
         const w = bar.style.width;
         if (left) bar.style.left = `${Math.round(parseFloat(left))}px`;
