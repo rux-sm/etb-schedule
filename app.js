@@ -5640,9 +5640,10 @@ function buildPrintScheduleTwoPages() {
   })();
 
   printRoot.querySelectorAll(".print-table").forEach((t) => repositionBarsForPrint(t, colMetrics));
-  printRoot.style.setProperty("--print-scale", String(computePrintScale()));
+  const scale = computePrintScale();
   printRoot.classList.add("is-hidden");
   printRoot.style.cssText = "";
+  printRoot.style.setProperty("--print-scale", String(scale));
 }
 
 /**

@@ -20,8 +20,8 @@
   --lvl-04: var(--base-04);
   --lvl-05: var(--base-05);
 
-  --lvl-00-border: var(--base-01);
-  --lvl-01-border: var(--base-03);
+  --lvl-00-border: var(--base-00);
+  --lvl-01-border: var(--base-00);
   --lvl-02-border: var(--base-03);
   --lvl-03-border: var(--base-04);
   --lvl-04-border: var(--base-05);

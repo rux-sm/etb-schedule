@@ -832,9 +832,9 @@
 /* Inner Gridlines */
 .schedule-grid__header-cell,
 .schedule-grid__cell {
-  border-inline-end: 1px solid var(--lvl-01-border);
+  border-inline-end: 2px solid var(--lvl-01-border);
   /* Vertical tracking lines */
-  border-bottom: 1px solid var(--lvl-01-border);
+  border-bottom: 2px solid var(--lvl-01-border);
   /* Horizontal tracking lines */
 }
 
@@ -1222,12 +1222,12 @@
   will-change: filter,
     box-shadow;
   background: color-mix(in srgb, var(--tripbar-color) var(--tripbar-bg-mix-percent), transparent);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(0px);
   /* Required for Safari support */
-  -webkit-backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(0px);
 
   /* 3. Soften the edge */
-  border: 1px solid color-mix(in srgb, var(--tripbar-color) 50%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tripbar-color) 0%, transparent);
   border-left: 4px solid var(--tripbar-color);
 }
 
@@ -1669,6 +1669,18 @@
   content: "chevron_right";
 }
 
+/* Legal print: border-collapse outside @media print so JS measures collapsed layout */
+#printRoot.print-mode-legal .print-table,
+#printRoot.print-mode-legal .print-table td,
+#printRoot.print-mode-legal .print-table th {
+  border: 1px solid #d3d3d3 !important;
+  border-collapse: collapse !important;
+  box-sizing: border-box !important;
+}
+#printRoot.print-mode-legal .print-table {
+  border-spacing: 0 !important;
+}
+
 /* Print overrides (migrated from _legacy-grid.css) */
 @media print {
       #printRoot.print-mode-legal .print-table .schedule-grid__trip-bar {
@@ -1782,16 +1794,9 @@
     print-color-adjust: exact !important;
   }
 
-  /* Legal print: all borders exactly 1px, prevent double borders */
-  #printRoot.print-mode-legal .print-table,
-  #printRoot.print-mode-legal .print-table td,
-  #printRoot.print-mode-legal .print-table th {
-    border: 1px solid #d3d3d3 !important;
-    border-collapse: collapse !important;
-    box-sizing: border-box !important;
-  }
-  #printRoot.print-mode-legal .print-table {
-    border-spacing: 0 !important;
+  #printRoot.print-mode-legal {
+    zoom: var(--print-scale, 1);
+    width: 1440px !important;
   }
 }
 
