@@ -191,7 +191,7 @@
   background-color: var(0);
   border-bottom: none;
   width: 100%;
-  height: 48px;
+  height: auto;
   overflow-x: auto;
   overflow-y: hidden;
 }
@@ -201,8 +201,8 @@
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   column-gap: 8px;
-  height: var(--size-header-row);
-  padding: 0;
+  height: auto;
+  padding: var(--space-lg) 0;
   position: relative;
 }
 
@@ -212,7 +212,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 4px;
+  gap: 8px;
   /* Perfect tight gap for the arrow buttons */
   min-width: 0;
   overflow: hidden;
@@ -381,9 +381,6 @@
   cursor: pointer;
   pointer-events: none;
 }
-
-/* --- Typography and headings --- */
-/* .c-header__title base handles margin/padding; see _primitives.css */
 
 /* Treat the entire date as one unified line of natural text */
 .agenda-header__week-date {
@@ -769,33 +766,33 @@
 
 /* Outer Boundaries */
 .schedule-grid {
-  border-inline-start: 1px solid var(--lvl-00-border);
+  border-inline-start: 1px solid var(--border-subtle);
   /* Left boundary */
 }
 
 .schedule-grid__header-cell {
-  border-top: 1px solid var(--lvl-00-border);
+  border-top: 1px solid var(--border-subtle);
   /* Top boundary */
 }
 
 .schedule-grid__header-cell:last-child,
 .schedule-grid__cell:last-child {
-  border-inline-end: 1px solid var(--lvl-00-border);
+  border-inline-end: 1px solid var(--border-subtle);
   /* Right boundary */
 }
 
 /* Bottom outer boundary */
 .schedule-grid tbody tr:last-child>.schedule-grid__cell,
 .schedule-grid tbody tr:last-child>.schedule-grid__bus-cell {
-  border-bottom: 1px solid var(--lvl-00-border);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 /* Inner Gridlines */
 .schedule-grid__header-cell,
 .schedule-grid__cell {
-  border-inline-end: 1px solid var(--lvl-00-border);
+  border-inline-end: 1px solid var(--border-subtle);
   /* Vertical tracking lines */
-  border-bottom: 1px solid var(--lvl-00-border);
+  border-bottom: 1px solid var(--border-subtle);
   /* Horizontal tracking lines */
 }
 
@@ -967,7 +964,7 @@
 
 .waiting-list-row .schedule-grid__bus-cell {
   background-color: var(--lvl-00) !important;
-  border-top: 1px solid var(--lvl-00-border);
+  border-top: 1px solid var(--border-subtle);
   color: var(--text-muted);
   font-size: 0.6875rem;
   text-align: center;
@@ -1265,7 +1262,7 @@
         color-mix(in srgb, var(--color-danger) 8%, transparent) 8px,
         color-mix(in srgb, var(--color-danger) 16%, transparent) 8px,
         color-mix(in srgb, var(--color-danger) 16%, transparent) 16px);
-    border: 1px dashed color-mix(in srgb, var(--color-danger) 40%, var(--base-00));
+    border: 1px solid color-mix(in srgb, var(--color-danger) 40%, var(--base-00));
     border-left: 4px solid var(--color-danger);
 
     /* Overrides for crisp text and recessed look */
@@ -1633,12 +1630,19 @@
 
 /* Print styles (Legal V1 table + V2 grid) moved to css/print.css */
 
+#driverWeekCard .c-card__body {
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 .driver-week__wrap {
   position: relative;
-  width: auto;
-  max-width: 100%;
+  flex: 1;
+  min-height: 0;
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: auto;
   margin: 0;
   background: var(--lvl-02);
 }
@@ -1663,17 +1667,17 @@
   text-align: center;
   white-space: nowrap;
   cursor: pointer;
-  border-inline-end: 1px solid var(--lvl-02-border);
-  border-bottom: 1px solid var(--lvl-02-border);
+  border-inline-end: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .driver-week__table th:last-child,
 .driver-week__table td:last-child {
-  border-inline-end: none;
+  border-inline-end: 1px solid var(--border-subtle);
 }
 
 .driver-week__table tr:last-child td {
-  border-bottom: none;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .driver-week__table th:first-child,
@@ -1683,13 +1687,24 @@
   padding-inline-start: 6px;
   color: var(--text-primary);
   font-weight: 400;
+ 
+}
+
+.driver-week__table th {
+  border-top: 1px solid var(--border-subtle);
 }
 
 .driver-week__table th:first-child {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.02em;
+  border-inline-start: 1px solid var(--border-subtle);
 }
+
+.driver-week__table td:first-child {
+  border-inline-start: 1px solid var(--border-subtle);
+}
+
 
 .driver-week__count {
   font-weight: 400;

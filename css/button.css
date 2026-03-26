@@ -166,8 +166,8 @@ button {
   text-shadow: var(--btn-ghost-text-shadow);
 
   /* Visuals */
-  background-color: var(--btn-ghost-bg);
-  border-color: var(--btn-ghost-border);
+  background-color: transparent;
+  border-color: var(--border-subtle);
   color: var(--btn-ghost-text);
   box-shadow: var(--btn-shadow-inset);
 }

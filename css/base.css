@@ -11,29 +11,24 @@
 
 /* ── SCROLLBARS — Hide vertical, keep horizontal where intended ───────── */
 /* Main schedule horizontal scrollbar remains visible */
-.schedule-grid-container::-webkit-scrollbar,
-.driver-week__wrap::-webkit-scrollbar {
+.schedule-grid-container::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-.schedule-grid-container::-webkit-scrollbar:vertical,
-.driver-week__wrap::-webkit-scrollbar:vertical {
+.schedule-grid-container::-webkit-scrollbar:vertical {
   width: 0;
 }
 
-.schedule-grid-container::-webkit-scrollbar:horizontal,
-.driver-week__wrap::-webkit-scrollbar:horizontal {
+.schedule-grid-container::-webkit-scrollbar:horizontal {
   height: 16px;
 }
 
-.schedule-grid-container::-webkit-scrollbar-track,
-.driver-week__wrap::-webkit-scrollbar-track {
+.schedule-grid-container::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.schedule-grid-container::-webkit-scrollbar-thumb,
-.driver-week__wrap::-webkit-scrollbar-thumb {
+.schedule-grid-container::-webkit-scrollbar-thumb {
   background-color: var(--btn-secondary-bg);
   border-radius: 2px;
   border: 2px solid transparent;
@@ -41,8 +36,7 @@
   transition: background-color 0.2s ease;
 }
 
-.schedule-grid-container::-webkit-scrollbar-thumb:hover,
-.driver-week__wrap::-webkit-scrollbar-thumb:hover {
+.schedule-grid-container::-webkit-scrollbar-thumb:hover {
   background-color: var(--btn-secondary-hover);
 }
 
@@ -175,7 +169,7 @@ h6 {
   font-family: var(--font-sans);
   font-size: var(--heading-2-size);
   font-weight: var(--heading-2-weight);
-  line-height: var(--heading-2-line-height) !important;
+  line-height: var(--heading-2-line-height);
   letter-spacing: var(--heading-2-letter-spacing);
   color: var(--heading-2-color);
   padding: 0 0;

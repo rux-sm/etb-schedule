@@ -20,12 +20,12 @@
   --lvl-04: var(--base-04);
   --lvl-05: var(--base-05);
 
-  --lvl-00-border: rgba(255, 255, 255, 10%);
-  --lvl-01-border: var(--base-00);
-  --lvl-02-border: var(--base-03);
-  --lvl-03-border: var(--base-04);
-  --lvl-04-border: var(--base-05);
-  --lvl-05-border: var(--base-06);
+
+  --border-subtle: rgb(255 255 255 / 15%);
+  --border-default: rgb(255 255 255 / 20%);
+  
+  --border-hover: rgb(255 255 255 / 30%);
+  --border-focus: rgb(255 255 255 / 100%); /* Solid white for max contrast */
 
   --field-bg: var(--base-04);
   --field-bg-hover: var(--base-02);
@@ -200,9 +200,6 @@
   --color-warning: var(--alert-yel);
   --color-secondary: var(--alert-blu);
 
-  --border-subtle: var(--gray-80);
-  --border-default: var(--gray-70);
-  --border-strong: var(--gray-60);
 
   --text-primary: var(--base-10);
   --text-secondary: var(--base-08);
