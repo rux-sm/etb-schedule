@@ -27,7 +27,7 @@ textarea,
   background-color: var(--field-bg);
   border: 1px solid var(--field-border);
   box-shadow: var(--field-shadow);
-  border-radius: 6px;
+  border-radius: 0px;
   font-size: var(--input-font-size);
   font-weight: var(--input-weight);
   color: var(--text-primary);

@@ -1,43 +1,4 @@
-@media print {
-  #printRoot.print-mode-legal .print-table thead tr:first-child th {
-    border-top: 1px solid #d3d3d3 !important;
-  }
-}
-@media print {
-  #printRoot.print-mode-legal .print-table .schedule-grid__trip-bar.cont-left::before,
-  #printRoot.print-mode-legal .print-table .schedule-grid__trip-bar.cont-right::after {
-    color: #111 !important;
-  }
-}
-#printRoot.print-mode-legal .c-header.c-header--schedule {
-  border-top: none !important;
-  border-bottom: none !important;
-  height: 40px !important;
-}
-
-#printRoot.print-mode-legal .print-header {
-  border-top: none !important;
-  border-bottom: none !important;
-  height: 40px !important;
-}
-
-#printRoot.print-mode-legal .print-table .schedule-grid__header-cell {
-  border-top: 1px solid transparent !important;
-}
-
-.print-header-logo-img {
-  display: block !important;
-  height: 24px !important;
-  width: auto !important;
-  margin-right: 12px !important;
-  flex-shrink: 0 !important;
-}
-
-#printRoot.print-mode-legal .agenda-header__date-left {
-  overflow: visible !important;
-  display: flex !important;
-  align-items: center !important;
-}
+/* Print styles moved to css/print.css */
 
 /* ==========================================================================
    APP HEADER - CARBON UI SHELL (48px)
@@ -808,33 +769,33 @@
 
 /* Outer Boundaries */
 .schedule-grid {
-  border-inline-start: 1px solid var(--lvl-01-border);
+  border-inline-start: 1px solid var(--lvl-00-border);
   /* Left boundary */
 }
 
 .schedule-grid__header-cell {
-  border-top: 1px solid var(--lvl-01-border);
+  border-top: 1px solid var(--lvl-00-border);
   /* Top boundary */
 }
 
 .schedule-grid__header-cell:last-child,
 .schedule-grid__cell:last-child {
-  border-inline-end: 1px solid var(--lvl-01-border);
+  border-inline-end: 1px solid var(--lvl-00-border);
   /* Right boundary */
 }
 
 /* Bottom outer boundary */
 .schedule-grid tbody tr:last-child>.schedule-grid__cell,
 .schedule-grid tbody tr:last-child>.schedule-grid__bus-cell {
-  border-bottom: 1px solid var(--lvl-01-border);
+  border-bottom: 1px solid var(--lvl-00-border);
 }
 
 /* Inner Gridlines */
 .schedule-grid__header-cell,
 .schedule-grid__cell {
-  border-inline-end: 2px solid var(--lvl-01-border);
+  border-inline-end: 1px solid var(--lvl-00-border);
   /* Vertical tracking lines */
-  border-bottom: 2px solid var(--lvl-01-border);
+  border-bottom: 1px solid var(--lvl-00-border);
   /* Horizontal tracking lines */
 }
 
@@ -866,7 +827,7 @@
   width: 100%;
   min-width: 1436px;
   height: auto;
-  background: var(--lvl-01);
+  background: var(--lvl-00);
   table-layout: fixed;
   border-collapse: separate;
   border-spacing: 0;
@@ -891,7 +852,7 @@
 }
 
 .schedule-grid__header-cell {
-  background: var(--lvl-01);
+  background: var(--lvl-00);
   padding: 0;
   height: var(--day-row-h);
   position: sticky;
@@ -911,7 +872,7 @@
   position: sticky;
   inset-inline-start: 0;
   z-index: 3000 !important;
-  background: var(--lvl-01);
+  background: var(--lvl-00);
   min-width: var(--bus-col-w);
   max-width: var(--bus-col-w);
   width: var(--bus-col-w);
@@ -950,7 +911,7 @@
 }
 
 .schedule-grid__header-cell--today {
-  background: var(--lvl-01);
+  background: var(--lvl-00);
   /*border: 1px solid var(--red);*/
 }
 
@@ -997,7 +958,7 @@
 
 #waitingBody tr.waiting-list-row td,
 .waiting-list-row td {
-  background-color: var(--lvl-01) !important;
+  background-color: var(--lvl-00) !important;
   vertical-align: top;
   height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
   min-height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
@@ -1005,8 +966,8 @@
 }
 
 .waiting-list-row .schedule-grid__bus-cell {
-  background-color: var(--lvl-01) !important;
-  border-top: 1px solid var(--lvl-01-border);
+  background-color: var(--lvl-00) !important;
+  border-top: 1px solid var(--lvl-00-border);
   color: var(--text-muted);
   font-size: 0.6875rem;
   text-align: center;
@@ -1043,7 +1004,7 @@
   z-index: 500;
   pointer-events: none;
   /* pass through so sticky overlay doesn't steal trip bar hover */
-  background: var(--lvl-01);
+  background: var(--lvl-00);
   font-size: var(--bus-num-size);
   /* 14px */
   font-weight: var(--bus-num-weight);
@@ -1222,16 +1183,17 @@
   will-change: filter,
     box-shadow;
   background: color-mix(in srgb, var(--tripbar-color) var(--tripbar-bg-mix-percent), transparent);
-  backdrop-filter: blur(0px);
+  backdrop-filter: blur(16px);
   /* Required for Safari support */
-  -webkit-backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(16px);
 
   /* 3. Soften the edge */
-  border: 1px solid color-mix(in srgb, var(--tripbar-color) 0%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tripbar-color) 50%, transparent);
   border-left: 4px solid var(--tripbar-color);
 }
 
-.schedule-grid__trip-bar:hover {
+.schedule-grid__trip-bar:hover,
+.schedule-grid__trip-bar.selected {
   /* Elevates the bar above adjacent rows to prevent clipping */
   z-index: 20;
   border: 1px solid color-mix(in srgb, var(--tripbar-color) 100%, transparent);
@@ -1669,138 +1631,10 @@
   content: "chevron_right";
 }
 
-/* Legal print: border-collapse outside @media print so JS measures collapsed layout */
-#printRoot.print-mode-legal .print-table,
-#printRoot.print-mode-legal .print-table td,
-#printRoot.print-mode-legal .print-table th {
-  border: 1px solid #d3d3d3 !important;
-  border-collapse: collapse !important;
-  box-sizing: border-box !important;
-}
-#printRoot.print-mode-legal .print-table {
-  border-spacing: 0 !important;
-}
-
-/* Print overrides (migrated from _legacy-grid.css) */
-@media print {
-      #printRoot.print-mode-legal .print-table .schedule-grid__trip-bar {
-        --tripbar-r6-color: #d60000 !important;
-      }
-      #printRoot.print-mode-legal .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__multi-badge {
-        color: #111 !important;
-      }
-    #printRoot.print-mode-legal .schedule-grid__row--notes,
-    #printRoot.print-mode-legal .schedule-grid__row--notes .schedule-grid__cell {
-      color: #d60000 !important;
-      font-weight: bold !important;
-    }
-  #printRoot.print-mode-legal .schedule-grid__trip-bar__row--6 {
-    color: #d60000 !important;
-    font-weight: bold !important;
-  }
-  #printRoot.print-mode-legal .print-table .schedule-grid__trip-bar__time {
-    background: none !important;
-    color: #111 !important;
-    font-weight: bold !important;
-    border-radius: 0 !important;
-    padding: 0 !important;
-  }
-  #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar {
-    border-radius: 0px !important;
-    border: 1px solid var(--gray-20) !important;
-  }
-
-  #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__drivers,
-  #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__contact,
-  #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__status-row,
-  #printRoot.print-mode-letter-full .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__pre-drivers {
-    display: none !important;
-  }
-
-  .print-table .schedule-grid__trip-bar {
-    container-type: normal !important;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-    background: color-mix(in srgb, var(--tripbar-color) 20%, white) !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    box-shadow: none !important;
-    position: absolute !important;
-    height: 100% !important;
-    top: 0 !important;
-    box-sizing: border-box !important;
-    border: 1px solid var(--gray-20) !important;
-    border-left: 4px solid var(--tripbar-color) !important;
-    padding: 3px 5px 3px 2px !important;
-    border-radius: 0px !important;
-    z-index: 10;
-    font-size: 9pt !important;
-  }
-
-  /* Restore stripe backgrounds for out-of-service and one-way (overrides the solid bg above) */
-  .print-table .schedule-grid__trip-bar.out-of-service,
-  .print-table .schedule-grid__trip-bar.one-way {
-    background: repeating-linear-gradient(-45deg,
-        color-mix(in srgb, var(--tripbar-color) 8%, white),
-        color-mix(in srgb, var(--tripbar-color) 8%, white) 8px,
-        color-mix(in srgb, var(--tripbar-color) 16%, white) 8px,
-        color-mix(in srgb, var(--tripbar-color) 16%, white) 16px) !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-
-  .print-table .schedule-grid__trip-bar * {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-
-  .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__row {
-    display: flex !important;
-  }
-
-  .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__title,
-  .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__sub,
-  .print-table .schedule-grid__trip-bar__pre-drivers {
-    visibility: visible !important;
-  }
-
-  .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__title {
-    font-size: 9pt !important;
-  }
-
-  .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__sub,
-  .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__contact {
-    font-size: 8pt !important;
-  }
-
-  .print-table .schedule-grid__trip-bar__time {
-    font-size: 8pt !important;
-  }
-
-  .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__drivers .schedule-grid__trip-bar__driver,
-  .print-table .schedule-grid__trip-bar__pre-drivers {
-    font-size: 8pt !important;
-  }
-
-  .print-table .schedule-grid__trip-bar__mini-badge .schedule-grid__trip-bar__mini-badge-text {
-    /* Styling is in .icon-invoice-text now */
-    color: var(--tripbar-badge-text-color);
-    background-color: var(--white);
-  }
-
-  .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__mini-badge,
-  .print-table .schedule-grid__trip-bar .schedule-grid__trip-bar__req-icon {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-
-  #printRoot.print-mode-legal {
-    zoom: var(--print-scale, 1);
-    width: 1440px !important;
-  }
-}
+/* Print styles (Legal V1 table + V2 grid) moved to css/print.css */
 
 .driver-week__wrap {
+  position: relative;
   width: auto;
   max-width: 100%;
   overflow-x: auto;
@@ -1863,13 +1697,21 @@
 }
 
 .driver-week__cell--unavailable {
-  background: var(--red-60) !important;
+  background: var(--red-40) !important;
   color: var(--text-primary) !important;
 }
 
 .driver-week__cell--on {
   background: var(--color-accent);
   color: var(--text-primary);
+}
+
+#driver-col-hl {
+  position: absolute;
+  pointer-events: none;
+  border: 1.5px solid var(--color-accent);
+  border-radius: 2px;
+  z-index: 10;
 }
 
 /* --- 5. Rigid Bus Assignment --- */

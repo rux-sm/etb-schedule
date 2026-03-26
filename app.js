@@ -3442,6 +3442,7 @@ function renderDriverWeekHeader() {
   weekDates.forEach((dStr, i) => {
     const th = document.createElement("th");
     th.textContent = dayLabels[i];
+    th.dataset.date = dStr;
 
     // Highlight today in driver week header too
     if (dStr === ymd(new Date())) {
@@ -5647,6 +5648,144 @@ function buildPrintScheduleTwoPages() {
 }
 
 /**
+ * Build Legal-landscape print layout using CSS Grid.
+ * Bars are positioned with grid-column (sidx/eidx) — no pixel measurement,
+ * no zoom, no requestAnimationFrame needed.
+ * 5 bus rows per page × 2 pages = 10 total rows.
+ */
+function buildPrintScheduleLegalCSSGrid() {
+  const printRoot = document.getElementById("printRoot");
+  if (!printRoot) return;
+
+  const weekTable = getScheduleGridTableEl();
+  if (!weekTable) return;
+
+  // Day header cells from the live schedule thead (index 1-7, skipping bus col)
+  const theadRow = weekTable.querySelector("thead tr");
+  const dayHeaderCells = theadRow ? Array.from(theadRow.cells).slice(1) : [];
+
+  function buildPage(startIdx, endIdx) {
+    const page = document.createElement("div");
+    page.className = "print-page";
+
+    const card = document.createElement("div");
+    card.className = "print-card";
+
+    // Agency header (logo + date range) — same approach as existing function
+    const agendaHeader = getScheduleAgendaHeaderEl();
+    const headerClone = agendaHeader ? agendaHeader.cloneNode(true) : null;
+    if (headerClone) {
+      headerClone.classList.add("print-header");
+      headerClone
+        .querySelectorAll(
+          ".c-header__actions, .agenda-header__date-left .btn--ghost, .weekpicker-trigger-wrap, .agenda-header__sync-center, .agenda-header__date-right",
+        )
+        .forEach((el) => el.remove());
+      const dateLeft = headerClone.querySelector(".agenda-header__date-left");
+      if (dateLeft) {
+        const logoImg = document.createElement("img");
+        logoImg.src = "logo.png";
+        logoImg.className = "print-header-logo-img";
+        logoImg.alt = "Logo";
+        dateLeft.insertBefore(logoImg, dateLeft.firstChild);
+      }
+      card.appendChild(headerClone);
+    }
+
+    // CSS Grid schedule
+    const grid = document.createElement("div");
+    grid.className = "pgv2-grid";
+
+    // Header row: empty bus cell + 7 day cells
+    const busHeaderCell = document.createElement("div");
+    busHeaderCell.className = "pgv2-hcell pgv2-hcell--bus";
+    grid.appendChild(busHeaderCell);
+
+    for (let d = 0; d < 7; d++) {
+      const hcell = document.createElement("div");
+      hcell.className = "pgv2-hcell";
+      const srcCell = dayHeaderCells[d];
+      if (srcCell) {
+        const label = srcCell.querySelector(".schedule-grid__day-label");
+        hcell.appendChild(label ? label.cloneNode(true) : document.createTextNode(srcCell.textContent.trim()));
+      }
+      grid.appendChild(hcell);
+    }
+
+    // Bus rows
+    const tbody = weekTable.querySelector("tbody:not([hidden])");
+    if (tbody) {
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      for (let i = startIdx; i < Math.min(endIdx, rows.length); i++) {
+        const tr = rows[i];
+
+        // Bus cell — clone indicator div (bus number + icons)
+        const busCell = document.createElement("div");
+        busCell.className = "pgv2-bus-cell";
+        const srcBusCell = tr.cells[0];
+        if (srcBusCell) {
+          const indicator = srcBusCell.querySelector(".schedule-grid__bus-indicator");
+          if (indicator) busCell.appendChild(indicator.cloneNode(true));
+        }
+        const busAccent = tr.style.getPropertyValue("--bus-accent-color");
+        if (busAccent) busCell.style.setProperty("--bus-accent-color", busAccent);
+        grid.appendChild(busCell);
+
+        // Bars area — inner 7-col grid; each bar placed by grid-column
+        const barsArea = document.createElement("div");
+        barsArea.className = "pgv2-bars-area";
+
+        const srcBarsCell = tr.cells[1];
+        if (srcBarsCell) {
+          srcBarsCell.querySelectorAll(".schedule-grid__trip-bar").forEach((bar) => {
+            const sidx = Number(bar.dataset.sidx);
+            const eidx = Number(bar.dataset.eidx);
+            if (!Number.isFinite(sidx) || !Number.isFinite(eidx)) return;
+            const barClone = bar.cloneNode(true);
+            // Set positioning inline with !important so it beats the base class's
+            // height: var(--tripbar-height) !important and position: absolute rules
+            barClone.style.removeProperty("left");
+            barClone.style.removeProperty("width");
+            barClone.style.setProperty("position", "absolute", "important");
+            barClone.style.setProperty("top", "0", "important");
+            barClone.style.setProperty("left", "0", "important");
+            barClone.style.setProperty("width", "100%", "important");
+            barClone.style.setProperty("height", "100%", "important");
+            barClone.style.setProperty("max-height", "none", "important");
+            // Wrapper is the grid item — grid-column placed here, not on the bar
+            const lane = Number(bar.dataset.lane) || 0;
+            const wrapper = document.createElement("div");
+            wrapper.className = "pgv2-bar-wrapper";
+            wrapper.style.gridColumn = `${sidx + 1} / ${eidx + 2}`;
+            wrapper.style.gridRow = String(lane + 1);
+            wrapper.appendChild(barClone);
+            barsArea.appendChild(wrapper);
+          });
+        }
+        grid.appendChild(barsArea);
+
+        // Two empty notes rows for handwritten notes
+        for (let n = 0; n < 2; n++) {
+          const notesRow = document.createElement("div");
+          notesRow.className = "pgv2-notes-row";
+          grid.appendChild(notesRow);
+        }
+      }
+    }
+
+    card.appendChild(grid);
+    page.appendChild(card);
+    return page;
+  }
+
+  printRoot.innerHTML = "";
+  printRoot.classList.remove("print-mode-legal", "print-mode-legal-v2", "print-mode-letter-full");
+  printRoot.classList.add("print-mode-legal-v2");
+  printRoot.appendChild(buildPage(0, 5));
+  printRoot.appendChild(buildPage(5, 10));
+}
+
+/**
  * Build Letter-landscape print layout (Full 10-row schedule on 1 page).
  */
 function buildPrintScheduleFullLetter() {
@@ -5748,7 +5887,7 @@ function clearPrintRoot() {
   const printRoot = document.getElementById("printRoot");
   if (printRoot) {
     printRoot.innerHTML = "";
-    printRoot.classList.remove("print-mode-letter-full", "print-mode-legal");
+    printRoot.classList.remove("print-mode-letter-full", "print-mode-legal", "print-mode-legal-v2");
   }
 }
 
@@ -5831,6 +5970,74 @@ async function loadDriversAndBuses(forceRefresh = false) {
 // ======================================================
 let activeContextTripKey = null;
 let activeCellContext = null;
+let selectedTripBar = null;
+
+function selectTripBar(barEl) {
+  if (selectedTripBar && selectedTripBar !== barEl) {
+    selectedTripBar.classList.remove("selected");
+  }
+  // Clear previous driver column highlights
+  document.querySelectorAll(
+    ".driver-week__cell--trip-highlight, .driver-week__header-cell--trip-highlight"
+  ).forEach(el => el.classList.remove(
+    "driver-week__cell--trip-highlight",
+    "driver-week__header-cell--trip-highlight"
+  ));
+  const existingOverlay = document.getElementById("driver-col-hl");
+  if (existingOverlay) existingOverlay.hidden = true;
+
+  selectedTripBar = barEl || null;
+  if (!selectedTripBar) return;
+
+  selectedTripBar.classList.add("selected");
+
+  const sidx = parseInt(selectedTripBar.dataset.sidx, 10);
+  const eidx = parseInt(selectedTripBar.dataset.eidx, 10);
+  const weekDates = getWeekDates();
+  const targetDates = new Set(weekDates.slice(sidx, eidx + 1));
+  const leftDate = weekDates[sidx];
+  const rightDate = weekDates[eidx];
+
+  // Background tint on matching cells
+  [
+    ...(dom.driverWeekHeadRow?.querySelectorAll("[data-date]") ?? []),
+    ...(dom.driverWeekBody?.querySelectorAll("[data-date]") ?? []),
+  ].forEach(el => {
+    if (!targetDates.has(el.dataset.date)) return;
+    el.classList.add(
+      el.tagName === "TH"
+        ? "driver-week__header-cell--trip-highlight"
+        : "driver-week__cell--trip-highlight"
+    );
+  });
+
+  // Overlay for border + glow
+  const wrap = dom.driverWeekBody?.closest(".driver-week__wrap");
+  if (!wrap) return;
+  const leftHeaderCell = dom.driverWeekHeadRow?.querySelector(`[data-date="${leftDate}"]`);
+  const bodyRows = Array.from(dom.driverWeekBody?.querySelectorAll("tr") ?? []);
+  const lastBodyRow = bodyRows[bodyRows.length - 1];
+  const rightLastCell = lastBodyRow?.querySelector(`[data-date="${rightDate}"]`);
+  if (!leftHeaderCell || !rightLastCell) return;
+
+  let overlay = document.getElementById("driver-col-hl");
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.id = "driver-col-hl";
+    wrap.appendChild(overlay);
+  }
+
+  const wrapRect = wrap.getBoundingClientRect();
+  const topRect = leftHeaderCell.getBoundingClientRect();
+  const bottomRect = rightLastCell.getBoundingClientRect();
+
+  overlay.style.left   = `${topRect.left   - wrapRect.left + wrap.scrollLeft}px`;
+  overlay.style.top    = `${topRect.top    - wrapRect.top  + wrap.scrollTop}px`;
+  overlay.style.width  = `${bottomRect.right  - topRect.left}px`;
+  overlay.style.height = `${bottomRect.bottom - topRect.top}px`;
+
+  overlay.hidden = false;
+}
 
 function closeTripContextMenu() {
   if (dom.ctxMenu) dom.ctxMenu.hidden = true;
@@ -5950,6 +6157,7 @@ function handleScheduleInteraction(e, isContext) {
       return;
     }
 
+    selectTripBar(tripBar);
     showTripContextMenu(e.pageX, e.pageY, tripKey);
     return;
   }
@@ -6238,6 +6446,10 @@ function wireDelegatedBarEvents() {
         }
         return;
       }
+
+        // Selection (all devices)
+      const clickedBar = e.target.closest(".schedule-grid__trip-bar");
+      selectTripBar(clickedBar || null);
 
       // Only handle Taps on touch devices for the general context menu
       if (isMobileOnly()) {
@@ -7374,11 +7586,9 @@ function wireSettingsMenu() {
     dom.settingsMenu.hidden = true;
     setSidePanelMode("off");
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setPrintPageSize("legal");
-        buildPrintScheduleTwoPages();
-        window.print();
-      });
+      setPrintPageSize("legal");
+      buildPrintScheduleLegalCSSGrid();
+      window.print();
     });
   });
 

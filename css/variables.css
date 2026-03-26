@@ -20,7 +20,7 @@
   --lvl-04: var(--base-04);
   --lvl-05: var(--base-05);
 
-  --lvl-00-border: var(--base-00);
+  --lvl-00-border: rgba(255, 255, 255, 10%);
   --lvl-01-border: var(--base-00);
   --lvl-02-border: var(--base-03);
   --lvl-03-border: var(--base-04);

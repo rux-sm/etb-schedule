@@ -12,5 +12,8 @@
 /* Schedule view (grid, nav, panels, agenda) */
 @import "schedule.css";
 
+/* Print layouts (legal, letter-full, legal-v2) */
+@import "print.css";
+
 /* Modals and Forms (envelope, notes, calculator) */
 @import "modals.css";

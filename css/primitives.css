@@ -15,16 +15,6 @@
   transform: translateX(-50%);
 }
 
-  @media print {
-    #printRoot.print-mode-legal .icon-invoice-text {
-      background: #fff !important;
-      color: #d60000 !important;
-      border-radius: 2px !important;
-      box-shadow: none !important;
-      text-shadow: none !important;
-    }
-  }
-
 /* ==========================================================================
    5-COMPONENTS / BADGES
    Small status indicators and counters
@@ -158,13 +148,6 @@
   inset-inline-end: var(--icon-arrow-offset, 4px);
   animation: arrow-right-bounce 0.75s infinite ease-in-out;
 }
-  #printRoot.print-mode-legal .icon-arrow,
-  #printRoot.print-mode-legal .schedule-grid__trip-bar.cont-left::before,
-  #printRoot.print-mode-legal .schedule-grid__trip-bar.cont-right::after {
-    text-shadow: none !important;
-    box-shadow: none !important;
-    filter: none !important;
-  }
 
 /* ==========================================================================
    5-COMPONENTS / CARDS
