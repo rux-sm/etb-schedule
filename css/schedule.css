@@ -816,7 +816,6 @@
 }
 
 /* ==========================================================================
-/* ==========================================================================
    SCHEDULE GRID STRUCTURE & LAYOUT
    ========================================================================== */
 
@@ -1618,6 +1617,28 @@
   content: "chevron_left";
 }
 
+/* ── cont-left: arrival time gets the full row width ───────────────────────
+   isStartDay is always false on cont-left bars so left/center are empty.
+   Collapse them to zero so the right (arrival) item owns the whole row,
+   then pad past the small chip so text can never clip under it. */
+.schedule-grid__trip-bar.cont-left .schedule-grid__trip-bar__time--left,
+.schedule-grid__trip-bar.cont-left .schedule-grid__trip-bar__time--center {
+  flex: 0;
+  overflow: hidden;
+}
+
+.schedule-grid__trip-bar.cont-left .schedule-grid__trip-bar__time-row {
+  padding-inline-start: calc(var(--icon-arrow-offset, 4px) + var(--icon-arrow-size, 1.125rem) + 2px);
+}
+
+/* On narrow half-day bars left-align the arrival time so it reads "10:0…"
+   instead of being left-clipped to "0 AM" when right-aligned. */
+@container (max-width: 80px) {
+  .schedule-grid__trip-bar.cont-left .schedule-grid__trip-bar__time--right {
+    justify-content: flex-start;
+  }
+}
+
 .schedule-grid__trip-bar.cont-right {
   border-inline-end: none;
   border-start-end-radius: 0;
@@ -1628,13 +1649,33 @@
   content: "chevron_right";
 }
 
+/* ── cont-right: departure time gets the full row width ─────────────────────
+   isEndDay is always false on cont-right bars so the right item is empty.
+   Collapse it, then pad past the right chip. */
+.schedule-grid__trip-bar.cont-right .schedule-grid__trip-bar__time--right {
+  flex: 0;
+  overflow: hidden;
+}
+
+.schedule-grid__trip-bar.cont-right .schedule-grid__trip-bar__time-row {
+  padding-inline-end: calc(var(--icon-arrow-offset, 4px) + var(--icon-arrow-size, 1.125rem) + 2px);
+}
+
+/* On narrow half-day bars right-align departure time so it reads "6:0…"
+   instead of being right-clipped when left-aligned. */
+@container (max-width: 80px) {
+  .schedule-grid__trip-bar.cont-right .schedule-grid__trip-bar__time--left {
+    justify-content: flex-end;
+  }
+}
+
 /* Print styles (Legal V1 table + V2 grid) moved to css/print.css */
 
 #driverWeekCard .c-card__body {
   padding: var(--space-lg);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  /* overflow: hidden removed to allow child scroll */
 }
 
 .driver-week__wrap {
@@ -1645,12 +1686,18 @@
   overflow-y: auto;
   margin: 0;
   background: var(--lvl-02);
+  -ms-overflow-style: none;      /* IE and Edge */
+  scrollbar-width: none;         /* Firefox */
+}
+
+.driver-week__wrap::-webkit-scrollbar {
+  display: none;                 /* Chrome, Safari, Opera */
 }
 
 .driver-week__table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: auto;
+  table-layout: fixed;
   -webkit-user-select: none;
   user-select: none;
 }
@@ -1682,7 +1729,7 @@
 
 .driver-week__table th:first-child,
 .driver-week__table td:first-child {
-  width: 90px;
+  width: 95px;
   text-align: start;
   padding-inline-start: 6px;
   color: var(--text-primary);
