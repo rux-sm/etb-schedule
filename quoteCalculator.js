@@ -14,6 +14,7 @@
     ldRate: $("quoteLDRate"),
     seasonalRate: $("quoteSeasonalRate"),
     deadMiles: $("quoteDeadMiles"),
+    deadMilesRate: $("quoteDeadMilesRate"),
     reliefToggle: $("quoteReliefDriver"),
     halfDayToggle: $("quoteHalfDay"),
     ccFeeToggle: $("quoteCCFeeToggle"),
@@ -95,6 +96,7 @@
     const stdRate = parseFloat(els.ldRate.value) || 4.5;
     const seaRate = parseFloat(els.seasonalRate.value) || 0;
     const deadMiles = parseInt(els.deadMiles.value, 10) || 0;
+    const deadMilesRate = parseFloat(els.deadMilesRate.value) || 3.80;
     const secondDriverOn = els.reliefToggle.value === "true";
     const halfDayOn = els.halfDayToggle.value === "true";
     const ccFeeOn = els.ccFeeToggle ? els.ccFeeToggle.value === "true" : false;
@@ -142,10 +144,11 @@
     // Helper to calculate pure mileage/day cost
     function calculateBaseMileageCost(rate) {
       if (totalMiles === 0 && totalDays === 0 && busExtraDays === 0 && deadMiles === 0) return 0;
-      const ldMileageBase = totalMiles * rate + busExtraDays * LD_EXTRA_DAY;
-      const baseCost = Math.max(ldMileageBase, localCostFloor);
-      const deadMilesCost = deadMiles * rate;
-      return baseCost + deadMilesCost;
+      const tripMiles = Math.max(0, totalMiles - deadMiles);
+      const ldMileageBase = tripMiles * rate
+        + deadMiles * deadMilesRate
+        + busExtraDays * LD_EXTRA_DAY;
+      return Math.max(ldMileageBase, localCostFloor);
     }
 
     // 1. Base Rates (excluding surcharges)
@@ -326,6 +329,7 @@
 
   els.discountValue.addEventListener("input", recalcQuote);
   els.discountType.addEventListener("change", recalcQuote);
+  els.deadMilesRate.addEventListener("input", recalcQuote);
 
   if (els.copySummaryBtn) {
     els.copySummaryBtn.addEventListener("click", copySummary);

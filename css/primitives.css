@@ -155,7 +155,7 @@
    ========================================================================== */
 
 .c-card {
-  background: var(--layer-02);
+  background: var(--layer-01);
   min-width: 0;
   border-inline-start: none;
   position: relative;
@@ -191,7 +191,6 @@
   height: 100%;
 }
 
-
 /* --- Side Panel Headers (Carbon UI Shell Inspired) --- */
 .c-header.c-header--panel {
   display: flex;
@@ -201,8 +200,8 @@
   width: 100%;
   flex-shrink: 0;
   padding: var(--space-lg);
-  border-bottom:none;
-  background-color: var(--lvl-02);
+  border-bottom: none;
+  background-color: var(--lvl-01);
 }
 
 .c-header.c-header--panel .c-header__title {
@@ -218,8 +217,8 @@
   white-space: nowrap;
   text-rendering: optimizeLegibility;
   text-shadow:
-    0px 2px 2px rgba(0, 0, 0, 1),
-    0px 4px 6px rgba(0, 0, 0, 0.8);
+    0px 1px 2px rgba(0, 0, 0, 0.6),
+    0px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .c-header.c-header--panel .c-header__actions {
@@ -255,8 +254,8 @@
   flex-wrap: wrap;
   padding: 16px;
   margin-top: 0;
-  border-top: 1px solid transparent;
-  background: var(--lvl-02);
+  border-top: none;
+  background: var(--lvl-01);
   border-radius: 0;
 }
 
@@ -276,7 +275,7 @@
 }
 
 .cds-accordion__item {
-  border-bottom: 1px solid var(--layer-02-border);
+  border-bottom: 1px solid var(--lvl-01);
 }
 
 .cds-accordion__heading {
@@ -298,7 +297,7 @@
 }
 
 .cds-accordion__heading:hover {
-  background-color: var(--lvl-03);
+  background-color: var(--btn-secondary-hover);
 }
 
 .cds-accordion__title {

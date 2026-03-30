@@ -530,8 +530,7 @@ samp {
   border-radius: 0px;
   /* Strictly square */
 
-  /* Carbon uses a very subtle shadow for floating menus, relying more on border contrast */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--card-shadow-context);
 
   overflow-y: auto;
   scrollbar-width: none;

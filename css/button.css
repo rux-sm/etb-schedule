@@ -58,7 +58,6 @@ button {
 }
 
 .btn {
-  /* Layout */
   min-width: var(--btn-min-width, 80px);
 }
 
@@ -76,10 +75,10 @@ button {
 .btn--toggle__icon {
   font-size: var(--btn-icon-size);
   font-variation-settings:
-    'FILL' var(--btn-icon-fill, 0),
-    'wght' var(--btn-icon-wght, 400),
-    'GRAD' var(--btn-icon-grad, -25),
-    'opsz' var(--btn-icon-opsz, 20);
+    "FILL" var(--btn-icon-fill, 0),
+    "wght" var(--btn-icon-wght, 400),
+    "GRAD" var(--btn-icon-grad, -25),
+    "opsz" var(--btn-icon-opsz, 20);
 }
 
 .btn:disabled,
@@ -152,7 +151,6 @@ button {
 /* ── 6. Compact (Size Modifier) ─────────────────────────────────────────── */
 
 .btn--compact {
-  /* Layout */
   height: var(--btn-compact-height);
   min-width: 0;
   padding: 0 var(--btn-compact-padding-x);
@@ -166,8 +164,8 @@ button {
   text-shadow: var(--btn-ghost-text-shadow);
 
   /* Visuals */
-  background-color: transparent;
-  border-color: var(--border-subtle);
+  background-color: var(--btn-ghost-bg);
+  border-color: var(--btn-ghost-border);
   color: var(--btn-ghost-text);
   box-shadow: var(--btn-shadow-inset);
 }
@@ -179,6 +177,7 @@ button {
 
 .btn--ghost:active {
   background-color: var(--btn-ghost-active-bg);
+  border-color: var(--border-default);
   box-shadow: var(--btn-shadow-active-sm);
 }
 
@@ -202,10 +201,14 @@ button {
   background-color: transparent;
   color: var(--text-primary);
   cursor: pointer;
-  box-shadow: var(--btn-shadow-inset);
+  /*box-shadow: var(--btn-shadow-inset);*/
 
   /* Transitions */
-  transition: background-color var(--transition-fast), box-shadow var(--transition-fast);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    color var(--transition-fast);
 }
 
 .btn--icon:hover {
@@ -222,8 +225,12 @@ button {
 }
 
 .btn--icon .material-symbols-outlined {
-  font-variation-settings: 'FILL' var(--btn-icon-fill, 0), 'wght' var(--btn-icon-wght, 400), 'GRAD' 0, 'opsz' 200;
   font-size: var(--btn-icon-nav-size);
+  font-variation-settings:
+    "FILL" var(--btn-icon-fill, 0),
+    "wght" var(--btn-icon-wght, 400),
+    "GRAD" 0,
+    "opsz" 200;
 }
 
 /* ── 9. Toggle (Requirements) ───────────────────────────────────────────── */
@@ -257,7 +264,9 @@ button {
 /* Toggle button icon */
 .btn--toggle .btn--toggle__icon {
   opacity: var(--btn-toggle-icon-opacity);
-  transition: opacity var(--transition-fast), font-variation-settings var(--transition-fast);
+  transition:
+    opacity var(--transition-fast),
+    font-variation-settings var(--transition-fast);
 }
 
 .btn--toggle:hover .btn--toggle__icon,
@@ -271,7 +280,7 @@ button {
 .btn--toggle-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px !important;
+  gap: 8px;
   margin-top: 12px;
   padding: 0;
 }
@@ -279,29 +288,26 @@ button {
 /* ── 10. Form Action Containers ─────────────────────────────────────────── */
 
 .form-actions {
-  /* Layout */
   display: flex;
   gap: 8px;
   align-items: center;
 }
 
-.form-actions>.btn {
+.form-actions > .btn {
   flex: 1;
 }
 
 /* Trip editor footer: Delete (left) | Clear + Save (right) */
 .form-actions--footer {
-  /* Layout */
-  width: 100%;
   display: grid;
+  width: 100%;
   grid-template-columns: 1fr 2fr;
   gap: 8px;
   padding: 0;
 }
 
 .form-actions__group {
-  /* Layout */
-  display: flex !important;
+  display: flex;
   gap: 8px;
   width: 100%;
 }
@@ -310,6 +316,19 @@ button {
   flex: 1;
 }
 
-.form-actions--footer>.btn--danger {
+.form-actions--footer > .btn--danger {
   width: 100%;
+}
+
+/* ── 11. Responsive ─────────────────────────────────────────────────────── */
+
+@media (max-width: 899px) {
+  .btn,
+  .btn--toggle {
+    min-height: 44px;
+  }
+
+  .form-actions--footer {
+    grid-template-columns: 1fr;
+  }
 }

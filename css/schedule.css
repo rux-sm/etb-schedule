@@ -75,9 +75,9 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  background-color: var(--lvl-02);
+  background-color: var(--lvl-01);
   box-shadow: var(--card-shadow);
-  border-bottom: 1px solid var(--lvl-02-border);
+  border-bottom: 1px solid var(--lvl-01);
 }
 
 /* Page-level heading utility used in schedule/header contexts */
@@ -104,7 +104,6 @@
 }
 
 @media (max-width: 899px) {
-
   /* Hide desktop-only toolbar buttons */
   #notesBtn,
   #waitingListBtn,
@@ -162,7 +161,6 @@
     position: relative;
     z-index: 10;
   }
-
 
   .dropdown-menu,
   .dropdown__menu {
@@ -414,7 +412,7 @@
 .agenda-header__week-date .wk-dates {
   margin-right: 4px;
 
-  color: var(--gray-10);
+  color: var(--gray-01);
   font-weight: 700;
   letter-spacing: 0;
 
@@ -427,7 +425,7 @@
 .agenda-header__week-date .wk-sep {
   margin-right: 4px;
 
-  color: var(--gray-10);
+  color: var(--basey-01);
   font-weight: 700;
   letter-spacing: 0;
 
@@ -440,7 +438,7 @@
 .agenda-header__week-date .wk-year {
   margin-right: 4px;
 
-  color: var(--gray-50);
+  color: var(--base-05);
   font-weight: 700;
   letter-spacing: 0;
 
@@ -481,12 +479,12 @@
 /* Base sidebars layer */
 .o-app-layout__sidebar--left:not(.is-collapsed),
 .o-app-layout__sidebar--right:not(.is-collapsed) {
-  background: var(--lvl-02);
+  background: var(--lvl-01);
   /* Removed the invisible layout wrapper borders here to prevent clipping */
 }
 
 /* Main schedule area layer */
-.o-app-layout__main>.c-card {
+.o-app-layout__main > .c-card {
   border-radius: 0;
   background: var(--lvl-00);
   /* Your pure black background */
@@ -497,17 +495,17 @@
    ========================================================================== */
 
 /* Right Sidebar Card - Shadow spills LEFT onto the main content */
-.o-app-layout__sidebar--right>.c-card:not(.is-hidden) {
+.o-app-layout__sidebar--right > .c-card:not(.is-hidden) {
   /* Offset-X: -8px, Blur: 10px, Spread: -8px (cleans up top/bottom) */
   box-shadow: var(--card-shadow-left);
   border-left: 1px solid var(--lvl-02-border);
 }
 
 /* Left Sidebar Card - Shadow spills RIGHT onto the main content */
-.o-app-layout__sidebar--left>.c-card:not(.is-hidden) {
+.o-app-layout__sidebar--left > .c-card:not(.is-hidden) {
   /* Offset-X: 8px, Blur: 10px, Spread: -8px */
   box-shadow: var(--card-shadow-right);
-  border-right: 1px solid var(--lvl-02-border);
+  border-right: 1px solid var(--lvl-01-border);
 }
 
 /* ==========================================================================
@@ -515,18 +513,18 @@
    ========================================================================== */
 
 /* Shared Sidebar Typography & Body Padding */
-.o-app-layout__sidebar--left>.c-card:not(.is-hidden) .c-card__body,
-.o-app-layout__sidebar--right>.c-card:not(.is-hidden) .c-card__body {
+.o-app-layout__sidebar--left > .c-card:not(.is-hidden) .c-card__body,
+.o-app-layout__sidebar--right > .c-card:not(.is-hidden) .c-card__body {
   font-size: 0.75rem;
   font-weight: 400;
   color: var(--text-muted);
   padding: var(--space-lg);
-  background-color: var(--lvl-02);
+  background-color: var(--lvl-01);
 }
 
 /* Shared Sidebar Footer Padding */
-.o-app-layout__sidebar--left>.c-card:not(.is-hidden) .c-card__footer,
-.o-app-layout__sidebar--right>.c-card:not(.is-hidden) .c-card__footer {
+.o-app-layout__sidebar--left > .c-card:not(.is-hidden) .c-card__footer,
+.o-app-layout__sidebar--right > .c-card:not(.is-hidden) .c-card__footer {
   padding: var(--space-lg);
 }
 
@@ -547,7 +545,7 @@
   flex: 1;
   min-height: 200px;
   max-height: 100%;
-  background: var(--lvl-01);
+  background: var(--lvl-02);
   color: var(--text-primary);
   border-radius: 2px;
   padding: 6px 6px;
@@ -585,9 +583,6 @@
   min-height: 0;
   overflow: visible;
 }
-
-
-
 
 .quote-calculator__layout-grid {
   display: grid;
@@ -648,7 +643,6 @@
   flex: 1;
 }
 
-
 .quote-calculator .toggle-switch {
   position: relative;
   display: inline-block;
@@ -656,11 +650,9 @@
   height: 18px;
 }
 
-
 .quote-calculator__toolbar-half {
   width: 100%;
 }
-
 
 .quote-calculator__input-group {
   display: flex;
@@ -766,33 +758,33 @@
 
 /* Outer Boundaries */
 .schedule-grid {
-  border-inline-start: 1px solid var(--border-subtle);
+  border-inline-start: 1px solid var(--border-default);
   /* Left boundary */
 }
 
 .schedule-grid__header-cell {
-  border-top: 1px solid var(--border-subtle);
+  border-top: 1px solid var(--border-default);
   /* Top boundary */
 }
 
 .schedule-grid__header-cell:last-child,
 .schedule-grid__cell:last-child {
-  border-inline-end: 1px solid var(--border-subtle);
+  border-inline-end: 1px solid var(--border-default);
   /* Right boundary */
 }
 
 /* Bottom outer boundary */
-.schedule-grid tbody tr:last-child>.schedule-grid__cell,
-.schedule-grid tbody tr:last-child>.schedule-grid__bus-cell {
-  border-bottom: 1px solid var(--border-subtle);
+.schedule-grid tbody tr:last-child > .schedule-grid__cell,
+.schedule-grid tbody tr:last-child > .schedule-grid__bus-cell {
+  border-bottom: 1px solid var(--border-default);
 }
 
 /* Inner Gridlines */
 .schedule-grid__header-cell,
 .schedule-grid__cell {
-  border-inline-end: 1px solid var(--border-subtle);
+  border-inline-end: 1px solid var(--border-default);
   /* Vertical tracking lines */
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-default);
   /* Horizontal tracking lines */
 }
 
@@ -1071,12 +1063,13 @@
   text-shadow: var(--text-shadow);
 }
 
-.schedule-grid__row--has-bus-color>.schedule-grid__cell:first-child {
+.schedule-grid__row--has-bus-color > .schedule-grid__cell:first-child {
   transition: background-color 0.15s ease;
 }
 
 /* Bus cell highlight: only when hovering bus indicator (not when trip bar overlaps due to sticky) */
-.schedule-grid__row--has-bus-color>.schedule-grid__cell:first-child:has(.schedule-grid__bus-indicator:hover) {
+.schedule-grid__row--has-bus-color
+  > .schedule-grid__cell:first-child:has(.schedule-grid__bus-indicator:hover) {
   background-color: var(--bus-accent-color);
 }
 
@@ -1125,7 +1118,7 @@
   overflow-y: auto;
 }
 
-.schedule-grid__conflict-panel .conflict-group+.conflict-group {
+.schedule-grid__conflict-panel .conflict-group + .conflict-group {
   margin-top: 14px;
 }
 
@@ -1151,7 +1144,10 @@
 .schedule-grid__trip-bar {
   display: grid;
   grid-template-rows:
-    var(--tripbar-r1-row-height) var(--tripbar-r2-row-height) var(--tripbar-r3-row-height) var(--tripbar-r4-row-height) var(--tripbar-r5-row-height) var(--tripbar-r6-row-height) var(--tripbar-r7-row-height);
+    var(--tripbar-r1-row-height) var(--tripbar-r2-row-height) var(--tripbar-r3-row-height)
+    var(--tripbar-r4-row-height) var(--tripbar-r5-row-height) var(--tripbar-r6-row-height) var(
+      --tripbar-r7-row-height
+    );
   row-gap: var(--tripbar-row-gap);
   container-type: inline-size;
   align-content: center;
@@ -1174,17 +1170,14 @@
     filter var(--transition-fast),
     border-color var(--transition-fast);
 
-
-
-  will-change: filter,
-    box-shadow;
+  will-change: filter, box-shadow;
   background: color-mix(in srgb, var(--tripbar-color) var(--tripbar-bg-mix-percent), transparent);
   backdrop-filter: blur(16px);
   /* Required for Safari support */
   -webkit-backdrop-filter: blur(16px);
 
   /* 3. Soften the edge */
-  border: 1px solid color-mix(in srgb, var(--tripbar-color) 50%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tripbar-color) 100%, transparent);
   border-left: 4px solid var(--tripbar-color);
 }
 
@@ -1200,9 +1193,8 @@
 
     /* 2. The physical elevation drop shadow (deep and dark) */
     0 8px 16px rgba(0, 0, 0, 0.9),
-
-    /* 3. The ambient colored underglow (pulls from your specific --tripbar-color token) */
-    0 4px 24px color-mix(in srgb, var(--tripbar-color) 40%, transparent);
+    /* 3. The ambient colored underglow (pulls from your specific --tripbar-color token) */ 0 4px
+      24px color-mix(in srgb, var(--tripbar-color) 40%, transparent);
 
   /* A static bump in surface brightness and saturation */
   filter: brightness(var(--tripbar-hover-brightness-to)) saturate(var(--tripbar-hover-saturate-to));
@@ -1251,16 +1243,22 @@
   --tripbar-badge-text-color: color-mix(in srgb, var(--red-50) 80%, var(--base-10));
   --tripbar-badge-text-bg: color-mix(in srgb, #ffffff 50%, transparent);
   --tripbar-status-pending-bg: color-mix(in srgb, var(--color-status-pending) 50%, transparent);
-  --tripbar-status-pending-color: color-mix(in srgb, var(--color-status-pending) 25%, var(--base-00));
+  --tripbar-status-pending-color: color-mix(
+    in srgb,
+    var(--color-status-pending) 25%,
+    var(--base-00)
+  );
   --tripbar-status-ok-bg: color-mix(in srgb, var(--color-status-ok) 0%, transparent);
 
   &.out-of-service {
     --tripbar-color: var(--color-danger);
-    background: repeating-linear-gradient(-45deg,
-        color-mix(in srgb, var(--color-danger) 8%, transparent),
-        color-mix(in srgb, var(--color-danger) 8%, transparent) 8px,
-        color-mix(in srgb, var(--color-danger) 16%, transparent) 8px,
-        color-mix(in srgb, var(--color-danger) 16%, transparent) 16px);
+    background: repeating-linear-gradient(
+      -45deg,
+      color-mix(in srgb, var(--color-danger) 8%, transparent),
+      color-mix(in srgb, var(--color-danger) 8%, transparent) 8px,
+      color-mix(in srgb, var(--color-danger) 16%, transparent) 8px,
+      color-mix(in srgb, var(--color-danger) 16%, transparent) 16px
+    );
     border: 1px solid color-mix(in srgb, var(--color-danger) 40%, var(--base-00));
     border-left: 4px solid var(--color-danger);
 
@@ -1300,11 +1298,13 @@
   }
 
   &.one-way {
-    background: repeating-linear-gradient(-45deg,
-        color-mix(in srgb, var(--tripbar-color) 8%, transparent),
-        color-mix(in srgb, var(--tripbar-color) 8%, transparent) 8px,
-        color-mix(in srgb, var(--tripbar-color) 16%, transparent) 8px,
-        color-mix(in srgb, var(--tripbar-color) 16%, transparent) 16px);
+    background: repeating-linear-gradient(
+      -45deg,
+      color-mix(in srgb, var(--tripbar-color) 8%, transparent),
+      color-mix(in srgb, var(--tripbar-color) 8%, transparent) 8px,
+      color-mix(in srgb, var(--tripbar-color) 16%, transparent) 8px,
+      color-mix(in srgb, var(--tripbar-color) 16%, transparent) 16px
+    );
     border: 1px dashed color-mix(in srgb, var(--tripbar-color) 40%, var(--base-00));
     border-left: 4px solid var(--tripbar-color);
   }
@@ -1628,7 +1628,9 @@
 }
 
 .schedule-grid__trip-bar.cont-left .schedule-grid__trip-bar__time-row {
-  padding-inline-start: calc(var(--icon-arrow-offset, 4px) + var(--icon-arrow-size, 1.125rem) + 2px);
+  padding-inline-start: calc(
+    var(--icon-arrow-offset, 4px) + var(--icon-arrow-size, 1.125rem) + 2px
+  );
 }
 
 /* On narrow half-day bars left-align the arrival time so it reads "10:0…"
@@ -1685,13 +1687,13 @@
   overflow-x: auto;
   overflow-y: auto;
   margin: 0;
-  background: var(--lvl-02);
-  -ms-overflow-style: none;      /* IE and Edge */
-  scrollbar-width: none;         /* Firefox */
+  background: var(--base-01);
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 .driver-week__wrap::-webkit-scrollbar {
-  display: none;                 /* Chrome, Safari, Opera */
+  display: none; /* Chrome, Safari, Opera */
 }
 
 .driver-week__table {
@@ -1705,57 +1707,73 @@
 .driver-week__table th {
   color: var(--text-primary);
   font-weight: 500;
+  background: var(--lvl-03);
+  font-size: var(--input-font-size);
 }
 
 .driver-week__table th,
 .driver-week__table td {
-  padding: 6px 8px;
-  font-size: 0.75rem;
+  padding: 0;
+  width: 32px;
+  height: 32px;
   text-align: center;
   white-space: nowrap;
   cursor: pointer;
-  border-inline-end: 1px solid var(--border-subtle);
-  border-bottom: 1px solid var(--border-subtle);
+  border-inline-end: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+}
+
+.driver-week__table tbody tr:nth-child(even) td {
+  background-color: var(--base-00);
+}
+
+.driver-week__table tbody tr:nth-child(even) td.driver-week__cell--on {
+  background-color: var(--color-accent);
+}
+
+.driver-week__table tbody tr:nth-child(even) td.driver-week__cell--unavailable {
+  background-color: var(--red-40);
 }
 
 .driver-week__table th:last-child,
 .driver-week__table td:last-child {
-  border-inline-end: 1px solid var(--border-subtle);
+  border-inline-end: 1px solid transparent;
 }
 
 .driver-week__table tr:last-child td {
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid transparent;
 }
 
 .driver-week__table th:first-child,
 .driver-week__table td:first-child {
-  width: 95px;
+  width: auto;
   text-align: start;
-  padding-inline-start: 6px;
+  padding-inline-start: 8px;
+  padding-inline-end: 8px;
   color: var(--text-primary);
   font-weight: 400;
- 
+  border-inline-end: 1px solid transparent;
 }
 
 .driver-week__table th {
-  border-top: 1px solid var(--border-subtle);
+  border-top: 1px solid transparent;
 }
 
 .driver-week__table th:first-child {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.02em;
-  border-inline-start: 1px solid var(--border-subtle);
+  border-inline-start: 1px solid transparent;
 }
 
 .driver-week__table td:first-child {
-  border-inline-start: 1px solid var(--border-subtle);
+  border-inline-start: 1px solid transparent;
 }
 
-
 .driver-week__count {
-  font-weight: 400;
-  color: var(--text-primary);
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-inline-start: 1px solid transparent;
 }
 
 .driver-week__cell--unavailable {
@@ -1766,13 +1784,14 @@
 .driver-week__cell--on {
   background: var(--color-accent);
   color: var(--text-primary);
+  opacity: 0.9;
 }
 
 #driver-col-hl {
   position: absolute;
   pointer-events: none;
-  border: 1.5px solid var(--color-accent);
-  border-radius: 2px;
+  border: 2px solid var(--alert-red);
+  border-radius: 0px;
   z-index: 10;
 }
 
@@ -1820,7 +1839,7 @@
 }
 
 .bus-assign__driver-block .select-dropdown:first-child,
-.bus-assign__driver-block>select:first-child {
+.bus-assign__driver-block > select:first-child {
   flex: 1;
   min-width: 0;
 }

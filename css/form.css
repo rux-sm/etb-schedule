@@ -130,8 +130,8 @@ input:hover,
 select:hover,
 textarea:hover,
 .select-trigger:hover {
-  background-color: var(--field-bg-hover);
-  border-color: var(--base-07);
+  /* background-color: var(--field-bg-hover);
+  border-color: var(--base-07); */
 }
 
 input:focus,
@@ -143,8 +143,8 @@ select:focus-visible,
 textarea:focus-visible,
 .select-trigger:focus-visible {
   outline: none;
-  border-color: transparent;
-  box-shadow: 0 0 0 2px var(--focus-ring-color), var(--field-shadow);
+  border-color: var(--color-accent);
+  /*box-shadow: 0 0 0 2px var(--focus-ring-color), var(--field-shadow);*/
 }
 
 /* ── 7. Custom Select Widget (.select-dropdown / .select-trigger) ─────────── */
@@ -242,6 +242,7 @@ select.is-empty:not(:focus),
   margin-bottom: 4px !important;
   letter-spacing: 0.02em;
   width: 100%;
+  text-shadow: var(--label-shadow);
 }
 
 /* Label text inside trip details grid rows */

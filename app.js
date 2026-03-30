@@ -3452,10 +3452,6 @@ function renderDriverWeekHeader() {
     dom.driverWeekHeadRow.appendChild(th);
   });
 
-  const thCount = document.createElement("th");
-  thCount.textContent = "";
-  thCount.className = "driver-week__count";
-  dom.driverWeekHeadRow.appendChild(thCount);
 }
 function renderDriverWeekGrid() {
   if (!dom.driverWeekHeadRow || !dom.driverWeekBody) return;
@@ -3539,7 +3535,6 @@ function renderDriverWeekGrid() {
 <tr>
 <td>${escHtml(name)}</td>
 ${cells}
-<td class="driver-week__count">${set.size}</td>
 </tr>
 `;
     })

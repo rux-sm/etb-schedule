@@ -39,71 +39,69 @@
       </div>
 
       <div class="c-header__actions">
-        <button id="tripInputBtn" class="btn--icon" title="Trip editor">
+        <button id="tripInputBtn" class="btn btn--icon" type="button" title="Trip editor">
           <span class="material-symbols-outlined">add</span>
         </button>
-        <button id="driversBtn" class="btn--icon" title="Driver assignments">
+        <button id="driversBtn" class="btn btn--icon" type="button" title="Driver assignments">
           <span class="material-symbols-outlined">groups</span>
         </button>
-        <button id="quoteBtn" class="btn--icon" title="Quote calculator">
+        <button id="quoteBtn" class="btn btn--icon" type="button" title="Quote calculator">
           <span class="material-symbols-outlined">calculate</span>
         </button>
-
-        </button>
-        <button id="notesBtn" class="btn--icon" title="Weekly notes">
+        <button id="notesBtn" class="btn btn--icon" type="button" title="Weekly notes">
           <span class="material-symbols-outlined">sticky_note_2</span>
-          <button id="waitingListBtn" class="btn--icon" title="Waiting list">
-            <span class="material-symbols-outlined">low_priority</span>
-
+        </button>
+        <button id="waitingListBtn" class="btn btn--icon" type="button" title="Waiting list">
+          <span class="material-symbols-outlined">low_priority</span>
+        </button>
+        <button id="todayBtnMobile" class="btn btn--icon u-hidden" type="button" title="Today" aria-label="Today">
+          <span class="material-symbols-outlined">today</span>
+        </button>
+        <div class="dropdown">
+          <button id="settingsBtn" class="btn btn--icon" type="button" aria-haspopup="true" aria-expanded="false"
+            title="Settings" aria-label="Settings">
+            <span class="material-symbols-outlined">settings</span>
           </button>
-          <button id="todayBtnMobile" class="btn--icon u-hidden" title="Today" aria-label="Today">
-            <span class="material-symbols-outlined">today</span>
-          </button>
-          <div class="dropdown">
-            <button id="settingsBtn" class="btn--icon" type="button" aria-haspopup="true" aria-expanded="false"
-              title="Settings" aria-label="Settings">
-              <span class="material-symbols-outlined">settings</span>
+          <div id="settingsMenu" class="dropdown__menu" hidden>
+            <button id="refreshBtn2" class="dropdown__item" type="button">
+              <span class="dropdown__icon material-symbols-outlined">refresh</span>
+              <span>Refresh Data</span>
             </button>
-            <div id="settingsMenu" class="dropdown__menu" hidden>
-              <button id="refreshBtn2" class="dropdown__item" type="button">
-                <span class="dropdown__icon material-symbols-outlined">refresh</span>
-                <span>Refresh Data</span>
-              </button>
-              <hr class="dropdown__divider" />
-              <button id="themeToggle2" class="dropdown__item" type="button">
-                <span class="dropdown__icon material-symbols-outlined">dark_mode</span>
-                <span>Toggle Theme</span>
-              </button>
-              <button id="printBtn2" class="dropdown__item" type="button">
-                <span class="dropdown__icon material-symbols-outlined">print</span>
-                <span>Print Schedule (Legal)</span>
-              </button>
-              <button id="printBtn2Full" class="dropdown__item" type="button">
-                <span class="dropdown__icon material-symbols-outlined">print</span>
-                <span>Print Full Schedule (Letter)</span>
-              </button>
-              <hr class="dropdown__divider" />
-              <button id="nextDayReportBtn" class="dropdown__item" type="button">
-                <span class="dropdown__icon material-symbols-outlined">event_upcoming</span>
-                <span>Weekly Maintenance</span>
-              </button>
-              <button id="dailyMaintenancePlanBtn" class="dropdown__item" type="button">
-                <span class="dropdown__icon material-symbols-outlined">handyman</span>
-                <span>Daily Maintenance Plan</span>
-              </button>
-              <button id="weekStartToggle" class="dropdown__item" type="button">
-                <span class="dropdown__icon material-symbols-outlined">toggle_off</span>
-                <span>Week starts Monday</span>
-              </button>
-              <hr class="dropdown__divider" />
-              <div id="appVersionMenuItem" class="dropdown__item dropdown__item--meta" role="note"></div>
-              <hr class="dropdown__divider" />
-              <button id="picrossBtn" class="dropdown__item" type="button">
-                <span class="dropdown__icon material-symbols-outlined">grid_on</span>
-                <span>Picross</span>
-              </button>
-            </div>
+            <hr class="dropdown__divider" />
+            <button id="themeToggle2" class="dropdown__item" type="button">
+              <span class="dropdown__icon material-symbols-outlined">dark_mode</span>
+              <span>Toggle Theme</span>
+            </button>
+            <button id="printBtn2" class="dropdown__item" type="button">
+              <span class="dropdown__icon material-symbols-outlined">print</span>
+              <span>Print Schedule (Legal)</span>
+            </button>
+            <button id="printBtn2Full" class="dropdown__item" type="button">
+              <span class="dropdown__icon material-symbols-outlined">print</span>
+              <span>Print Full Schedule (Letter)</span>
+            </button>
+            <hr class="dropdown__divider" />
+            <button id="nextDayReportBtn" class="dropdown__item" type="button">
+              <span class="dropdown__icon material-symbols-outlined">event_upcoming</span>
+              <span>Weekly Maintenance</span>
+            </button>
+            <button id="dailyMaintenancePlanBtn" class="dropdown__item" type="button">
+              <span class="dropdown__icon material-symbols-outlined">handyman</span>
+              <span>Daily Maintenance Plan</span>
+            </button>
+            <button id="weekStartToggle" class="dropdown__item" type="button">
+              <span class="dropdown__icon material-symbols-outlined">toggle_off</span>
+              <span>Week starts Monday</span>
+            </button>
+            <hr class="dropdown__divider" />
+            <div id="appVersionMenuItem" class="dropdown__item dropdown__item--meta" role="note"></div>
+            <hr class="dropdown__divider" />
+            <button id="picrossBtn" class="dropdown__item" type="button">
+              <span class="dropdown__icon material-symbols-outlined">grid_on</span>
+              <span>Picross</span>
+            </button>
           </div>
+        </div>
       </div>
     </header>
 
@@ -131,12 +129,6 @@
             <div class="c-card c-card--compact is-hidden quote-calculator" id="quoteCard" data-js="panel-card-quote">
               <div class="c-header c-header--panel">
                 <h2 class="c-header__title">Quote Calculator</h2>
-                <div class="c-header__actions">
-                  <button id="quoteInfoBtn" class="btn--icon" type="button"
-                    aria-label="View Calculator Rules & Logic" title="Rules & Logic">
-                    <span class="material-symbols-outlined">info</span>
-                  </button>
-                </div>
               </div>
 
               <div class="c-card__body">
@@ -256,8 +248,12 @@
 
                     <div class="form-group">
                       <label for="quoteDeadMiles">Dead Miles</label>
-                      <input type="text" id="quoteDeadMiles" class="quote-calculator__input" inputmode="numeric"
-                        pattern="[0-9]*" value="0" />
+                      <div class="quote-calculator__input-group">
+                        <input type="text" id="quoteDeadMiles" class="quote-calculator__input" inputmode="numeric"
+                          pattern="[0-9]*" value="0" />
+                        <input type="text" id="quoteDeadMilesRate" class="quote-calculator__select-mini"
+                          inputmode="decimal" value="3.80" title="Dead miles rate ($/mi)" />
+                      </div>
                     </div>
 
                     <div class="form-group">
@@ -361,6 +357,11 @@
               <!-- Action Footer -->
               <div class="c-card__footer">
                 <div class="form-actions u-w-full">
+                  <button type="button" class="btn btn--default u-w-full" id="quoteInfoBtn"
+                    aria-label="View Calculator Rules & Logic">
+                    <span class="material-symbols-outlined">info</span>
+                    <span>Rules & Logic</span>
+                  </button>
                   <button type="button" class="btn btn--accent u-w-full" id="quoteCopySummary">
                     <span class="material-symbols-outlined">content_copy</span>
                     <span>Copy Summary</span>
