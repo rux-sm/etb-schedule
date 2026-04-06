@@ -11,6 +11,7 @@
 
 /* Schedule view (grid, nav, panels, agenda) */
 @import "schedule.css";
+@import "trip-bar.css";
 
 /* Print layouts (legal, letter-full, legal-v2) */
 @import "print.css";

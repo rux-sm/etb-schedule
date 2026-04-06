@@ -1,0 +1,530 @@
+/* ==========================================================================
+   Trip Bar (BEM - Step 12a)
+   JS adds schedule-grid__trip-bar class; legacy trip-bar kept for print clone
+   alongside trip-bar. Remove legacy in Step 12b.
+   ========================================================================== */
+.schedule-grid__trip-bar {
+  display: grid;
+  grid-template-rows:
+    var(--tripbar-r1-row-height) var(--tripbar-r2-row-height) var(--tripbar-r3-row-height)
+    var(--tripbar-r4-row-height) var(--tripbar-r5-row-height) var(--tripbar-r6-row-height) var(
+      --tripbar-r7-row-height
+    );
+  row-gap: var(--tripbar-row-gap);
+  container-type: inline-size;
+  align-content: center;
+  position: absolute;
+  z-index: 501;
+  /* above sticky bus cell (500) so trip bar receives hover when overlapping */
+  height: var(--tripbar-height) !important;
+  max-height: var(--tripbar-height) !important;
+  box-sizing: border-box;
+  padding: var(--tripbar-padding-y) var(--tripbar-padding-x);
+  font-variant-numeric: tabular-nums;
+  text-shadow: var(--tripbar-text-shadow);
+
+  border-radius: var(--tripbar-radius);
+  overflow: hidden;
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    box-shadow var(--transition-fast),
+    filter var(--transition-fast),
+    border-color var(--transition-fast);
+background: var(--tripbar-color);
+  will-change: filter, box-shadow;
+  /* background: color-mix(in srgb, var(--tripbar-color) var(--tripbar-bg-mix-percent), transparent); */
+  /* backdrop-filter: blur(30px); */
+  /* Required for Safari support
+  -webkit-backdrop-filter: blur(30px); */
+
+  /* 3. Soften the edge */
+  border: 1px solid color-mix(in srgb, var(--tripbar-border-color) 100%, transparent);
+  border-left: 4px solid var(--tripbar-border-color);
+}
+
+.schedule-grid__trip-bar:hover,
+.schedule-grid__trip-bar.selected {
+  /* Elevates the bar above adjacent rows to prevent clipping */
+  z-index: 20;
+  border: 1px solid color-mix(in srgb, var(--tripbar-color) 100%, transparent);
+  border-left: 4px solid var(--tripbar-color);
+  /* The physical lighting stack */
+  box-shadow: var(--tripbar-shadow-hover);
+
+  /* A static bump in surface brightness and saturation */
+  filter: brightness(var(--tripbar-hover-brightness-to)) saturate(var(--tripbar-hover-saturate-to));
+
+  cursor: pointer;
+}
+
+.schedule-grid__trip-bar:active {
+  box-shadow: var(--card-shadow);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+.schedule-grid__trip-bar.danger::after {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  content: "!";
+  position: absolute;
+  top: var(--tripbar-danger-offset);
+  inset-inline-end: var(--tripbar-danger-offset);
+  width: var(--tripbar-danger-size);
+  height: var(--tripbar-danger-size);
+  font-size: var(--tripbar-danger-font);
+  font-weight: 700;
+  color: var(--color-danger);
+  background: var(--color-danger-soft);
+  border-radius: 999px;
+  box-shadow: 0 0 6px color-mix(in srgb, var(--color-danger) 50%, transparent);
+}
+
+/* Color variants — only override the accent variable;
+   the base rule's glass gradient + color-mix background
+   automatically picks up the new --tripbar-color. */
+.schedule-grid__trip-bar {
+  --tripbar-r1-color: var(--tripbar-text-color);
+  --tripbar-r2-color: var(--tripbar-text-color);
+  --tripbar-r3-color: var(--tripbar-text-color);
+  --tripbar-r4-color: var(--alert-yel);
+  /* Bright Neon Lemon */
+  --tripbar-r5-color: var(--tripbar-text-color);
+  --tripbar-r6-color: color-mix(in srgb, var(--alert-yel) 50%, var(--white));
+  /* Bright Coral */
+  --tripbar-r7-color: var(--text-primary);
+
+  --tripbar-badge-text-color: color-mix(in srgb, var(--red-50) 80%, var(--white));
+  --tripbar-badge-text-bg: color-mix(in srgb, #ffffff 50%, transparent);
+  --tripbar-status-pending-bg: color-mix(in srgb, var(--color-status-pending) 50%, transparent);
+  --tripbar-status-pending-color: color-mix(
+    in srgb,
+    var(--color-status-pending) 25%,
+    var(--gray-900)
+  );
+  --tripbar-status-ok-bg: color-mix(in srgb, var(--color-status-ok) 0%, transparent);
+
+  &.out-of-service {
+    --tripbar-color: var(--color-danger);
+    background: repeating-linear-gradient(
+      -45deg,
+      color-mix(in srgb, var(--color-danger) 8%, transparent),
+      color-mix(in srgb, var(--color-danger) 8%, transparent) 8px,
+      color-mix(in srgb, var(--color-danger) 16%, transparent) 8px,
+      color-mix(in srgb, var(--color-danger) 16%, transparent) 16px
+    );
+    border: 1px solid color-mix(in srgb, var(--color-danger) 40%, var(--gray-900));
+    border-left: 4px solid var(--color-danger);
+
+    /* Overrides for crisp text and recessed look */
+    opacity: 1;
+    box-shadow: none;
+
+    /* Hide irrelevant fields: Subtitle, Contact, Time, Status Row, Drivers */
+    .schedule-grid__trip-bar__row--2,
+    .schedule-grid__trip-bar__row--3,
+    .schedule-grid__trip-bar__row--4,
+    .schedule-grid__trip-bar__row--5,
+    .schedule-grid__trip-bar__row--7 {
+      visibility: hidden;
+      height: 0;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Adjust layout to just show Destination (row 1) and Notes (row 6) */
+    grid-template-rows: auto auto !important;
+    align-content: start;
+    padding-top: 8px;
+    gap: 4px;
+
+    .schedule-grid__trip-bar__row--1,
+    .schedule-grid__trip-bar__row--6 {
+      grid-row: auto;
+      /* let it flow naturally */
+    }
+
+    /* Give destination text slightly more prominence */
+    .schedule-grid__trip-bar__title {
+      font-size: 0.875rem;
+      /* 14px */
+    }
+  }
+
+  &.one-way {
+    background: repeating-linear-gradient(
+      -45deg,
+      color-mix(in srgb, var(--tripbar-color) 8%, transparent),
+      color-mix(in srgb, var(--tripbar-color) 8%, transparent) 8px,
+      color-mix(in srgb, var(--tripbar-color) 16%, transparent) 8px,
+      color-mix(in srgb, var(--tripbar-color) 16%, transparent) 16px
+    );
+    border: 1px dashed color-mix(in srgb, var(--tripbar-color) 40%, var(--gray-900));
+    border-left: 4px solid var(--tripbar-color);
+  }
+
+  &.unconfirmed {
+    --tripbar-color: var(--heart-03);
+    --tripbar-border-color: var(--heart-07);
+    --tripbar-text-color: var(--heart-07);
+  }
+
+  &.color-green {
+    --tripbar-color: var(--grn-50);
+  }
+
+  &.color-yellow {
+    --tripbar-color: var(--yel-50);
+  }
+
+  &.color-gray {
+    --tripbar-color: var(--gray-50);
+  }
+
+  &.color-purple {
+    --tripbar-color: var(--pur-50);
+  }
+
+  &.color-pink {
+    --tripbar-color: var(--pnk-50);
+  }
+
+  &.color-orange {
+    --tripbar-color: var(--org-50);
+  }
+
+  &.color-teal {
+    --tripbar-color: var(--tea-50);
+  }
+
+  &.color-cyan {
+    --tripbar-color: var(--cyn-50);
+  }
+
+  &.color-indigo {
+    --tripbar-color: var(--ind-50);
+  }
+
+  &.color-brown {
+    --tripbar-color: var(--brn-50);
+  }
+}
+
+.schedule-grid__trip-bar__row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  min-width: 0;
+  padding-inline: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.schedule-grid__trip-bar__title:empty,
+.schedule-grid__trip-bar__sub:empty,
+.schedule-grid__trip-bar__pre-drivers:empty {
+  visibility: hidden;
+}
+
+.schedule-grid__trip-bar__row--1 {
+  grid-row: 1;
+  position: relative;
+}
+
+.schedule-grid__trip-bar__row--2 {
+  grid-row: 2;
+}
+
+.schedule-grid__trip-bar__row--3 {
+  grid-row: 3;
+}
+
+.schedule-grid__trip-bar__row--4 {
+  grid-row: 4;
+}
+
+.schedule-grid__trip-bar__row--5 {
+  grid-row: 5;
+}
+
+.schedule-grid__trip-bar__row--6 {
+  grid-row: 6;
+}
+
+.schedule-grid__trip-bar__row--7 {
+  grid-row: 7;
+}
+
+.schedule-grid__trip-bar__title {
+  display: block;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  font-size: var(--tripbar-r1-font-size);
+  font-weight: var(--tripbar-r1-font-weight);
+  line-height: var(--tripbar-r1-line-height);
+  letter-spacing: var(--tripbar-r1-letter-spacing);
+  text-transform: uppercase;
+  color: var(--tripbar-r1-color);
+  text-shadow: var(--text-shadow);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.schedule-grid__trip-bar__multi-badge {
+  flex-shrink: 0;
+  position: absolute;
+  left: 2px;
+  top: 50%;
+  z-index: 1;
+  transform: translateY(-50%);
+  font-size: var(--tripbar-multi-badge-font-size);
+  font-weight: 500;
+  color: var(--tripbar-color);
+  text-shadow: var(--text-shadow);
+  width: 22px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.schedule-grid__trip-bar.has-multi-bus .schedule-grid__trip-bar__row--1 {
+  padding-inline: var(--tripbar-multi-bus-indent);
+}
+
+.schedule-grid__trip-bar__sub {
+  font-size: var(--tripbar-r2-font-size);
+  font-weight: var(--tripbar-r2-font-weight);
+  line-height: var(--tripbar-r2-line-height);
+  letter-spacing: var(--tripbar-r2-letter-spacing);
+  text-transform: uppercase;
+  color: var(--tripbar-r2-color);
+  text-shadow: var(--text-shadow);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.schedule-grid__trip-bar__time-row {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between !important;
+  width: 100%;
+  padding-inline: 1px;
+  font-size: var(--tripbar-r4-font-size);
+  font-weight: var(--tripbar-r4-font-weight);
+  line-height: var(--tripbar-r4-line-height);
+  letter-spacing: var(--tripbar-r4-letter-spacing);
+  text-shadow: var(--text-shadow);
+  text-transform: uppercase;
+  color: var(--tripbar-r4-color);
+  white-space: nowrap;
+}
+
+.schedule-grid__trip-bar__time {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.schedule-grid__trip-bar__time--left {
+  justify-content: flex-start !important;
+}
+
+.schedule-grid__trip-bar__time--center {
+  justify-content: center !important;
+}
+
+.schedule-grid__trip-bar__time--right {
+  justify-content: flex-end !important;
+}
+
+.schedule-grid__trip-bar__status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tripbar-gap-inline);
+  width: 100%;
+}
+
+.schedule-grid__trip-bar__req-icons {
+  display: flex;
+  align-items: center;
+  gap: var(--tripbar-gap-inline);
+  flex-shrink: 0;
+}
+
+/* REQ ICON and STATUS BADGE styling moved to _icons.css */
+
+.schedule-grid__trip-bar__status-badges {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tripbar-gap-inline);
+  flex: 1;
+  min-width: 0;
+}
+
+.schedule-grid__trip-bar__mini-badge {
+  /* Layout remains if needed, but styling is in .icon-status now */
+  color: var(--tripbar-r5-color);
+}
+
+/* MINI BADGE glyph styling moved to _icons.css */
+
+.schedule-grid__trip-bar__mini-badge.is-pending {
+  background: transparent;
+  color: var(--alert-red);
+}
+
+.schedule-grid__trip-bar__mini-badge.is-ok {
+  background: transparent;
+  color: var(--tripbar-color);
+}
+
+.schedule-grid__trip-bar__mini-badge.is-blue {
+  background: transparent;
+  color: var(--alert-blu);
+}
+
+.schedule-grid__trip-bar__mini-badge.is-yellow {
+  background: transparent;
+  color: var(--alert-yel);
+}
+
+.schedule-grid__trip-bar__mini-badge.has-pdf,
+.schedule-grid__trip-bar__mini-badge.has-action {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.schedule-grid__trip-bar__mini-badge.has-pdf:hover,
+.schedule-grid__trip-bar__mini-badge.has-action:hover {
+  transform: scale(1.15);
+  color: var(--text-primary);
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.schedule-grid__trip-bar__mini-badge.has-text {
+  width: auto;
+  padding-inline-end: 2px;
+  gap: 0;
+  color: var(--tripbar-color);
+}
+
+.schedule-grid__trip-bar__mini-badge .schedule-grid__trip-bar__mini-badge-text {
+  /* Styling is in .icon-invoice-text now */
+  color: var(--tripbar-badge-text-color);
+  background-color: transparent;
+}
+
+.schedule-grid__trip-bar__pre-drivers {
+  font-size: var(--tripbar-r6-font-size);
+  font-weight: var(--tripbar-r6-font-weight);
+  line-height: var(--tripbar-r6-line-height);
+  letter-spacing: var(--tripbar-r6-letter-spacing);
+  text-transform: uppercase;
+  color: var(--tripbar-r6-color);
+  text-shadow: var(--text-shadow);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.schedule-grid__trip-bar__drivers {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tripbar-gap-drivers, 6px);
+}
+
+.schedule-grid__trip-bar__driver {
+  font-size: var(--tripbar-r7-font-size);
+  font-weight: var(--tripbar-r7-font-weight);
+  line-height: var(--tripbar-r7-line-height);
+  letter-spacing: var(--tripbar-r7-letter-spacing);
+  justify-content: center;
+  text-transform: uppercase;
+  color: var(--tripbar-r7-color);
+  text-shadow: var(--text-shadow);
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.schedule-grid__trip-bar.cont-left {
+  border-inline-start: none;
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+}
+
+.schedule-grid__trip-bar.cont-left::before {
+  content: "chevron_left";
+}
+
+/* ── cont-left: arrival time gets the full row width ───────────────────────
+   isStartDay is always false on cont-left bars so left/center are empty.
+   Collapse them to zero so the right (arrival) item owns the whole row,
+   then pad past the small chip so text can never clip under it. */
+.schedule-grid__trip-bar.cont-left .schedule-grid__trip-bar__time--left,
+.schedule-grid__trip-bar.cont-left .schedule-grid__trip-bar__time--center {
+  flex: 0;
+  overflow: hidden;
+}
+
+.schedule-grid__trip-bar.cont-left .schedule-grid__trip-bar__time-row {
+  padding-inline-start: calc(
+    var(--icon-arrow-offset, 4px) + var(--icon-arrow-size, 1.125rem) + 2px
+  );
+}
+
+/* On narrow half-day bars left-align the arrival time so it reads "10:0…"
+   instead of being left-clipped to "0 AM" when right-aligned. */
+@container (max-width: 80px) {
+  .schedule-grid__trip-bar.cont-left .schedule-grid__trip-bar__time--right {
+    justify-content: flex-start;
+  }
+}
+
+.schedule-grid__trip-bar.cont-right {
+  border-inline-end: none;
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+
+.schedule-grid__trip-bar.cont-right::after {
+  content: "chevron_right";
+}
+
+/* ── cont-right: departure time gets the full row width ─────────────────────
+   isEndDay is always false on cont-right bars so the right item is empty.
+   Collapse it, then pad past the right chip. */
+.schedule-grid__trip-bar.cont-right .schedule-grid__trip-bar__time--right {
+  flex: 0;
+  overflow: hidden;
+}
+
+.schedule-grid__trip-bar.cont-right .schedule-grid__trip-bar__time-row {
+  padding-inline-end: calc(var(--icon-arrow-offset, 4px) + var(--icon-arrow-size, 1.125rem) + 2px);
+}
+
+/* On narrow half-day bars right-align departure time so it reads "6:0…"
+   instead of being right-clipped when left-aligned. */
+@container (max-width: 80px) {
+  .schedule-grid__trip-bar.cont-right .schedule-grid__trip-bar__time--left {
+    justify-content: flex-end;
+  }
+}

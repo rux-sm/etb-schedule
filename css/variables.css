@@ -1,205 +1,354 @@
 :root {
   color-scheme: dark;
 
-  --black: #000000; /* gray-10 */
-  --white: #ffffff; /* gray-00 */
+  --ruby-050: oklch(97.1% 0.013 17.38);
+  --ruby-100: oklch(93.6% 0.032 17.717);
+  --ruby-200: oklch(88.5% 0.062 18.334);
+  --ruby-300: oklch(80.8% 0.114 19.571);
+  --ruby-400: oklch(70.4% 0.191 22.216);
+  --ruby-500: oklch(63.7% 0.237 25.331);
+  --ruby-600: oklch(57.7% 0.245 27.325);
+  --ruby-700: oklch(50.5% 0.213 27.518);
+  --ruby-800: oklch(44.4% 0.177 26.899);
+  --ruby-900: oklch(39.6% 0.141 25.723);
+  --ruby-950: oklch(25.8% 0.092 26.042);
 
-  --base-00: #000000; /* gray-10 */
-  --base-01: #1c1b1f; /* gray-09 */
-  --base-02: #434343; /* gray-08 */
-  --base-03: #595959; /* gray-07 */
-  --base-04: #8c8c8c; /* gray-06 */
-  --base-05: #bfbfbf; /* gray-05 */
-  --base-06: #d9d9d9; /* gray-04 */
-  --base-07: #f0f0f0; /* gray-03 */
-  --base-08: #f5f5f5; /* gray-02 */
-  --base-09: #fafafa; /* gray-01 */
-  --base-10: #ffffff; /* gray-00 */
+  --fire-050: oklch(98% 0.016 73.684);
+  --fire-100: oklch(95.4% 0.038 75.164);
+  --fire-200: oklch(90.1% 0.076 70.697);
+  --fire-300: oklch(83.7% 0.128 66.29);
+  --fire-400: oklch(75% 0.183 55.934);
+  --fire-500: oklch(70.5% 0.213 47.604);
+  --fire-600: oklch(64.6% 0.222 41.116);
+  --fire-700: oklch(55.3% 0.195 38.402);
+  --fire-800: oklch(47% 0.157 37.304);
+  --fire-900: oklch(40.8% 0.123 38.172);
+  --fire-950: oklch(26.6% 0.079 36.259);
 
-  --lvl-00: var(--base-01); /* App background */
-  --lvl-01: color-mix(in srgb, var(--base-01), white 4%); /* Resting cards */
-  --lvl-02: color-mix(in srgb, var(--base-01), white 8%); /* Hover / sticky headers */
-  --lvl-03: color-mix(in srgb, var(--base-01), white 12%); /* Dropdowns / dialogs */
-  --lvl-04: color-mix(in srgb, var(--base-01), white 16%); /* Modals */
+  --gold-050: oklch(98.7% 0.022 95.277);
+  --gold-100: oklch(96.2% 0.059 95.617);
+  --gold-200: oklch(92.4% 0.12 95.746);
+  --gold-300: oklch(87.9% 0.169 91.605);
+  --gold-400: oklch(82.8% 0.189 84.429);
+  --gold-500: oklch(76.9% 0.188 70.08);
+  --gold-600: oklch(66.6% 0.179 58.318);
+  --gold-700: oklch(55.5% 0.163 48.998);
+  --gold-800: oklch(47.3% 0.137 46.201);
+  --gold-900: oklch(41.4% 0.112 45.904);
+  --gold-950: oklch(27.9% 0.077 45.635);
 
-  --border-subtle: rgb(255 255 255 / 15%);
+  --volt-050: oklch(98.7% 0.026 102.212);
+  --volt-100: oklch(97.3% 0.071 103.193);
+  --volt-200: oklch(94.5% 0.129 101.54);
+  --volt-300: oklch(90.5% 0.182 98.111);
+  --volt-400: oklch(85.2% 0.199 91.936);
+  --volt-500: oklch(79.5% 0.184 86.047);
+  --volt-600: oklch(68.1% 0.162 75.834);
+  --volt-700: oklch(55.4% 0.135 66.442);
+  --volt-800: oklch(47.6% 0.114 61.907);
+  --volt-900: oklch(42.1% 0.095 57.708);
+  --volt-950: oklch(28.6% 0.066 53.813);
+
+  --lime-050: oklch(98.6% 0.031 120.757);
+  --lime-100: oklch(96.7% 0.067 122.328);
+  --lime-200: oklch(93.8% 0.127 124.321);
+  --lime-300: oklch(89.7% 0.196 126.665);
+  --lime-400: oklch(84.1% 0.238 128.85);
+  --lime-500: oklch(76.8% 0.233 130.85);
+  --lime-600: oklch(64.8% 0.2 131.684);
+  --lime-700: oklch(53.2% 0.157 131.589);
+  --lime-800: oklch(45.3% 0.124 130.933);
+  --lime-900: oklch(40.5% 0.101 131.063);
+  --lime-950: oklch(27.4% 0.072 132.109);
+
+  --leaf-050: oklch(98.2% 0.018 155.826);
+  --leaf-100: oklch(96.2% 0.044 156.743);
+  --leaf-200: oklch(92.5% 0.084 155.995);
+  --leaf-300: oklch(87.1% 0.15 154.449);
+  --leaf-400: oklch(79.2% 0.209 151.711);
+  --leaf-500: oklch(72.3% 0.219 149.579);
+  --leaf-600: oklch(62.7% 0.194 149.214);
+  --leaf-700: oklch(52.7% 0.154 150.069);
+  --leaf-800: oklch(44.8% 0.119 151.328);
+  --leaf-900: oklch(39.3% 0.095 152.535);
+  --leaf-950: oklch(26.6% 0.065 152.934);
+
+  --emerald-050: oklch(97.9% 0.021 166.113);
+  --emerald-100: oklch(95% 0.052 163.051);
+  --emerald-200: oklch(90.5% 0.093 164.15);
+  --emerald-300: oklch(84.5% 0.143 164.978);
+  --emerald-400: oklch(76.5% 0.177 163.223);
+  --emerald-500: oklch(69.6% 0.17 162.48);
+  --emerald-600: oklch(59.6% 0.145 163.225);
+  --emerald-700: oklch(50.8% 0.118 165.612);
+  --emerald-800: oklch(43.2% 0.095 166.913);
+  --emerald-900: oklch(37.8% 0.077 168.94);
+  --emerald-950: oklch(26.2% 0.051 172.552);
+
+  --teal-050: oklch(98.4% 0.014 180.72);
+  --teal-100: oklch(95.3% 0.051 180.801);
+  --teal-200: oklch(91% 0.096 180.426);
+  --teal-300: oklch(85.5% 0.138 181.071);
+  --teal-400: oklch(77.7% 0.152 181.912);
+  --teal-500: oklch(70.4% 0.14 182.503);
+  --teal-600: oklch(60% 0.118 184.704);
+  --teal-700: oklch(51.1% 0.096 186.391);
+  --teal-800: oklch(43.7% 0.078 188.216);
+  --teal-900: oklch(38.6% 0.063 188.416);
+  --teal-950: oklch(27.7% 0.046 192.524);
+
+  --cyan-050: oklch(98.4% 0.019 200.873);
+  --cyan-100: oklch(95.6% 0.045 203.388);
+  --cyan-200: oklch(91.7% 0.08 205.041);
+  --cyan-300: oklch(86.5% 0.127 207.078);
+  --cyan-400: oklch(78.9% 0.154 211.53);
+  --cyan-500: oklch(71.5% 0.143 215.221);
+  --cyan-600: oklch(60.9% 0.126 221.723);
+  --cyan-700: oklch(52% 0.105 223.128);
+  --cyan-800: oklch(45% 0.085 224.283);
+  --cyan-900: oklch(39.8% 0.07 227.392);
+  --cyan-950: oklch(30.2% 0.056 229.695);
+
+  --sky-050: oklch(97.7% 0.013 236.62);
+  --sky-100: oklch(95.1% 0.026 236.824);
+  --sky-200: oklch(90.1% 0.058 230.902);
+  --sky-300: oklch(82.8% 0.111 230.318);
+  --sky-400: oklch(74.6% 0.16 232.661);
+  --sky-500: oklch(68.5% 0.169 237.323);
+  --sky-600: oklch(58.8% 0.158 241.966);
+  --sky-700: oklch(50% 0.134 242.749);
+  --sky-800: oklch(44.3% 0.11 240.79);
+  --sky-900: oklch(39.1% 0.09 240.876);
+  --sky-950: oklch(29.3% 0.066 243.157);
+
+  --mana-050: oklch(97% 0.014 254.604);
+  --mana-100: oklch(93.2% 0.032 255.585);
+  --mana-200: oklch(88.2% 0.059 254.128);
+  --mana-300: oklch(80.9% 0.105 251.813);
+  --mana-400: oklch(70.7% 0.165 254.624);
+  --mana-500: oklch(62.3% 0.214 259.815);
+  --mana-600: oklch(54.6% 0.245 262.881);
+  --mana-700: oklch(48.8% 0.243 264.376);
+  --mana-800: oklch(42.4% 0.199 265.638);
+  --mana-900: oklch(37.9% 0.146 265.522);
+  --mana-950: oklch(28.2% 0.091 267.935);
+
+  --indigo-050: oklch(96.2% 0.018 272.314);
+  --indigo-100: oklch(93% 0.034 272.788);
+  --indigo-200: oklch(87% 0.065 274.039);
+  --indigo-300: oklch(78.5% 0.115 274.713);
+  --indigo-400: oklch(67.3% 0.182 276.935);
+  --indigo-500: oklch(58.5% 0.233 277.117);
+  --indigo-600: oklch(51.1% 0.262 276.966);
+  --indigo-700: oklch(45.7% 0.24 277.023);
+  --indigo-800: oklch(39.8% 0.195 277.366);
+  --indigo-900: oklch(35.9% 0.144 278.697);
+  --indigo-950: oklch(25.7% 0.09 281.288);
+
+  --violet-050: oklch(96.9% 0.016 293.756);
+  --violet-100: oklch(94.3% 0.029 294.588);
+  --violet-200: oklch(89.4% 0.057 293.283);
+  --violet-300: oklch(81.1% 0.111 293.571);
+  --violet-400: oklch(70.2% 0.183 293.541);
+  --violet-500: oklch(60.6% 0.25 292.717);
+  --violet-600: oklch(54.1% 0.281 293.009);
+  --violet-700: oklch(49.1% 0.27 292.581);
+  --violet-800: oklch(43.2% 0.232 292.759);
+  --violet-900: oklch(38% 0.189 293.745);
+  --violet-950: oklch(28.3% 0.141 291.089);
+
+  --purple-050: oklch(97.7% 0.014 308.299);
+  --purple-100: oklch(94.6% 0.033 307.174);
+  --purple-200: oklch(90.2% 0.063 306.703);
+  --purple-300: oklch(82.7% 0.119 306.383);
+  --purple-400: oklch(71.4% 0.203 305.504);
+  --purple-500: oklch(62.7% 0.265 303.9);
+  --purple-600: oklch(55.8% 0.288 302.321);
+  --purple-700: oklch(49.6% 0.265 301.924);
+  --purple-800: oklch(43.8% 0.218 303.724);
+  --purple-900: oklch(38.1% 0.176 304.987);
+  --purple-950: oklch(29.1% 0.149 302.717);
+
+  --fuchsia-050: oklch(97.7% 0.017 320.058);
+  --fuchsia-100: oklch(95.2% 0.037 318.852);
+  --fuchsia-200: oklch(90.3% 0.076 319.62);
+  --fuchsia-300: oklch(83.3% 0.145 321.434);
+  --fuchsia-400: oklch(74% 0.238 322.16);
+  --fuchsia-500: oklch(66.7% 0.295 322.15);
+  --fuchsia-600: oklch(59.1% 0.293 322.896);
+  --fuchsia-700: oklch(51.8% 0.253 323.949);
+  --fuchsia-800: oklch(45.2% 0.211 324.591);
+  --fuchsia-900: oklch(40.1% 0.17 325.612);
+  --fuchsia-950: oklch(29.3% 0.136 325.661);
+
+  --pink-050: oklch(97.1% 0.014 343.198);
+  --pink-100: oklch(94.8% 0.028 342.258);
+  --pink-200: oklch(89.9% 0.061 343.231);
+  --pink-300: oklch(82.3% 0.12 346.018);
+  --pink-400: oklch(71.8% 0.202 349.761);
+  --pink-500: oklch(65.6% 0.241 354.308);
+  --pink-600: oklch(59.2% 0.249 0.584);
+  --pink-700: oklch(52.5% 0.223 3.958);
+  --pink-800: oklch(45.9% 0.187 3.815);
+  --pink-900: oklch(40.8% 0.153 2.432);
+  --pink-950: oklch(28.4% 0.109 3.907);
+
+  --rose-050: oklch(96.9% 0.015 12.422);
+  --rose-100: oklch(94.1% 0.03 12.58);
+  --rose-200: oklch(89.2% 0.058 10.001);
+  --rose-300: oklch(81% 0.117 11.638);
+  --rose-400: oklch(71.2% 0.194 13.428);
+  --rose-500: oklch(64.5% 0.246 16.439);
+  --rose-600: oklch(58.6% 0.253 17.585);
+  --rose-700: oklch(51.4% 0.222 16.935);
+  --rose-800: oklch(45.5% 0.188 13.697);
+  --rose-900: oklch(41% 0.159 10.272);
+  --rose-950: oklch(27.1% 0.105 12.094);
+
+  --slate-050: oklch(98.4% 0.003 247.858);
+  --slate-100: oklch(96.8% 0.007 247.896);
+  --slate-200: oklch(92.9% 0.013 255.508);
+  --slate-300: oklch(86.9% 0.022 252.894);
+  --slate-400: oklch(70.4% 0.04 256.788);
+  --slate-500: oklch(55.4% 0.046 257.417);
+  --slate-600: oklch(44.6% 0.043 257.281);
+  --slate-700: oklch(37.2% 0.044 257.287);
+  --slate-800: oklch(27.9% 0.041 260.031);
+  --slate-900: oklch(20.8% 0.042 265.755);
+  --slate-950: oklch(12.9% 0.042 264.695);
+
+  --gray-050: oklch(98.5% 0.002 247.839);
+  --gray-100: oklch(96.7% 0.003 264.542);
+  --gray-200: oklch(92.8% 0.006 264.531);
+  --gray-300: oklch(87.2% 0.01 258.338);
+  --gray-400: oklch(70.7% 0.022 261.325);
+  --gray-500: oklch(55.1% 0.027 264.364);
+  --gray-600: oklch(44.6% 0.03 256.802);
+  --gray-700: oklch(37.3% 0.034 259.733);
+  --gray-800: oklch(27.8% 0.033 256.848);
+  --gray-900: oklch(21% 0.034 264.665);
+  --gray-950: oklch(13% 0.028 261.692);
+
+  --zinc-050: oklch(98.5% 0 0);
+  --zinc-100: oklch(96.7% 0.001 286.375);
+  --zinc-200: oklch(92% 0.004 286.32);
+  --zinc-300: oklch(87.1% 0.006 286.286);
+  --zinc-400: oklch(70.5% 0.015 286.067);
+  --zinc-500: oklch(55.2% 0.016 285.938);
+  --zinc-600: oklch(44.2% 0.017 285.786);
+  --zinc-700: oklch(37% 0.013 285.805);
+  --zinc-800: oklch(27.4% 0.006 286.033);
+  --zinc-900: oklch(21% 0.006 285.885);
+  --zinc-950: oklch(14.1% 0.005 285.823);
+
+  --neutral-050: oklch(98.5% 0 0);
+  --neutral-100: oklch(97% 0 0);
+  --neutral-200: oklch(92.2% 0 0);
+  --neutral-300: oklch(87% 0 0);
+  --neutral-400: oklch(70.8% 0 0);
+  --neutral-500: oklch(55.6% 0 0);
+  --neutral-600: oklch(43.9% 0 0);
+  --neutral-700: oklch(37.1% 0 0);
+  --neutral-800: oklch(26.9% 0 0);
+  --neutral-900: oklch(20.5% 0 0);
+  --neutral-950: oklch(14.5% 0 0);
+
+  --stone-050: oklch(98.5% 0.001 106.423);
+  --stone-100: oklch(97% 0.001 106.424);
+  --stone-200: oklch(92.3% 0.003 48.717);
+  --stone-300: oklch(86.9% 0.005 56.366);
+  --stone-400: oklch(70.9% 0.01 56.259);
+  --stone-500: oklch(55.3% 0.013 58.071);
+  --stone-600: oklch(44.4% 0.011 73.639);
+  --stone-700: oklch(37.4% 0.01 67.558);
+  --stone-800: oklch(26.8% 0.007 34.298);
+  --stone-900: oklch(21.6% 0.006 56.043);
+  --stone-950: oklch(14.7% 0.004 49.25);
+
+  --mauve-050: oklch(98.5% 0 0);
+  --mauve-100: oklch(96% 0.003 325.6);
+  --mauve-200: oklch(92.2% 0.005 325.62);
+  --mauve-300: oklch(86.5% 0.012 325.68);
+  --mauve-400: oklch(71.1% 0.019 323.02);
+  --mauve-500: oklch(54.2% 0.034 322.5);
+  --mauve-600: oklch(43.5% 0.029 321.78);
+  --mauve-700: oklch(36.4% 0.029 323.89);
+  --mauve-800: oklch(26.3% 0.024 320.12);
+  --mauve-900: oklch(21.2% 0.019 322.12);
+  --mauve-950: oklch(14.5% 0.008 326);
+
+  --olive-050: oklch(98.8% 0.003 106.5);
+  --olive-100: oklch(96.6% 0.005 106.5);
+  --olive-200: oklch(93% 0.007 106.5);
+  --olive-300: oklch(88% 0.011 106.6);
+  --olive-400: oklch(73.7% 0.021 106.9);
+  --olive-500: oklch(58% 0.031 107.3);
+  --olive-600: oklch(46.6% 0.025 107.3);
+  --olive-700: oklch(39.4% 0.023 107.4);
+  --olive-800: oklch(28.6% 0.016 107.4);
+  --olive-900: oklch(22.8% 0.013 107.4);
+  --olive-950: oklch(15.3% 0.006 107.1);
+
+  --mist-050: oklch(98.7% 0.002 197.1);
+  --mist-100: oklch(96.3% 0.002 197.1);
+  --mist-200: oklch(92.5% 0.005 214.3);
+  --mist-300: oklch(87.2% 0.007 219.6);
+  --mist-400: oklch(72.3% 0.014 214.4);
+  --mist-500: oklch(56% 0.021 213.5);
+  --mist-600: oklch(45% 0.017 213.2);
+  --mist-700: oklch(37.8% 0.015 216);
+  --mist-800: oklch(27.5% 0.011 216.9);
+  --mist-900: oklch(21.8% 0.008 223.9);
+  --mist-950: oklch(14.8% 0.004 228.8);
+
+  --taupe-050: oklch(98.6% 0.002 67.8);
+  --taupe-100: oklch(96% 0.002 17.2);
+  --taupe-200: oklch(92.2% 0.005 34.3);
+  --taupe-300: oklch(86.8% 0.007 39.5);
+  --taupe-400: oklch(71.4% 0.014 41.2);
+  --taupe-500: oklch(54.7% 0.021 43.1);
+  --taupe-600: oklch(43.8% 0.017 39.3);
+  --taupe-700: oklch(36.7% 0.016 35.7);
+  --taupe-800: oklch(26.8% 0.011 36.5);
+  --taupe-900: oklch(21.4% 0.009 43.1);
+  --taupe-950: oklch(14.7% 0.004 49.3);
+
+  --color-black: #000;
+  --color-white: #fff;
+
+
+  /* ==========================================================================
+   * LAYER 3 — COMPONENT TOKENS (DARK DEFAULTS)
+   * Mapped from Layer 2. Override only changed values in [data-theme="light"].
+   * ========================================================================== */
+
+  /* --- Surfaces ----------------------------------------------------------- */
+  --surface-00: var(--ash-01);
+  /* App bg       #10131A */
+  --surface-01: var(--ash-02);
+  /* Cards        #1C1B1B */
+  --surface-02: var(--ash-03);
+  /* Hover/sticky #201F1F */
+  --surface-03: var(--ash-04);
+  /* Dropdowns    #2B2A2A */
+  --surface-04: var(--ash-05);
+  /* Modals       #353434 */
+
+  /* --- Borders ------------------------------------------------------------ */
+  --border-subtle: rgb(255 255 255 / 10%);
   --border-default: rgb(255 255 255 / 20%);
-
   --border-hover: rgb(255 255 255 / 30%);
-  --border-focus: rgb(255 255 255 / 100%); /* Solid white for max contrast */
+  --border-focus: rgb(255 255 255 / 100%);
+  --border: var(--border-default);
 
-  --field-bg: var(--lvl-03);
-  --field-bg-hover: var(--base-02);
-  --field-border: var(--lvl-03);
+  /* --- Semantic colors ---------------------------------------------------- */
+  --color-accent: var(--md-sys-color-primary);
+  --color-danger: var(--md-sys-color-error);
+  --color-success: var(--md-extended-color-poison-color);
+  --color-warning: var(--md-extended-color-gold-color);
+  --color-secondary: var(--md-sys-color-secondary);
 
-  /* Text shadows */
-  --heading-shadow: none;
-  --label-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-
-  /* Field */
-  --field-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-
-  /* Button shadows */
-  --btn-shadow-inset: 0 2px 4px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-
-  --btn-shadow-active: inset 0 2px 4px rgba(0, 0, 0, 0.6);
-  --btn-shadow-active-sm: inset 0 1px 2px rgba(0, 0, 0, 0.6);
-
-  /* Card / surface shadows (M3 elevation scale) */
-  --card-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-
-  --card-shadow-hover:
-    0 2px 4px rgba(0, 0, 0, 0.4), 0 8px 16px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-
-  --card-shadow-context:
-    0 4px 8px rgba(0, 0, 0, 0.5), 0 16px 32px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-
-  /* Directional shadows for sidebars */
-  --card-shadow-left: -4px 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-
-  --card-shadow-right: 4px 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-
-  /* Primary (Action/Save) */
-  --btn-primary-bg: var(--color-accent);
-  --btn-primary-text: var(--base-10);
-  --btn-primary-hover: color-mix(in srgb, var(--blu-60) 85%, black);
-  --btn-primary-active: color-mix(in srgb, var(--blu-60) 70%, black);
-  --btn-primary-disabled: var(--lvl-02);
-  --btn-primary-border: transparent;
-
-  /* Secondary (Cancel/Structural) */
-  --btn-secondary-bg: #595959;
-  --btn-secondary-text: var(--base-10);
-  --btn-secondary-hover: color-mix(in srgb, var(--base-03) 85%, black);
-  /* Lightens slightly to pop off dark backgrounds */
-  --btn-secondary-active: color-mix(in srgb, var(--base-04) 70%, black);
-  /* Drops down for the click */
-  --btn-secondary-disabled: var(--lvl-02);
-  --btn-secondary-border: transparent;
-
-  /* Danger (Delete) */
-  --btn-danger-bg: var(--red-40);
-  --btn-danger-text: var(--base-10);
-  --btn-danger-hover: color-mix(in srgb, var(--red-60) 85%, black);
-  --btn-danger-active: color-mix(in srgb, var(--red-60) 70%, black);
-  --btn-danger-disabled: var(--lvl-02);
-  --btn-danger-border: transparent;
-
-  /* Ghost Buttons (Pagination, standard icon buttons) */
-  --btn-ghost-bg: transparent;
-  --btn-ghost-border: var(--border-default);
-  --btn-ghost-text: var(--text-primary);
-  --btn-ghost-hover-bg: color-mix(in srgb, var(--base-10) 10%, transparent);
-  --btn-ghost-active-bg: color-mix(in srgb, var(--base-10) 20%, transparent);
-  --btn-ghost-icon-size: 18px;
-  --btn-ghost-text-shadow: 0px 2px 2px rgba(0, 0, 0, 1), 0px 4px 6px rgba(0, 0, 0, 0.8);
-  --btn-icon-size: 16px;
-  --btn-icon-nav-size: 24px;
-
-  /* Control Buttons (Toolbar) */
-  --btn-toolbar-hover-bg: color-mix(in srgb, var(--base-10) 10%, transparent);
-  --btn-toolbar-active-bg: color-mix(in srgb, var(--base-10) 20%, transparent);
-
-  /* Maps directly to your global physical system */
-  --btn-toolbar-shadow-hover: var(--btn-shadow-inset);
-  --btn-toolbar-shadow-active: var(--btn-shadow-active-sm);
-
-  /* Header Action Buttons */
-  --header-action-bg: var(--base-03);
-  /* Swapped var(--gray-90) to your custom gray palette */
-  --header-action-hover-bg: color-mix(in srgb, var(--base-03) 85%, white);
-  /* Lightens base background */
-  --header-action-active-bg: color-mix(in srgb, var(--base-03) 70%, white);
-  --header-action-color: var(--white);
-
-  /* Toggle Buttons / Requirements Tiles */
-  --btn-toggle-bg: var(--base-03);
-  /* Swapped var(--layer-03) to your custom gray palette */
-  --btn-toggle-border: transparent;
-  --btn-toggle-text: var(--text-secondary);
-  --btn-toggle-hover-bg: color-mix(in srgb, var(--base-03) 85%, white);
-  --btn-toggle-active-bg: var(--color-accent);
-  --btn-toggle-active-border: var(--blu-60);
-  /* Fixed from --blue to match your palette */
-  --btn-toggle-icon-opacity: 0.7;
-
-  /* Button size modifiers */
-  --btn-compact-height: 24px;
-  --btn-compact-padding-x: 10px;
-
-  /* ==========================================================================
-   *  M3 50 Palette - Trip Bar Background Colors
-   * ========================================================================== */
-  --blu-60: rgb(53, 125, 232);
-  --blu-50: rgb(53, 125, 232);
-  --red-50: rgb(226, 72, 61);
-  --pur-50: rgb(175, 89, 225);
-  --yel-50: #b28600;
-  --tea-50: #009d9a;
-  --org-50: #eb6200;
-  --pnk-50: #ee5396;
-  --grn-50: #24a148;
-  --cyn-50: #1192e8;
-  --ind-50: #8a3ffc;
-  --brn-50: #a56a3f;
-  --base-50: rgba(229, 233, 246, 0.25);
-
-  /* ==========================================================================
-   *  M3 40 Palette - UI and Buttons
-   * ========================================================================== */
-  --blu-40: rgb(28, 43, 66);
-  /* atlassian blue 800 */
-  --red-40: rgb(174, 46, 36);
-  /* atlassian red 800 */
-  --red-60: #e05555;
-  /* m3 red 60 — lighter accent, used for danger hover/active states */
-  --pur-60: #7438d2;
-  --yel-60: #8f4e06;
-  --tea-60: #007d79;
-  --org-60: #9a4600;
-  --pnk-60: #b60d6e;
-  --grn-60: #006c35;
-  --cyn-60: #00687c;
-  --ind-60: #6929c4;
-  --brn-60: #8f5f3a;
-  --base-40: rgb(80, 82, 88);
-  /* atlassian neutral800 */
-
-  /* ==========================================================================
-   *  Alert Palette - Badges, Icons & Highlights
-   * ========================================================================== */
-  --alert-blu: #1890ff; /* blue-6  */
-  --alert-grn: #6abe39; /* green-6 */
-  --alert-yel: #e8b339; /* gold-6  */
-  --alert-red: #d32029; /* red-5   */
-
-  /* ==========================================================================
-   * 2. CANONICAL RUX TOKENS
-   * Apply these families moving forward: color, layer, border, text, space, size.
-   * ========================================================================== */
-
-  --color-accent: var(--blu-50);
-  --color-danger: var(--alert-red);
-  --color-success: var(--alert-grn);
-  --color-warning: var(--alert-yel);
-  --color-secondary: var(--alert-blu);
-
-  --text-primary: var(--base-10);
-  --text-secondary: var(--base-08);
-  --text-placeholder: var(--base-05);
-  --text-disabled: var(--base-05);
-  --header-seperator: var(--border-default);
-
-  /* ==========================================================================
-   * 3. STATUS & STATE
-   * Derived status semantics and temporary compatibility aliases.
-   * ========================================================================== */
-
-  --color-danger-soft: color-mix(in srgb, var(--red-60) 20%, transparent);
+  --color-danger-soft: color-mix(in srgb, var(--color-danger) 20%, transparent);
   --color-conflict-accent: var(--color-danger);
   --color-conflict-bg: color-mix(in srgb, var(--color-danger) 25%, transparent);
   --color-status-pending: var(--color-danger);
@@ -207,11 +356,166 @@
   --color-status-assigned: var(--color-warning);
   --color-status-blue: var(--color-secondary);
 
-  /* ==========================================================================
-   * 6. TYPOGRAPHY
-   * Font stacks + type scale
-   * ========================================================================== */
+  /* Backward-compat alert aliases */
+  --alert-red: var(--md-sys-color-error);
+  --alert-grn: var(--md-extended-color-poison-color);
+  --alert-yel: var(--md-extended-color-gold-color);
+  --alert-blu: var(--md-sys-color-secondary);
 
+  /* --- Text --------------------------------------------------------------- */
+  --text-primary: var(--md-sys-color-on-background);
+  --text-secondary: var(--md-sys-color-on-surface-variant);
+  --text-placeholder: var(--md-ref-palette-neutral-60);
+  --text-disabled: var(--md-ref-palette-neutral-40);
+  --text-muted: var(--text-secondary);
+  --header-seperator: var(--border-default);
+
+  /* --- Fields ------------------------------------------------------------- */
+  --field-bg: var(--surface-03);
+  --field-bg-hover: var(--md-sys-color-surface-variant);
+  --field-border: var(--surface-03);
+  --field-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  /* --- Shadows & effects -------------------------------------------------- */
+  --heading-shadow: none;
+  --heading-shadow-panel: 0px 1px 2px rgba(0, 0, 0, 0.6), 0px 2px 4px rgba(0, 0, 0, 0.3);
+  --label-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  --overlay-hover: rgba(0, 0, 0, 0.05);
+
+  --btn-shadow-inset: 0 2px 4px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --btn-shadow-active: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+  --btn-shadow-active-sm: inset 0 1px 2px rgba(0, 0, 0, 0.6);
+
+  --card-shadow: var(--md-sys-elevation-level1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --card-shadow-hover: var(--md-sys-elevation-level2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --card-shadow-context: var(--md-sys-elevation-level5), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  --card-shadow-left: -4px 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --card-shadow-right: 4px 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  /* --- Buttons ------------------------------------------------------------ */
+  /* Primary */
+  --btn-primary-bg: var(--md-sys-color-primary);
+  --btn-primary-text: var(--md-sys-color-on-primary);
+  --btn-primary-hover: color-mix(in srgb, var(--md-sys-color-primary) 85%, white);
+  --btn-primary-active: color-mix(in srgb, var(--md-sys-color-primary) 70%, white);
+  --btn-primary-disabled: var(--surface-02);
+  --btn-primary-border: transparent;
+
+  /* Secondary */
+  --btn-secondary-bg: var(--md-ref-palette-neutral-40);
+  --btn-secondary-text: var(--md-ref-palette-neutral-100);
+  --btn-secondary-hover: color-mix(in srgb, var(--md-ref-palette-neutral-40) 85%, black);
+  --btn-secondary-active: color-mix(in srgb, var(--md-ref-palette-neutral-40) 70%, black);
+  --btn-secondary-disabled: var(--surface-02);
+  --btn-secondary-border: transparent;
+
+  /* Danger */
+  --btn-danger-bg: var(--md-sys-color-error);
+  --btn-danger-text: var(--md-sys-color-on-error);
+  --btn-danger-hover: color-mix(in srgb, var(--md-sys-color-error) 85%, white);
+  --btn-danger-active: color-mix(in srgb, var(--md-sys-color-error) 70%, white);
+  --btn-danger-disabled: var(--surface-02);
+  --btn-danger-border: transparent;
+
+  /* Success */
+  --btn-success-bg: var(--md-extended-color-poison-color);
+  --btn-success-text: var(--md-extended-color-poison-on-color);
+  --btn-success-hover: color-mix(in srgb, var(--md-extended-color-poison-color) 85%, white);
+  --btn-success-active: color-mix(in srgb, var(--md-extended-color-poison-color) 70%, white);
+
+  /* Ghost */
+  --btn-ghost-bg: transparent;
+  --btn-ghost-border: var(--border-default);
+  --btn-ghost-text: var(--text-primary);
+  --btn-ghost-hover-bg: color-mix(in srgb, white 10%, transparent);
+  --btn-ghost-active-bg: color-mix(in srgb, white 20%, transparent);
+  --btn-ghost-active-border: var(--md-sys-color-primary);
+  --btn-ghost-icon-size: 18px;
+  --btn-ghost-text-shadow: 0px 2px 2px rgba(0, 0, 0, 1), 0px 4px 6px rgba(0, 0, 0, 0.8);
+
+  /* Toolbar */
+  --btn-toolbar-hover-bg: color-mix(in srgb, white 10%, transparent);
+  --btn-toolbar-active-bg: color-mix(in srgb, white 20%, transparent);
+  --btn-toolbar-shadow-hover: var(--btn-shadow-inset);
+  --btn-toolbar-shadow-active: var(--btn-shadow-active-sm);
+  --btn-toolbar-text: var(--text-primary);
+  --btn-toolbar-border: var(--border-default);
+  --btn-toolbar-font-size: 14px;
+  --btn-toolbar-icon-size: 18px;
+  --btn-toolbar-height: 32px;
+  --btn-toolbar-min-width: 80px;
+  --btn-toolbar-padding-x: 16px;
+
+  /* Header action */
+  --header-action-bg: var(--md-ref-palette-neutral-40);
+  --header-action-hover-bg: color-mix(in srgb, var(--md-ref-palette-neutral-40) 85%, white);
+  --header-action-active-bg: color-mix(in srgb, var(--md-ref-palette-neutral-40) 70%, white);
+  --header-action-color: var(--md-ref-palette-neutral-100);
+
+  /* Toggle tiles */
+  --btn-toggle-bg: var(--md-ref-palette-neutral-40);
+  --btn-toggle-border: transparent;
+  --btn-toggle-text: var(--text-secondary);
+  --btn-toggle-hover-bg: color-mix(in srgb, var(--md-ref-palette-neutral-40) 85%, white);
+  --btn-toggle-active-bg: var(--md-sys-color-primary);
+  --btn-toggle-active-border: var(--md-sys-color-primary);
+  --btn-toggle-icon-opacity: 0.7;
+
+  /* Icon buttons */
+  --btn-icon-bg: transparent;
+  --btn-icon-text: var(--text-secondary);
+  --btn-icon-hover-bg: color-mix(in srgb, white 10%, transparent);
+  --btn-icon-hover-text: var(--text-primary);
+  --btn-icon-active-bg: var(--md-sys-color-primary);
+  --btn-icon-disabled-bg: var(--surface-02);
+  --btn-icon-disabled-text: var(--text-disabled);
+  --btn-icon-size: 16px;
+  --btn-icon-nav-size: 24px;
+
+  /* Pagination */
+  --btn-pagination-size: 32px;
+  --btn-pagination-text: var(--text-primary);
+  --btn-pagination-hover-bg: color-mix(in srgb, white 10%, transparent);
+
+  /* Shared sizing */
+  --btn-padding-x: 16px;
+  --btn-min-width: 80px;
+  --btn-compact-height: 24px;
+  --btn-compact-padding-x: 10px;
+
+  /* --- Interactive --------------------------------------------------------- */
+  --focus-ring-color: var(--md-sys-color-primary);
+  --focus-ring: inset 0 0 0 2px var(--focus-ring-color);
+  --transition-fast: 0.11s cubic-bezier(0.2, 0, 0.38, 0.9);
+  --control-radius-icon: 8px;
+  --input-height: 32px;
+  --input-padding-x: 6px;
+  --input-font-size: 12px;
+
+  /* --- Spacing & layout --------------------------------------------------- */
+  --layout-container-max: 100%;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --panel-width: 400px;
+  --layout-panel-gap: var(--space-xl);
+  --card-padding: 16px;
+  --size-header-row: 48px;
+  --size-header-action: 48px;
+  --size-toolbar-action: 32px;
+  --schedule-row-height: 100px;
+  --bus-col-w: 34px;
+  --week-picker-height: 32px;
+  --day-row-h: 34px;
+  --schedule-edge-inset-right: 16px;
+  --sync-progress: 0%;
+  --waiting-list-dynamic-height: var(--schedule-row-height);
+  --print-scale: 1;
+
+  /* --- Typography --------------------------------------------------------- */
   --font-sans:
     system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Google Sans", "Inter",
     "Helvetica Neue", Arial, sans-serif;
@@ -231,30 +535,7 @@
   --heading-2-letter-spacing: 0.05px;
   --heading-2-color: var(--text-primary);
 
-  /* ==========================================================================
-   * 7. SPACING & LAYOUT
-   * Sizing, gaps, widths, structural dimensions
-   * ========================================================================== */
-
-  --layout-container-max: 100%;
-  --space-xs: 4px;
-  --space-sm: 8px;
-  --space-md: 12px;
-  --space-lg: 16px;
-  --space-xl: 24px;
-  --panel-width: 400px;
-  --layout-panel-gap: var(--space-xl);
-  --card-padding: 16px;
-  --size-header-row: 48px;
-  --size-header-action: 48px;
-  --size-toolbar-action: 32px;
-  --schedule-row-height: 100px;
-  --bus-col-w: 34px;
-  --week-picker-height: 32px;
-  --day-row-h: 34px;
-  --schedule-edge-inset-right: 16px;
-
-  /* Day Header */
+  /* --- Day header --------------------------------------------------------- */
   --day-header-date-color: var(--text-primary);
   --day-header-date-size: 14px;
   --day-header-date-weight: 600;
@@ -266,7 +547,7 @@
   --day-header-name-letter-spacing: 0;
   --day-header-name-line-height: 1;
 
-  /* Bus Column */
+  /* --- Bus column --------------------------------------------------------- */
   --bus-num-color: var(--text-primary);
   --bus-num-size: 14px;
   --bus-num-weight: 500;
@@ -274,63 +555,33 @@
   --bus-num-line-height: 1;
   --bus-lift-color: var(--alert-blu);
   --bus-sleeper-color: var(--text-primary);
+  --bus-accent-color: var(--surface-01);
 
-  /* ==========================================================================
-   * 8. ELEVATION & EFFECTS
-   * Shadows, overlays, text-shadows
-   * ========================================================================== */
-
-  --text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-  --overlay-hover: rgba(0, 0, 0, 0.05);
-
-  /* Compatibility aliases still in active use */
-  --border: var(--border-default);
-  --text-muted: var(--text-secondary);
-  --bus-accent-color: var(--lvl-01);
-  --sync-progress: 0%;
-  --waiting-list-dynamic-height: var(--schedule-row-height);
-
-  /* ==========================================================================
-   * 9. INTERACTIVE
-    * Buttons, inputs, focus
-   * ========================================================================== */
-
-  --focus-ring-color: var(--blu-60);
-  --focus-ring: inset 0 0 0 2px var(--focus-ring-color);
-
-  --transition-fast: 0.11s cubic-bezier(0.2, 0, 0.38, 0.9);
-
-  --control-radius-icon: 8px;
-  /* Small control height baseline */
-  --input-height: 32px;
-  --input-padding-x: 6px;
-  --input-font-size: 12px;
-
-  /* ==========================================================================
-   * 10. COMPONENT — Trip Bar
-   * All trip-bar geometry, typography, and icons
-   * ========================================================================== */
-
-  --tripbar-height: 100px;
-  --tripbar-radius: 0px;
+  /* --- Component: Trip Bar ------------------------------------------------ */
+  --tripbar-height: 101px;
+  --tripbar-radius: 2px;
   --tripbar-lane-step: 100px;
-  --tripbar-bg-mix-percent: 25%;
+  --tripbar-bg-mix-percent: 50%;
   --tripbar-text-shadow: 0 1px 2px rgba(0, 0, 0, 1);
+  --tripbar-shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.9);
 
-  --tripbar-color: var(--blu-50);
-  --tripbar-badge-text-color: var(--base-10);
-  --tripbar-r1-color: var(--base-10); /* Destination — white for max contrast */
-  --tripbar-r2-color: var(--base-06); /* Customer — softer gray subtitle */
-  --tripbar-r4-color: var(--base-10); /* Time — white */
-  --tripbar-r5-color: var(--base-10); /* Status icons — white */
-  --tripbar-r6-color: var(--base-06); /* Notes — softer gray subtitle */
-  --tripbar-r7-color: var(--base-10); /* Drivers — white */
+  --tripbar-color: var(--mana-01);
+  --tripbar-border-color: color-mix(in srgb, var(--mana-05) 100%, black);
+  --tripbar-text-color: var(--mana-05);
+
+  --tripbar-badge-text-color: var(--md-ref-palette-neutral-100);
+  --tripbar-r1-color: var(--md-ref-palette-neutral-100);
+  --tripbar-r2-color: var(--md-ref-palette-neutral-80);
+  --tripbar-r4-color: var(--md-ref-palette-neutral-100);
+  --tripbar-r5-color: var(--md-ref-palette-neutral-100);
+  --tripbar-r6-color: var(--md-ref-palette-neutral-80);
+  --tripbar-r7-color: var(--md-ref-palette-neutral-100);
+
   --tripbar-hover-brightness-from: 1.05;
   --tripbar-hover-brightness-to: 1.15;
   --tripbar-hover-saturate-from: 1;
   --tripbar-hover-saturate-to: 1.25;
 
-  /* Insets & Spacing */
   --tripbar-inset: 0px;
   --tripbar-inset-left: 0px;
   --tripbar-inset-right: 1px;
@@ -342,43 +593,40 @@
   --tripbar-gap-inline: 2px;
   --tripbar-gap-drivers: 6px;
 
-  /* Row 1: Destination */
   --tripbar-r1-font-size: 0.75rem;
   --tripbar-r1-row-height: 14px;
   --tripbar-r1-font-weight: 600;
   --tripbar-r1-line-height: 14px;
   --tripbar-r1-letter-spacing: 0.02em;
-  /* Row 2: Customer */
+
   --tripbar-r2-font-size: 0.6875rem;
   --tripbar-r2-row-height: 12px;
   --tripbar-r2-font-weight: 500;
   --tripbar-r2-line-height: 12px;
   --tripbar-r2-letter-spacing: 0.02em;
-  /* Row 3: Contact */
+
   --tripbar-r3-row-height: 13px;
-  /* Row 4: Time */
+
   --tripbar-r4-font-size: 0.6875rem;
   --tripbar-r4-row-height: 13px;
   --tripbar-r4-font-weight: 700;
   --tripbar-r4-line-height: 13px;
   --tripbar-r4-letter-spacing: 0.05em;
 
-  /* Row 5: Status Icons */
   --tripbar-r5-row-height: 14px;
-  /* Row 6: Notes */
+
   --tripbar-r6-font-size: 0.625rem;
   --tripbar-r6-row-height: 12px;
   --tripbar-r6-font-weight: 400;
   --tripbar-r6-line-height: 12px;
   --tripbar-r6-letter-spacing: 0.02em;
-  /* Row 7: Drivers */
+
   --tripbar-r7-font-size: 0.75rem;
   --tripbar-r7-row-height: 14px;
   --tripbar-r7-font-weight: 700;
   --tripbar-r7-line-height: 14px;
   --tripbar-r7-letter-spacing: 0.05em;
 
-  /* Icons */
   --tripbar-mini-badge: 14px;
   --tripbar-badge-radius: 0;
   --tripbar-danger-size: 16px;
@@ -386,6 +634,7 @@
   --tripbar-danger-offset: 4px;
   --tripbar-multi-badge-font-size: 0.625rem;
   --tripbar-multi-bus-indent: 0px;
+
   --icon-bus-size: 18px;
   --icon-bus-fill: 1;
   --icon-bus-opsz: 20;
@@ -397,141 +646,108 @@
   --icon-arrow-offset: 4px;
   --icon-btn-size: 32px;
 
-  /* Envelope / print sheet tokens */
+  /* --- Envelope / print --------------------------------------------------- */
   --env-ink: var(--text-primary);
-  --env-rule: var(--border);
+  --env-rule: var(--border-default);
   --env-border: 1px;
   --env-pad: 0.25in;
   --env-panel-pad: 0.375in;
   --env-section-gap: 0.125in;
   --env-label-size: 0.625rem;
   --env-tiny-size: 0.5625rem;
-  --env-pickup: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  --env-pickup: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
 
-  /* ==========================================================================
-   * 11. Z-INDEX
-   * Layering stack
-   * ========================================================================== */
-
+  /* --- Z-index ------------------------------------------------------------ */
   --z-dropdown: 1000;
   --z-modal: 10100;
-  --print-scale: 1;
 }
 
 /* ==========================================================================
- * LIGHT THEME OVERRIDES
+ * LIGHT THEME
+ * Layer 2 (sys color roles) fully overridden.
+ * Layer 3: only tokens that differ from dark defaults.
+ * Reference palettes in :root are theme-independent — no override needed.
  * ========================================================================== */
 [data-theme="light"] {
   color-scheme: light;
 
-  /* --- 1. Foundation overrides (simple base tokens) --- */
-  --blue: #0062ff;
-  --red: #da1e28;
-  --green: #198038;
-  --yellow: #f1c21b;
-  --orange: #ff832b;
-  --teal: #007d79;
-  --purple: #8a3ffc;
-  --pink: #d02670;
+ 
+  /* Borders */
+  --border-hover: rgba(0, 0, 0, 0.3);
+  --border-focus: rgba(0, 0, 0, 1);
 
-  --alert-yel: var(--primary-text);
-  --alert-red: #da1e28;
-  --alert-grn: #198038;
-  --alert-blu: #8a3ffc;
+  /* Text */
+  --text-placeholder: var(--md-ref-palette-neutral-50);
+  --text-disabled: var(--md-ref-palette-neutral-60);
+  --text-muted: var(--md-ref-palette-neutral-variant-50);
 
-  --text-primary: var(--black);
-  --text-secondary: var(--gray-100);
-  --text-placeholder: var(--gray-50);
-  --text-disabled: var(--gray-40);
-
-  /* Field Drop Shadow */
+  /* Fields */
   --field-shadow: 0 1px 3px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.1);
+  --field-bg-hover: var(--md-sys-color-surface-variant);
 
-  /* --- 3. Compatibility aliases (temporary migration layer) --- */
-  --text-muted: var(--gray-90);
-  --border: var(--border-default);
-  --color-danger-soft: color-mix(in srgb, var(--red) 14%, white);
-  --bus-accent-color: var(--layer-02);
-  --sync-progress: 0%;
-  --waiting-list-dynamic-height: var(--schedule-row-height);
-
+  /* Shadows */
+  --text-shadow: none;
   --overlay-hover: rgba(0, 0, 0, 0.04);
-  --tripbar-bg-mix-percent: 15%;
-  --tripbar-badge-text-color: var(--white);
-  --tripbar-r1-color: var(--white);
-  --tripbar-r2-color: color-mix(in srgb, var(--white) 90%, black 10%);
-  --tripbar-r4-color: var(--white);
-  --tripbar-r5-color: var(--white);
-  --tripbar-r6-color: color-mix(in srgb, var(--white) 90%, black 10%);
-  --tripbar-r7-color: var(--white);
+  --btn-shadow-inset: none;
+  --card-shadow: var(--md-sys-elevation-level1);
+  --card-shadow-hover: var(--md-sys-elevation-level2);
+  --card-shadow-context: var(--md-sys-elevation-level5);
 
-  --env-ink: var(--black);
-  --env-rule: var(--gray-50);
-  --env-pickup: color-mix(in srgb, var(--blue) 18%, white);
+  /* Buttons */
+  --btn-primary-hover: color-mix(in srgb, var(--md-sys-color-primary) 85%, black);
+  --btn-primary-active: color-mix(in srgb, var(--md-sys-color-primary) 70%, black);
 
-  /* Primary (Action/Save - Solid Blue) */
-  --btn-primary-bg: var(--blue-60);
-  --btn-primary-text: var(--white);
-  --btn-primary-hover: color-mix(in srgb, var(--blue-60) 85%, white);
-  --btn-primary-active: color-mix(in srgb, var(--blue-60) 70%, white);
-
-  /* Secondary (Structural/Cancel - Solid Gray matching Layer 03) */
-  --btn-secondary-bg: var(--layer-03);
+  --btn-secondary-bg: var(--surface-03);
   --btn-secondary-text: var(--text-primary);
-  --btn-secondary-hover: color-mix(in srgb, var(--layer-03), black 5%);
-  --btn-secondary-active: color-mix(in srgb, var(--layer-03), black 10%);
+  --btn-secondary-hover: color-mix(in srgb, var(--surface-03), black 5%);
+  --btn-secondary-active: color-mix(in srgb, var(--surface-03), black 10%);
 
-  /* Danger (Delete) */
-  --btn-danger-bg: var(--red-60);
-  --btn-danger-text: var(--white);
-  --btn-danger-hover: color-mix(in srgb, var(--red-60) 85%, white);
-  --btn-danger-active: color-mix(in srgb, var(--red-60) 70%, white);
+  --btn-danger-hover: color-mix(in srgb, var(--md-sys-color-error) 85%, black);
+  --btn-danger-active: color-mix(in srgb, var(--md-sys-color-error) 70%, black);
 
-  /* Success (Confirmation/Completed actions) */
-  --btn-success-bg: var(--color-success);
-  --btn-success-text: var(--white);
-  --btn-success-hover: color-mix(in srgb, var(--color-success) 85%, white);
-  --btn-success-active: color-mix(in srgb, var(--color-success) 70%, white);
+  --btn-success-hover: color-mix(in srgb, var(--md-extended-color-poison-color) 85%, black);
+  --btn-success-active: color-mix(in srgb, var(--md-extended-color-poison-color) 70%, black);
 
-  /* Tertiary / Toggle Tiles (For Requirements) */
-  /* Keep ghost tiles on the same surface as form controls */
-  --btn-ghost-bg: var(--layer-03);
-  --btn-ghost-border: var(--gray-40);
-  /* Secondary text by default; interaction states can promote contrast */
-  --btn-ghost-text: var(--text-primary);
-  --btn-ghost-hover-bg: color-mix(in srgb, var(--layer-03), white 5%);
-  --btn-ghost-active-bg: var(--layer-03);
-  --btn-ghost-active-border: var(--blue);
-  --btn-ghost-icon-size: 18px;
+  --btn-ghost-bg: var(--surface-03);
+  --btn-ghost-border: var(--md-sys-color-outline-variant);
+  --btn-ghost-hover-bg: color-mix(in srgb, var(--surface-03), black 5%);
+  --btn-ghost-active-bg: var(--surface-03);
   --btn-ghost-text-shadow: none;
 
-  /* Shared button sizing */
-  --btn-padding-x: 16px;
-  --btn-min-width: 80px;
+  --btn-toggle-bg: var(--surface-03);
+  --btn-toggle-hover-bg: color-mix(in srgb, var(--surface-03), black 5%);
+
+  --header-action-bg: var(--surface-03);
+  --header-action-hover-bg: color-mix(in srgb, var(--surface-03), black 5%);
+  --header-action-active-bg: color-mix(in srgb, var(--surface-03), black 10%);
+  --header-action-color: var(--text-primary);
+
+  --btn-icon-hover-bg: color-mix(in srgb, var(--surface-03), black 5%);
+  --btn-pagination-hover-bg: var(--md-sys-color-surface-container-lowest);
+  --btn-toolbar-border: var(--md-sys-color-outline-variant);
+  --btn-toolbar-hover-bg: var(--surface-03);
+
+  /* Compact size override (light uses larger touch targets) */
   --btn-compact-height: 32px;
   --btn-compact-padding-x: 12px;
   --btn-icon-size: 24px;
   --btn-icon-nav-size: 24px;
 
-  /* Control buttons (icon/pagination/toolbar) */
-  --btn-pagination-size: 32px;
-  --btn-pagination-text: var(--text-primary);
-  --btn-pagination-hover-bg: var(--gray-10);
+  /* Trip bar */
+  --tripbar-bg-mix-percent: 15%;
+  --tripbar-badge-text-color: var(--md-ref-palette-neutral-100);
+  --tripbar-r1-color: var(--md-ref-palette-neutral-100);
+  --tripbar-r2-color: color-mix(in srgb, var(--md-ref-palette-neutral-100) 90%, black);
+  --tripbar-r4-color: var(--md-ref-palette-neutral-100);
+  --tripbar-r5-color: var(--md-ref-palette-neutral-100);
+  --tripbar-r6-color: color-mix(in srgb, var(--md-ref-palette-neutral-100) 90%, black);
+  --tripbar-r7-color: var(--md-ref-palette-neutral-100);
 
-  --btn-toolbar-height: 32px;
-  --btn-toolbar-min-width: 80px;
-  --btn-toolbar-padding-x: 16px;
-  --btn-toolbar-text: var(--text-primary);
-  --btn-toolbar-border: var(--gray-40);
-  --btn-toolbar-hover-bg: var(--layer-03);
-  --btn-toolbar-font-size: 14px;
-  --btn-toolbar-icon-size: 18px;
+  /* Envelope */
+  --env-ink: var(--text-primary);
+  --env-rule: var(--md-sys-color-outline-variant);
+  --env-pickup: color-mix(in srgb, var(--md-sys-color-primary) 18%, white);
 
-  --btn-icon-bg: transparent;
-  --btn-icon-text: var(--text-secondary);
-  --btn-icon-hover-bg: color-mix(in srgb, var(--layer-03), white 8%);
-  --btn-icon-hover-text: var(--text-primary);
-  --btn-icon-active-bg: var(--color-accent);
-  --btn-icon-disabled-bg: var(--layer-03);
-  --btn-icon-disabled-text: var(--text-disabled);
+  /* Misc */
+  --bus-accent-color: var(--surface-02);
 }

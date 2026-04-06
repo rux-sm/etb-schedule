@@ -87,7 +87,7 @@ button {
 .btn--toggle[aria-disabled="true"],
 .btn--icon:disabled,
 .btn--icon[aria-disabled="true"] {
-  background-color: var(--lvl-02) !important;
+  background-color: var(--surface-02) !important;
   color: var(--text-disabled) !important;
   box-shadow: none !important;
   cursor: not-allowed;
@@ -212,11 +212,11 @@ button {
 }
 
 .btn--icon:hover {
-  background-color: var(--lvl-03);
+  background-color: var(--surface-03);
 }
 
 .btn--icon:active {
-  background-color: var(--lvl-02);
+  background-color: var(--surface-02);
   box-shadow: var(--btn-shadow-active-sm);
 }
 

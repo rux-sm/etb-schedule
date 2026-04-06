@@ -1,7 +1,20 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep -rn \"btn--\\\\|toggle-pill\\\\b\\\\|c-header__action\\\\b\\\\|picross-mode-btn\" '/Users/sergiomercado/Library/Mobile Documents/com~apple~CloudDocs/Projects/etb/etb_trip_schedule/' --include=*.html)"
+      "Bash(grep -rn \"btn--\\\\|toggle-pill\\\\b\\\\|c-header__action\\\\b\\\\|picross-mode-btn\" '/Users/sergiomercado/Library/Mobile Documents/com~apple~CloudDocs/Projects/etb/etb_trip_schedule/' --include=*.html)",
+      "Bash(wc -l /Users/escamillatourbuses/Library/Mobile Documents/com~apple~CloudDocs/Projects/etb/etb_trip_schedule/css/*.css)",
+      "Bash(wc -l css/*.css)",
+      "Bash(sed -i '' 's/var\\(--lvl-00\\)/var\\(--surface-00\\)/g;:*)",
+      "Bash(sed -i '' 's/var\\(--lvl-02\\)/var\\(--surface-02\\)/g;:*)",
+      "Bash(sed -i '' 's/var\\(--lvl-03\\)/var\\(--surface-03\\)/g;:*)",
+      "Bash(sed -i '' 's/var\\(--base-00\\)/var\\(--gray-900\\)/g;:*)",
+      "Bash(sed -i '' 's/var\\(--layer-03\\)/var\\(--surface-03\\)/g' \"/Users/escamillatourbuses/Library/Mobile Documents/com~apple~CloudDocs/Projects/etb/etb_trip_schedule/css/form.css\")",
+      "Bash(sed -i '' 's/var\\(--layer-01\\)/var\\(--surface-01\\)/g;:*)",
+      "Bash(sed -i '' 's/var\\(--layer-01\\)/var\\(--surface-01\\)/g' \"/Users/escamillatourbuses/Library/Mobile Documents/com~apple~CloudDocs/Projects/etb/etb_trip_schedule/css/primitives.css\")",
+      "Bash(sed -n '215,240p' \"/Users/escamillatourbuses/Library/Mobile Documents/com~apple~CloudDocs/Projects/etb/etb_trip_schedule/css/primitives.css\")",
+      "Bash(sed -n '45,60p' \"/Users/escamillatourbuses/Library/Mobile Documents/com~apple~CloudDocs/Projects/etb/etb_trip_schedule/css/schedule.css\")",
+      "Bash(sed -n '50,65p' \"/Users/escamillatourbuses/Library/Mobile Documents/com~apple~CloudDocs/Projects/etb/etb_trip_schedule/css/trip-bar.css\")",
+      "Bash(grep -E \"\\\\.\\(css|js\\)$\")"
     ]
   }
 }

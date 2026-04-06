@@ -131,7 +131,7 @@ select:hover,
 textarea:hover,
 .select-trigger:hover {
   /* background-color: var(--field-bg-hover);
-  border-color: var(--base-07); */
+  border-color: var(--gray-200); */
 }
 
 input:focus,
@@ -287,7 +287,7 @@ select.is-empty:not(:focus),
   font-variant-numeric: normal;
   white-space: pre-wrap;
   color: var(--text-secondary);
-  background: var(--layer-03);
+  background: var(--surface-03);
   border: 1px solid var(--border);
   border-radius: 0;
 }
@@ -303,7 +303,7 @@ select.is-empty:not(:focus),
   font-size: 0.875rem;
   white-space: pre;
   color: var(--text-secondary);
-  background: var(--layer-03);
+  background: var(--surface-03);
   padding: 12px;
   line-height: 1.5;
   letter-spacing: normal;

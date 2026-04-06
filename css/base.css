@@ -148,7 +148,7 @@ body {
   line-height: 1.5;
   letter-spacing: 0.02em;
   color: var(--text-primary);
-  background: var(--lvl-00);
+  background: var(--surface-00);
   /* Base behind schedule */
   transition:
     background-color 200ms ease,
@@ -525,8 +525,8 @@ samp {
   padding: 0;
 
   /* Force to Layer 03 (Highest elevation, lightest background) */
-  background-color: var(--lvl-03);
-  border: 1px solid var(--lvl-03-border);
+  background-color: var(--surface-03);
+  border: 1px solid var(--border-subtle);
   border-radius: 0px;
   /* Strictly square */
 
@@ -562,8 +562,8 @@ samp {
   position: absolute;
   z-index: var(--z-dropdown);
   min-width: 180px;
-  background-color: var(--lvl-03);
-  border: 1px solid var(--lvl-03-border);
+  background-color: var(--surface-03);
+  border: 1px solid var(--border-subtle);
   box-shadow: var(--card-shadow-context);
   padding: 4px 0;
   animation: menuPopIn var(--transition-fast);
@@ -598,7 +598,7 @@ samp {
   border: 0;
   height: 1px;
   margin: 4px 0;
-  background-color: var(--lvl-03-border);
+  background-color: var(--border-subtle);
 }
 
 /* --- Menu Items --- */
@@ -653,7 +653,7 @@ samp {
 .dropdown__item:hover,
 .context-item:hover,
 .context-menu__item:hover {
-  background-color: var(--lvl-04);
+  background-color: var(--surface-04);
   color: var(--text-primary);
 }
 
@@ -662,7 +662,7 @@ samp {
 .dropdown__item:active,
 .context-item:active,
 .context-menu__item:active {
-  background-color: var(--lvl-03);
+  background-color: var(--surface-03);
 }
 
 .dropdown__item--meta {
@@ -673,7 +673,7 @@ samp {
 
 .dropdown__item--meta:hover,
 .dropdown__item--meta:active {
-  background-color: var(--lvl-04);
+  background-color: var(--surface-04);
   color: var(--text-secondary);
 }
 
