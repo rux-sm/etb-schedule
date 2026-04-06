@@ -32,30 +32,41 @@
     filter var(--transition-fast),
     border-color var(--transition-fast);
 background: var(--tripbar-color);
-  will-change: filter, box-shadow;
+  /*will-change: filter, box-shadow;
   /* background: color-mix(in srgb, var(--tripbar-color) var(--tripbar-bg-mix-percent), transparent); */
   /* backdrop-filter: blur(30px); */
   /* Required for Safari support
   -webkit-backdrop-filter: blur(30px); */
 
   /* 3. Soften the edge */
-  border: 1px solid color-mix(in srgb, var(--tripbar-border-color) 100%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tripbar-border-color) 50%, transparent);
   border-left: 4px solid var(--tripbar-border-color);
 }
 
+
 .schedule-grid__trip-bar:hover,
 .schedule-grid__trip-bar.selected {
-  /* Elevates the bar above adjacent rows to prevent clipping */
-  z-index: 20;
-  border: 1px solid color-mix(in srgb, var(--tripbar-color) 100%, transparent);
-  border-left: 4px solid var(--tripbar-color);
-  /* The physical lighting stack */
+  /* 1. Raise z-index above the sticky column (500) and other bars (501) */
+  z-index: 99999; 
+
+  /* 2. Physical Lift: Moving it up slightly makes the shadow feel real */
+  transform: translateY(-2px);
+  
+  /* 3. Deep Shadow: Ensure this variable in variables.css has enough spread */
   box-shadow: var(--tripbar-shadow-hover);
 
-  /* A static bump in surface brightness and saturation */
-  filter: brightness(var(--tripbar-hover-brightness-to)) saturate(var(--tripbar-hover-saturate-to));
+  /* 4. Border Visibility (Fixing your previous issue) */
+  border: 1px solid color-mix(in srgb, var(--tripbar-border-color) 100%, white 20%);
+  border-left: 4px solid color-mix(in srgb, var(--tripbar-border-color) 100%, white 20%);
+
+  /* 5. Brightness boost */
+  filter: brightness(var(--tripbar-hover-brightness-to, 1.15)) 
+          saturate(var(--tripbar-hover-saturate-to, 1.1));
 
   cursor: pointer;
+  transition: transform var(--transition-fast), 
+              box-shadow var(--transition-fast), 
+              filter var(--transition-fast);
 }
 
 .schedule-grid__trip-bar:active {
@@ -107,16 +118,16 @@ background: var(--tripbar-color);
   --tripbar-status-ok-bg: color-mix(in srgb, var(--color-status-ok) 0%, transparent);
 
   &.out-of-service {
-    --tripbar-color: var(--color-danger);
+    --tripbar-color: var(--vamp-04);
     background: repeating-linear-gradient(
       -45deg,
-      color-mix(in srgb, var(--color-danger) 8%, transparent),
-      color-mix(in srgb, var(--color-danger) 8%, transparent) 8px,
-      color-mix(in srgb, var(--color-danger) 16%, transparent) 8px,
-      color-mix(in srgb, var(--color-danger) 16%, transparent) 16px
+      color-mix(in srgb, var(--vamp-04) 10%, transparent),
+      color-mix(in srgb, var(--vamp-04) 10%, transparent) 8px,
+      color-mix(in srgb, var(--vamp-04) 20%, transparent) 8px,
+      color-mix(in srgb, var(--vamp-04) 20%, transparent) 16px
     );
-    border: 1px solid color-mix(in srgb, var(--color-danger) 40%, var(--gray-900));
-    border-left: 4px solid var(--color-danger);
+    border: 1px solid color-mix(in srgb, var(--vamp-10) 40%, var(--gray-900));
+    border-left: 4px solid var(--vamp-10);
 
     /* Overrides for crisp text and recessed look */
     opacity: 1;
@@ -166,49 +177,69 @@ background: var(--tripbar-color);
   }
 
   &.unconfirmed {
-    --tripbar-color: var(--heart-03);
-    --tripbar-border-color: var(--heart-07);
-    --tripbar-text-color: var(--heart-07);
+    --tripbar-color: var(--vamp-04);
+    --tripbar-border-color: var(--vamp-10);
+    --tripbar-text-color: var(--vamp-10);
   }
 
   &.color-green {
-    --tripbar-color: var(--grn-50);
+    --tripbar-color: var(--vamp-02);
+    --tripbar-border-color: var(--vamp-09);
+    --tripbar-text-color: var(--vamp-09);
   }
 
   &.color-yellow {
-    --tripbar-color: var(--yel-50);
+    --tripbar-color: var(--vamp-02);
+    --tripbar-border-color: var(--vamp-09);
+    --tripbar-text-color: var(--vamp-09);
   }
 
   &.color-gray {
-    --tripbar-color: var(--gray-50);
+    --tripbar-color: var(--vamp-02);
+    --tripbar-border-color: var(--vamp-08);
+    --tripbar-text-color: var(--vamp-08);
   }
 
   &.color-purple {
-    --tripbar-color: var(--pur-50);
+    --tripbar-color: var(--vamp-02);
+    --tripbar-border-color: var(--vamp-08);
+    --tripbar-text-color: var(--vamp-08);
   }
 
   &.color-pink {
-    --tripbar-color: var(--pnk-50);
+    --tripbar-color: var(--vamp-02);
+    --tripbar-border-color: var(--vamp-08);
+    --tripbar-text-color: var(--vamp-08);
   }
 
   &.color-orange {
-    --tripbar-color: var(--org-50);
+    --tripbar-color: var(--vamp-02);
+    --tripbar-border-color: var(--vamp-08);
+    --tripbar-text-color: var(--vamp-08);
   }
 
   &.color-teal {
-    --tripbar-color: var(--tea-50);
+    --tripbar-color: var(--cold-02);
+    --tripbar-border-color: var(--cold-08);
+    --tripbar-text-color: var(--cold-08);
   }
 
   &.color-cyan {
-    --tripbar-color: var(--cyn-50);
+    --tripbar-color: var(--vamp-02);
+    --tripbar-border-color: var(--vamp-08);
+    --tripbar-text-color: var(--vamp-08);
   }
 
   &.color-indigo {
-    --tripbar-color: var(--ind-50);
+    --tripbar-color: var(--vamp-02);
+    --tripbar-border-color: var(--vamp-08);
+    --tripbar-text-color: var(--vamp-08);
   }
 
   &.color-brown {
-    --tripbar-color: var(--brn-50);
+    --tripbar-color: var(--vamp-02);
+    --tripbar-border-color: var(--vamp-08);
+    --tripbar-text-color: var(--vamp-08);
   }
 }
 
