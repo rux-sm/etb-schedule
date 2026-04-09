@@ -2965,9 +2965,9 @@ function _renderAgendaInner() {
           if (glyph) glyph.textContent = "edit_document";
           bar._b$.classList.add("is-pending"); // red
         } else if (ps === "contract signed") {
-          // Contract signed but no PO -> yellow PO icon
+          // Contract signed but no PO -> red PO icon
           if (glyph) glyph.textContent = "request_quote";
-          bar._b$.classList.add("is-yellow"); // yellow
+          bar._b$.classList.add("is-pending"); // red
         } else {
           // Fallback
           if (glyph) glyph.textContent = "description";
