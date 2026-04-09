@@ -1483,6 +1483,13 @@ function getStatusIcon(fieldId, statusValue) {
   const s = String(statusValue || "")
     .trim()
     .toLowerCase();
+  if (fieldId === "driverStatus") {
+    if (s === "assigned") return "sentiment_neutral";
+    if (s === "confirmed") return "sentiment_satisfied";
+    if (s === "driver info sent") return "mood";
+    return "sentiment_dissatisfied"; // default fallback for pending/empty
+  }
+
   if (!s || s === "none") return "";
 
   if (fieldId === "itineraryStatus") {
@@ -1497,13 +1504,6 @@ function getStatusIcon(fieldId, statusValue) {
     if (s === "po received") return "request_quote";
     if (s === "not required") return "scan_delete";
     return "description";
-  }
-  if (fieldId === "driverStatus") {
-    if (s === "pending") return "sentiment_dissatisfied";
-    if (s === "assigned") return "sentiment_neutral";
-    if (s === "confirmed") return "sentiment_satisfied";
-    if (s === "driver info sent") return "mood";
-    return "person";
   }
   if (fieldId === "invoiceStatus") {
     return "attach_money";
@@ -2996,33 +2996,30 @@ function _renderAgendaInner() {
 
       // Swap driver 1 status icon based on value
       if (bar._bD1) {
-        const hasD1 = d1 && d1 !== "None";
-        bar._bD1.classList.toggle("is-hidden", !hasD1);
-        if (hasD1) {
-          bar._bD1.classList.add("has-action");
-          const glyph = bar._bD1.querySelector(".schedule-grid__trip-bar__badge-glyph");
-          if (glyph) {
-            const s1 = (a.driver1Status || "Pending").toLowerCase();
-            const iconName = getStatusIcon("driverStatus", s1);
-            glyph.textContent = iconName || "person";
-            glyph.dataset.action = "showDriverContact";
-            glyph.dataset.tripkey = t.tripKey;
-            glyph.style.cursor = "pointer";
-          }
+        bar._bD1.classList.remove("is-hidden");
+        bar._bD1.classList.add("has-action");
+        const glyph = bar._bD1.querySelector(".schedule-grid__trip-bar__badge-glyph");
+        if (glyph) {
+          const s1 = (a.driver1Status || "Pending").toLowerCase();
+          const iconName = getStatusIcon("driverStatus", s1);
+          glyph.textContent = iconName || "sentiment_dissatisfied";
+          glyph.dataset.action = "showDriverContact";
+          glyph.dataset.tripkey = t.tripKey;
+          glyph.style.cursor = "pointer";
         }
       }
 
-      // Swap driver 2 status icon based on value, only if driver 2 exists
+      // Swap driver 2 status icon based on value, only if driver 2 exists or is required
       if (bar._bD2) {
-        const hasD2 = a.driver2 && a.driver2 !== "None";
-        bar._bD2.classList.toggle("is-hidden", !hasD2);
-        if (hasD2) {
+        const needsD2 = t.reqCoDriver || t.reqRelief || (a.driver2 && a.driver2 !== "None");
+        bar._bD2.classList.toggle("is-hidden", !needsD2);
+        if (needsD2) {
           bar._bD2.classList.add("has-action");
           const glyph = bar._bD2.querySelector(".schedule-grid__trip-bar__badge-glyph");
           if (glyph) {
             const s2 = (a.driver2Status || "Pending").toLowerCase();
             const iconName = getStatusIcon("driverStatus", s2);
-            glyph.textContent = iconName || "person";
+            glyph.textContent = iconName || "sentiment_dissatisfied";
             glyph.dataset.action = "showDriverContact";
             glyph.dataset.tripkey = t.tripKey;
             glyph.style.cursor = "pointer";
@@ -3808,7 +3805,6 @@ function getDriverOptions() {
 }
 
 const DRIVER_STATUS_OPTIONS = [
-  { value: "Pending", label: "Pending" },
   { value: "Assigned", label: "Assigned" },
   { value: "Confirmed", label: "Confirmed" },
 ];
@@ -3818,8 +3814,8 @@ function makeDriverStatusSelect(name) {
   sel.name = name;
   sel.setAttribute("aria-label", "Driver status");
   const emptyOpt = document.createElement("option");
-  emptyOpt.value = "";
-  emptyOpt.textContent = "";
+  emptyOpt.value = "Pending";
+  emptyOpt.textContent = "Pending";
   sel.appendChild(emptyOpt);
 
   DRIVER_STATUS_OPTIONS.forEach((o) => {
