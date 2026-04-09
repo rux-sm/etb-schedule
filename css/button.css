@@ -45,7 +45,7 @@ button {
 
   /* Visuals */
   border: 1px solid transparent;
-  border-radius: 0px;
+  border-radius: 4px;
   cursor: pointer;
 
   /* Transitions */
@@ -66,7 +66,7 @@ button {
 .btn:focus-visible,
 .btn--toggle:focus-visible,
 .btn--icon:focus-visible {
-  outline: 2px solid var(--focus-ring-color) !important;
+  outline: 2px solid var(--rux-accent-color) !important;
   outline-offset: -2px !important;
   border-color: transparent !important;
 }
@@ -98,7 +98,7 @@ button {
 
 .btn--accent {
   /* Visuals */
-  background-color: var(--btn-primary-bg);
+  background-color: var(--rux-blue-500);
   color: var(--btn-primary-text);
   box-shadow: var(--btn-shadow-inset);
 }
@@ -116,7 +116,7 @@ button {
 
 .btn--default {
   /* Visuals */
-  background-color: var(--btn-secondary-bg);
+  background-color: var(--rux-gray-500);
   color: var(--btn-secondary-text);
   box-shadow: var(--btn-shadow-inset);
 }
@@ -134,7 +134,7 @@ button {
 
 .btn--danger {
   /* Visuals */
-  background-color: var(--btn-danger-bg);
+  background-color: var(--rux-red-500);
   color: var(--btn-danger-text);
   box-shadow: var(--btn-shadow-inset);
 }
@@ -293,7 +293,7 @@ button {
   align-items: center;
 }
 
-.form-actions > .btn {
+.form-actions>.btn {
   flex: 1;
 }
 
@@ -316,13 +316,14 @@ button {
   flex: 1;
 }
 
-.form-actions--footer > .btn--danger {
+.form-actions--footer>.btn--danger {
   width: 100%;
 }
 
 /* ── 11. Responsive ─────────────────────────────────────────────────────── */
 
 @media (max-width: 899px) {
+
   .btn,
   .btn--toggle {
     min-height: 44px;

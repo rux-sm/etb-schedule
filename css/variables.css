@@ -1,72 +1,156 @@
 :root {
   color-scheme: dark;
- 
-  --base-01: oklch(0.162 0 0);
-  --base-02: oklch(0.195 0 0);
-  --base-03: oklch(0.254 0 0);
-  --base-04: oklch(0.302 0 0);
-  --base-05: oklch(0.348 0 0);
-  --base-06: oklch(0.396 0 0);
-  --base-07: oklch(0.459 0 0);
-  --base-08: oklch(0.549 0 0);
-  --base-09: oklch(0.649 0 0);
-  --base-10: oklch(0.72 0 0);
-  --base-11: oklch(0.863 0 0);
-  --base-12: oklch(0.933 0 0);
-  
-  --coal-01: oklch(0.165 0.007 264);
-  --coal-02: oklch(0.197 0.008 264);
-  --coal-03: oklch(0.256 0.011 264);
-  --coal-04: oklch(0.303 0.013 264);
-  --coal-05: oklch(0.349 0.014 264);
-  --coal-06: oklch(0.396 0.016 264);
-  --coal-07: oklch(0.459 0.018 264);
-  --coal-08: oklch(0.548 0.02 264);
-  --coal-09: oklch(0.645 0.018 256);
-  --coal-10: oklch(0.716 0.016 256);
-  --coal-11: oklch(0.86 0.008 256);
-  --coal-12: oklch(0.932 0.004 256);
 
-  --vamp-01: oklch(0.191 0.029 25);
-  --vamp-02: oklch(0.222 0.04 25);
-  --vamp-03: oklch(0.287 0.076 25);
-  --vamp-04: oklch(0.338 0.106 25);
-  --vamp-05: oklch(0.384 0.13 25);
-  --vamp-06: oklch(0.435 0.151 25);
-  --vamp-07: oklch(0.503 0.172 25);
-  --vamp-08: oklch(0.591 0.192 25);
-  --vamp-09: oklch(0.657 0.183 25);
-  --vamp-10: oklch(0.712 0.172 25);
-  --vamp-11: oklch(0.866 0.107 25);
-  --vamp-12: oklch(0.933 0.063 25);
+  --rux-accent-color: var(--rux-blue-500);
+  --rux-danger-color: var(--rux-red-500);
+  --rux-warning-color: var(--rux-yellow-300);
+  --rux-success-color: var(--rux-green-500);
 
-  --cold-01: oklch(0.176 0.03 180);
-  --cold-02: oklch(0.207 0.042 180);
-  --cold-03: oklch(0.27 0.078 180);
-  --cold-04: oklch(0.319 0.106 180);
-  --cold-05: oklch(0.364 0.129 180);
-  --cold-06: oklch(0.414 0.15 180);
-  --cold-07: oklch(0.481 0.17 180);
-  --cold-08: oklch(0.567 0.187 180);
-  --cold-09: oklch(0.618 0.182 180);
-  --cold-10: oklch(0.671 0.17 180);
-  --cold-11: oklch(0.839 0.109 180);
-  --cold-12: oklch(0.916 0.064 180);
+  --rux-blue-500-alpha: oklch(55% 0.2 260 / 20%);
+  --rux-red-500-alpha: oklch(55% 0.2 25 / 20%);
 
-  --mana-01: oklch(0.181 0.028 252);
-  --mana-02: oklch(0.212 0.039 252);
-  --mana-03: oklch(0.277 0.077 252);
-  --mana-04: oklch(0.328 0.107 252);
-  --mana-05: oklch(0.374 0.131 252);
-  --mana-06: oklch(0.425 0.152 252);
-  --mana-07: oklch(0.493 0.172 252);
-  --mana-08: oklch(0.579 0.191 252);
-  --mana-09: oklch(0.629 0.187 252);
-  --mana-10: oklch(0.682 0.176 252);
-  --mana-11: oklch(0.849 0.107 252);
-  --mana-12: oklch(0.921 0.063 252);
+  --rux-gray-100: oklch(95% 0.004 255);
+  --rux-gray-200: oklch(85% 0.004 255);
+  --rux-gray-300: oklch(75% 0.004 255);
+  --rux-gray-400: oklch(65% 0.004 255);
+  --rux-gray-500: oklch(55% 0.004 255);
+  --rux-gray-600: oklch(44% 0.004 255);
+  --rux-gray-700: oklch(32% 0.004 255);
+  --rux-gray-800: oklch(24% 0.004 255);
+  --rux-gray-900: oklch(16% 0.004 255);
+
+  --rux-green-100: oklch(95% 0.2 155);
+  --rux-green-200: oklch(85% 0.2 155);
+  --rux-green-300: oklch(75% 0.2 155);
+  --rux-green-400: oklch(65% 0.2 155);
+  --rux-green-500: oklch(55% 0.2 155);
+  --rux-green-600: oklch(45% 0.2 155);
+  --rux-green-700: oklch(35% 0.2 155);
+  --rux-green-800: oklch(25% 0.2 155);
+  --rux-green-900: oklch(15% 0.2 155);
+
+  --rux-blue-100: oklch(95% 0.2 260);
+  --rux-blue-200: oklch(85% 0.2 260);
+  --rux-blue-300: oklch(75% 0.2 260);
+  --rux-blue-400: oklch(65% 0.2 260);
+  --rux-blue-500: oklch(55% 0.2 260);
+  --rux-blue-600: oklch(45% 0.2 260);
+  --rux-blue-700: oklch(35% 0.2 260);
+  --rux-blue-800: oklch(25% 0.2 260);
+  --rux-blue-900: oklch(15% 0.2 260);
+
+  --rux-red-100: oklch(95% 0.2 25);
+  --rux-red-200: oklch(85% 0.2 25);
+  --rux-red-300: oklch(75% 0.2 25);
+  --rux-red-400: oklch(65% 0.2 25);
+  --rux-red-500: oklch(55% 0.2 25);
+  --rux-red-600: oklch(45% 0.2 25);
+  --rux-red-700: oklch(35% 0.2 25);
+  --rux-red-800: oklch(25% 0.2 25);
+  --rux-red-900: oklch(15% 0.2 25);
+
+  --rux-yellow-100: oklch(95% 0.2 100);
+  --rux-yellow-200: oklch(85% 0.2 100);
+  --rux-yellow-300: oklch(75% 0.2 100);
+  --rux-yellow-400: oklch(65% 0.2 100);
+  --rux-yellow-500: oklch(55% 0.2 100);
+  --rux-yellow-600: oklch(45% 0.2 100);
+  --rux-yellow-700: oklch(35% 0.2 100);
+  --rux-yellow-800: oklch(25% 0.2 100);
+  --rux-yellow-900: oklch(15% 0.2 100);
+
+  --gra-dark: oklch(55% 0 0);
+  --gra: oklch(65% 0 0);
+  --gra-alpha: oklch(65% 0 0 / 20%);
+  --gra-alert: oklch(80% 0 0);
+
+  --red-accent: oklch(65% 0.22 20);
+  --red-dark: oklch(55% 0.22 20);
+  --red: oklch(65% 0.22 20);
+  --red-alpha: oklch(65% 0.22 20 / 20%);
+  --red-alert: oklch(80% 0.22 20);
+
+  --org: oklch(65% 0.2 60);
+  --org-alpha: oklch(65% 0.2 60 / 20%);
+  --org-alert: oklch(80% 0.2 60);
+
+  --yel: oklch(65% 0.15 96);
+  --yel-alpha: oklch(65% 0.15 96 / 20%);
+  --yel-alert: oklch(80% 0.15 96);
+
+  --grn: oklch(65% 0.19 142);
+  --grn-alpha: oklch(65% 0.19 142 / 20%);
+  --grn-alert: oklch(80% 0.19 142);
+
+  --tea: oklch(65% 0.15 180);
+  --tea-alpha: oklch(65% 0.15 180 / 20%);
+  --tea-alert: oklch(80% 0.15 180);
+
+  --cya: oklch(65% 0.15 200);
+  --cya-alpha: oklch(65% 0.15 200 / 20%);
+  --cya-alert: oklch(80% 0.21 200);
+
+  --blue-accent: oklch(65% 0.18 255);
+  --blu-dark: oklch(55% 0.18 255);
+  --blu: oklch(65% 0.18 255);
+  --blu-alpha: oklch(65% 0.18 255 / 20%);
+  --blu-alert: oklch(80% 0.18 255);
+
+  --pur: oklch(65% 0.3 290);
+  --pur-alpha: oklch(65% 0.3 290 / 20%);
+  --pur-alert: oklch(80% 0.3 290);
+
+  --pin: oklch(65% 0.21 350);
+  --pin-alpha: oklch(65% 0.21 350 / 20%);
+  --pin-alert: oklch(80% 0.21 350);
 
 
+  /* --- Core Palettes --- */
+  --color-primary: var(--blu);
+  --color-secondary: var(--gra-dark);
+  --color-accent: var(--blu-dark);
+
+  --color-danger: var(--red-dark);
+  --color-danger-soft: var(--red-alpha);
+
+  --color-success: var(--wald-05);
+  --color-warning: var(--aube-05);
+
+  /* Semantic Mappings */
+  --color-status-pending: var(--red-alert);
+  --color-status-ok: var(--grn-alert);
+  --color-status-assigned: var(--yel-alert);
+  --color-status-blue: var(--blu-alert);
+
+  --color-conflict-accent: var(--red-alert);
+  --color-conflict-bg: var(--red-alpha);
+
+  --white: #ffffff;
+  --black: #000000;
+
+  /* core */
+
+  /* Surfaces */
+  --core-01: #000000;
+  /* Canvas / App bg */
+  --core-02: #1c1c1e;
+  /* Sidebars / Nav (Raised from canvas) */
+  --core-03: #323234;
+  /* Cards / Modals (Highest surface) */
+  --core-04: #505052;
+  /* Subtle Grid Lines (Low contrast against core-01) */
+  --core-05: oklch(35% 0.006 260);
+  /* Input Borders / Dividers */
+
+  /* Content */
+  --core-06: oklch(20% 0.006 260);
+  /* Muted Text */
+  --core-07: oklch(65% 0.006 260);
+  /* Secondary Text */
+  --core-08: oklch(85% 0.006 260);
+  /* Primary Text */
+  --core-09: oklch(98% 0.006 260);
+  /* Headlines / White */
 
   /* ==========================================================================
    * LAYER 3 — COMPONENT TOKENS (DARK DEFAULTS)
@@ -74,57 +158,40 @@
    * ========================================================================== */
 
   /* --- Surfaces ----------------------------------------------------------- */
-  --surface-00: var(--base-02);
+  --surface-00: var(--rux-gray-900);
   /* App bg       #10131A */
-  --surface-01: var(--base-03);
+  --surface-01: var(--rux-gray-800);
   /* Cards        #1C1B1B */
-  --surface-02: var(--base-04);
+  --surface-02: var(--rux-gray-700);
   /* Hover/sticky #201F1F */
-  --surface-03: var(--base-05);
+  --surface-03: var(--rux-gray-600);
   /* Dropdowns    #2B2A2A */
-  --surface-04: var(--base-06);
+  --surface-04: var(--rux-gray-500);
   /* Modals       #353434 */
 
   /* --- Borders ------------------------------------------------------------ */
-  --border-subtle: rgb(255 255 255 / 10%);
-  --border-default: rgb(255 255 255 / 20%);
+  --border-subtle: rgb(255 255 255 /5%);
+  --border-default: rgb(255 255 255 / 10%);
   --border-hover: rgb(255 255 255 / 30%);
   --border-focus: rgb(255 255 255 / 100%);
   --border: var(--border-default);
 
-  /* --- Semantic colors ---------------------------------------------------- */
-  --color-accent: var(--md-sys-color-primary);
-  --color-danger: var(--md-sys-color-error);
-  --color-success: var(--md-extended-color-poison-color);
-  --color-warning: var(--md-extended-color-gold-color);
-  --color-secondary: var(--md-sys-color-secondary);
 
-  --color-danger-soft: color-mix(in srgb, var(--color-danger) 20%, transparent);
-  --color-conflict-accent: var(--color-danger);
-  --color-conflict-bg: color-mix(in srgb, var(--color-danger) 25%, transparent);
-  --color-status-pending: var(--color-danger);
-  --color-status-ok: var(--color-success);
-  --color-status-assigned: var(--color-warning);
-  --color-status-blue: var(--color-secondary);
 
-  /* Backward-compat alert aliases */
-  --alert-red: var(--md-sys-color-error);
-  --alert-grn: var(--md-extended-color-poison-color);
-  --alert-yel: var(--md-extended-color-gold-color);
-  --alert-blu: var(--md-sys-color-secondary);
+
 
   /* --- Text --------------------------------------------------------------- */
-  --text-primary: var(--md-sys-color-on-background);
-  --text-secondary: var(--md-sys-color-on-surface-variant);
-  --text-placeholder: var(--md-ref-palette-neutral-60);
-  --text-disabled: var(--md-ref-palette-neutral-40);
+  --text-primary: var(--base-12);
+  --text-secondary: var(--base-10);
+  --text-placeholder: var(--base-08);
+  --text-disabled: var(--base-06);
   --text-muted: var(--text-secondary);
   --header-seperator: var(--border-default);
 
   /* --- Fields ------------------------------------------------------------- */
-  --field-bg: var(--surface-03);
-  --field-bg-hover: var(--md-sys-color-surface-variant);
-  --field-border: var(--surface-03);
+  --field-bg: var(--surface-02);
+  --field-bg-hover: var(--surface-03);
+  --field-border: var(--surface-02);
   --field-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
   /* --- Shadows & effects -------------------------------------------------- */
@@ -138,42 +205,42 @@
   --btn-shadow-active: inset 0 2px 4px rgba(0, 0, 0, 0.6);
   --btn-shadow-active-sm: inset 0 1px 2px rgba(0, 0, 0, 0.6);
 
-  --card-shadow: var(--md-sys-elevation-level1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  --card-shadow-hover: var(--md-sys-elevation-level2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  --card-shadow-context: var(--md-sys-elevation-level5), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --card-shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --card-shadow-context: 0 8px 16px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.10);
   --card-shadow-left: -4px 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   --card-shadow-right: 4px 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
   /* --- Buttons ------------------------------------------------------------ */
   /* Primary */
-  --btn-primary-bg: var(--md-sys-color-primary);
-  --btn-primary-text: var(--md-sys-color-on-primary);
-  --btn-primary-hover: color-mix(in srgb, var(--md-sys-color-primary) 85%, white);
-  --btn-primary-active: color-mix(in srgb, var(--md-sys-color-primary) 70%, white);
+  --btn-primary-bg: var(--color-accent);
+  --btn-primary-text: var(--text-primary);
+  --btn-primary-hover: color-mix(in srgb, var(--color-accent) 85%, white);
+  --btn-primary-active: color-mix(in srgb, var(--color-accent) 70%, white);
   --btn-primary-disabled: var(--surface-02);
   --btn-primary-border: transparent;
 
   /* Secondary */
-  --btn-secondary-bg: var(--md-ref-palette-neutral-40);
-  --btn-secondary-text: var(--md-ref-palette-neutral-100);
-  --btn-secondary-hover: color-mix(in srgb, var(--md-ref-palette-neutral-40) 85%, black);
-  --btn-secondary-active: color-mix(in srgb, var(--md-ref-palette-neutral-40) 70%, black);
+  --btn-secondary-bg: var(--color-secondary);
+  --btn-secondary-text: var(--text-primary);
+  --btn-secondary-hover: color-mix(in srgb, var(--color-secondary) 85%, black);
+  --btn-secondary-active: color-mix(in srgb, var(--color-secondary) 70%, black);
   --btn-secondary-disabled: var(--surface-02);
   --btn-secondary-border: transparent;
 
   /* Danger */
-  --btn-danger-bg: var(--md-sys-color-error);
-  --btn-danger-text: var(--md-sys-color-on-error);
-  --btn-danger-hover: color-mix(in srgb, var(--md-sys-color-error) 85%, white);
-  --btn-danger-active: color-mix(in srgb, var(--md-sys-color-error) 70%, white);
+  --btn-danger-bg: var(--color-danger);
+  --btn-danger-text: var(--text-primary);
+  --btn-danger-hover: color-mix(in srgb, var(--color-danger) 85%, white);
+  --btn-danger-active: color-mix(in srgb, var(--color-danger) 70%, white);
   --btn-danger-disabled: var(--surface-02);
   --btn-danger-border: transparent;
 
   /* Success */
-  --btn-success-bg: var(--md-extended-color-poison-color);
-  --btn-success-text: var(--md-extended-color-poison-on-color);
-  --btn-success-hover: color-mix(in srgb, var(--md-extended-color-poison-color) 85%, white);
-  --btn-success-active: color-mix(in srgb, var(--md-extended-color-poison-color) 70%, white);
+  --btn-success-bg: var(--color-success);
+  --btn-success-text: var(--base-01);
+  --btn-success-hover: color-mix(in srgb, var(--color-success) 85%, white);
+  --btn-success-active: color-mix(in srgb, var(--color-success) 70%, white);
 
   /* Ghost */
   --btn-ghost-bg: transparent;
@@ -209,8 +276,8 @@
   --btn-toggle-border: transparent;
   --btn-toggle-text: var(--text-secondary);
   --btn-toggle-hover-bg: color-mix(in srgb, var(--md-ref-palette-neutral-40) 85%, white);
-  --btn-toggle-active-bg: var(--md-sys-color-primary);
-  --btn-toggle-active-border: var(--md-sys-color-primary);
+  --btn-toggle-active-bg: var(--color-primary);
+  --btn-toggle-active-border: var(--color-primary);
   --btn-toggle-icon-opacity: 0.7;
 
   /* Icon buttons */
@@ -281,7 +348,7 @@
   --heading-1-color: var(--text-primary);
 
   --heading-2-size: 20px;
-  --heading-2-weight: 700;
+  --heading-2-weight: 400;
   --heading-2-line-height: 1.25;
   --heading-2-letter-spacing: 0.05px;
   --heading-2-color: var(--text-primary);
@@ -304,20 +371,20 @@
   --bus-num-weight: 500;
   --bus-num-letter-spacing: 0;
   --bus-num-line-height: 1;
-  --bus-lift-color: var(--alert-blu);
+  --bus-lift-color: var(--color-primary);
   --bus-sleeper-color: var(--text-primary);
   --bus-accent-color: var(--surface-01);
 
   /* --- Component: Trip Bar ------------------------------------------------ */
-  --tripbar-height: 100px;
-  --tripbar-radius: 4px;
+  --tripbar-height: 99px;
+  --tripbar-radius: 6px;
   --tripbar-lane-step: 100px;
-  --tripbar-bg-mix-percent: 50%;
+  --tripbar-bg-mix-percent: 100%;
   --tripbar-text-shadow: 0 1px 2px rgba(0, 0, 0, 1);
   --tripbar-shadow-hover: 0 10px 20px rgba(0, 0, 0, 0.5), 0 6px 6px rgba(0, 0, 0, 0.3);
-  --tripbar-color: var(--mana-04);
-  --tripbar-border-color: color-mix(in srgb, var(--mana-10) 100%, black);
-  --tripbar-text-color: var(--mana-10);
+  --tripbar-color: var(--rux-blue-500-alpha);
+  --tripbar-border-color: var(--rux-blue-500);
+  --tripbar-text-color: var(--rux-blue-500);
 
   --tripbar-badge-text-color: var(--text-primary);
   --tripbar-r1-color: var(--md-ref-palette-neutral-100);
@@ -421,7 +488,7 @@
 [data-theme="light"] {
   color-scheme: light;
 
- 
+
   /* Borders */
   --border-hover: rgba(0, 0, 0, 0.3);
   --border-focus: rgba(0, 0, 0, 1);

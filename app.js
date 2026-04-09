@@ -1475,7 +1475,7 @@ function getEffectiveDriverStatus(t) {
     if (d2 && d2 !== "None") statuses.push(String(a.driver2Status || "").trim() || "Pending");
   }
   if (statuses.length === 0) return (t?.driverStatus || "Pending").trim();
-  const statusOrder = { Pending: 0, Assigned: 1, Confirmed: 2, "Driver Info Sent": 3 };
+  const statusOrder = { Pending: 0, Assigned: 1, Confirmed: 2 };
   return statuses.reduce((a, b) => ((statusOrder[a] ?? 0) <= (statusOrder[b] ?? 0) ? a : b));
 }
 
@@ -1514,7 +1514,7 @@ function getStatusIcon(fieldId, statusValue) {
 function updateStatusSelect(el) {
   if (!el) return;
 
-  const id = el.id;
+  const id = el.id || (el.name && el.name.endsWith("Status") ? "driverStatus" : "");
   const v = String(el.value || "")
     .trim()
     .toLowerCase();
@@ -1532,7 +1532,7 @@ function updateStatusSelect(el) {
   if (!v) return;
 
   let addClass = "";
-  if (id === "driverStatus") {
+  if (id === "driverStatus" || (id && id.includes("driver"))) {
     if (v === "pending") addClass = "status-pending";
     else if (v === "assigned") addClass = "status-assigned";
     else if (v === "confirmed") addClass = "status-ok";
@@ -2939,23 +2939,47 @@ function _renderAgendaInner() {
 
       const effectiveDriverStatus = getEffectiveDriverStatus(t);
       if (bar._bI) setBadge(bar._bI, t.itineraryStatus);
-      if (bar._bC) setBadge(bar._bC, t.contactStatus);
-      if (bar._b$) setBadge(bar._b$, t.paymentStatus);
+      if (bar._bC) {
+        setBadge(bar._bC, t.contactStatus);
+        const contactStatus = String(t.contactStatus || "").trim().toLowerCase();
+        bar._bC.classList.toggle("is-hidden", contactStatus === "not required" || contactStatus === "received");
+      }
+      // Customer payment bar badge logic done below instead of generic setBadge
       if (bar._bD1) setBadge(bar._bD1, a.driver1Status || "Pending");
       if (bar._bD2) setBadge(bar._bD2, a.driver2Status || "Pending");
       if (bar._bInv) setBadge(bar._bInv, t.invoiceStatus);
 
-      // Swap payment status icon based on value
+      // Custom payment status icon based on value for trip bars
       if (bar._b$) {
+        const ps = String(t.paymentStatus || "").trim().toLowerCase();
+        const inv = String(t.invoiceStatus || "").trim().toLowerCase();
+        bar._b$.classList.remove("is-pending", "is-yellow", "is-blue", "is-ok", "is-hidden");
+        
         const glyph = bar._b$.querySelector(".schedule-grid__trip-bar__badge-glyph");
-        if (glyph) {
-          const iconName = getStatusIcon("paymentStatus", t.paymentStatus);
-          glyph.textContent = iconName || "description";
+        
+        if (ps === "po received" || ps === "not required" || inv === "paid in full") {
+          // PO received, not required, or paid in full -> hide icons
+          bar._b$.classList.add("is-hidden");
+        } else if (ps === "pending quote" || ps === "quoted" || ps === "pending") {
+          // No contract signed -> red contract icon
+          if (glyph) glyph.textContent = "edit_document";
+          bar._b$.classList.add("is-pending"); // red
+        } else if (ps === "contract signed") {
+          // Contract signed but no PO -> yellow PO icon
+          if (glyph) glyph.textContent = "request_quote";
+          bar._b$.classList.add("is-yellow"); // yellow
+        } else {
+          // Fallback
+          if (glyph) glyph.textContent = "description";
+          bar._b$.classList.add("is-pending"); // red
         }
       }
 
       // Swap itinerary status icon when a PDF URL exists
       if (bar._bI) {
+        const itinStatus = String(t.itineraryStatus || "").trim().toLowerCase();
+        bar._bI.classList.toggle("is-hidden", itinStatus === "not required");
+
         const glyph = bar._bI.querySelector(".schedule-grid__trip-bar__badge-glyph");
         if (glyph) {
           if (t.itineraryPdfUrl) {
@@ -3059,19 +3083,21 @@ function _renderAgendaInner() {
 
       // Color Override
       bar.classList.remove(
-        "color-blue",
-        "color-red",
         "color-orange",
         "color-yellow",
         "color-green",
-        "color-teal",
+        "color-cyan",
         "color-purple",
         "color-pink",
+        // legacy cleanup
+        "color-blue",
+        "color-red",
+        "color-teal",
         "color-indigo",
         "color-mint",
         "color-brown",
         "color-gray",
-        "color-violet", // Keep for legacy cleanup
+        "color-violet",
         "out-of-service",
         "one-way",
       );
@@ -3785,7 +3811,6 @@ const DRIVER_STATUS_OPTIONS = [
   { value: "Pending", label: "Pending" },
   { value: "Assigned", label: "Assigned" },
   { value: "Confirmed", label: "Confirmed" },
-  { value: "Driver Info Sent", label: "Driver Info Sent" },
 ];
 
 function makeDriverStatusSelect(name) {
@@ -6026,8 +6051,8 @@ function selectTripBar(barEl) {
   const topRect = leftHeaderCell.getBoundingClientRect();
   const bottomRect = rightLastCell.getBoundingClientRect();
 
-  overlay.style.left   = `${topRect.left   - wrapRect.left + wrap.scrollLeft}px`;
-  overlay.style.top    = `${topRect.top    - wrapRect.top  + wrap.scrollTop}px`;
+  overlay.style.left   = `${topRect.left   - wrapRect.left - wrap.clientLeft + wrap.scrollLeft}px`;
+  overlay.style.top    = `${topRect.top    - wrapRect.top  - wrap.clientTop  + wrap.scrollTop}px`;
   overlay.style.width  = `${bottomRect.right  - topRect.left}px`;
   overlay.style.height = `${bottomRect.bottom - topRect.top}px`;
 
@@ -6620,6 +6645,7 @@ function wrapSelectInGlassDropdown(sel, opts) {
           const colorClass = getStatusColorClass(itemStatusId, lcValue);
           if (colorClass) {
             iconSpan.classList.add(colorClass);
+            btn.classList.add(colorClass);
           }
 
           iconSpan.textContent = itemIconName;
@@ -7306,7 +7332,7 @@ function wireEvents() {
       if (d2 && d2 !== "None")
         driverStatuses.push(String(row.d2StatusSel?.value || "Pending").trim());
     }
-    const statusOrder = { Pending: 0, Assigned: 1, Confirmed: 2, "Driver Info Sent": 3 };
+    const statusOrder = { Pending: 0, Assigned: 1, Confirmed: 2 };
     const worst = driverStatuses.length
       ? driverStatuses.reduce((a, b) => ((statusOrder[a] ?? 0) <= (statusOrder[b] ?? 0) ? a : b))
       : "Pending";

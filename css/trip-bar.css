@@ -6,10 +6,7 @@
 .schedule-grid__trip-bar {
   display: grid;
   grid-template-rows:
-    var(--tripbar-r1-row-height) var(--tripbar-r2-row-height) var(--tripbar-r3-row-height)
-    var(--tripbar-r4-row-height) var(--tripbar-r5-row-height) var(--tripbar-r6-row-height) var(
-      --tripbar-r7-row-height
-    );
+    var(--tripbar-r1-row-height) var(--tripbar-r2-row-height) var(--tripbar-r3-row-height) var(--tripbar-r4-row-height) var(--tripbar-r5-row-height) var(--tripbar-r6-row-height) var(--tripbar-r7-row-height);
   row-gap: var(--tripbar-row-gap);
   container-type: inline-size;
   align-content: center;
@@ -28,10 +25,12 @@
   cursor: pointer;
   pointer-events: auto;
   transition:
+    transform var(--transition-fast),
     box-shadow var(--transition-fast),
     filter var(--transition-fast),
     border-color var(--transition-fast);
-background: var(--tripbar-color);
+  will-change: transform, filter, box-shadow;
+  background: var(--tripbar-color);
   /*will-change: filter, box-shadow;
   /* background: color-mix(in srgb, var(--tripbar-color) var(--tripbar-bg-mix-percent), transparent); */
   /* backdrop-filter: blur(30px); */
@@ -40,39 +39,33 @@ background: var(--tripbar-color);
 
   /* 3. Soften the edge */
   border: 1px solid color-mix(in srgb, var(--tripbar-border-color) 50%, transparent);
-  border-left: 4px solid var(--tripbar-border-color);
+  border-left: 4px solid var(--tripbar-text-color);
 }
 
 
+/* Raise the row-bars container so the bar's shadow renders above other trip bars */
+.schedule-grid__row-bars:has(.schedule-grid__trip-bar:hover),
+.schedule-grid__row-bars:has(.schedule-grid__trip-bar.selected) {
+  z-index: 99999;
+}
+
+/* Hover: shadow only, no lift */
 .schedule-grid__trip-bar:hover,
 .schedule-grid__trip-bar.selected {
-  /* 1. Raise z-index above the sticky column (500) and other bars (501) */
-  z-index: 99999; 
-
-  /* 2. Physical Lift: Moving it up slightly makes the shadow feel real */
-  transform: translateY(-2px);
-  
-  /* 3. Deep Shadow: Ensure this variable in variables.css has enough spread */
+  z-index: 99999;
   box-shadow: var(--tripbar-shadow-hover);
-
-  /* 4. Border Visibility (Fixing your previous issue) */
-  border: 1px solid color-mix(in srgb, var(--tripbar-border-color) 100%, white 20%);
-  border-left: 4px solid color-mix(in srgb, var(--tripbar-border-color) 100%, white 20%);
-
-  /* 5. Brightness boost */
-  filter: brightness(var(--tripbar-hover-brightness-to, 1.15)) 
-          saturate(var(--tripbar-hover-saturate-to, 1.1));
-
   cursor: pointer;
-  transition: transform var(--transition-fast), 
-              box-shadow var(--transition-fast), 
-              filter var(--transition-fast);
 }
 
+/* Click: lift + shadow */
 .schedule-grid__trip-bar:active {
-  box-shadow: var(--card-shadow);
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
+  transform: translateY(-2px);
+  box-shadow: var(--tripbar-shadow-hover);
+}
+
+/* Selected: keep shadow even after mouse leaves */
+.schedule-grid__trip-bar.selected {
+  box-shadow: var(--tripbar-shadow-hover);
 }
 
 .schedule-grid__trip-bar.danger::after {
@@ -87,10 +80,10 @@ background: var(--tripbar-color);
   height: var(--tripbar-danger-size);
   font-size: var(--tripbar-danger-font);
   font-weight: 700;
-  color: var(--color-danger);
-  background: var(--color-danger-soft);
+  color: var(--red-alert);
+  background: var(--red-alpha);
   border-radius: 999px;
-  box-shadow: 0 0 6px color-mix(in srgb, var(--color-danger) 50%, transparent);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--red-alert) 50%, transparent);
 }
 
 /* Color variants — only override the accent variable;
@@ -100,34 +93,26 @@ background: var(--tripbar-color);
   --tripbar-r1-color: var(--tripbar-text-color);
   --tripbar-r2-color: var(--tripbar-text-color);
   --tripbar-r3-color: var(--tripbar-text-color);
-  --tripbar-r4-color: var(--alert-yel);
-  /* Bright Neon Lemon */
+  --tripbar-r4-color: var(--yel-alert);
   --tripbar-r5-color: var(--tripbar-text-color);
-  --tripbar-r6-color: color-mix(in srgb, var(--alert-yel) 50%, var(--white));
-  /* Bright Coral */
-  --tripbar-r7-color: var(--text-primary);
+  --tripbar-r6-color: color-mix(in srgb, var(--yel-alert) 50%, white);
 
-  --tripbar-badge-text-color: color-mix(in srgb, var(--red-50) 80%, var(--white));
-  --tripbar-badge-text-bg: color-mix(in srgb, #ffffff 50%, transparent);
-  --tripbar-status-pending-bg: color-mix(in srgb, var(--color-status-pending) 50%, transparent);
-  --tripbar-status-pending-color: color-mix(
-    in srgb,
-    var(--color-status-pending) 25%,
-    var(--gray-900)
-  );
-  --tripbar-status-ok-bg: color-mix(in srgb, var(--color-status-ok) 0%, transparent);
+  --tripbar-badge-text-color: color-mix(in srgb, var(--red-alert) 80%, white);
+  --tripbar-status-pending-bg: var(--red-alpha);
+  --tripbar-status-pending-color: color-mix(in srgb,
+      var(--red-alert) 25%,
+      var(--gray-900));
+  --tripbar-status-ok-bg: var(--grn-alpha);
 
   &.out-of-service {
-    --tripbar-color: var(--vamp-04);
-    background: repeating-linear-gradient(
-      -45deg,
-      color-mix(in srgb, var(--vamp-04) 10%, transparent),
-      color-mix(in srgb, var(--vamp-04) 10%, transparent) 8px,
-      color-mix(in srgb, var(--vamp-04) 20%, transparent) 8px,
-      color-mix(in srgb, var(--vamp-04) 20%, transparent) 16px
-    );
-    border: 1px solid color-mix(in srgb, var(--vamp-10) 40%, var(--gray-900));
-    border-left: 4px solid var(--vamp-10);
+    --tripbar-color: var(--red-alpha);
+    background: repeating-linear-gradient(-45deg,
+        color-mix(in srgb, var(--red-alpha) 10%, transparent),
+        color-mix(in srgb, var(--red-alpha) 10%, transparent) 8px,
+        color-mix(in srgb, var(--red-alpha) 50%, transparent) 8px,
+        color-mix(in srgb, var(--red-alpha) 50%, transparent) 16px);
+    border: 1px solid color-mix(in srgb, var(--red-alpha) 0%, transparent);
+    border-left: none;
 
     /* Overrides for crisp text and recessed look */
     opacity: 1;
@@ -165,82 +150,63 @@ background: var(--tripbar-color);
   }
 
   &.one-way {
-    background: repeating-linear-gradient(
-      -45deg,
-      color-mix(in srgb, var(--tripbar-color) 8%, transparent),
-      color-mix(in srgb, var(--tripbar-color) 8%, transparent) 8px,
-      color-mix(in srgb, var(--tripbar-color) 16%, transparent) 8px,
-      color-mix(in srgb, var(--tripbar-color) 16%, transparent) 16px
-    );
-    border: 1px dashed color-mix(in srgb, var(--tripbar-color) 40%, var(--gray-900));
-    border-left: 4px solid var(--tripbar-color);
+    background: repeating-linear-gradient(-45deg,
+        color-mix(in srgb, var(--tripbar-color) 50%, transparent),
+        color-mix(in srgb, var(--tripbar-color) 50%, transparent) 8px,
+        color-mix(in srgb, var(--tripbar-color) 100%, transparent) 8px,
+        color-mix(in srgb, var(--tripbar-color) 100%, transparent) 16px);
+    border: 1px solid color-mix(in srgb, var(--tripbar-border-color) 50%, transparent);
+    border-left: 4px solid var(--tripbar-text-color);
   }
 
   &.unconfirmed {
-    --tripbar-color: var(--vamp-04);
-    --tripbar-border-color: var(--vamp-10);
-    --tripbar-text-color: var(--vamp-10);
+    --tripbar-color: var(--rux-red-500-alpha);
+    --tripbar-border-color: var(--rux-red-500);
+    --tripbar-text-color: var(--rux-red-500);
   }
 
   &.color-green {
-    --tripbar-color: var(--vamp-02);
-    --tripbar-border-color: var(--vamp-09);
-    --tripbar-text-color: var(--vamp-09);
+    --tripbar-color: var(--grn-alpha);
+    --tripbar-border-color: var(--grn);
+    --tripbar-text-color: var(--grn);
   }
 
   &.color-yellow {
-    --tripbar-color: var(--vamp-02);
-    --tripbar-border-color: var(--vamp-09);
-    --tripbar-text-color: var(--vamp-09);
-  }
-
-  &.color-gray {
-    --tripbar-color: var(--vamp-02);
-    --tripbar-border-color: var(--vamp-08);
-    --tripbar-text-color: var(--vamp-08);
+    --tripbar-color: var(--yel-alpha);
+    --tripbar-border-color: var(--yel);
+    --tripbar-text-color: var(--yel);
   }
 
   &.color-purple {
-    --tripbar-color: var(--vamp-02);
-    --tripbar-border-color: var(--vamp-08);
-    --tripbar-text-color: var(--vamp-08);
+    --tripbar-color: var(--pur-alpha);
+    --tripbar-border-color: var(--pur);
+    --tripbar-text-color: var(--pur);
   }
 
   &.color-pink {
-    --tripbar-color: var(--vamp-02);
-    --tripbar-border-color: var(--vamp-08);
-    --tripbar-text-color: var(--vamp-08);
+    --tripbar-color: var(--pin-alpha);
+    --tripbar-border-color: var(--pin);
+    --tripbar-text-color: var(--pin);
   }
 
   &.color-orange {
-    --tripbar-color: var(--vamp-02);
-    --tripbar-border-color: var(--vamp-08);
-    --tripbar-text-color: var(--vamp-08);
+    --tripbar-color: var(--org-alpha);
+    --tripbar-border-color: var(--org);
+    --tripbar-text-color: var(--org);
   }
 
   &.color-teal {
-    --tripbar-color: var(--cold-02);
-    --tripbar-border-color: var(--cold-08);
-    --tripbar-text-color: var(--cold-08);
+    --tripbar-color: var(--tea-alpha);
+    --tripbar-border-color: var(--tea);
+    --tripbar-text-color: var(--tea);
   }
 
   &.color-cyan {
-    --tripbar-color: var(--vamp-02);
-    --tripbar-border-color: var(--vamp-08);
-    --tripbar-text-color: var(--vamp-08);
+    --tripbar-color: var(--cya-alpha);
+    --tripbar-border-color: var(--cya);
+    --tripbar-text-color: var(--cya);
   }
 
-  &.color-indigo {
-    --tripbar-color: var(--vamp-02);
-    --tripbar-border-color: var(--vamp-08);
-    --tripbar-text-color: var(--vamp-08);
-  }
-
-  &.color-brown {
-    --tripbar-color: var(--vamp-02);
-    --tripbar-border-color: var(--vamp-08);
-    --tripbar-text-color: var(--vamp-08);
-  }
 }
 
 .schedule-grid__trip-bar__row {
@@ -317,7 +283,7 @@ background: var(--tripbar-color);
   transform: translateY(-50%);
   font-size: var(--tripbar-multi-badge-font-size);
   font-weight: 500;
-  color: var(--tripbar-color);
+  color: var(--tripbar-text-color);
   text-shadow: var(--text-shadow);
   width: 22px;
   height: 14px;
@@ -409,29 +375,29 @@ background: var(--tripbar-color);
 
 .schedule-grid__trip-bar__mini-badge {
   /* Layout remains if needed, but styling is in .icon-status now */
-  color: var(--tripbar-r5-color);
+  color: color-mix(in srgb, var(--tripbar-text-color) 30%, transparent);
 }
 
 /* MINI BADGE glyph styling moved to _icons.css */
 
 .schedule-grid__trip-bar__mini-badge.is-pending {
   background: transparent;
-  color: var(--alert-red);
+  color: var(--red-alert);
 }
 
 .schedule-grid__trip-bar__mini-badge.is-ok {
   background: transparent;
-  color: var(--tripbar-color);
+  color: var(--tripbar-text-color);
 }
 
 .schedule-grid__trip-bar__mini-badge.is-blue {
   background: transparent;
-  color: var(--alert-blu);
+  color: var(--blu-alert);
 }
 
 .schedule-grid__trip-bar__mini-badge.is-yellow {
   background: transparent;
-  color: var(--alert-yel);
+  color: var(--yel-alert);
 }
 
 .schedule-grid__trip-bar__mini-badge.has-pdf,
@@ -451,7 +417,7 @@ background: var(--tripbar-color);
   width: auto;
   padding-inline-end: 2px;
   gap: 0;
-  color: var(--tripbar-color);
+  color: var(--tripbar-text-color);
 }
 
 .schedule-grid__trip-bar__mini-badge .schedule-grid__trip-bar__mini-badge-text {
@@ -517,9 +483,7 @@ background: var(--tripbar-color);
 }
 
 .schedule-grid__trip-bar.cont-left .schedule-grid__trip-bar__time-row {
-  padding-inline-start: calc(
-    var(--icon-arrow-offset, 4px) + var(--icon-arrow-size, 1.125rem) + 2px
-  );
+  padding-inline-start: calc(var(--icon-arrow-offset, 4px) + var(--icon-arrow-size, 1.125rem) + 2px);
 }
 
 /* On narrow half-day bars left-align the arrival time so it reads "10:0…"
@@ -540,22 +504,13 @@ background: var(--tripbar-color);
   content: "chevron_right";
 }
 
-/* ── cont-right: departure time gets the full row width ─────────────────────
-   isEndDay is always false on cont-right bars so the right item is empty.
-   Collapse it, then pad past the right chip. */
-.schedule-grid__trip-bar.cont-right .schedule-grid__trip-bar__time--right {
-  flex: 0;
-  overflow: hidden;
-}
+/* ── cont-right: departure time & spot time must remain centered ─────────
+   By NOT collapsing the empty right item, it acts as a natural bumper
+   for the chevron icon, keeping the center item perfectly in the middle. */
 
-.schedule-grid__trip-bar.cont-right .schedule-grid__trip-bar__time-row {
-  padding-inline-end: calc(var(--icon-arrow-offset, 4px) + var(--icon-arrow-size, 1.125rem) + 2px);
-}
-
-/* On narrow half-day bars right-align departure time so it reads "6:0…"
-   instead of being right-clipped when left-aligned. */
+/* On narrow half-day bars right-align departure time */
 @container (max-width: 80px) {
   .schedule-grid__trip-bar.cont-right .schedule-grid__trip-bar__time--left {
-    justify-content: flex-end;
+    justify-content: flex-end !important;
   }
 }

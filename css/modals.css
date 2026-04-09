@@ -372,7 +372,7 @@
 .picross-cell.is-filled {
   background: var(--color-accent);
   border-color: color-mix(in srgb, var(--color-accent), black 28%);
-  color: var(--white);
+  color: white;
 }
 
 .picross-cell.is-marked {
@@ -382,7 +382,7 @@
 .picross-cell.is-mistake {
   background: color-mix(in srgb, var(--color-danger), white 12%);
   border-color: color-mix(in srgb, var(--color-danger), black 24%);
-  color: var(--white);
+  color: white;
 }
 
 .picross-cell:focus-visible {
@@ -1293,7 +1293,7 @@
   grid-column: 1 / -1;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--white);
+  color: white;
   margin-bottom: 8px;
   display: block;
 }

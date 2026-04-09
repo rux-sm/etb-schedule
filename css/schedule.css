@@ -73,9 +73,9 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  background-color: var(--surface-01);
+  background-color: var(--surface-02);
   box-shadow: var(--card-shadow);
-  border-bottom: 1px solid var(--surface-01);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 /* Page-level heading utility used in schedule/header contexts */
@@ -102,6 +102,7 @@
 }
 
 @media (max-width: 899px) {
+
   /* Hide desktop-only toolbar buttons */
   #notesBtn,
   #waitingListBtn,
@@ -303,21 +304,21 @@
 }
 
 .schedule-sync-status.is-stale {
-  color: var(--alert-yel);
-  border-color: color-mix(in srgb, var(--alert-yel), var(--border-subtle) 40%);
+  color: var(--color-warning);
+  border-color: color-mix(in srgb, var(--color-warning), var(--border-subtle) 40%);
 }
 
 .schedule-sync-status.is-stale::before {
-  background: color-mix(in srgb, var(--alert-yel), transparent 72%);
+  background: color-mix(in srgb, var(--color-warning), transparent 72%);
 }
 
 .schedule-sync-status.is-error {
-  color: var(--alert-red);
-  border-color: color-mix(in srgb, var(--alert-red), var(--border-subtle) 40%);
+  color: var(--color-danger);
+  border-color: color-mix(in srgb, var(--color-danger), var(--border-subtle) 40%);
 }
 
 .schedule-sync-status.is-error::before {
-  background: color-mix(in srgb, var(--alert-red), transparent 74%);
+  background: color-mix(in srgb, var(--color-danger), transparent 74%);
 }
 
 @media (max-width: 899px) {
@@ -474,7 +475,7 @@
 }
 
 /* Main schedule area layer */
-.o-app-layout__main > .c-card {
+.o-app-layout__main>.c-card {
   border-radius: 0;
   background: var(--surface-00);
   /* Your pure black background */
@@ -485,14 +486,14 @@
    ========================================================================== */
 
 /* Right Sidebar Card - Shadow spills LEFT onto the main content */
-.o-app-layout__sidebar--right > .c-card:not(.is-hidden) {
+.o-app-layout__sidebar--right>.c-card:not(.is-hidden) {
   /* Offset-X: -8px, Blur: 10px, Spread: -8px (cleans up top/bottom) */
   box-shadow: var(--card-shadow-left);
   border-left: 1px solid var(--border-default);
 }
 
 /* Left Sidebar Card - Shadow spills RIGHT onto the main content */
-.o-app-layout__sidebar--left > .c-card:not(.is-hidden) {
+.o-app-layout__sidebar--left>.c-card:not(.is-hidden) {
   /* Offset-X: 8px, Blur: 10px, Spread: -8px */
   box-shadow: var(--card-shadow-right);
   border-right: 1px solid var(--border-subtle);
@@ -503,8 +504,8 @@
    ========================================================================== */
 
 /* Shared Sidebar Typography & Body Padding */
-.o-app-layout__sidebar--left > .c-card:not(.is-hidden) .c-card__body,
-.o-app-layout__sidebar--right > .c-card:not(.is-hidden) .c-card__body {
+.o-app-layout__sidebar--left>.c-card:not(.is-hidden) .c-card__body,
+.o-app-layout__sidebar--right>.c-card:not(.is-hidden) .c-card__body {
   font-size: 0.75rem;
   font-weight: 400;
   color: var(--text-muted);
@@ -513,8 +514,8 @@
 }
 
 /* Shared Sidebar Footer Padding */
-.o-app-layout__sidebar--left > .c-card:not(.is-hidden) .c-card__footer,
-.o-app-layout__sidebar--right > .c-card:not(.is-hidden) .c-card__footer {
+.o-app-layout__sidebar--left>.c-card:not(.is-hidden) .c-card__footer,
+.o-app-layout__sidebar--right>.c-card:not(.is-hidden) .c-card__footer {
   padding: var(--space-lg);
 }
 
@@ -732,13 +733,13 @@
 .quote-summary__row--primary .quote-summary__label {
   font-size: 16px;
   font-weight: 600;
-  color: var(--white);
+  color: white;
 }
 
 .quote-summary__row--primary .quote-summary__value {
   font-size: 20px;
   font-weight: 700;
-  color: var(--white);
+  color: white;
 }
 
 /* ==========================================================================
@@ -764,8 +765,8 @@
 }
 
 /* Bottom outer boundary */
-.schedule-grid tbody tr:last-child > .schedule-grid__cell,
-.schedule-grid tbody tr:last-child > .schedule-grid__bus-cell {
+.schedule-grid tbody tr:last-child>.schedule-grid__cell,
+.schedule-grid tbody tr:last-child>.schedule-grid__bus-cell {
   border-bottom: 1px solid var(--border-default);
 }
 
@@ -786,7 +787,7 @@
   height: 24px !important;
   max-height: 24px !important;
   min-height: 24px !important;
-  background-color: var(--white);
+  background-color: white;
 }
 
 .schedule-grid__row--notes .schedule-grid__cell {
@@ -900,7 +901,7 @@
   width: 24px;
   height: 24px;
   background: var(--blu-50);
-  color: var(--white);
+  color: white;
   border-radius: 0;
   text-shadow: var(--text-shadow);
   font-weight: 600;
@@ -1053,13 +1054,12 @@
   text-shadow: var(--text-shadow);
 }
 
-.schedule-grid__row--has-bus-color > .schedule-grid__cell:first-child {
+.schedule-grid__row--has-bus-color>.schedule-grid__cell:first-child {
   transition: background-color 0.15s ease;
 }
 
 /* Bus cell highlight: only when hovering bus indicator (not when trip bar overlaps due to sticky) */
-.schedule-grid__row--has-bus-color
-  > .schedule-grid__cell:first-child:has(.schedule-grid__bus-indicator:hover) {
+.schedule-grid__row--has-bus-color>.schedule-grid__cell:first-child:has(.schedule-grid__bus-indicator:hover) {
   background-color: var(--bus-accent-color);
 }
 
@@ -1108,7 +1108,7 @@
   overflow-y: auto;
 }
 
-.schedule-grid__conflict-panel .conflict-group + .conflict-group {
+.schedule-grid__conflict-panel .conflict-group+.conflict-group {
   margin-top: 14px;
 }
 
@@ -1144,28 +1144,37 @@
   overflow-x: auto;
   overflow-y: auto;
   margin: 0;
-  background: var(--surface-00);
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  background: var(--surface-01);
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+  border-radius: 8px;
+  border: 1px solid var(--border-default);
 }
 
 .driver-week__wrap::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
+  /* Chrome, Safari, Opera */
 }
 
 .driver-week__table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   table-layout: fixed;
   -webkit-user-select: none;
   user-select: none;
+  font-size: 14px;
 }
 
 .driver-week__table th {
   color: var(--text-primary);
   font-weight: 500;
   background: var(--surface-02);
-  font-size: var(--input-font-size);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .driver-week__table th,
@@ -1176,8 +1185,8 @@
   text-align: center;
   white-space: nowrap;
   cursor: pointer;
-  border-inline-end: 1px solid transparent;
-  border-bottom: 1px solid transparent;
+  border-inline-end: 1px solid var(--border-default);
+  border-bottom: 1px solid var(--border-default);
 }
 
 .driver-week__table tbody tr:nth-child(even) td {
@@ -1185,11 +1194,11 @@
 }
 
 .driver-week__table tbody tr:nth-child(even) td.driver-week__cell--on {
-  background-color: var(--color-accent);
+  background-color: var(--rux-accent-color);
 }
 
 .driver-week__table tbody tr:nth-child(even) td.driver-week__cell--unavailable {
-  background-color: var(--red-40);
+  background-color: var(--rux-danger-color);
 }
 
 .driver-week__table th:last-child,
@@ -1209,7 +1218,6 @@
   padding-inline-end: 8px;
   color: var(--text-primary);
   font-weight: 400;
-  border-inline-end: 1px solid transparent;
 }
 
 .driver-week__table th {
@@ -1218,7 +1226,6 @@
 
 .driver-week__table th:first-child {
   font-weight: 500;
-  text-transform: uppercase;
   letter-spacing: 0.02em;
   border-inline-start: 1px solid transparent;
 }
@@ -1234,22 +1241,21 @@
 }
 
 .driver-week__cell--unavailable {
-  background: var(--red-40) !important;
+  background: var(--rux-danger-color) !important;
   color: var(--text-primary) !important;
 }
 
 .driver-week__cell--on {
-  background: var(--color-accent);
+  background: var(--rux-accent-color);
   color: var(--text-primary);
-  opacity: 0.9;
 }
 
 #driver-col-hl {
   position: absolute;
   pointer-events: none;
-  border: 2px solid var(--alert-red);
+  border: 2px solid var(--rux-gray-300);
   border-radius: 0px;
-  z-index: 10;
+  z-index: 100;
 }
 
 /* --- 5. Rigid Bus Assignment --- */
@@ -1283,7 +1289,7 @@
   margin-bottom: 0;
   font-size: 0.6875rem;
   font-weight: 500;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   letter-spacing: 0.04em;
 }
 
@@ -1296,7 +1302,7 @@
 }
 
 .bus-assign__driver-block .select-dropdown:first-child,
-.bus-assign__driver-block > select:first-child {
+.bus-assign__driver-block>select:first-child {
   flex: 1;
   min-width: 0;
 }
