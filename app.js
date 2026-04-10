@@ -5398,7 +5398,8 @@ async function openTripForEdit(tripKey) {
 
   if (hasCache) {
     populateFormFromData(cachedTrip, cachedAssigns);
-    dom.saveBtn.disabled = false;
+    dom.saveBtn.disabled = true;
+    if (dom.deleteBtn) dom.deleteBtn.disabled = true;
     state.tripFormDirty = false;
   } else {
     // CLEAR PREVIOUS DATA
@@ -5414,6 +5415,7 @@ async function openTripForEdit(tripKey) {
     $("tripIdBadge").classList.add("is-hidden");
     updateBusRowVisibility();
     dom.saveBtn.disabled = true;
+    if (dom.deleteBtn) dom.deleteBtn.disabled = true;
   }
 
   try {
@@ -5500,6 +5502,7 @@ async function openTripForEdit(tripKey) {
   } finally {
     tripLoadInFlight = false;
     dom.saveBtn.disabled = false;
+    if (dom.deleteBtn) dom.deleteBtn.disabled = dom.action.value === "create";
     if (!hasCache) state.tripFormDirty = false;
   }
 }
