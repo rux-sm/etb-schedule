@@ -6880,7 +6880,7 @@ function wrapSelectInGlassDropdown(sel, opts) {
 
   // Portal: attach menu to body so overflow:hidden on ancestor cards can't clip it
   menu.style.position = "fixed";
-  menu.style.zIndex = "1001";
+  menu.style.zIndex = "10500";
   menu.style.insetInlineEnd = "auto"; // reset CSS default that would anchor to viewport right edge
   document.body.appendChild(menu);
 
