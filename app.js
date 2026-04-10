@@ -425,10 +425,10 @@ const state = {
   activeStatusNotice: null,
   statusNoticeToken: 0,
   baseWeekSyncStatus: {
-    mode: "idle",
-    message: "Up to date",
+    mode: "loading",
+    message: "Loading\u2026",
     progress: null,
-    indeterminate: false,
+    indeterminate: true,
   },
 
   progressCreepTimer: null,
@@ -878,6 +878,7 @@ function sanitizeWeekResp(resp) {
       driver2: asStr(a?.driver2).trim(),
       driver1Status: asStr(a?.driver1Status).trim(),
       driver2Status: asStr(a?.driver2Status).trim(),
+      busNumber: Number(a?.busNumber) || 0,
     }))
     .filter((a) => a.tripKey);
 
@@ -2021,6 +2022,7 @@ function applyWeekRespToState(resp) {
     if (!k) continue;
     (state.assignmentsByTripKey[k] ||= []).push({
       busId: String(a.busId || "").trim(),
+      busNumber: Number(a.busNumber) || 0,
       driver1: String(a.driver1 || "").trim(),
       driver2: String(a.driver2 || "").trim(),
       driver1Status: String(a.driver1Status || "").trim(),
@@ -3804,8 +3806,13 @@ function setSidePanelMode(mode) {
       // Close anything else
       Object.keys(CARD_CONFIG).forEach((cardType) => hideCard(cardType));
       showCardInPanel(mode, "left");
+    } else {
+      // Card is assigned to a panel — ensure that panel is actually expanded
+      const panelEl = currentPanel === "left" ? dom.panelStart : dom.panelEnd;
+      if (panelEl?.classList.contains("is-collapsed")) {
+        panelEl.classList.remove("is-collapsed");
+      }
     }
-    // If card is already open, do nothing
   }
 }
 
@@ -4263,6 +4270,9 @@ function setModeEdit(tripKey, tripId) {
 }
 
 function clearTripInfoCardForNextTrip() {
+  const conflictBanner = document.getElementById("tripConflictBanner");
+  if (conflictBanner) conflictBanner.classList.add("is-hidden");
+  
   dom.tripForm.reset();
   resetRequirementToggles();
   refreshEmptyStateUI();
@@ -5272,8 +5282,12 @@ function setTripFormFromState(tripKey) {
 // ======================================================
 // 29) TRIP OPEN (DESKTOP EDIT)
 // ======================================================
+let tripLoadInFlight = false;
+
 async function openTripForEdit(tripKey) {
-  if (isMobileOnly()) return openTripDetailsModal(tripKey);
+  if (tripLoadInFlight) return;
+  tripLoadInFlight = true;
+  if (isMobileOnly()) { tripLoadInFlight = false; return openTripDetailsModal(tripKey); }
 
   showHeaderStatusNotice("Loading trip…", "loading", {
     sticky: true,
@@ -5281,45 +5295,14 @@ async function openTripForEdit(tripKey) {
     priority: 55,
   });
 
-  dom.saveBtn.disabled = true;
-
   // Ensure the left panel is open and showing the trip card
   setSidePanelMode("trip");
 
-  // CLEAR PREVIOUS DATA
-  if (dom.tripForm) dom.tripForm.reset();
-  state.busRows.forEach((r) => {
-    r.busSel.value = "None";
-    r.d1Sel.value = "None";
-    r.d1StatusSel.value = "Pending";
-    r.d2Sel.value = "None";
-    r.d2StatusSel.value = "Pending";
-  });
-  // Reset badges/status
-  $("tripIdBadge").textContent = "";
-  $("tripIdBadge").classList.add("is-hidden");
+  const conflictBanner = document.getElementById("tripConflictBanner");
+  if (conflictBanner) conflictBanner.classList.add("is-hidden");
 
-  // Force bus rows to update (hide extra rows)
-  updateBusRowVisibility();
-
-  try {
-    const startTime = Date.now();
-
-    const [tripResp, assignResp] = await Promise.all([
-      api.getTrip(tripKey),
-      api.getBusAssignments(tripKey),
-    ]);
-
-    // Force a minimum delay so the user feels the "loading" state (prevents instant flash)
-    const elapsed = Date.now() - startTime;
-    if (elapsed < 600) {
-      await new Promise((resolve) => setTimeout(resolve, 600 - elapsed));
-    }
-
-    if (!tripResp?.ok) throw new Error(tripResp?.error || "Trip not found");
-
-    const t = tripResp.trip || {};
-
+  // Helper to populate the form fully
+  const populateFormFromData = (t, assigns) => {
     $("destination").value = t.destination || "";
     $("customer").value = t.customer || "";
     $("contactName").value = t.contactName || "";
@@ -5340,7 +5323,7 @@ async function openTripForEdit(tripKey) {
     $("tripColor").value = t.tripColor || "";
     setRequirementTogglesFromTrip(t);
 
-    // Sync custom dropdown triggers (values were set above; dispatch change so triggers update)
+    // Sync custom dropdown triggers
     [
       "itineraryStatus",
       "contactStatus",
@@ -5353,13 +5336,11 @@ async function openTripForEdit(tripKey) {
       if (el) el.dispatchEvent(new Event("change", { bubbles: true }));
     });
     updateInvoiceNumberVisibility();
-    if (typeof syncEmptyFields === "function") syncEmptyFields();
 
-    dom.itineraryField.value = t.itinerary || "";
-    $("notes").value = t.notes || "";
-    $("comments").value = t.comments || "";
+    if ($("itinerary")) dom.itineraryField.value = t.itinerary || "";
+    if ($("notes")) $("notes").value = t.notes || "";
+    if ($("comments")) $("comments").value = t.comments || "";
 
-    // Envelope-specific fields (when opening trip in the main Trip Editor)
     if ($("envelopePickup")) $("envelopePickup").value = t.envelopePickup || "";
     if ($("envelopeTripContact")) $("envelopeTripContact").value = t.envelopeTripContact || "";
     if ($("envelopeTripPhone")) $("envelopeTripPhone").value = t.envelopeTripPhone || "";
@@ -5384,8 +5365,7 @@ async function openTripForEdit(tripKey) {
       r.d2StatusSel.value = "Pending";
     });
 
-    const assigns = assignResp?.ok && assignResp.assignments ? assignResp.assignments : [];
-    assigns.forEach((a) => {
+    (assigns || []).forEach((a) => {
       const n = Number(a.busNumber);
       if (!n || n < 1 || n > 10) return;
       const row = state.busRows[n - 1];
@@ -5409,6 +5389,96 @@ async function openTripForEdit(tripKey) {
     syncBusPanelState();
     syncBusSelectEmptyState();
     refreshEmptyStateUI();
+    if (typeof syncEmptyFields === "function") syncEmptyFields();
+  };
+
+  const cachedTrip = state.tripByKey[tripKey];
+  const cachedAssigns = state.assignmentsByTripKey[tripKey];
+  const hasCache = !!cachedTrip;
+
+  if (hasCache) {
+    populateFormFromData(cachedTrip, cachedAssigns);
+    dom.saveBtn.disabled = false;
+    state.tripFormDirty = false;
+  } else {
+    // CLEAR PREVIOUS DATA
+    if (dom.tripForm) dom.tripForm.reset();
+    state.busRows.forEach((r) => {
+      r.busSel.value = "None";
+      r.d1Sel.value = "None";
+      r.d1StatusSel.value = "Pending";
+      r.d2Sel.value = "None";
+      r.d2StatusSel.value = "Pending";
+    });
+    $("tripIdBadge").textContent = "";
+    $("tripIdBadge").classList.add("is-hidden");
+    updateBusRowVisibility();
+    dom.saveBtn.disabled = true;
+  }
+
+  try {
+    const startTime = Date.now();
+
+    const [tripResp, assignResp] = await Promise.all([
+      api.getTrip(tripKey),
+      api.getBusAssignments(tripKey),
+    ]);
+
+    // Minor loading flash prevention
+    const elapsed = Date.now() - startTime;
+    if (elapsed < 200) {
+      await new Promise((resolve) => setTimeout(resolve, 200 - elapsed));
+    }
+
+    if (!tripResp?.ok) throw new Error(tripResp?.error || "Trip not found");
+
+    const serverTrip = tripResp.trip || {};
+    const serverAssigns = assignResp?.ok && assignResp.assignments ? assignResp.assignments : [];
+
+    // Conflict detection logic
+    let hasConflict = false;
+    if (hasCache) {
+      for (const key of Object.keys(cachedTrip)) {
+        if (key === "tripKey" || key === "tripId" || typeof cachedTrip[key] === "object") continue;
+        const normC = String(cachedTrip[key] || "");
+        const normS = String(serverTrip[key] || "");
+        if (normC !== normS && (normC !== "00:00" || normS)) { // rudimentary normalization fallback
+          if (key === "departureTime" || key === "arrivalTime" || key === "spotTime") {
+            if (normalizeTime(normC) !== normalizeTime(normS)) { hasConflict = true; break; }
+          } else {
+            hasConflict = true; break;
+          }
+        }
+      }
+      
+      if (!hasConflict) {
+        if ((cachedAssigns || []).length !== serverAssigns.length) hasConflict = true;
+        else {
+           for (const ca of cachedAssigns) {
+              const sa = serverAssigns.find(a => Number(a.busNumber) === Number(ca.busNumber));
+              if (!sa || sa.busId !== ca.busId || sa.driver1 !== ca.driver1 || sa.driver2 !== ca.driver2) {
+                 hasConflict = true; break;
+              }
+           }
+        }
+      }
+    }
+
+    if (!hasCache) {
+      populateFormFromData(serverTrip, serverAssigns);
+    } else if (hasConflict) {
+      if (state.tripFormDirty) {
+        if (conflictBanner) conflictBanner.classList.remove("is-hidden");
+      } else {
+        // Silently overwrite since user hasn't touched the form
+        populateFormFromData(serverTrip, serverAssigns);
+      }
+    } else {
+      // Data is mostly identical but server response might have extra fields (like itinerary), so apply them if safe
+      if (!state.tripFormDirty) {
+        populateFormFromData(serverTrip, serverAssigns);
+      }
+    }
 
     showHeaderStatusNotice("Trip ready", "success", {
       duration: 1200,
@@ -5416,7 +5486,9 @@ async function openTripForEdit(tripKey) {
       priority: 55,
     });
 
-    $("destination")?.focus?.({ preventScroll: true });
+    if (!hasCache) {
+      $("destination")?.focus?.({ preventScroll: true });
+    }
   } catch (e) {
     showHeaderStatusNotice("Could not load trip", "danger", {
       duration: 2200,
@@ -5424,11 +5496,11 @@ async function openTripForEdit(tripKey) {
       priority: 60,
     });
     console.error(e);
-    alert("Could not open trip for editing.");
+    if (!hasCache) alert("Could not open trip for editing.");
   } finally {
+    tripLoadInFlight = false;
     dom.saveBtn.disabled = false;
-    // Freshly loaded trip data should be considered clean until edited.
-    state.tripFormDirty = false;
+    if (!hasCache) state.tripFormDirty = false;
   }
 }
 
@@ -6312,11 +6384,11 @@ function wireDelegatedBarEvents() {
     }
   });
 
-  dom.ctxEditBtn?.addEventListener("click", () => {
-    if (activeContextTripKey) {
-      openTripForEdit(activeContextTripKey);
-      closeTripContextMenu();
-    }
+  dom.ctxEditBtn?.addEventListener("click", async () => {
+    if (!activeContextTripKey) return;
+    const tripKey = activeContextTripKey; // capture before menu close clears it
+    closeTripContextMenu();
+    await openTripForEdit(tripKey);
   });
 
   dom.ctxViewBtn?.addEventListener("click", () => {
@@ -8629,6 +8701,7 @@ if (dom.printDailyMaintenancePlanBtn) {
   }
 
   (async function init() {
+    setWeekSyncStatus("loading");
     try {
       await loadDriversAndBuses();
     } catch (e) {

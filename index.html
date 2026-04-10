@@ -424,6 +424,10 @@
               </div>
 
               <div class="c-card__body">
+                <div id="tripConflictBanner" class="alert alert--danger is-hidden u-mb-4" role="alert">
+                  <span class="material-symbols-outlined alert__icon">warning</span>
+                  This trip was updated by someone else on the server. Review changes before saving.
+                </div>
                 <form id="tripForm" data-js="trip-form" class="form-grid" target="hidden_iframe" method="POST">
                   <input type="hidden" name="action" id="action" value="create" />
                   <input type="hidden" name="tripKey" id="tripKey" value="" />
@@ -758,9 +762,9 @@
                     </div>
                   </div>
                   <div class="agenda-header__sync-center">
-                    <span id="weekSyncStatus" class="schedule-sync-status is-idle" role="status" aria-live="polite"
+                    <span id="weekSyncStatus" class="schedule-sync-status is-loading" role="status" aria-live="polite"
                       aria-atomic="true">
-                      Up to date
+                      Loading…
                     </span>
                   </div>
                   <div class="c-header__actions">
