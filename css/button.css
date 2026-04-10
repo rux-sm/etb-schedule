@@ -241,6 +241,8 @@ button {
   color: var(--btn-toggle-text);
   border-color: var(--btn-toggle-border);
   box-shadow: var(--btn-shadow-inset);
+  justify-content: flex-start;
+  width: 100%;
 }
 
 .btn--toggle:hover {
@@ -279,10 +281,12 @@ button {
 /* Toggle button grid layout */
 .btn--toggle-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
   margin-top: 12px;
-  padding: 0;
+  padding: 0 8px; /* Added horizontal padding to give consistent space to the border */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* ── 10. Form Action Containers ─────────────────────────────────────────── */
@@ -302,13 +306,13 @@ button {
   display: grid;
   width: 100%;
   grid-template-columns: 1fr 2fr;
-  gap: 8px;
+  gap: var(--rux-space-sm);
   padding: 0;
 }
 
 .form-actions__group {
   display: flex;
-  gap: 8px;
+  gap: var(--rux-space-sm);
   width: 100%;
 }
 

@@ -410,6 +410,7 @@ const state = {
   busesList: [],
   driversList: [],
   busRows: [],
+  driverConflicts: new Set(),
 
   trips: [],
   assignmentsByTripKey: {},
@@ -1124,6 +1125,65 @@ function checkPotentialConflicts(trip, assignments) {
     }
   }
   return null;
+}
+
+// ======================================================
+// DRIVER DOUBLE-BOOKING DETECTION
+// ======================================================
+
+function checkDriverDoubleBookings() {
+  if (!dom.busGrid || !state.busRows?.length) return;
+
+  const currentTripKey = String(dom.tripKey?.value || "").trim();
+  const depStr = $("tripDate")?.value || "";
+  const arrStr = $("arrivalDate")?.value || depStr;
+
+  // Rebuild the set of driver names booked on other overlapping trips
+  const conflicts = new Set();
+
+  if (depStr) {
+    const depDate = parseYMD(depStr);
+    const arrDate = parseYMD(arrStr) || depDate;
+    if (depDate && arrDate) {
+      const depY = ymd(depDate);
+      const arrY = ymd(arrDate);
+
+      for (const t of state.trips) {
+        if (String(t.tripKey) === currentTripKey) continue;
+        const tDep = parseYMD(t.departureDate);
+        const tArr = parseYMD(t.arrivalDate) || tDep;
+        if (!tDep) continue;
+        // Overlap: StartA <= EndB && EndA >= StartB
+        if (depY <= ymd(tArr) && arrY >= ymd(tDep)) {
+          const tAssigns = state.assignmentsByTripKey[String(t.tripKey)] || [];
+          for (const ta of tAssigns) {
+            const d1 = String(ta.driver1 || "").trim();
+            const d2 = String(ta.driver2 || "").trim();
+            if (d1 && d1 !== "None") conflicts.add(d1);
+            if (d2 && d2 !== "None") conflicts.add(d2);
+          }
+        }
+      }
+    }
+  }
+
+  state.driverConflicts = conflicts;
+
+  // Apply/remove conflict highlight on each driver dropdown trigger
+  state.busRows.forEach((r) => {
+    [r.d1Sel, r.d2Sel].forEach((sel) => {
+      const v = String(sel.value || "").trim();
+      const isConflict = v && v !== "None" && conflicts.has(v);
+      const wrapper = sel.closest(".select-dropdown");
+      const trigger = wrapper?.querySelector(".select-trigger");
+      if (wrapper) wrapper.classList.toggle("driver-conflict", !!isConflict);
+      if (trigger) {
+        trigger.title = isConflict
+          ? `${v} is already assigned to another trip on these dates`
+          : "";
+      }
+    });
+  });
 }
 
 // ======================================================
@@ -3618,6 +3678,12 @@ function showCardInPanel(cardType, panel) {
   const panelStart = dom.panelStart;
   const panelEndEl = dom.panelEnd;
 
+  // Cancel any pending exit animation
+  if (config.card._hideTimeout) {
+    clearTimeout(config.card._hideTimeout);
+    config.card._hideTimeout = null;
+  }
+
   // Remove card from current location if it's a direct child
   const currentParent = config.card.parentElement;
   if (currentParent === panelStart || currentParent === panelEndEl) {
@@ -3637,9 +3703,9 @@ function showCardInPanel(cardType, panel) {
   config.card.classList.remove("is-hidden");
 
   // Reset animation
-  config.card.classList.remove("fade-in");
+  config.card.classList.remove("slide-in-left", "fade-in", "slide-out-left");
   void config.card.offsetWidth; // force reflow
-  config.card.classList.add("fade-in");
+  config.card.classList.add("slide-in-left");
 
   // Update state
   state.cardPanelAssignments[cardType] = panel;
@@ -3667,7 +3733,12 @@ function hideCard(cardType) {
   suppressScrollbarDuringResize();
 
   const panel = state.cardPanelAssignments[cardType];
-  config.card.classList.add("is-hidden");
+  
+  // Explicitly trigger the slide-out animation independently from the wrapper's CSS
+  config.card.classList.remove("slide-in-left", "slide-out-left");
+  void config.card.offsetWidth; // force reflow
+  config.card.classList.add("slide-out-left");
+  
   state.cardPanelAssignments[cardType] = null;
 
   // Update button state
@@ -3689,6 +3760,15 @@ function hideCard(cardType) {
     panelEndEl.classList.add("is-collapsed");
   }
 
+  // Delay "display: none" so the closing animation can visually complete
+  if (config.card._hideTimeout) {
+    clearTimeout(config.card._hideTimeout);
+  }
+  config.card._hideTimeout = setTimeout(() => {
+    config.card.classList.add("is-hidden");
+    config.card._hideTimeout = null;
+  }, 300);
+
   scheduleAgendaReflow();
 }
 
@@ -3699,20 +3779,16 @@ function toggleCard(cardType) {
     // Card is open, close it
     hideCard(cardType);
   } else {
-    // Card is closed, find available panel
-    const availablePanel = getFirstAvailablePanel();
-    if (availablePanel) {
-      showCardInPanel(cardType, availablePanel);
-    } else {
-      // Both panels full - close leftmost card and open new one there
-      const leftCard = Object.keys(state.cardPanelAssignments).find(
-        (k) => state.cardPanelAssignments[k] === "left",
-      );
-      if (leftCard) {
-        hideCard(leftCard);
+    // Exclusive left-panel mode:
+    // First, close ANY currently open cards across the board
+    Object.keys(state.cardPanelAssignments).forEach((k) => {
+      if (state.cardPanelAssignments[k]) {
+        hideCard(k);
       }
-      showCardInPanel(cardType, "left");
-    }
+    });
+    
+    // Now proudly display the new card on the left
+    showCardInPanel(cardType, "left");
   }
 }
 
@@ -3722,16 +3798,14 @@ function setSidePanelMode(mode) {
     // Close all cards
     Object.keys(CARD_CONFIG).forEach((cardType) => hideCard(cardType));
   } else {
-    // Ensure card is shown (don't toggle if already open)
+    // Ensure card is shown exclusively on the left
     const currentPanel = getCardPanel(mode);
     if (!currentPanel) {
-      // Card is not open, find available panel and show it
-      const availablePanel = getFirstAvailablePanel();
-      if (availablePanel) {
-        showCardInPanel(mode, availablePanel);
-      }
+      // Close anything else
+      Object.keys(CARD_CONFIG).forEach((cardType) => hideCard(cardType));
+      showCardInPanel(mode, "left");
     }
-    // If card is already open, do nothing (don't toggle it off)
+    // If card is already open, do nothing
   }
 }
 
@@ -3847,6 +3921,7 @@ function syncBusSelectEmptyState() {
       }
     }
   });
+  checkDriverDoubleBookings();
 }
 
 function refreshBusSelectOptions() {
@@ -6509,7 +6584,7 @@ function loadPrefs() {
 // 35.5) GLASS SELECT DROPDOWNS (trip editor status fields + bus grid)
 // ======================================================
 function wrapSelectInGlassDropdown(sel, opts) {
-  const { statusId, rebuildMenuOnOpen, cellClass } = opts || {};
+  const { statusId, rebuildMenuOnOpen, cellClass, searchable } = opts || {};
   const statusIds = new Set([
     "itineraryStatus",
     "contactStatus",
@@ -6618,6 +6693,37 @@ function wrapSelectInGlassDropdown(sel, opts) {
 
   function populateMenu() {
     menu.innerHTML = "";
+
+    if (searchable) {
+      const searchInput = document.createElement("input");
+      searchInput.type = "text";
+      searchInput.className = "dropdown__search";
+      searchInput.placeholder = "Search…";
+      searchInput.setAttribute("aria-label", "Search options");
+      // Prevent clicks inside input from closing the menu
+      searchInput.addEventListener("click", (e) => e.stopPropagation());
+      searchInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          const first = menu.querySelector(".dropdown__item:not([hidden])");
+          if (first) first.click();
+        } else if (e.key === "ArrowDown") {
+          e.preventDefault();
+          const first = menu.querySelector(".dropdown__item:not([hidden])");
+          if (first) first.focus();
+        } else if (e.key === "Escape") {
+          closeMenu();
+        }
+      });
+      searchInput.addEventListener("input", () => {
+        const q = searchInput.value.trim().toLowerCase();
+        menu.querySelectorAll(".dropdown__item").forEach((btn) => {
+          btn.hidden = q !== "" && !btn.textContent.trim().toLowerCase().includes(q);
+        });
+      });
+      menu.appendChild(searchInput);
+    }
+
     Array.from(sel.options).forEach((opt) => {
       if (opt.disabled && !String(opt.value).trim()) return;
       const btn = document.createElement("button");
@@ -6650,8 +6756,19 @@ function wrapSelectInGlassDropdown(sel, opts) {
       }
 
       const itemTextSpan = document.createElement("span");
+      itemTextSpan.style.flex = "1";
       itemTextSpan.textContent = opt.textContent.trim();
       btn.appendChild(itemTextSpan);
+
+      // Warn if this driver is already booked on another overlapping trip
+      if (v && v !== "None" && state.driverConflicts?.has(v)) {
+        btn.classList.add("driver-conflict-item");
+        const warnIcon = document.createElement("span");
+        warnIcon.className = "material-symbols-outlined dropdown__conflict-icon";
+        warnIcon.textContent = "warning";
+        warnIcon.title = `${v} is already assigned to another trip on these dates`;
+        btn.appendChild(warnIcon);
+      }
 
       btn.addEventListener("click", () => {
         sel.value = opt.value;
@@ -6689,6 +6806,28 @@ function wrapSelectInGlassDropdown(sel, opts) {
   wrapper.appendChild(sel);
   sel.classList.add("select-native");
 
+  // Portal: attach menu to body so overflow:hidden on ancestor cards can't clip it
+  menu.style.position = "fixed";
+  menu.style.zIndex = "1001";
+  menu.style.insetInlineEnd = "auto"; // reset CSS default that would anchor to viewport right edge
+  document.body.appendChild(menu);
+
+  function positionMenu() {
+    const triggerRect = trigger.getBoundingClientRect();
+    const menuMaxH = 244; // ~240px max-height + gap
+    const openUpward = triggerRect.bottom + menuMaxH > window.innerHeight;
+    menu.classList.toggle("dropdown__menu--up", openUpward);
+    menu.style.left = triggerRect.left + "px";
+    menu.style.minWidth = triggerRect.width + "px";
+    if (openUpward) {
+      menu.style.top = "auto";
+      menu.style.bottom = (window.innerHeight - triggerRect.top + 4) + "px";
+    } else {
+      menu.style.top = (triggerRect.bottom + 4) + "px";
+      menu.style.bottom = "auto";
+    }
+  }
+
   if (!rebuildMenuOnOpen) populateMenu();
 
   trigger.addEventListener("click", (e) => {
@@ -6696,23 +6835,26 @@ function wrapSelectInGlassDropdown(sel, opts) {
     if (menu.hidden) {
       closeAllFloatingMenus();
       if (rebuildMenuOnOpen) populateMenu();
+      positionMenu();
       menu.hidden = false;
-      // Flip menu above trigger if near bottom edge (avoids card resize / page scroll)
-      const triggerRect = trigger.getBoundingClientRect();
-      const menuMaxH = 244; // ~240px max-height + gap
-      const openUpward = triggerRect.bottom + menuMaxH > window.innerHeight;
-      menu.classList.toggle("dropdown__menu--up", openUpward);
       trigger.setAttribute("aria-expanded", "true");
       trigger.classList.add("is-open");
       document.addEventListener("click", outsideClick);
       document.addEventListener("keydown", handleEscape);
+      if (searchable) {
+        const searchInput = menu.querySelector(".dropdown__search");
+        if (searchInput) {
+          searchInput.value = "";
+          menu.querySelectorAll(".dropdown__item").forEach((btn) => (btn.hidden = false));
+          requestAnimationFrame(() => searchInput.focus());
+        }
+      }
     } else {
       closeMenu();
     }
   });
 
   wrapper.appendChild(trigger);
-  wrapper.appendChild(menu);
 
   sel.addEventListener("change", updateTrigger);
   updateTrigger();
@@ -6755,6 +6897,7 @@ function initGlassSelects() {
       rebuildMenuOnOpen: true,
       cellClass: isStatus ? "bus-assign__status-cell" : "bus-assign__cell",
       statusId: isStatus ? "driverStatus" : null,
+      searchable: !isStatus,
     });
   });
 }
@@ -7138,6 +7281,11 @@ function wireEvents() {
     }
     arrival.dispatchEvent(new Event("change", { bubbles: true }));
     maybeApplyPendingDefaults();
+    checkDriverDoubleBookings();
+  });
+
+  $("arrivalDate").addEventListener("change", () => {
+    checkDriverDoubleBookings();
   });
 
   dom.hiddenIframe.addEventListener("load", () => {

@@ -73,9 +73,9 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  background-color: var(--surface-02);
+  background-color: var(--rux-surface-app-header);
   box-shadow: var(--card-shadow);
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-default);
 }
 
 /* Page-level heading utility used in schedule/header contexts */
@@ -470,14 +470,14 @@
 /* Base sidebars layer */
 .o-app-layout__sidebar--left:not(.is-collapsed),
 .o-app-layout__sidebar--right:not(.is-collapsed) {
-  background: var(--surface-01);
+  background: var(--rux-surface-base);
   /* Removed the invisible layout wrapper borders here to prevent clipping */
 }
 
 /* Main schedule area layer */
 .o-app-layout__main>.c-card {
   border-radius: 0;
-  background: var(--surface-00);
+  background: var(--rux-surface-base);
   /* Your pure black background */
 }
 
@@ -510,13 +510,13 @@
   font-weight: 400;
   color: var(--text-muted);
   padding: var(--space-lg);
-  background-color: var(--surface-01);
+  background-color: var(--rux-surface-panel);
 }
 
 /* Shared Sidebar Footer Padding */
 .o-app-layout__sidebar--left>.c-card:not(.is-hidden) .c-card__footer,
 .o-app-layout__sidebar--right>.c-card:not(.is-hidden) .c-card__footer {
-  padding: var(--space-lg);
+  padding: var(--space-md) var(--rux-space-md);
 }
 
 /* ==========================================================================
@@ -536,7 +536,7 @@
   flex: 1;
   min-height: 200px;
   max-height: 100%;
-  background: var(--surface-02);
+  background: var(--rux-surface-textarea);
   color: var(--text-primary);
   border-radius: 2px;
   padding: 6px 6px;
@@ -668,7 +668,7 @@
 
 .quote-calculator__summary {
   padding: 0 !important;
-  background: var(--surface-02);
+  background: var(--rux-surface-panel);
   border-top: 1px solid var(--border-default);
   margin-top: auto;
   display: flex;
@@ -725,7 +725,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 16px;
-  background: var(--surface-02);
+  background: var(--rux-surface-panel);
   border-top: none;
   border-bottom: none !important;
 }
@@ -806,7 +806,7 @@
   width: 100%;
   min-width: 1436px;
   height: auto;
-  background: var(--surface-00);
+  background: var(--rux-surface-base);
   table-layout: fixed;
   border-collapse: separate;
   border-spacing: 0;
@@ -831,7 +831,7 @@
 }
 
 .schedule-grid__header-cell {
-  background: var(--surface-00);
+  background: var(--rux-surface-base);
   padding: 0;
   height: var(--day-row-h);
   position: sticky;
@@ -851,7 +851,7 @@
   position: sticky;
   inset-inline-start: 0;
   z-index: 3000 !important;
-  background: var(--surface-00);
+  background: var(--rux-surface-base);
   min-width: var(--bus-col-w);
   max-width: var(--bus-col-w);
   width: var(--bus-col-w);
@@ -890,7 +890,7 @@
 }
 
 .schedule-grid__header-cell--today {
-  background: var(--surface-00);
+  background: var(--rux-surface-base);
   /*border: 1px solid var(--red);*/
 }
 
@@ -900,7 +900,7 @@
   justify-content: center;
   width: 24px;
   height: 24px;
-  background: var(--blu-50);
+  background: var(--rux-accent-color);
   color: white;
   border-radius: 0;
   text-shadow: var(--text-shadow);
@@ -937,7 +937,7 @@
 
 #waitingBody tr.waiting-list-row td,
 .waiting-list-row td {
-  background-color: var(--surface-00) !important;
+  background-color: var(--rux-surface-base) !important;
   vertical-align: top;
   height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
   min-height: var(--waiting-list-dynamic-height, var(--schedule-row-height)) !important;
@@ -945,7 +945,7 @@
 }
 
 .waiting-list-row .schedule-grid__bus-cell {
-  background-color: var(--surface-00) !important;
+  background-color: var(--rux-surface-base) !important;
   border-top: 1px solid var(--border-subtle);
   color: var(--text-muted);
   font-size: 0.6875rem;
@@ -983,7 +983,7 @@
   z-index: 500;
   pointer-events: none;
   /* pass through so sticky overlay doesn't steal trip bar hover */
-  background: var(--surface-00);
+  background: var(--rux-surface-base);
   font-size: var(--bus-num-size);
   /* 14px */
   font-weight: var(--bus-num-weight);
@@ -1144,7 +1144,7 @@
   overflow-x: auto;
   overflow-y: auto;
   margin: 0;
-  background: var(--surface-01);
+  background: var(--rux-surface-input);
   -ms-overflow-style: none;
   /* IE and Edge */
   scrollbar-width: none;
@@ -1171,7 +1171,7 @@
 .driver-week__table th {
   color: var(--text-primary);
   font-weight: 500;
-  background: var(--surface-02);
+  background: var(--rux-surface-input);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -1190,7 +1190,7 @@
 }
 
 .driver-week__table tbody tr:nth-child(even) td {
-  background-color: var(--surface-01);
+  background-color: var(--rux-surface-input);
 }
 
 .driver-week__table tbody tr:nth-child(even) td.driver-week__cell--on {

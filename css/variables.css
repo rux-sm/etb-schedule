@@ -1,63 +1,165 @@
 :root {
   color-scheme: dark;
 
+  /* ==========================================================================
+   # REFERENCE TOKENS
+   ========================================================================== */
+
+  --rux-white: oklch(100% 0.004 255);
+  --rux-black: oklch(0% 0.004 255);
+
+  --rux-gray-100: oklch(100% 0.004 255);
+  --rux-gray-200: oklch(90% 0.004 255);
+  --rux-gray-300: oklch(80% 0.004 255);
+  --rux-gray-400: oklch(70% 0.004 255);
+  --rux-gray-500: oklch(60% 0.004 255);
+  --rux-gray-600: oklch(55% 0.004 255);
+  --rux-gray-700: oklch(50% 0.004 255);
+  --rux-gray-800: oklch(32% 0.004 255);
+  --rux-gray-900: oklch(24% 0.004 255);
+  --rux-gray-950: oklch(16% 0.004 255);
+
+  --rux-red-100: oklch(100% 0.2 25);
+  --rux-red-200: oklch(90% 0.2 25);
+  --rux-red-300: oklch(80% 0.2 25);
+  --rux-red-400: oklch(70% 0.2 25);
+  --rux-red-500: oklch(60% 0.2 25);
+  --rux-red-600: oklch(50% 0.2 25);
+  --rux-red-700: oklch(40% 0.2 25);
+  --rux-red-800: oklch(30% 0.2 25);
+  --rux-red-900: oklch(20% 0.2 25);
+
+  --rux-orange-100: oklch(100% 0.2 65);
+  --rux-orange-200: oklch(90% 0.2 65);
+  --rux-orange-300: oklch(80% 0.2 65);
+  --rux-orange-400: oklch(70% 0.2 65);
+  --rux-orange-500: oklch(60% 0.2 65);
+  --rux-orange-600: oklch(50% 0.2 65);
+  --rux-orange-700: oklch(40% 0.2 65);
+  --rux-orange-800: oklch(30% 0.2 65);
+  --rux-orange-900: oklch(20% 0.2 65);
+
+  --rux-yellow-100: oklch(100% 0.2 100);
+  --rux-yellow-200: oklch(90% 0.2 100);
+  --rux-yellow-300: oklch(80% 0.2 100);
+  --rux-yellow-400: oklch(70% 0.2 100);
+  --rux-yellow-500: oklch(60% 0.2 100);
+  --rux-yellow-600: oklch(50% 0.2 100);
+  --rux-yellow-700: oklch(40% 0.2 100);
+  --rux-yellow-800: oklch(30% 0.2 100);
+  --rux-yellow-900: oklch(20% 0.2 100);
+
+  --rux-green-100: oklch(100% 0.2 155);
+  --rux-green-200: oklch(90% 0.2 155);
+  --rux-green-300: oklch(80% 0.2 155);
+  --rux-green-400: oklch(70% 0.2 155);
+  --rux-green-500: oklch(60% 0.2 155);
+  --rux-green-600: oklch(50% 0.2 155);
+  --rux-green-700: oklch(40% 0.2 155);
+  --rux-green-800: oklch(30% 0.2 155);
+  --rux-green-900: oklch(20% 0.2 155);
+
+  --rux-cyan-100: oklch(100% 0.2 220);
+  --rux-cyan-200: oklch(90% 0.2 220);
+  --rux-cyan-300: oklch(80% 0.2 220);
+  --rux-cyan-400: oklch(70% 0.2 220);
+  --rux-cyan-500: oklch(60% 0.2 220);
+  --rux-cyan-600: oklch(50% 0.2 220);
+  --rux-cyan-700: oklch(40% 0.2 220);
+  --rux-cyan-800: oklch(30% 0.2 220);
+  --rux-cyan-900: oklch(20% 0.2 220);
+
+  --rux-blue-100: oklch(100% 0.2 260);
+  --rux-blue-200: oklch(90% 0.2 260);
+  --rux-blue-300: oklch(80% 0.2 260);
+  --rux-blue-400: oklch(70% 0.2 260);
+  --rux-blue-500: oklch(60% 0.2 260);
+  --rux-blue-600: oklch(50% 0.2 260);
+  --rux-blue-700: oklch(40% 0.2 260);
+  --rux-blue-800: oklch(30% 0.2 260);
+  --rux-blue-900: oklch(20% 0.2 260);
+
+  --rux-purple-100: oklch(100% 0.2 300);
+  --rux-purple-200: oklch(90% 0.2 300);
+  --rux-purple-300: oklch(80% 0.2 300);
+  --rux-purple-400: oklch(70% 0.2 300);
+  --rux-purple-500: oklch(60% 0.2 300);
+  --rux-purple-600: oklch(50% 0.2 300);
+  --rux-purple-700: oklch(40% 0.2 300);
+  --rux-purple-800: oklch(30% 0.2 300);
+  --rux-purple-900: oklch(20% 0.2 300);
+
+  --rux-pink-100: oklch(100% 0.2 350);
+  --rux-pink-200: oklch(90% 0.2 350);
+  --rux-pink-300: oklch(80% 0.2 350);
+  --rux-pink-400: oklch(70% 0.2 350);
+  --rux-pink-500: oklch(60% 0.2 350);
+  --rux-pink-600: oklch(50% 0.2 350);
+  --rux-pink-700: oklch(40% 0.2 350);
+  --rux-pink-800: oklch(30% 0.2 350);
+  --rux-pink-900: oklch(20% 0.2 350);
+
+  --rux-space-xs: 4px;
+  --rux-space-sm: 8px;
+  --rux-space-md: 16px;
+  --rux-space-lg: 24px;
+  --rux-space-xl: 32px;
+
+  --rux-border-radius-sm: 4px;
+  --rux-border-radius-md: 8px;
+  --rux-border-radius-lg: 16px;
+  --rux-border-radius-xl: 32px;
+
+  /* ==========================================================================
+   # 2. SYSTEM TOKENS
+   ========================================================================== */
+
+  /* Level 1: Deepest background (The canvas/grid) */
+  --rux-surface-base: var(--rux-gray-950);
+
+  /* Level 2: Surface 00 (The canvas/grid) */
+  --rux-surface-app-header: var(--rux-gray-900);
+
+  /* Level 3: Structural containers (Sidebars, Top nav) */
+  --rux-surface-panel: var(--rux-gray-800);
+  --rux-surface-header: var(--rux-gray-800);
+  --rux-surface-footer: var(--rux-gray-800);
+  --rux-surface-modal: var(--rux-gray-800);
+
+  /* Level 4: Interactive components (Inputs, Buttons resting on panels) */
+  --rux-surface-input: var(--rux-gray-900);
+  --rux-surface-menu: var(--rux-gray-700);
+  --rux-surface-textarea: var(--rux-gray-700);
+
+  --rux-border-color: oklch(100% 0 0 / 10%);
+
+  --rux-color-status-red: var(--rux-red-500);
+  --rux-color-status-red-alpha: oklch(60% 0.2 25 / 20%);
+  --rux-color-status-yellow: var(--rux-yellow-500);
+  --rux-color-status-yellow-alpha: oklch(60% 0.2 96 / 20%);
+  --rux-color-status-green: var(--rux-green-500);
+  --rux-color-status-green-alpha: oklch(60% 0.2 155 / 20%);
+  --rux-color-status-blue: var(--rux-blue-500);
+  --rux-color-status-blue-alpha: oklch(60% 0.2 260 / 20%);
+
+
+
+
+
   --rux-accent-color: var(--rux-blue-500);
   --rux-danger-color: var(--rux-red-500);
   --rux-warning-color: var(--rux-yellow-300);
   --rux-success-color: var(--rux-green-500);
 
-  --rux-blue-500-alpha: oklch(55% 0.2 260 / 20%);
-  --rux-red-500-alpha: oklch(55% 0.2 25 / 20%);
+  --rux-blue-500-alpha: oklch(60% 0.2 260 / 20%);
+  --rux-red-500-alpha: oklch(60% 0.2 25 / 20%);
 
-  --rux-gray-100: oklch(95% 0.004 255);
-  --rux-gray-200: oklch(85% 0.004 255);
-  --rux-gray-300: oklch(75% 0.004 255);
-  --rux-gray-400: oklch(65% 0.004 255);
-  --rux-gray-500: oklch(55% 0.004 255);
-  --rux-gray-600: oklch(44% 0.004 255);
-  --rux-gray-700: oklch(32% 0.004 255);
-  --rux-gray-800: oklch(24% 0.004 255);
-  --rux-gray-900: oklch(16% 0.004 255);
+  /* ==========================================================================
+   # 3. COMPONENT TOKENS
+   ========================================================================== */
 
-  --rux-green-100: oklch(95% 0.2 155);
-  --rux-green-200: oklch(85% 0.2 155);
-  --rux-green-300: oklch(75% 0.2 155);
-  --rux-green-400: oklch(65% 0.2 155);
-  --rux-green-500: oklch(55% 0.2 155);
-  --rux-green-600: oklch(45% 0.2 155);
-  --rux-green-700: oklch(35% 0.2 155);
-  --rux-green-800: oklch(25% 0.2 155);
-  --rux-green-900: oklch(15% 0.2 155);
 
-  --rux-blue-100: oklch(95% 0.2 260);
-  --rux-blue-200: oklch(85% 0.2 260);
-  --rux-blue-300: oklch(75% 0.2 260);
-  --rux-blue-400: oklch(65% 0.2 260);
-  --rux-blue-500: oklch(55% 0.2 260);
-  --rux-blue-600: oklch(45% 0.2 260);
-  --rux-blue-700: oklch(35% 0.2 260);
-  --rux-blue-800: oklch(25% 0.2 260);
-  --rux-blue-900: oklch(15% 0.2 260);
 
-  --rux-red-100: oklch(95% 0.2 25);
-  --rux-red-200: oklch(85% 0.2 25);
-  --rux-red-300: oklch(75% 0.2 25);
-  --rux-red-400: oklch(65% 0.2 25);
-  --rux-red-500: oklch(55% 0.2 25);
-  --rux-red-600: oklch(45% 0.2 25);
-  --rux-red-700: oklch(35% 0.2 25);
-  --rux-red-800: oklch(25% 0.2 25);
-  --rux-red-900: oklch(15% 0.2 25);
-
-  --rux-yellow-100: oklch(95% 0.2 100);
-  --rux-yellow-200: oklch(85% 0.2 100);
-  --rux-yellow-300: oklch(75% 0.2 100);
-  --rux-yellow-400: oklch(65% 0.2 100);
-  --rux-yellow-500: oklch(55% 0.2 100);
-  --rux-yellow-600: oklch(45% 0.2 100);
-  --rux-yellow-700: oklch(35% 0.2 100);
-  --rux-yellow-800: oklch(25% 0.2 100);
-  --rux-yellow-900: oklch(15% 0.2 100);
 
   --gra-dark: oklch(55% 0 0);
   --gra: oklch(65% 0 0);
@@ -159,15 +261,11 @@
 
   /* --- Surfaces ----------------------------------------------------------- */
   --surface-00: var(--rux-gray-900);
-  /* App bg       #10131A */
   --surface-01: var(--rux-gray-800);
-  /* Cards        #1C1B1B */
   --surface-02: var(--rux-gray-700);
-  /* Hover/sticky #201F1F */
   --surface-03: var(--rux-gray-600);
-  /* Dropdowns    #2B2A2A */
   --surface-04: var(--rux-gray-500);
-  /* Modals       #353434 */
+
 
   /* --- Borders ------------------------------------------------------------ */
   --border-subtle: rgb(255 255 255 /5%);
@@ -189,7 +287,7 @@
   --header-seperator: var(--border-default);
 
   /* --- Fields ------------------------------------------------------------- */
-  --field-bg: var(--surface-02);
+  --field-bg: var(--rux-surface-input);
   --field-bg-hover: var(--surface-03);
   --field-border: var(--surface-02);
   --field-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);

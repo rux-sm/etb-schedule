@@ -22,12 +22,11 @@ textarea,
   display: block;
   width: 100%;
   box-sizing: border-box;
-  height: var(--input-height, 40px);
+  height: var(--input-height);
   padding: 0 var(--input-padding-x);
   background-color: var(--field-bg);
-  border: 1px solid var(--field-border);
-  box-shadow: var(--field-shadow);
-  border-radius: 4px;
+  border: 1px solid var(--rux-border-color);
+  border-radius: var(--rux-border-radius-sm);
   font-size: var(--input-font-size);
   font-weight: var(--input-weight);
   color: var(--text-primary);
@@ -110,7 +109,7 @@ select.select--centered {
 /* ── 5. Textarea ─────────────────────────────────────────────────────────── */
 
 textarea {
-  min-height: var(--input-height, 40px);
+  min-height: var(--input-height);
   height: auto;
   padding: 11px var(--input-padding-x);
   resize: vertical;
@@ -143,8 +142,28 @@ select:focus-visible,
 textarea:focus-visible,
 .select-trigger:focus-visible {
   outline: none;
-  border-color: var(--color-accent);
+  border-color: var(--rux-accent-color);
   /*box-shadow: 0 0 0 2px var(--focus-ring-color), var(--field-shadow);*/
+}
+
+/* ── 6b. Driver double-booking conflict highlight ──────────────────────────── */
+
+.select-dropdown.driver-conflict .select-trigger {
+  border-color: var(--color-warning);
+  box-shadow: 0 0 0 2px color-mix(in oklch, var(--color-warning) 30%, transparent);
+}
+
+/* Warning icon inside the dropdown list item */
+.dropdown__conflict-icon {
+  font-size: 1rem;
+  color: var(--color-warning);
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+/* Dim the conflicting item text slightly so the icon pops */
+.driver-conflict-item {
+  color: color-mix(in oklch, var(--text-primary) 70%, var(--color-warning));
 }
 
 /* ── 7. Custom Select Widget (.select-dropdown / .select-trigger) ─────────── */
@@ -196,7 +215,7 @@ textarea:focus-visible,
 
 /* Open state — same focus ring as inputs */
 .select-trigger.is-open {
-  outline: 2px solid var(--blue);
+  outline: 2px solid var(--rux-accent-color);
   outline-offset: -2px;
   border-bottom-color: transparent;
 }
@@ -231,47 +250,47 @@ textarea:focus-visible,
 /* Status colors on dropdown menu items */
 .dropdown__item.status-pending,
 .dropdown__item.status-pending .dropdown-icon {
-  color: var(--color-status-pending) !important;
+  color: var(--rux-color-status-red) !important;
 }
 
 .dropdown__item.status-ok,
 .dropdown__item.status-ok .dropdown-icon {
-  color: var(--color-status-ok) !important;
+  color: var(--rux-color-status-green) !important;
 }
 
 .dropdown__item.status-assigned,
 .dropdown__item.status-assigned .dropdown-icon {
-  color: var(--color-status-assigned) !important;
+  color: var(--rux-color-status-blue) !important;
 }
 
 .dropdown__item.status-blue,
 .dropdown__item.status-blue .dropdown-icon {
-  color: var(--color-status-blue) !important;
+  color: var(--rux-color-status-blue) !important;
 }
 
 /* Status colors on the select field itself */
 .select-trigger.status-pending {
-  border-left: 3px solid var(--color-status-pending);
-  background-color: color-mix(in srgb, var(--color-status-pending) 8%, var(--field-bg));
-  color: var(--color-status-pending);
+  border-left: 3px solid var(--rux-color-status-red);
+  background-color: color-mix(in srgb, var(--rux-color-status-red) 8%, var(--field-bg));
+  color: var(--rux-color-status-red);
 }
 
 .select-trigger.status-ok {
-  border-left: 3px solid var(--color-status-ok);
-  background-color: color-mix(in srgb, var(--color-status-ok) 8%, var(--field-bg));
-  color: var(--color-status-ok);
+  border-left: 3px solid var(--rux-color-status-green);
+  background-color: color-mix(in srgb, var(--rux-color-status-green) 8%, var(--field-bg));
+  color: var(--rux-color-status-green);
 }
 
 .select-trigger.status-assigned {
-  border-left: 3px solid var(--color-status-assigned);
-  background-color: color-mix(in srgb, var(--color-status-assigned) 8%, var(--field-bg));
-  color: var(--color-status-assigned);
+  border-left: 3px solid var(--rux-color-status-yellow);
+  background-color: color-mix(in srgb, var(--rux-color-status-yellow) 8%, var(--field-bg));
+  color: var(--rux-color-status-yellow);
 }
 
 .select-trigger.status-blue {
-  border-left: 3px solid var(--color-status-blue);
-  background-color: color-mix(in srgb, var(--color-status-blue) 8%, var(--field-bg));
-  color: var(--color-status-blue);
+  border-left: 3px solid var(--rux-color-status-blue);
+  background-color: color-mix(in srgb, var(--rux-color-status-blue) 8%, var(--field-bg));
+  color: var(--rux-color-status-blue);
 }
 
 /* ── 8. Empty State ──────────────────────────────────────────────────────── */

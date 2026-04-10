@@ -148,7 +148,7 @@ body {
   line-height: 1.5;
   letter-spacing: 0.02em;
   color: var(--text-primary);
-  background: var(--surface-00);
+  background: var(--rux-surface-base);
   /* Base behind schedule */
   transition:
     background-color 200ms ease,
@@ -230,6 +230,38 @@ samp {
 
 .fade-in {
   animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideInLeftSheet {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slide-in-left {
+  animation: slideInLeftSheet 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+}
+
+@keyframes slideOutLeftSheet {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+.slide-out-left {
+  animation: slideOutLeftSheet 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
 }
 
 @keyframes slideDown {
@@ -562,7 +594,7 @@ samp {
   position: absolute;
   z-index: var(--z-dropdown);
   min-width: 180px;
-  background-color: var(--surface-03);
+  background-color: var(--surface-02);
   border: 1px solid var(--border-subtle);
   box-shadow: var(--card-shadow-context);
   padding: 4px 0;
@@ -685,4 +717,3 @@ samp {
   /* Carbon uses primary blue to indicate current selection */
   font-weight: 600;
 }
-
