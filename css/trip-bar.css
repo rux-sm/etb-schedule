@@ -469,6 +469,19 @@
   gap: var(--tripbar-gap-drivers, 6px);
 }
 
+.schedule-grid__trip-bar__driver-slot {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+.schedule-grid__trip-bar__driver-slot .schedule-grid__trip-bar__mini-badge {
+  flex-shrink: 0;
+  font-size: var(--tripbar-r7-font-size);
+  line-height: 1;
+}
+
 .schedule-grid__trip-bar__driver {
   font-size: var(--tripbar-r7-font-size);
   font-weight: var(--tripbar-r7-font-weight);

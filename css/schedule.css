@@ -1293,6 +1293,16 @@
   letter-spacing: 0.04em;
 }
 
+/* Relief slots pin to their driver's column so they appear stacked below Driver 1 / Driver 2 */
+.bus-assign__driver-block--relief1 { grid-column: 2; }
+.bus-assign__driver-block--relief2 { grid-column: 3; }
+
+/* Locked state: visible but dimmed and non-interactive until the toggle unlocks the slot */
+.bus-assign__driver-block.is-locked {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
 /* Driver + Status block: driver on top, status below (Carbon-style grouped layout) */
 .bus-assign__driver-block {
   display: flex;

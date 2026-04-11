@@ -720,7 +720,7 @@ function truthyRequirement(v) {
 }
 
 function setRequirementTogglesFromTrip(t = {}) {
-  const ids = ["req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqCoDriver", "reqHotel"];
+  const ids = ["req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqRelief2", "reqCoDriver", "reqHotel"];
   ids.forEach((id) => {
     const btn = document.getElementById(id);
     if (!btn) return;
@@ -876,8 +876,12 @@ function sanitizeWeekResp(resp) {
       busId: asStr(a?.busId).trim(),
       driver1: asStr(a?.driver1).trim(),
       driver2: asStr(a?.driver2).trim(),
+      driver3: asStr(a?.driver3).trim(),
+      driver4: asStr(a?.driver4).trim(),
       driver1Status: asStr(a?.driver1Status).trim(),
       driver2Status: asStr(a?.driver2Status).trim(),
+      driver3Status: asStr(a?.driver3Status).trim(),
+      driver4Status: asStr(a?.driver4Status).trim(),
       busNumber: Number(a?.busNumber) || 0,
     }))
     .filter((a) => a.tripKey);
@@ -1532,8 +1536,12 @@ function getEffectiveDriverStatus(t) {
   for (const a of assigns) {
     const d1 = String(a.driver1 || "").trim();
     const d2 = String(a.driver2 || "").trim();
+    const d3 = String(a.driver3 || "").trim();
+    const d4 = String(a.driver4 || "").trim();
     if (d1 && d1 !== "None") statuses.push(String(a.driver1Status || "").trim() || "Pending");
     if (d2 && d2 !== "None") statuses.push(String(a.driver2Status || "").trim() || "Pending");
+    if (d3 && d3 !== "None") statuses.push(String(a.driver3Status || "").trim() || "Pending");
+    if (d4 && d4 !== "None") statuses.push(String(a.driver4Status || "").trim() || "Pending");
   }
   if (statuses.length === 0) return (t?.driverStatus || "Pending").trim();
   const statusOrder = { Pending: 0, Assigned: 1, Confirmed: 2 };
@@ -2816,6 +2824,8 @@ function _renderAgendaInner() {
 
       const d1 = a.driver1 && a.driver1 !== "None" ? a.driver1 : "";
       const d2 = a.driver2 && a.driver2 !== "None" ? a.driver2 : "";
+      const d3 = a.driver3 && a.driver3 !== "None" ? a.driver3 : "";
+      const d4 = a.driver4 && a.driver4 !== "None" ? a.driver4 : "";
 
       const key = barKey(t.tripKey, busId, d1, d2);
       let bar = state.barElByKey.get(key);
@@ -2911,7 +2921,9 @@ function _renderAgendaInner() {
         const bC = makeMini("phone_enabled", true); // Contact
         const b$ = makeMini("description", true); // Payment / Approval
         const bD1 = makeMini("person", true); // Driver 1
-        const bD2 = makeMini("person", true); // Driver 2
+        const bD2 = makeMini("person", true); // Driver 2 (co-driver)
+        const bD3 = makeMini("person_alert", true); // Relief 1
+        const bD4 = makeMini("person_alert", true); // Relief 2
         const bInv = makeMini("attach_money", true); // Invoice
         const invText = document.createElement("span");
         invText.className = "schedule-grid__trip-bar__mini-badge-text icon-invoice-text";
@@ -2925,7 +2937,7 @@ function _renderAgendaInner() {
 
         const statusBadgesWrap = document.createElement("div");
         statusBadgesWrap.className = "schedule-grid__trip-bar__status-badges";
-        statusBadgesWrap.append(barReqIcons, b$, bI, bC, bD1, bD2, bInv);
+        statusBadgesWrap.append(barReqIcons, b$, bI, bC, bInv);
         statusRow.append(statusBadgesWrap);
 
         r5.appendChild(statusRow);
@@ -2935,9 +2947,39 @@ function _renderAgendaInner() {
         preDriversRow.className = "schedule-grid__trip-bar__pre-drivers";
         r6.appendChild(preDriversRow);
 
-        // Row 7: Drivers
+        // Row 7: Drivers — each slot = [smiley icon] [name]
         const driversRow = document.createElement("div");
         driversRow.className = "schedule-grid__trip-bar__drivers";
+
+        const d1Slot = document.createElement("div");
+        d1Slot.className = "schedule-grid__trip-bar__driver-slot";
+        d1Slot.appendChild(bD1);
+        const d1Name = document.createElement("span");
+        d1Name.className = "schedule-grid__trip-bar__driver";
+        d1Slot.appendChild(d1Name);
+
+        const d2Slot = document.createElement("div");
+        d2Slot.className = "schedule-grid__trip-bar__driver-slot";
+        d2Slot.appendChild(bD2);
+        const d2Name = document.createElement("span");
+        d2Name.className = "schedule-grid__trip-bar__driver";
+        d2Slot.appendChild(d2Name);
+
+        const d3Slot = document.createElement("div");
+        d3Slot.className = "schedule-grid__trip-bar__driver-slot";
+        d3Slot.appendChild(bD3);
+        const d3Name = document.createElement("span");
+        d3Name.className = "schedule-grid__trip-bar__driver";
+        d3Slot.appendChild(d3Name);
+
+        const d4Slot = document.createElement("div");
+        d4Slot.className = "schedule-grid__trip-bar__driver-slot";
+        d4Slot.appendChild(bD4);
+        const d4Name = document.createElement("span");
+        d4Name.className = "schedule-grid__trip-bar__driver";
+        d4Slot.appendChild(d4Name);
+
+        driversRow.append(d1Slot, d2Slot, d3Slot, d4Slot);
         r7.appendChild(driversRow);
 
         // Append all 7 fixed rows to bar (critical)
@@ -2958,9 +3000,19 @@ function _renderAgendaInner() {
         bar._b$ = b$;
         bar._bD1 = bD1;
         bar._bD2 = bD2;
+        bar._bD3 = bD3;
+        bar._bD4 = bD4;
         bar._bInv = bInv;
         bar._preDrivers = preDriversRow;
         bar._drivers = driversRow;
+        bar._d1Slot = d1Slot;
+        bar._d2Slot = d2Slot;
+        bar._d3Slot = d3Slot;
+        bar._d4Slot = d4Slot;
+        bar._d1Name = d1Name;
+        bar._d2Name = d2Name;
+        bar._d3Name = d3Name;
+        bar._d4Name = d4Name;
 
         bar.dataset.tripkey = String(t.tripKey || "");
         bar.setAttribute("role", "button");
@@ -3016,6 +3068,8 @@ function _renderAgendaInner() {
       // Customer payment bar badge logic done below instead of generic setBadge
       if (bar._bD1) setBadge(bar._bD1, a.driver1Status || "Pending");
       if (bar._bD2) setBadge(bar._bD2, a.driver2Status || "Pending");
+      if (bar._bD3) setBadge(bar._bD3, a.driver3Status || "Pending");
+      if (bar._bD4) setBadge(bar._bD4, a.driver4Status || "Pending");
       if (bar._bInv) setBadge(bar._bInv, t.invoiceStatus);
 
       // Custom payment status icon based on value for trip bars
@@ -3069,26 +3123,54 @@ function _renderAgendaInner() {
         bar._bD1.classList.add("has-action");
         const glyph = bar._bD1.querySelector(".schedule-grid__trip-bar__badge-glyph");
         if (glyph) {
-          const s1 = (a.driver1Status || "Pending").toLowerCase();
-          const iconName = getStatusIcon("driverStatus", s1);
-          glyph.textContent = iconName || "sentiment_dissatisfied";
+          glyph.textContent = "person";
           glyph.dataset.action = "showDriverContact";
           glyph.dataset.tripkey = t.tripKey;
           glyph.style.cursor = "pointer";
         }
       }
 
-      // Swap driver 2 status icon based on value, only if driver 2 exists or is required
+      // Driver 2 (co-driver) slot
       if (bar._bD2) {
-        const needsD2 = t.reqCoDriver || t.reqRelief || (a.driver2 && a.driver2 !== "None");
-        bar._bD2.classList.toggle("is-hidden", !needsD2);
+        const needsD2 = t.reqCoDriver || (a.driver2 && a.driver2 !== "None");
+        bar._d2Slot.classList.toggle("is-hidden", !needsD2);
         if (needsD2) {
           bar._bD2.classList.add("has-action");
           const glyph = bar._bD2.querySelector(".schedule-grid__trip-bar__badge-glyph");
           if (glyph) {
-            const s2 = (a.driver2Status || "Pending").toLowerCase();
-            const iconName = getStatusIcon("driverStatus", s2);
-            glyph.textContent = iconName || "sentiment_dissatisfied";
+            glyph.textContent = "person_add";
+            glyph.dataset.action = "showDriverContact";
+            glyph.dataset.tripkey = t.tripKey;
+            glyph.style.cursor = "pointer";
+          }
+        }
+      }
+
+      // Relief 1 slot
+      if (bar._bD3) {
+        const needsD3 = t.reqRelief || (a.driver3 && a.driver3 !== "None");
+        bar._d3Slot.classList.toggle("is-hidden", !needsD3);
+        if (needsD3) {
+          bar._bD3.classList.add("has-action");
+          const glyph = bar._bD3.querySelector(".schedule-grid__trip-bar__badge-glyph");
+          if (glyph) {
+            glyph.textContent = "person_alert";
+            glyph.dataset.action = "showDriverContact";
+            glyph.dataset.tripkey = t.tripKey;
+            glyph.style.cursor = "pointer";
+          }
+        }
+      }
+
+      // Relief 2 slot
+      if (bar._bD4) {
+        const needsD4 = t.reqRelief2 || (a.driver4 && a.driver4 !== "None");
+        bar._d4Slot.classList.toggle("is-hidden", !needsD4);
+        if (needsD4) {
+          bar._bD4.classList.add("has-action");
+          const glyph = bar._bD4.querySelector(".schedule-grid__trip-bar__badge-glyph");
+          if (glyph) {
+            glyph.textContent = "person_alert";
             glyph.dataset.action = "showDriverContact";
             glyph.dataset.tripkey = t.tripKey;
             glyph.style.cursor = "pointer";
@@ -3116,8 +3198,6 @@ function _renderAgendaInner() {
         { key: "req56Pass", icon: "tatami_seat" },
         { key: "reqSleeper", icon: "airline_seat_flat" },
         { key: "reqLift", icon: "accessible" },
-        { key: "reqRelief", icon: "warning" },
-        { key: "reqCoDriver", icon: "person_add" },
         { key: "reqHotel", icon: "apartment" },
       ];
       if (bar._reqIcons) {
@@ -3259,10 +3339,10 @@ function _renderAgendaInner() {
 
       bar._preDrivers.textContent = t.notes ? clipText(t.notes, 500) : "";
 
-      bar._drivers.innerHTML = `
-            <span class="schedule-grid__trip-bar__driver">${escHtml(d1)}</span>
-            ${d2 && d2 !== "—" ? `<span class="schedule-grid__trip-bar__driver">${escHtml(d2)}</span>` : ""}
-        `;
+      bar._d1Name.textContent = d1;
+      bar._d2Name.textContent = (d2 && d2 !== "—") ? d2 : "";
+      bar._d3Name.textContent = (d3 && d3 !== "—") ? d3 : "";
+      bar._d4Name.textContent = (d4 && d4 !== "—") ? d4 : "";
 
       positionBarWithinOverlay(bar, bars, col, startIdx, endIdx);
 
@@ -3929,18 +4009,6 @@ function syncBusSelectEmptyState() {
     const cell = el.closest(".select-dropdown") || el;
     cell.classList.toggle("is-empty", !v || v === "None");
 
-    // Hide status dropdown if no driver is selected
-    if (
-      el.name &&
-      (el.name.includes("_driver1") || el.name.includes("_driver2")) &&
-      !el.name.endsWith("Status")
-    ) {
-      const block = el.closest(".bus-assign__driver-block");
-      const statusWrap = block?.querySelector(".bus-assign__status-wrap");
-      if (statusWrap) {
-        statusWrap.classList.toggle("is-hidden", !v || v === "None");
-      }
-    }
   });
   checkDriverDoubleBookings();
 }
@@ -3952,6 +4020,8 @@ function refreshBusSelectOptions() {
     setSelectOptions(r.busSel, busOpts);
     setSelectOptions(r.d1Sel, drvOpts);
     setSelectOptions(r.d2Sel, drvOpts);
+    setSelectOptions(r.d3Sel, drvOpts);
+    setSelectOptions(r.d4Sel, drvOpts);
   });
   syncBusSelectEmptyState();
 }
@@ -3960,27 +4030,55 @@ function updateBusRowVisibility() {
   const raw = Number(dom.busesNeeded.value);
   const n = raw > 0 ? Math.min(10, raw) : 0;
 
+  const wantsD2 = document.getElementById("reqCoDriver")?.getAttribute("aria-pressed") === "true";
+  const wantsD3 = document.getElementById("reqRelief")?.getAttribute("aria-pressed") === "true";
+  const wantsD4 = document.getElementById("reqRelief2")?.getAttribute("aria-pressed") === "true";
+
   state.busRows.forEach((r, idx) => {
     const show = idx < n;
     const enabled = raw > 0 && show;
 
+    const showD2 = show && (wantsD2 || (r.d2Sel.value && r.d2Sel.value !== "None"));
+    const showD3 = show && (wantsD3 || (r.d3Sel.value && r.d3Sel.value !== "None"));
+    const showD4 = show && (wantsD4 || (r.d4Sel.value && r.d4Sel.value !== "None"));
+
+    // d2 is visible but locked (dimmed, non-interactive) when the row is active but the
+    // co-driver toggle is off and no driver has already been assigned to that slot.
+    const lockedD2 = show && !showD2;
+
     const busCell = r.busSel.closest(".select-dropdown") || r.busSel;
     busCell.classList.toggle("is-hidden", !show);
     r.d1Block.classList.toggle("is-hidden", !show);
-    r.d2Block.classList.toggle("is-hidden", !show);
+    r.d2Block.classList.toggle("is-hidden", !show);   // always visible when row is active
+    r.d2Block.classList.toggle("is-locked", lockedD2);
+    r.d3Block.classList.toggle("is-hidden", !showD3);
+    r.d4Block.classList.toggle("is-hidden", !showD4);
 
     r.busSel.disabled = !enabled;
     r.d1Sel.disabled = !enabled;
     r.d1StatusSel.disabled = !enabled;
-    r.d2Sel.disabled = !enabled;
-    r.d2StatusSel.disabled = !enabled;
+    r.d2Sel.disabled = !enabled || lockedD2;
+    r.d2StatusSel.disabled = !enabled || lockedD2;
+    r.d3Sel.disabled = !enabled;
+    r.d3StatusSel.disabled = !enabled;
+    r.d4Sel.disabled = !enabled;
+    r.d4StatusSel.disabled = !enabled;
 
-    // Disable custom dropdown triggers when select is disabled (native select is hidden)
+    // Disable custom dropdown triggers — d2 triggers also locked when toggle is off
     const busTrigger = busCell.querySelector?.(".select-trigger");
-    [r.d1Sel, r.d1StatusSel, r.d2Sel, r.d2StatusSel].forEach((sel) => {
+    [
+      [r.d1Sel,       !enabled],
+      [r.d1StatusSel, !enabled],
+      [r.d2Sel,       !enabled || lockedD2],
+      [r.d2StatusSel, !enabled || lockedD2],
+      [r.d3Sel,       !enabled],
+      [r.d3StatusSel, !enabled],
+      [r.d4Sel,       !enabled],
+      [r.d4StatusSel, !enabled],
+    ].forEach(([sel, shouldDisable]) => {
       const cell = sel.closest(".select-dropdown") || sel.parentElement;
       const trigger = cell?.querySelector?.(".select-trigger");
-      if (trigger) trigger.disabled = !enabled;
+      if (trigger) trigger.disabled = shouldDisable;
     });
     if (busTrigger) busTrigger.disabled = !enabled;
 
@@ -3990,6 +4088,10 @@ function updateBusRowVisibility() {
       r.d1StatusSel.value = "Pending";
       r.d2Sel.value = "None";
       r.d2StatusSel.value = "Pending";
+      r.d3Sel.value = "None";
+      r.d3StatusSel.value = "Pending";
+      r.d4Sel.value = "None";
+      r.d4StatusSel.value = "Pending";
     }
   });
 
@@ -4040,7 +4142,29 @@ function buildBusRowsOnce() {
     d2StatusWrap.appendChild(d2StatusSel);
     d2Block.appendChild(d2StatusWrap);
 
-    dom.busGrid.append(busSel, d1Block, d2Block);
+    const d3Sel = makeSelect(`bus${i}_driver3`);
+    const d3StatusSel = makeDriverStatusSelect(`bus${i}_driver3Status`);
+    const d3Block = document.createElement("div");
+    d3Block.className = "bus-assign__driver-block bus-assign__driver-block--relief1";
+    d3Block.appendChild(d3Sel);
+    const d3StatusWrap = document.createElement("div");
+    d3StatusWrap.className = "bus-assign__status-wrap";
+    d3StatusSel.classList.add("bus-assign__status-cell");
+    d3StatusWrap.appendChild(d3StatusSel);
+    d3Block.appendChild(d3StatusWrap);
+
+    const d4Sel = makeSelect(`bus${i}_driver4`);
+    const d4StatusSel = makeDriverStatusSelect(`bus${i}_driver4Status`);
+    const d4Block = document.createElement("div");
+    d4Block.className = "bus-assign__driver-block bus-assign__driver-block--relief2";
+    d4Block.appendChild(d4Sel);
+    const d4StatusWrap = document.createElement("div");
+    d4StatusWrap.className = "bus-assign__status-wrap";
+    d4StatusSel.classList.add("bus-assign__status-cell");
+    d4StatusWrap.appendChild(d4StatusSel);
+    d4Block.appendChild(d4StatusWrap);
+
+    dom.busGrid.append(busSel, d1Block, d2Block, d3Block, d4Block);
 
     state.busRows.push({
       row: null,
@@ -4049,8 +4173,14 @@ function buildBusRowsOnce() {
       d1StatusSel,
       d2Sel,
       d2StatusSel,
+      d3Sel,
+      d3StatusSel,
+      d4Sel,
+      d4StatusSel,
       d1Block,
       d2Block,
+      d3Block,
+      d4Block,
     });
   }
 
@@ -5263,6 +5393,10 @@ function setTripFormFromState(tripKey) {
     r.d1StatusSel.value = "Pending";
     r.d2Sel.value = "None";
     r.d2StatusSel.value = "Pending";
+    r.d3Sel.value = "None";
+    r.d3StatusSel.value = "Pending";
+    r.d4Sel.value = "None";
+    r.d4StatusSel.value = "Pending";
   });
   assigns.forEach((a, i) => {
     const row = state.busRows[i];
@@ -5270,8 +5404,12 @@ function setTripFormFromState(tripKey) {
     if (a.busId) row.busSel.value = String(a.busId);
     if (a.driver1) row.d1Sel.value = String(a.driver1);
     if (a.driver2) row.d2Sel.value = String(a.driver2);
+    if (a.driver3) row.d3Sel.value = String(a.driver3);
+    if (a.driver4) row.d4Sel.value = String(a.driver4);
     row.d1StatusSel.value = String(a.driver1Status || "").trim() || fallbackDriverStatus;
     row.d2StatusSel.value = String(a.driver2Status || "").trim() || fallbackDriverStatus;
+    row.d3StatusSel.value = String(a.driver3Status || "").trim() || fallbackDriverStatus;
+    row.d4StatusSel.value = String(a.driver4Status || "").trim() || fallbackDriverStatus;
   });
   updateBusRowVisibility();
   state.busRows.forEach((r) => {
@@ -5280,6 +5418,10 @@ function setTripFormFromState(tripKey) {
     r.d1StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
     r.d2Sel.dispatchEvent(new Event("change", { bubbles: true }));
     r.d2StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d3Sel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d3StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d4Sel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d4StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
   });
   syncBusPanelState();
   if (typeof syncBusSelectEmptyState === "function") syncBusSelectEmptyState();
@@ -6705,16 +6847,24 @@ function wrapSelectInGlassDropdown(sel, opts) {
     return opt ? opt.textContent.trim() : "";
   }
 
+  function getBusDriverRoleIcon(name) {
+    if (name.includes("_driver1Status")) return "person";
+    if (name.includes("_driver2Status")) return "person_add";
+    if (name.includes("_driver3Status") || name.includes("_driver4Status")) return "person_alert";
+    return "";
+  }
+
   function getSelectedIcon() {
     const opt = sel.options[sel.selectedIndex];
     if (opt) {
-      // Primary status fields: use statusId
+      // Bus grid driver status selects: check slot name first for role icon
+      if (sel.name) {
+        const roleIcon = getBusDriverRoleIcon(sel.name);
+        if (roleIcon) return roleIcon;
+      }
+      // All other status fields: use statusId-based icon
       if (statusId && statusIds.has(statusId)) {
         return getStatusIcon(statusId, opt.value);
-      }
-      // Bus grid status selects: name ends with 'Status'
-      if (sel.name && sel.name.endsWith("Status")) {
-        return getStatusIcon("driverStatus", opt.value);
       }
     }
     return "";
@@ -6827,8 +6977,10 @@ function wrapSelectInGlassDropdown(sel, opts) {
       const isStatusField =
         (statusId && statusIds.has(statusId)) || (sel.name && sel.name.endsWith("Status"));
       if (isStatusField && v) {
+        // Bus driver slots: use fixed role icon based on slot name
+        const roleIcon = sel.name ? getBusDriverRoleIcon(sel.name) : "";
         const itemStatusId = statusId || "driverStatus";
-        const itemIconName = getStatusIcon(itemStatusId, lcValue);
+        const itemIconName = roleIcon || getStatusIcon(itemStatusId, lcValue);
         if (itemIconName) {
           const iconSpan = document.createElement("span");
           iconSpan.className = "material-symbols-outlined dropdown-icon";
@@ -7523,18 +7675,26 @@ function wireEvents() {
         const busId = String(row.busSel.value || "").trim();
         const driver1 = String(row.d1Sel.value || "").trim();
         const driver2 = String(row.d2Sel.value || "").trim();
+        const driver3 = String(row.d3Sel.value || "").trim();
+        const driver4 = String(row.d4Sel.value || "").trim();
 
         if (busId && busId !== "None") hasAssignedBus = true;
 
         const d1Status = String(row.d1StatusSel?.value || "Pending").trim();
         const d2Status = String(row.d2StatusSel?.value || "Pending").trim();
+        const d3Status = String(row.d3StatusSel?.value || "Pending").trim();
+        const d4Status = String(row.d4StatusSel?.value || "Pending").trim();
 
         optimisticAssignments.push({
           busId,
           driver1,
           driver2,
+          driver3,
+          driver4,
           driver1Status: driver1 && driver1 !== "None" ? d1Status : "",
           driver2Status: driver2 && driver2 !== "None" ? d2Status : "",
+          driver3Status: driver3 && driver3 !== "None" ? d3Status : "",
+          driver4Status: driver4 && driver4 !== "None" ? d4Status : "",
         });
       }
     }
@@ -7560,10 +7720,16 @@ function wireEvents() {
       if (!busId || busId === "None") continue;
       const d1 = String(row.d1Sel.value || "").trim();
       const d2 = String(row.d2Sel.value || "").trim();
+      const d3 = String(row.d3Sel.value || "").trim();
+      const d4 = String(row.d4Sel.value || "").trim();
       if (d1 && d1 !== "None")
         driverStatuses.push(String(row.d1StatusSel?.value || "Pending").trim());
       if (d2 && d2 !== "None")
         driverStatuses.push(String(row.d2StatusSel?.value || "Pending").trim());
+      if (d3 && d3 !== "None")
+        driverStatuses.push(String(row.d3StatusSel?.value || "Pending").trim());
+      if (d4 && d4 !== "None")
+        driverStatuses.push(String(row.d4StatusSel?.value || "Pending").trim());
     }
     const statusOrder = { Pending: 0, Assigned: 1, Confirmed: 2 };
     const worst = driverStatuses.length
@@ -7654,7 +7820,7 @@ function wireEvents() {
     dom.saveBtn.disabled = true;
 
     // Sync requirement toggles to hidden inputs so backend receives them
-    ["req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqCoDriver", "reqHotel"].forEach((id) => {
+    ["req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqRelief2", "reqCoDriver", "reqHotel"].forEach((id) => {
       const btn = $(id);
       const hidden = $(id + "Value");
       if (btn && hidden) {
@@ -7676,6 +7842,8 @@ function wireEvents() {
       if (!row) continue;
       if (row.d1Sel.value === "None") row.d1StatusSel.value = "";
       if (row.d2Sel.value === "None") row.d2StatusSel.value = "";
+      if (row.d3Sel.value === "None") row.d3StatusSel.value = "";
+      if (row.d4Sel.value === "None") row.d4StatusSel.value = "";
     }
 
     startVerifyFallback();
@@ -7777,6 +7945,7 @@ function wireEvents() {
     btn.addEventListener("click", () => {
       const pressed = btn.getAttribute("aria-pressed") === "true";
       btn.setAttribute("aria-pressed", pressed ? "false" : "true");
+      updateBusRowVisibility();
     });
   });
 }

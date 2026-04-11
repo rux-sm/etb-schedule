@@ -131,7 +131,7 @@
   --rux-surface-menu: var(--rux-gray-700);
   --rux-surface-textarea: var(--rux-gray-700);
 
-  --rux-border-color: oklch(100% 0 0 / 10%);
+  /* --rux-border-color: oklch(100% 0 0 / 10%); */
 
   --rux-color-status-red: var(--rux-red-500);
   --rux-color-status-red-alpha: oklch(60% 0.2 25 / 20%);
