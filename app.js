@@ -2846,6 +2846,12 @@ function _renderAgendaInner() {
         multiBadge.className = "schedule-grid__trip-bar__multi-badge";
         multiBadge.setAttribute("aria-hidden", "true");
         r1.appendChild(multiBadge);
+
+        const paidBadge = document.createElement("span");
+        paidBadge.className = "schedule-grid__trip-bar__paid-badge material-symbols-outlined is-hidden";
+        paidBadge.setAttribute("aria-hidden", "true");
+        paidBadge.textContent = "paid";
+        r1.appendChild(paidBadge);
         const line1 = document.createElement("div");
         line1.className = "schedule-grid__trip-bar__title";
         r1.appendChild(line1);
@@ -2939,6 +2945,7 @@ function _renderAgendaInner() {
 
         // Keep your existing references working
         bar._multiBadge = multiBadge;
+        bar._paidBadge = paidBadge;
         bar._reqIcons = barReqIcons;
         bar._line1 = line1;
         bar._line2 = line2;
@@ -3132,6 +3139,13 @@ function _renderAgendaInner() {
       // Red unconfirmed if "Pending Quote" or "Quoted" (or legacy "pending")
       const isUnconfirmed = pay === "pending quote" || pay === "quoted" || pay === "pending";
       bar.classList.toggle("unconfirmed", isUnconfirmed);
+
+      if (bar._paidBadge) {
+        const invoiceState = String(t.invoiceStatus || "").trim().toLowerCase();
+        const isPaid = invoiceState === "paid in full";
+        bar._paidBadge.classList.toggle("is-hidden", !isPaid);
+        bar.classList.toggle("has-paid-badge", isPaid);
+      }
 
       const ds = String(effectiveDriverStatus || "")
         .trim()
