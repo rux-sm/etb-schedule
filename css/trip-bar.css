@@ -444,9 +444,13 @@
 }
 
 .schedule-grid__trip-bar__mini-badge .schedule-grid__trip-bar__mini-badge-text {
-  /* Styling is in .icon-invoice-text now */
   color: var(--tripbar-badge-text-color);
   background-color: transparent;
+}
+
+/* Invoice number text uses the standard trip bar color, not the badge accent color */
+.schedule-grid__trip-bar__mini-badge .icon-invoice-text {
+  color: var(--tripbar-text-color);
 }
 
 .schedule-grid__trip-bar__pre-drivers {

@@ -513,3 +513,28 @@ hr.form-divider {
     justify-content: flex-start;
   }
 }
+/* ── Section Dividers ────────────────────────────────────────── */
+.form-divider {
+  grid-column: span 12;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.form-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rux-border-color);
+}
+
+.form-divider__label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}

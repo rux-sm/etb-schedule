@@ -184,10 +184,8 @@ const dom = {
   saveBtn: $("saveBtn"),
   deleteBtn: $("deleteBtn"),
   newBtn: $("newBtn"),
-  requirementsBtn: $("requirementsBtn"),
   requirementsSection:
     document.querySelector('[data-js="trip-requirements-section"]') || $("requirementsSection"),
-  assignmentsBtn: $("assignmentsBtn"),
   itineraryModal: $("itineraryModal"),
   itineraryField: $("itinerary"),
   itineraryModalField: $("itineraryModalField"),
@@ -317,7 +315,6 @@ const dom = {
   copyDriverReminderBtn: $("copyDriverReminderBtn"),
 
   // Envelope Modal & Overrides
-  envelopeBtn: $("envelopeBtn"),
   envelopeOverridesSection:
     document.querySelector('[data-js="trip-envelope-section"]') || $("envelopeOverridesSection"),
   envelopeNote1: $("envelopeNote1"),
@@ -2878,7 +2875,7 @@ function _renderAgendaInner() {
         const paidBadge = document.createElement("span");
         paidBadge.className = "schedule-grid__trip-bar__paid-badge material-symbols-outlined is-hidden";
         paidBadge.setAttribute("aria-hidden", "true");
-        paidBadge.textContent = "paid";
+        paidBadge.textContent = "check_circle";
         r1.appendChild(paidBadge);
         const line1 = document.createElement("div");
         line1.className = "schedule-grid__trip-bar__title";
@@ -3241,10 +3238,11 @@ function _renderAgendaInner() {
       bar.classList.toggle("unconfirmed", isUnconfirmed);
 
       if (bar._paidBadge) {
-        const invoiceState = String(t.invoiceStatus || "").trim().toLowerCase();
-        const isPaid = invoiceState === "paid in full";
-        bar._paidBadge.classList.toggle("is-hidden", !isPaid);
-        bar.classList.toggle("has-paid-badge", isPaid);
+        const payment = String(t.paymentStatus || "").trim().toLowerCase();
+        const invoice = String(t.invoiceStatus || "").trim().toLowerCase();
+        const isAllClear = payment === "po received" || payment === "not required" || invoice === "paid in full";
+        bar._paidBadge.classList.toggle("is-hidden", !isAllClear);
+        bar.classList.toggle("has-paid-badge", isAllClear);
       }
 
       const ds = String(effectiveDriverStatus || "")
@@ -4005,7 +4003,7 @@ function setSelectOptions(sel, options, selectedValue) {
 function getBusOptions() {
   const base = [
     { value: "None", label: "None" },
-    { value: "WAITING_LIST", label: "Waiting List" },
+    { value: "WAITING_LIST", label: "W/L" },
   ];
   const mapped = state.busesList.map((b) => ({
     value: String(b.busId),
@@ -4086,27 +4084,31 @@ function updateBusRowVisibility() {
     const showD3 = show && (wantsD3 || (r.d3Sel.value && r.d3Sel.value !== "None"));
     const showD4 = show && (wantsD4 || (r.d4Sel.value && r.d4Sel.value !== "None"));
 
-    // d2 is visible but locked (dimmed, non-interactive) when the row is active but the
-    // co-driver toggle is off and no driver has already been assigned to that slot.
+    // d2/d3/d4 are visible but locked (dimmed, non-interactive) when the row is active
+    // but their toggle is off and no driver has been assigned to that slot.
     const lockedD2 = show && !showD2;
+    const lockedD3 = show && !showD3;
+    const lockedD4 = show && !showD4;
 
     const busCell = r.busSel.closest(".select-dropdown") || r.busSel;
     busCell.classList.toggle("is-hidden", !show);
     r.d1Block.classList.toggle("is-hidden", !show);
     r.d2Block.classList.toggle("is-hidden", !show);   // always visible when row is active
     r.d2Block.classList.toggle("is-locked", lockedD2);
-    r.d3Block.classList.toggle("is-hidden", !showD3);
-    r.d4Block.classList.toggle("is-hidden", !showD4);
+    r.d3Block.classList.toggle("is-hidden", !show);   // always visible when row is active
+    r.d3Block.classList.toggle("is-locked", lockedD3);
+    r.d4Block.classList.toggle("is-hidden", !show);   // always visible when row is active
+    r.d4Block.classList.toggle("is-locked", lockedD4);
 
     r.busSel.disabled = !enabled;
     r.d1Sel.disabled = !enabled;
     r.d1StatusSel.disabled = !enabled;
     r.d2Sel.disabled = !enabled || lockedD2;
     r.d2StatusSel.disabled = !enabled || lockedD2;
-    r.d3Sel.disabled = !enabled;
-    r.d3StatusSel.disabled = !enabled;
-    r.d4Sel.disabled = !enabled;
-    r.d4StatusSel.disabled = !enabled;
+    r.d3Sel.disabled = !enabled || lockedD3;
+    r.d3StatusSel.disabled = !enabled || lockedD3;
+    r.d4Sel.disabled = !enabled || lockedD4;
+    r.d4StatusSel.disabled = !enabled || lockedD4;
 
     // Disable custom dropdown triggers — d2 triggers also locked when toggle is off
     const busTrigger = busCell.querySelector?.(".select-trigger");
@@ -4115,10 +4117,10 @@ function updateBusRowVisibility() {
       [r.d1StatusSel, !enabled],
       [r.d2Sel,       !enabled || lockedD2],
       [r.d2StatusSel, !enabled || lockedD2],
-      [r.d3Sel,       !enabled],
-      [r.d3StatusSel, !enabled],
-      [r.d4Sel,       !enabled],
-      [r.d4StatusSel, !enabled],
+      [r.d3Sel,       !enabled || lockedD3],
+      [r.d3StatusSel, !enabled || lockedD3],
+      [r.d4Sel,       !enabled || lockedD4],
+      [r.d4StatusSel, !enabled || lockedD4],
     ].forEach(([sel, shouldDisable]) => {
       const cell = sel.closest(".select-dropdown") || sel.parentElement;
       const trigger = cell?.querySelector?.(".select-trigger");
@@ -5414,14 +5416,6 @@ function setTripFormFromState(tripKey) {
   });
   if (typeof updateInvoiceNumberVisibility === "function") updateInvoiceNumberVisibility();
 
-  // Collapse overrides accordion by default when loading a trip
-  if (dom.requirementsBtn) dom.requirementsBtn.setAttribute("aria-expanded", "false");
-  if (dom.requirementsSection) dom.requirementsSection.classList.add("is-hidden");
-  if (dom.assignmentsBtn) dom.assignmentsBtn.setAttribute("aria-expanded", "false");
-  if (dom.assignmentsOverridesSection) dom.assignmentsOverridesSection.classList.add("is-hidden");
-  if (dom.envelopeBtn) dom.envelopeBtn.setAttribute("aria-expanded", "false");
-  if (dom.envelopeOverridesSection) dom.envelopeOverridesSection.classList.add("is-hidden");
-
   dom.itineraryField.value = t.itinerary || "";
   $("notes").value = t.notes || "";
   $("comments").value = t.comments || "";
@@ -5494,9 +5488,6 @@ async function openTripForEdit(tripKey) {
     source: "trip-load",
     priority: 55,
   });
-
-  // Ensure the left panel is open and showing the trip card
-  setSidePanelMode("trip");
 
   const conflictBanner = document.getElementById("tripConflictBanner");
   if (conflictBanner) conflictBanner.classList.add("is-hidden");
@@ -5610,6 +5601,7 @@ async function openTripForEdit(tripKey) {
 
   if (hasCache) {
     populateFormFromData(cachedTrip, cachedAssigns);
+    setSidePanelMode("trip"); // open panel immediately — already populated from cache
     dom.saveBtn.disabled = true;
     if (dom.deleteBtn) dom.deleteBtn.disabled = true;
     state.tripFormDirty = false;
@@ -5622,6 +5614,10 @@ async function openTripForEdit(tripKey) {
       r.d1StatusSel.value = "Pending";
       r.d2Sel.value = "None";
       r.d2StatusSel.value = "Pending";
+      r.d3Sel.value = "None";
+      r.d3StatusSel.value = "Pending";
+      r.d4Sel.value = "None";
+      r.d4StatusSel.value = "Pending";
     });
     $("tripIdBadge").textContent = "";
     $("tripIdBadge").classList.add("is-hidden");
@@ -5680,6 +5676,7 @@ async function openTripForEdit(tripKey) {
 
     if (!hasCache) {
       populateFormFromData(serverTrip, serverAssigns);
+      setSidePanelMode("trip"); // no cache — panel opens only now, fully populated
     } else if (hasConflict) {
       if (state.tripFormDirty) {
         if (conflictBanner) conflictBanner.classList.remove("is-hidden");
@@ -7117,17 +7114,23 @@ function wrapSelectInGlassDropdown(sel, opts) {
 
   function positionMenu() {
     const triggerRect = trigger.getBoundingClientRect();
-    const menuMaxH = 244; // ~240px max-height + gap
-    const openUpward = triggerRect.bottom + menuMaxH > window.innerHeight;
+    const gap = 4;
+    const cssMaxH = 300; // must match dropdown.css max-height
+    const spaceBelow = window.innerHeight - triggerRect.bottom - gap;
+    const spaceAbove = triggerRect.top - gap;
+    // Open upward when there's meaningfully more room above than below
+    const openUpward = spaceAbove > spaceBelow && spaceAbove > 80;
     menu.classList.toggle("dropdown__menu--up", openUpward);
     menu.style.left = triggerRect.left + "px";
     menu.style.minWidth = triggerRect.width + "px";
     if (openUpward) {
       menu.style.top = "auto";
-      menu.style.bottom = (window.innerHeight - triggerRect.top + 4) + "px";
+      menu.style.bottom = (window.innerHeight - triggerRect.top + gap) + "px";
+      menu.style.maxHeight = Math.min(cssMaxH, spaceAbove) + "px";
     } else {
-      menu.style.top = (triggerRect.bottom + 4) + "px";
+      menu.style.top = (triggerRect.bottom + gap) + "px";
       menu.style.bottom = "auto";
+      menu.style.maxHeight = Math.min(cssMaxH, spaceBelow) + "px";
     }
   }
 
@@ -7461,72 +7464,6 @@ function wireEvents() {
   syncWeekStartUI();
   // applyWeekStart moved to global scope
   // Old buttons (weekStartSunBtn) removed from DOM
-
-  // Carbon Accordion Logic: Trip Requirements
-  dom.requirementsBtn?.addEventListener("click", () => {
-    const isExpanded = dom.requirementsBtn.getAttribute("aria-expanded") === "true";
-    const newState = !isExpanded;
-
-    // Toggle current
-    dom.requirementsBtn.setAttribute("aria-expanded", String(newState));
-    dom.requirementsSection?.classList.toggle("is-hidden", !newState);
-
-    // Auto-close others if opening Requirements
-    if (newState) {
-      if (dom.assignmentsBtn && dom.assignmentsOverridesSection) {
-        dom.assignmentsBtn.setAttribute("aria-expanded", "false");
-        dom.assignmentsOverridesSection.classList.add("is-hidden");
-      }
-      if (dom.envelopeBtn && dom.envelopeOverridesSection) {
-        dom.envelopeBtn.setAttribute("aria-expanded", "false");
-        dom.envelopeOverridesSection.classList.add("is-hidden");
-      }
-    }
-  });
-
-  // Carbon Accordion Logic: Driver Assignments
-  dom.assignmentsBtn?.addEventListener("click", () => {
-    const isExpanded = dom.assignmentsBtn.getAttribute("aria-expanded") === "true";
-    const newState = !isExpanded;
-
-    // Toggle current
-    dom.assignmentsBtn.setAttribute("aria-expanded", String(newState));
-    dom.assignmentsOverridesSection?.classList.toggle("is-hidden", !newState);
-
-    // Auto-close others if opening Assignments
-    if (newState) {
-      if (dom.requirementsBtn && dom.requirementsSection) {
-        dom.requirementsBtn.setAttribute("aria-expanded", "false");
-        dom.requirementsSection.classList.add("is-hidden");
-      }
-      if (dom.envelopeBtn && dom.envelopeOverridesSection) {
-        dom.envelopeBtn.setAttribute("aria-expanded", "false");
-        dom.envelopeOverridesSection.classList.add("is-hidden");
-      }
-    }
-  });
-
-  // Carbon Accordion Logic: Envelope Overrides
-  dom.envelopeBtn?.addEventListener("click", () => {
-    const isExpanded = dom.envelopeBtn.getAttribute("aria-expanded") === "true";
-    const newState = !isExpanded;
-
-    // Toggle current
-    dom.envelopeBtn.setAttribute("aria-expanded", String(newState));
-    dom.envelopeOverridesSection?.classList.toggle("is-hidden", !newState);
-
-    // Auto-close others if opening Envelope
-    if (newState) {
-      if (dom.requirementsBtn && dom.requirementsSection) {
-        dom.requirementsBtn.setAttribute("aria-expanded", "false");
-        dom.requirementsSection.classList.add("is-hidden");
-      }
-      if (dom.assignmentsBtn && dom.assignmentsOverridesSection) {
-        dom.assignmentsBtn.setAttribute("aria-expanded", "false");
-        dom.assignmentsOverridesSection.classList.add("is-hidden");
-      }
-    }
-  });
 
   dom.itineraryModal.addEventListener("click", (e) => {
     if (e.target.closest("[data-close]")) closeItineraryModal();
@@ -7961,14 +7898,6 @@ function wireEvents() {
       (id) => updateStatusSelect($(id)),
     );
     updateInvoiceNumberVisibility();
-
-    // Collapse overrides accordion by default when resetting form
-    if (dom.requirementsBtn) dom.requirementsBtn.setAttribute("aria-expanded", "false");
-    if (dom.requirementsSection) dom.requirementsSection.classList.add("is-hidden");
-    if (dom.assignmentsBtn) dom.assignmentsBtn.setAttribute("aria-expanded", "false");
-    if (dom.assignmentsOverridesSection) dom.assignmentsOverridesSection.classList.add("is-hidden");
-    if (dom.envelopeBtn) dom.envelopeBtn.setAttribute("aria-expanded", "false");
-    if (dom.envelopeOverridesSection) dom.envelopeOverridesSection.classList.add("is-hidden");
 
     // Form has just been reset after save/delete; treat as clean.
     state.tripFormDirty = false;

@@ -531,6 +531,8 @@
                     <input type="text" id="comments" name="comments" placeholder="" />
                   </div>
 
+                  <div class="form-divider col-12"><span class="form-divider__label">Status</span></div>
+
                   <div class="form-group col-6">
                     <label for="itineraryStatus">Itinerary status</label>
                     <select id="itineraryStatus" name="itineraryStatus" required>
@@ -590,19 +592,9 @@
 
                   <textarea id="itinerary" name="itinerary" class="is-hidden" aria-label="Itinerary Content"></textarea>
                   <div class="subsection col-12 u-px-0">
-                    <div class="cds-accordion" id="tripExtrasAccordion">
-                      <div class="cds-accordion__item">
-                        <button type="button" class="cds-accordion__heading" aria-expanded="false"
-                          aria-controls="requirementsSection" id="requirementsBtn">
-                          <span class="cds-accordion__title">
-                            <span class="material-symbols-outlined">fact_check</span>
-                            Trip requirements
-                          </span>
-                          <span class="material-symbols-outlined cds-accordion__arrow">expand_more</span>
-                        </button>
-                        <div id="requirementsSection" data-js="trip-requirements-section"
-                          class="cds-accordion__content is-hidden">
-                          <div class="btn--toggle-grid u-mt-0" role="group" aria-label="Requirements">
+                    <div id="requirementsSection" data-js="trip-requirements-section">
+                      <div class="form-divider"><span class="form-divider__label">Requirements</span></div>
+                      <div class="btn--toggle-grid u-mt-0" role="group" aria-label="Requirements">
                             <button type="button" class="btn--toggle" id="req56Pass" aria-pressed="false">
                               <span class="toggle-pill__icon material-symbols-outlined"
                                 aria-hidden="true">tatami_seat</span>
@@ -640,71 +632,46 @@
                             </button>
                           </div>
                         </div>
-                      </div>
-
-                      <div class="cds-accordion__item">
-                        <button type="button" class="cds-accordion__heading" aria-expanded="false"
-                          aria-controls="assignmentsOverridesSection" id="assignmentsBtn">
-                          <span class="cds-accordion__title">
-                            <span class="material-symbols-outlined">group</span>
-                            Bus and driver assignments
-                          </span>
-                          <span class="material-symbols-outlined cds-accordion__arrow">expand_more</span>
-                        </button>
-
-                        <div id="assignmentsOverridesSection" data-js="trip-assignments-section"
-                          class="cds-accordion__content is-hidden">
-                          <div class="form-grid assignments-overrides-section">
-                            <div class="bus-assign-header col-12">
-                              <span class="field-label">Bus</span>
-                              <span class="field-label">Driver 1</span>
-                              <span class="field-label">Driver 2</span>
-                            </div>
-                            <div id="busGrid" data-js="trip-bus-grid" class="col-12"></div>
-                          </div>
+                    <div id="assignmentsOverridesSection" data-js="trip-assignments-section">
+                      <div class="form-grid assignments-overrides-section">
+                        <div class="form-divider col-12"><span class="form-divider__label">Bus Assignment</span></div>
+                        <div class="bus-assign-header col-12">
+                          <span class="field-label">Bus</span>
+                          <span class="field-label">Driver 1</span>
+                          <span class="field-label">Driver 2</span>
                         </div>
+                        <div id="busGrid" data-js="trip-bus-grid" class="col-12"></div>
                       </div>
+                    </div>
 
-                      <div class="cds-accordion__item">
-                        <button type="button" class="cds-accordion__heading" aria-expanded="false"
-                          aria-controls="envelopeOverridesSection" id="envelopeBtn">
-                          <span class="cds-accordion__title">
-                            <span class="material-symbols-outlined">mail</span>
-                            Envelope information
-                          </span>
-                          <span class="material-symbols-outlined cds-accordion__arrow">expand_more</span>
-                        </button>
+                    <div id="envelopeOverridesSection" data-js="trip-envelope-section">
+                      <div class="form-grid envelope-overrides-section">
+                        <div class="form-divider col-12"><span class="form-divider__label">Envelope</span></div>
+                        <div class="form-group col-12">
+                          <label for="envelopePickup">Pick up address</label>
+                          <input type="text" id="envelopePickup" name="envelopePickup"
+                            placeholder="Pick up address" />
+                        </div>
 
-                        <div id="envelopeOverridesSection" data-js="trip-envelope-section"
-                          class="cds-accordion__content is-hidden">
-                          <div class="form-grid envelope-overrides-section">
-                            <div class="form-group col-12">
-                              <label for="envelopePickup">Pick up address</label>
-                              <input type="text" id="envelopePickup" name="envelopePickup"
-                                placeholder="Pick up address" />
-                            </div>
+                        <div class="form-group col-6">
+                          <label for="envelopeTripContact">Trip contact</label>
+                          <input type="text" id="envelopeTripContact" name="envelopeTripContact"
+                            placeholder="Primary contact name" />
+                        </div>
 
-                            <div class="form-group col-6">
-                              <label for="envelopeTripContact">Trip contact</label>
-                              <input type="text" id="envelopeTripContact" name="envelopeTripContact"
-                                placeholder="Primary contact name" />
-                            </div>
+                        <div class="form-group col-6">
+                          <label for="envelopeTripPhone">Trip contact phone</label>
+                          <input type="tel" id="envelopeTripPhone" name="envelopeTripPhone" autocomplete="tel"
+                            inputmode="tel" placeholder="Primary contact phone" />
+                        </div>
 
-                            <div class="form-group col-6">
-                              <label for="envelopeTripPhone">Trip contact phone</label>
-                              <input type="tel" id="envelopeTripPhone" name="envelopeTripPhone" autocomplete="tel"
-                                inputmode="tel" placeholder="Primary contact phone" />
-                            </div>
-
-                            <div class="form-group col-12">
-                              <span class="field-label">Envelope notes</span>
-                              <div class="envelope-notes-stack">
-                                <input type="text" id="envelopeNote1" placeholder="Notes Line 1" />
-                                <input type="text" id="envelopeNote2" placeholder="Notes Line 2" />
-                                <input type="text" id="envelopeNote3" placeholder="Notes Line 3" />
-                                <input type="hidden" id="envelopeTripNotes" name="envelopeTripNotes" />
-                              </div>
-                            </div>
+                        <div class="form-group col-12">
+                          <span class="field-label">Envelope notes</span>
+                          <div class="envelope-notes-stack">
+                            <input type="text" id="envelopeNote1" placeholder="Notes Line 1" />
+                            <input type="text" id="envelopeNote2" placeholder="Notes Line 2" />
+                            <input type="text" id="envelopeNote3" placeholder="Notes Line 3" />
+                            <input type="hidden" id="envelopeTripNotes" name="envelopeTripNotes" />
                           </div>
                         </div>
                       </div>

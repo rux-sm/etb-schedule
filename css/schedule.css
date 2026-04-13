@@ -1321,6 +1321,16 @@
   pointer-events: none;
 }
 
+/* Bus assignment cells: no borders — status is communicated via bg, text, and icon color only */
+.bus-assign__driver-block .select-trigger {
+  border: none !important;
+}
+
+/* Locked triggers: reset trigger's own :disabled opacity so parent is-locked (0.4) is the sole source */
+.bus-assign__driver-block.is-locked .select-trigger {
+  opacity: 1;
+}
+
 /* Driver + Status block: driver on top, status below (Carbon-style grouped layout) */
 .bus-assign__driver-block {
   display: flex;

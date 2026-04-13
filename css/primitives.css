@@ -108,6 +108,7 @@
   line-height: 14px;
   letter-spacing: 0.02em;
   text-shadow: var(--text-shadow);
+  color: var(--tripbar-text-color);
   width: auto;
   min-width: 48px;
   min-height: var(--tripbar-mini-badge);

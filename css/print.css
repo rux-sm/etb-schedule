@@ -5,6 +5,15 @@
 
 /* ── From primitives.css ────────────────────────────────────────────────── */
 
+/* Applied outside @media print so the on-screen #printRoot render also shows red */
+#printRoot.print-mode-legal .icon-invoice-text {
+  background: #fff !important;
+  color: #d60000 !important;
+  border-radius: 2px !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
 @media print {
   #printRoot.print-mode-legal .icon-invoice-text {
     background: #fff !important;
