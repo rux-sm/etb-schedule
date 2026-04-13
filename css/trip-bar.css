@@ -415,7 +415,7 @@
 
 .schedule-grid__trip-bar__mini-badge.is-blue {
   background: transparent;
-  color: var(--blu-alert);
+  color: var(--rux-accent-color);
 }
 
 .schedule-grid__trip-bar__mini-badge.is-yellow {

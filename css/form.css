@@ -343,7 +343,7 @@ select.is-empty:not(:focus),
 
 #itineraryModalField:focus {
   outline: none;
-  border-color: var(--color-accent);
+  border-color: var(--rux-accent-color);
   box-shadow: var(--focus-ring);
 }
 
@@ -451,7 +451,7 @@ select.is-empty:not(:focus),
 /* Section dividers */
 .subsection {
   grid-column: span 12;
-  border-top: 1px solid var(--border-subtle);
+  border-top: none;
   margin-top: 0;
   padding-top: 0;
   margin-bottom: 0;

@@ -15,8 +15,9 @@
   --rux-gray-500: oklch(60% 0.004 250);
   --rux-gray-600: oklch(50% 0.004 250);
   --rux-gray-700: oklch(35% 0.004 250);
-  --rux-gray-800: oklch(20% 0.004 250);
-  --rux-gray-900: oklch(16% 0.004 250);
+  --rux-gray-800: oklch(26% 0.004 250);
+  --rux-gray-900: oklch(22% 0.004 250);
+  --rux-gray-950: oklch(10% 0.004 250);
 
   --rux-red-100: oklch(100% 0.2 25);
   --rux-red-200: oklch(90% 0.2 25);
@@ -104,17 +105,46 @@
   --rux-space-lg: 24px;
   --rux-space-xl: 32px;
 
+  /* Legacy radius scale — kept for backward compat, migrate to --rux-radius-* */
   --rux-border-radius-sm: 4px;
   --rux-border-radius-md: 8px;
   --rux-border-radius-lg: 16px;
   --rux-border-radius-xl: 32px;
+
+  /* Optical Radius Scale
+   * Consistent 8px nesting gap at every depth level:
+   *   r_inner = r_outer − 8px   (matches --rux-space-sm, the app's primary spacing unit)
+   * Halves to 4px at depth 3–4 for micro-nesting atoms.
+   * Pair with corner-shape: squircle for the full Apple squircle effect.
+   *
+   * Depth 0  xl   24px  ── Outermost: floating cards, pill buttons, modals
+   * Depth 1  lg   16px  ── Panels, cards             (24 − 8)
+   * Depth 2  md    8px  ── Controls: buttons, inputs  (16 − 8)
+   * Depth 3  sm    4px  ── Nested controls            ( 8 − 4, half-step)
+   * Depth 4  xs    2px  ── Atoms: badges, chips, tags ( 4 − 2, half-step)
+   */
+  --rux-radius-none:   0px;
+  --rux-radius-xs:     2px;
+  --rux-radius-sm:     4px;
+  --rux-radius-md:     8px;
+  --rux-radius-lg:    16px;
+  --rux-radius-xl:    24px;
+  --rux-radius-pill: 9999px;
+
+  /* Semantic radius aliases — map roles to the optical scale */
+  --rux-radius-overlay:   var(--rux-radius-xl);   /* Modals, popovers, sheets */
+  --rux-radius-surface:   var(--rux-radius-lg);   /* Cards, panels, sidebars */
+  --rux-radius-section:   var(--rux-radius-md);   /* Groups nested inside cards */
+  --rux-radius-control:   var(--rux-radius-sm);   /* Inputs, selects, toolbars */
+  --rux-radius-badge:     var(--rux-radius-xs);   /* Chips, tags, mini-badges */
+  --rux-radius-button:    var(--rux-radius-xl);   /* Pill/squircle buttons */
 
   /* ==========================================================================
    # 2. SYSTEM TOKENS
    ========================================================================== */
 
   /* Level 1: Deepest background (The canvas/grid) */
-  --rux-surface-base: var(--rux-gray-900);
+  --rux-surface-base: var(--rux-black);
 
   /* Level 2: Surface 00 (The canvas/grid) */
   --rux-surface-app-header: var(--rux-gray-800);
@@ -126,7 +156,7 @@
   --rux-surface-modal: var(--rux-gray-700);
 
   /* Level 4: Interactive components (Inputs, Buttons resting on panels) */
-  --rux-surface-input: var(--rux-gray-800);
+  --rux-surface-input: var(--rux-gray-900);
   --rux-surface-menu: var(--rux-gray-700);
   --rux-surface-textarea: var(--rux-gray-700);
 
@@ -207,9 +237,9 @@
 
 
   /* --- Core Palettes --- */
-  --color-primary: var(--blu);
+  --color-primary: var(--rux-accent-color);
   --color-secondary: var(--gra-dark);
-  --color-accent: var(--blu-dark);
+  --color-accent: var(--rux-accent-color);
 
   --color-danger: var(--red-dark);
   --color-danger-soft: var(--red-alpha);
@@ -221,7 +251,7 @@
   --color-status-pending: var(--red-alert);
   --color-status-ok: var(--grn-alert);
   --color-status-assigned: var(--yel-alert);
-  --color-status-blue: var(--blu-alert);
+  --color-status-blue: var(--rux-accent-color);
 
   --color-conflict-accent: var(--red-alert);
   --color-conflict-bg: var(--red-alpha);
@@ -267,8 +297,8 @@
 
 
   /* --- Borders ------------------------------------------------------------ */
-  --border-subtle: rgb(255 255 255 /5%);
-  --border-default: rgb(255 255 255 / 10%);
+  --border-subtle: rgb(255, 0, 0);
+  --border-default: var(--rux-gray-900);
   --border-hover: rgb(255 255 255 / 30%);
   --border-focus: rgb(255 255 255 / 100%);
   --border: var(--border-default);
@@ -345,7 +375,7 @@
   --btn-ghost-text: var(--text-primary);
   --btn-ghost-hover-bg: color-mix(in srgb, white 10%, transparent);
   --btn-ghost-active-bg: color-mix(in srgb, white 20%, transparent);
-  --btn-ghost-active-border: var(--md-sys-color-primary);
+  --btn-ghost-active-border: var(--rux-accent-color);
   --btn-ghost-icon-size: 18px;
   --btn-ghost-text-shadow: 0px 2px 2px rgba(0, 0, 0, 1), 0px 4px 6px rgba(0, 0, 0, 0.8);
 
@@ -373,8 +403,8 @@
   --btn-toggle-border: transparent;
   --btn-toggle-text: var(--text-secondary);
   --btn-toggle-hover-bg: color-mix(in srgb, var(--md-ref-palette-neutral-40) 85%, white);
-  --btn-toggle-active-bg: var(--color-primary);
-  --btn-toggle-active-border: var(--color-primary);
+  --btn-toggle-active-bg: var(--rux-accent-color);
+  --btn-toggle-active-border: var(--rux-accent-color);
   --btn-toggle-icon-opacity: 0.7;
 
   /* Icon buttons */
@@ -382,7 +412,7 @@
   --btn-icon-text: var(--text-secondary);
   --btn-icon-hover-bg: color-mix(in srgb, white 10%, transparent);
   --btn-icon-hover-text: var(--text-primary);
-  --btn-icon-active-bg: var(--md-sys-color-primary);
+  --btn-icon-active-bg: var(--rux-accent-color);
   --btn-icon-disabled-bg: var(--surface-02);
   --btn-icon-disabled-text: var(--text-disabled);
   --btn-icon-size: 16px;
@@ -393,6 +423,14 @@
   --btn-pagination-text: var(--text-primary);
   --btn-pagination-hover-bg: color-mix(in srgb, white 10%, transparent);
 
+  /* Base (Aluminum default — no variant class) */
+  --btn-base-bg:           oklch(32% 0.01 250);
+  --btn-base-border:       oklch(45% 0.02 250);
+  --btn-base-text:         oklch(95% 0.005 250);
+  --btn-base-hover-bg:     oklch(38% 0.015 250);
+  --btn-base-hover-border: oklch(55% 0.02 250);
+  --btn-base-active-bg:    oklch(28% 0.01 250);
+
   /* Shared sizing */
   --btn-padding-x: 16px;
   --btn-min-width: 80px;
@@ -400,7 +438,7 @@
   --btn-compact-padding-x: 10px;
 
   /* --- Interactive --------------------------------------------------------- */
-  --focus-ring-color: var(--md-sys-color-primary);
+  --focus-ring-color: var(--rux-accent-color);
   --focus-ring: inset 0 0 0 2px var(--focus-ring-color);
   --transition-fast: 0.11s cubic-bezier(0.2, 0, 0.38, 0.9);
   --control-radius-icon: 8px;
@@ -468,7 +506,7 @@
   --bus-num-weight: 500;
   --bus-num-letter-spacing: 0;
   --bus-num-line-height: 1;
-  --bus-lift-color: var(--color-primary);
+  --bus-lift-color: var(--rux-accent-color);
   --bus-sleeper-color: var(--text-primary);
   --bus-accent-color: var(--surface-01);
 
@@ -480,8 +518,8 @@
   --tripbar-text-shadow: 0 1px 2px rgba(0, 0, 0, 1);
   --tripbar-shadow-hover: 0 10px 20px rgba(0, 0, 0, 0.5), 0 6px 6px rgba(0, 0, 0, 0.3);
   --tripbar-color: var(--rux-color-status-blue-alpha);
-  --tripbar-border-color: var(--rux-blue-500);
-  --tripbar-text-color: var(--rux-blue-500);
+  --tripbar-border-color: var(--rux-accent-color);
+  --tripbar-text-color: var(--rux-accent-color);
 
   --tripbar-badge-text-color: var(--text-primary);
   --tripbar-r1-color: var(--md-ref-palette-neutral-100);
@@ -569,7 +607,7 @@
   --env-section-gap: 0.125in;
   --env-label-size: 0.625rem;
   --env-tiny-size: 0.5625rem;
-  --env-pickup: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
+  --env-pickup: color-mix(in srgb, var(--rux-accent-color) 12%, transparent);
 
   /* --- Z-index ------------------------------------------------------------ */
   --z-dropdown: 1000;
@@ -608,8 +646,8 @@
   --card-shadow-context: var(--md-sys-elevation-level5);
 
   /* Buttons */
-  --btn-primary-hover: color-mix(in srgb, var(--md-sys-color-primary) 85%, black);
-  --btn-primary-active: color-mix(in srgb, var(--md-sys-color-primary) 70%, black);
+  --btn-primary-hover: color-mix(in srgb, var(--rux-accent-color) 85%, black);
+  --btn-primary-active: color-mix(in srgb, var(--rux-accent-color) 70%, black);
 
   --btn-secondary-bg: var(--surface-03);
   --btn-secondary-text: var(--text-primary);
@@ -660,7 +698,7 @@
   /* Envelope */
   --env-ink: var(--text-primary);
   --env-rule: var(--md-sys-color-outline-variant);
-  --env-pickup: color-mix(in srgb, var(--md-sys-color-primary) 18%, white);
+  --env-pickup: color-mix(in srgb, var(--rux-accent-color) 18%, white);
 
   /* Misc */
   --bus-accent-color: var(--surface-02);

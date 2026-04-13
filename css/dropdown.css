@@ -12,10 +12,10 @@
   font-size: 0.875rem;
   text-align: left;
   list-style: none;
-  background-color: var(--surface-03);
+  background-color: var(--rux-surface-menu);
   background-clip: padding-box;
-  border: 1px solid var(--border-subtle);
-  border-radius: 0;
+  border: none;
+  border-radius: 04;
   box-shadow: var(--card-shadow-context);
   max-height: 300px;
   overflow-y: auto;

@@ -2,7 +2,7 @@
    BUTTONS & CONTROLS
    ==========================================================================
    Sections (in order):
-    #1  button, .btn          — element reset + shared base
+    #1  button, .btn          — element reset + shared base + :hover :active
     #2  Global States         — :focus-visible + icons + :disabled
     #3  .btn--accent          — :hover  :active
     #4  .btn--default         — :hover  :active
@@ -23,29 +23,38 @@ button {
   font-family: inherit;
 }
 
+/* Shared layout + typography — both .btn and .btn--toggle */
 .btn,
 .btn--toggle {
   /* Layout */
+  box-sizing: border-box;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: 32px;
+  /* Increased to 34px for better optical balance with squircles */
+  height: 34px;
   padding: 0 16px;
 
   /* Typography */
   font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 400;
+  font-size: 14px; /* Dropped from 16px for that 'Pro' utility look */
+  font-weight: 500; /* Medium weight holds up better on black backgrounds */
   line-height: 1;
+  letter-spacing: -0.01em; /* Subtle Apple-style tightening */
   text-decoration: none;
   white-space: nowrap;
   user-select: none;
   -webkit-user-select: none;
 
-  /* Visuals */
-  border: 1px solid transparent;
-  border-radius: 4px;
+  /* Squircle shape: border-radius is the rendered curve.
+     corner-shape: squircle is a forward-looking CSS property with limited
+     browser support as of 2025 — kept here as progressive enhancement.
+     Browsers that don't support it fall back to the border-radius value.
+     Uses --rux-radius-button (depth 0 in the optical radius scale). */
+  border-radius: var(--rux-radius-button);
+  corner-shape: squircle;
+
   cursor: pointer;
 
   /* Transitions */
@@ -53,12 +62,30 @@ button {
     background-color var(--transition-fast),
     border-color var(--transition-fast),
     color var(--transition-fast),
-    box-shadow var(--transition-fast),
-    transform var(--transition-fast);
+    transform 0.1s ease;
 }
 
+/* Aluminum visual defaults — unstyled .btn only (variants own their colors) */
 .btn {
+  background-color: var(--btn-base-bg);
+  color: var(--btn-base-text);
+  border: 1px solid var(--btn-base-border);
   min-width: var(--btn-min-width, 80px);
+}
+
+/* Base hover/active — scoped away from variants to prevent border-color bleed */
+.btn:not(.btn--accent):not(.btn--default):not(.btn--danger):not(.btn--ghost):hover {
+  background-color: var(--btn-base-hover-bg);
+  border-color: var(--btn-base-hover-border);
+}
+
+.btn:not(.btn--accent):not(.btn--default):not(.btn--danger):not(.btn--ghost):active {
+  background-color: var(--btn-base-active-bg);
+}
+
+/* Press transform applies to all .btn variants */
+.btn:active {
+  transform: scale(0.97);
 }
 
 /* ── 2. Focus, Icons & Global States ────────────────────────────────────── */
@@ -97,9 +124,9 @@ button {
 /* ── 3. Accent (Save, Copy, Print) ──────────────────────────────────────── */
 
 .btn--accent {
-  /* Visuals */
-  background-color: var(--rux-blue-500);
+  background-color: var(--btn-primary-bg);
   color: var(--btn-primary-text);
+  border-color: var(--btn-primary-border);
   box-shadow: var(--btn-shadow-inset);
 }
 
@@ -115,9 +142,9 @@ button {
 /* ── 4. Default (Cancel, Clear) ─────────────────────────────────────────── */
 
 .btn--default {
-  /* Visuals */
-  background-color: var(--rux-gray-500);
+  background-color: var(--btn-secondary-bg);
   color: var(--btn-secondary-text);
+  border-color: var(--btn-secondary-border);
   box-shadow: var(--btn-shadow-inset);
 }
 
@@ -133,9 +160,9 @@ button {
 /* ── 5. Danger (Delete) ─────────────────────────────────────────────────── */
 
 .btn--danger {
-  /* Visuals */
-  background-color: var(--rux-red-500);
+  background-color: var(--btn-danger-bg);
   color: var(--btn-danger-text);
+  border-color: var(--btn-danger-border);
   box-shadow: var(--btn-shadow-inset);
 }
 
@@ -159,14 +186,10 @@ button {
 /* ── 7. Ghost (Prev, Next, Week, Today) ─────────────────────────────────── */
 
 .btn--ghost {
-  /* Typography */
-  text-rendering: optimizeLegibility;
-  text-shadow: var(--btn-ghost-text-shadow);
-
-  /* Visuals */
   background-color: var(--btn-ghost-bg);
   border-color: var(--btn-ghost-border);
   color: var(--btn-ghost-text);
+  text-shadow: var(--btn-ghost-text-shadow);
   box-shadow: var(--btn-shadow-inset);
 }
 
@@ -181,7 +204,7 @@ button {
   box-shadow: var(--btn-shadow-active-sm);
 }
 
-/* ── 8. Nav (48×48, app header — Trip, Drivers, Settings…) ──────────────── */
+/* ── 8. .btn--icon (48×48, app header — Trip, Drivers, Settings…) ────────── */
 
 .btn--icon {
   /* Layout */
@@ -201,7 +224,6 @@ button {
   background-color: transparent;
   color: var(--text-primary);
   cursor: pointer;
-  /*box-shadow: var(--btn-shadow-inset);*/
 
   /* Transitions */
   transition:
@@ -221,7 +243,7 @@ button {
 }
 
 .btn--icon[aria-pressed="true"] {
-  border-bottom-color: var(--color-accent);
+  border-bottom-color: var(--rux-accent-color);
 }
 
 .btn--icon .material-symbols-outlined {
@@ -230,16 +252,16 @@ button {
     "FILL" var(--btn-icon-fill, 0),
     "wght" var(--btn-icon-wght, 400),
     "GRAD" 0,
-    "opsz" 200;
+    "opsz" 24;
 }
 
 /* ── 9. Toggle (Requirements) ───────────────────────────────────────────── */
 
+/* Toggle owns its own visual defaults — does not inherit aluminum from .btn */
 .btn--toggle {
-  /* Visuals */
   background-color: var(--btn-toggle-bg);
   color: var(--btn-toggle-text);
-  border-color: var(--btn-toggle-border);
+  border: 1px solid var(--btn-toggle-border);
   box-shadow: var(--btn-shadow-inset);
   justify-content: flex-start;
   width: 100%;
@@ -284,7 +306,7 @@ button {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
   margin-top: 12px;
-  padding: 0 8px; /* Added horizontal padding to give consistent space to the border */
+  padding: 0 8px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -297,7 +319,7 @@ button {
   align-items: center;
 }
 
-.form-actions>.btn {
+.form-actions > .btn {
   flex: 1;
 }
 
@@ -320,7 +342,7 @@ button {
   flex: 1;
 }
 
-.form-actions--footer>.btn--danger {
+.form-actions--footer > .btn--danger {
   width: 100%;
 }
 
