@@ -1250,6 +1250,24 @@
   color: var(--text-primary);
 }
 
+.driver-week__cell--relief {
+  background: var(--rux-accent-color);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.driver-week__table tbody tr:nth-child(even) td.driver-week__cell--relief {
+  background-color: var(--rux-accent-color);
+}
+
+.driver-week__relief-icon {
+  font-size: 14px;
+  font-variation-settings: "FILL" 1, "opsz" 20;
+  opacity: 0.85;
+  pointer-events: none;
+  vertical-align: middle;
+}
+
 #driver-col-hl {
   position: absolute;
   pointer-events: none;

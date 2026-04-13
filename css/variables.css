@@ -8,16 +8,15 @@
   --rux-white: oklch(100% 0.004 255);
   --rux-black: oklch(0% 0.004 255);
 
-  --rux-gray-100: oklch(100% 0.004 255);
-  --rux-gray-200: oklch(90% 0.004 255);
-  --rux-gray-300: oklch(80% 0.004 255);
-  --rux-gray-400: oklch(70% 0.004 255);
-  --rux-gray-500: oklch(60% 0.004 255);
-  --rux-gray-600: oklch(55% 0.004 255);
-  --rux-gray-700: oklch(50% 0.004 255);
-  --rux-gray-800: oklch(32% 0.004 255);
-  --rux-gray-900: oklch(24% 0.004 255);
-  --rux-gray-950: oklch(16% 0.004 255);
+  --rux-gray-100: oklch(100% 0.002 250);
+  --rux-gray-200: oklch(90% 0.004 250);
+  --rux-gray-300: oklch(80% 0.004 250);
+  --rux-gray-400: oklch(70% 0.004 250);
+  --rux-gray-500: oklch(60% 0.004 250);
+  --rux-gray-600: oklch(50% 0.004 250);
+  --rux-gray-700: oklch(35% 0.004 250);
+  --rux-gray-800: oklch(20% 0.004 250);
+  --rux-gray-900: oklch(16% 0.004 250);
 
   --rux-red-100: oklch(100% 0.2 25);
   --rux-red-200: oklch(90% 0.2 25);
@@ -115,19 +114,19 @@
    ========================================================================== */
 
   /* Level 1: Deepest background (The canvas/grid) */
-  --rux-surface-base: var(--rux-gray-950);
+  --rux-surface-base: var(--rux-gray-900);
 
   /* Level 2: Surface 00 (The canvas/grid) */
-  --rux-surface-app-header: var(--rux-gray-900);
+  --rux-surface-app-header: var(--rux-gray-800);
 
   /* Level 3: Structural containers (Sidebars, Top nav) */
-  --rux-surface-panel: var(--rux-gray-800);
-  --rux-surface-header: var(--rux-gray-800);
-  --rux-surface-footer: var(--rux-gray-800);
-  --rux-surface-modal: var(--rux-gray-800);
+  --rux-surface-panel: var(--rux-gray-700);
+  --rux-surface-header: var(--rux-gray-700);
+  --rux-surface-footer: var(--rux-gray-700);
+  --rux-surface-modal: var(--rux-gray-700);
 
   /* Level 4: Interactive components (Inputs, Buttons resting on panels) */
-  --rux-surface-input: var(--rux-gray-900);
+  --rux-surface-input: var(--rux-gray-800);
   --rux-surface-menu: var(--rux-gray-700);
   --rux-surface-textarea: var(--rux-gray-700);
 
@@ -193,10 +192,10 @@
   --cya-alert: oklch(80% 0.21 200);
 
   --blue-accent: oklch(65% 0.18 255);
-  --blu-dark: oklch(55% 0.18 255);
-  --blu: oklch(65% 0.18 255);
-  --blu-alpha: oklch(65% 0.18 255 / 20%);
-  --blu-alert: oklch(80% 0.18 255);
+  --blue-dark: oklch(55% 0.18 255);
+  --blue: var(--rux-blue-500);
+  --blue-alpha: oklch(65% 0.18 255 / 20%);
+  --blue-alert: oklch(80% 0.18 255);
 
   --pur: oklch(65% 0.3 290);
   --pur-alpha: oklch(65% 0.3 290 / 20%);
@@ -480,7 +479,7 @@
   --tripbar-bg-mix-percent: 100%;
   --tripbar-text-shadow: 0 1px 2px rgba(0, 0, 0, 1);
   --tripbar-shadow-hover: 0 10px 20px rgba(0, 0, 0, 0.5), 0 6px 6px rgba(0, 0, 0, 0.3);
-  --tripbar-color: var(--rux-blue-500-alpha);
+  --tripbar-color: var(--rux-color-status-blue-alpha);
   --tripbar-border-color: var(--rux-blue-500);
   --tripbar-text-color: var(--rux-blue-500);
 

@@ -1144,7 +1144,8 @@ function checkDriverDoubleBookings() {
   const arrStr = $("arrivalDate")?.value || depStr;
 
   // Rebuild the set of driver names booked on other overlapping trips
-  const conflicts = new Set();
+  const conflicts = new Set();      // primary: driver1 / driver2
+  const reliefConflicts = new Set(); // relief only: driver3 / driver4
 
   if (depStr) {
     const depDate = parseYMD(depStr);
@@ -1166,25 +1167,38 @@ function checkDriverDoubleBookings() {
             const d2 = String(ta.driver2 || "").trim();
             if (d1 && d1 !== "None") conflicts.add(d1);
             if (d2 && d2 !== "None") conflicts.add(d2);
+
+            const d3 = String(ta.driver3 || "").trim();
+            const d4 = String(ta.driver4 || "").trim();
+            if (d3 && d3 !== "None") reliefConflicts.add(d3);
+            if (d4 && d4 !== "None") reliefConflicts.add(d4);
           }
         }
       }
     }
   }
 
+  // Primary wins: if already in primary conflicts, remove from relief
+  for (const name of conflicts) reliefConflicts.delete(name);
+
   state.driverConflicts = conflicts;
+  state.driverReliefConflicts = reliefConflicts;
 
   // Apply/remove conflict highlight on each driver dropdown trigger
   state.busRows.forEach((r) => {
     [r.d1Sel, r.d2Sel].forEach((sel) => {
       const v = String(sel.value || "").trim();
-      const isConflict = v && v !== "None" && conflicts.has(v);
+      const isPrimary = v && v !== "None" && conflicts.has(v);
+      const isRelief = v && v !== "None" && reliefConflicts.has(v);
+      const isConflict = isPrimary || isRelief;
       const wrapper = sel.closest(".select-dropdown");
       const trigger = wrapper?.querySelector(".select-trigger");
       if (wrapper) wrapper.classList.toggle("driver-conflict", !!isConflict);
       if (trigger) {
-        trigger.title = isConflict
-          ? `${v} is already assigned to another trip on these dates`
+        trigger.title = isPrimary
+          ? `${v} is already assigned as a driver on these dates`
+          : isRelief
+          ? `${v} is already assigned as a relief driver on these dates`
           : "";
       }
     });
@@ -2035,6 +2049,10 @@ function applyWeekRespToState(resp) {
       driver2: String(a.driver2 || "").trim(),
       driver1Status: String(a.driver1Status || "").trim(),
       driver2Status: String(a.driver2Status || "").trim(),
+      driver3: String(a.driver3 || "").trim(),
+      driver4: String(a.driver4 || "").trim(),
+      driver3Status: String(a.driver3Status || "").trim(),
+      driver4Status: String(a.driver4Status || "").trim(),
     });
   }
 
@@ -2922,8 +2940,8 @@ function _renderAgendaInner() {
         const b$ = makeMini("description", true); // Payment / Approval
         const bD1 = makeMini("person", true); // Driver 1
         const bD2 = makeMini("person", true); // Driver 2 (co-driver)
-        const bD3 = makeMini("person_alert", true); // Relief 1
-        const bD4 = makeMini("person_alert", true); // Relief 2
+        const bD3 = makeMini("emergency_home", true); // Relief 1
+        const bD4 = makeMini("emergency_home", true); // Relief 2
         const bInv = makeMini("attach_money", true); // Invoice
         const invText = document.createElement("span");
         invText.className = "schedule-grid__trip-bar__mini-badge-text icon-invoice-text";
@@ -3154,7 +3172,7 @@ function _renderAgendaInner() {
           bar._bD3.classList.add("has-action");
           const glyph = bar._bD3.querySelector(".schedule-grid__trip-bar__badge-glyph");
           if (glyph) {
-            glyph.textContent = "person_alert";
+            glyph.textContent = "emergency_home";
             glyph.dataset.action = "showDriverContact";
             glyph.dataset.tripkey = t.tripKey;
             glyph.style.cursor = "pointer";
@@ -3170,7 +3188,7 @@ function _renderAgendaInner() {
           bar._bD4.classList.add("has-action");
           const glyph = bar._bD4.querySelector(".schedule-grid__trip-bar__badge-glyph");
           if (glyph) {
-            glyph.textContent = "person_alert";
+            glyph.textContent = "emergency_home";
             glyph.dataset.action = "showDriverContact";
             glyph.dataset.tripkey = t.tripKey;
             glyph.style.cursor = "pointer";
@@ -3198,6 +3216,8 @@ function _renderAgendaInner() {
         { key: "req56Pass", icon: "tatami_seat" },
         { key: "reqSleeper", icon: "airline_seat_flat" },
         { key: "reqLift", icon: "accessible" },
+        { key: "reqRelief", icon: "emergency_home" },
+        { key: "reqRelief2", icon: "emergency_home" },
         { key: "reqHotel", icon: "apartment" },
       ];
       if (bar._reqIcons) {
@@ -3643,7 +3663,8 @@ function renderDriverWeekGrid() {
   const weekStart = weekDates[0];
   const weekEnd = weekDates[6]; // 7 days, so last index is 6
 
-  const onDaysByDriver = new Map();
+  const onDaysByDriver = new Map();     // primary (driver1/driver2)
+  const reliefDaysByDriver = new Map(); // relief  (driver3/driver4)
 
   const visibleTrips = state.trips
     .map((t) => {
@@ -3682,17 +3703,35 @@ function renderDriverWeekGrid() {
           if (!onDaysByDriver.has(name)) onDaysByDriver.set(name, new Set());
           onDaysByDriver.get(name).add(idx);
         }
+
+        const d3 = String(a.driver3 || "").trim();
+        const d4 = String(a.driver4 || "").trim();
+        const relief = [d3, d4].filter((x) => x && x !== "None");
+
+        for (const name of relief) {
+          if (!reliefDaysByDriver.has(name)) reliefDaysByDriver.set(name, new Set());
+          reliefDaysByDriver.get(name).add(idx);
+        }
       }
     }
   }
 
-  const driverNames = (state.driversList || [])
-    .map((d) => String(d.driverName || "").trim())
-    .filter(Boolean);
+  const seenDriverNames = new Set();
+  const driverNames = [];
+  const addDriverName = (name) => {
+    if (name && !seenDriverNames.has(name.toLowerCase())) {
+      seenDriverNames.add(name.toLowerCase());
+      driverNames.push(name);
+    }
+  };
 
-  for (const name of onDaysByDriver.keys()) {
-    if (!driverNames.includes(name)) driverNames.push(name);
-  }
+  (state.driversList || [])
+    .map((d) => String(d.driverName || "").trim())
+    .filter(Boolean)
+    .forEach(addDriverName);
+
+  for (const name of onDaysByDriver.keys()) addDriverName(name);
+  for (const name of reliefDaysByDriver.keys()) addDriverName(name);
 
   dom.driverWeekBody.innerHTML = driverNames
     .map((name) => {
@@ -3701,12 +3740,17 @@ function renderDriverWeekGrid() {
       const cells = weekDates
         .map((dStr, idx) => {
           const on = set.has(idx);
+          const relief = !on && (reliefDaysByDriver.get(name)?.has(idx) ?? false);
           const unavailable = state.unavailabilityByDriver[name]?.[dStr];
           let cls = "driver-week__cell--off";
           if (on) cls = "driver-week__cell--on";
+          else if (relief) cls = "driver-week__cell--relief";
           else if (unavailable) cls = "driver-week__cell--unavailable";
 
-          return `<td class="${cls}" data-driver="${escHtml(name)}" data-date="${dStr}"></td>`;
+          const icon = relief
+            ? `<span class="material-symbols-outlined driver-week__relief-icon">emergency_home</span>`
+            : "";
+          return `<td class="${cls}" data-driver="${escHtml(name)}" data-date="${dStr}">${icon}</td>`;
         })
         .join("");
 
@@ -5519,6 +5563,10 @@ async function openTripForEdit(tripKey) {
       r.d1StatusSel.value = "Pending";
       r.d2Sel.value = "None";
       r.d2StatusSel.value = "Pending";
+      r.d3Sel.value = "None";
+      r.d3StatusSel.value = "Pending";
+      r.d4Sel.value = "None";
+      r.d4StatusSel.value = "Pending";
     });
 
     (assigns || []).forEach((a) => {
@@ -5530,8 +5578,12 @@ async function openTripForEdit(tripKey) {
       if (a.busId) row.busSel.value = String(a.busId);
       if (a.driver1) row.d1Sel.value = String(a.driver1);
       if (a.driver2) row.d2Sel.value = String(a.driver2);
+      if (a.driver3) row.d3Sel.value = String(a.driver3);
+      if (a.driver4) row.d4Sel.value = String(a.driver4);
       row.d1StatusSel.value = String(a.driver1Status || "").trim() || fallbackDriverStatus;
       row.d2StatusSel.value = String(a.driver2Status || "").trim() || fallbackDriverStatus;
+      row.d3StatusSel.value = String(a.driver3Status || "").trim() || "Pending";
+      row.d4StatusSel.value = String(a.driver4Status || "").trim() || "Pending";
     });
 
     updateBusRowVisibility();
@@ -5541,6 +5593,10 @@ async function openTripForEdit(tripKey) {
       r.d1StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
       r.d2Sel.dispatchEvent(new Event("change", { bubbles: true }));
       r.d2StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
+      r.d3Sel.dispatchEvent(new Event("change", { bubbles: true }));
+      r.d3StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
+      r.d4Sel.dispatchEvent(new Event("change", { bubbles: true }));
+      r.d4StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
     });
     syncBusPanelState();
     syncBusSelectEmptyState();
@@ -5614,7 +5670,7 @@ async function openTripForEdit(tripKey) {
         else {
            for (const ca of cachedAssigns) {
               const sa = serverAssigns.find(a => Number(a.busNumber) === Number(ca.busNumber));
-              if (!sa || sa.busId !== ca.busId || sa.driver1 !== ca.driver1 || sa.driver2 !== ca.driver2) {
+              if (!sa || sa.busId !== ca.busId || sa.driver1 !== ca.driver1 || sa.driver2 !== ca.driver2 || sa.driver3 !== ca.driver3 || sa.driver4 !== ca.driver4) {
                  hasConflict = true; break;
               }
            }
@@ -5630,11 +5686,13 @@ async function openTripForEdit(tripKey) {
       } else {
         // Silently overwrite since user hasn't touched the form
         populateFormFromData(serverTrip, serverAssigns);
+        state.tripFormDirty = false;
       }
     } else {
       // Data is mostly identical but server response might have extra fields (like itinerary), so apply them if safe
       if (!state.tripFormDirty) {
         populateFormFromData(serverTrip, serverAssigns);
+        state.tripFormDirty = false;
       }
     }
 
@@ -6850,7 +6908,7 @@ function wrapSelectInGlassDropdown(sel, opts) {
   function getBusDriverRoleIcon(name) {
     if (name.includes("_driver1Status")) return "person";
     if (name.includes("_driver2Status")) return "person_add";
-    if (name.includes("_driver3Status") || name.includes("_driver4Status")) return "person_alert";
+    if (name.includes("_driver3Status") || name.includes("_driver4Status")) return "emergency_home";
     return "";
   }
 
@@ -7002,12 +7060,16 @@ function wrapSelectInGlassDropdown(sel, opts) {
       btn.appendChild(itemTextSpan);
 
       // Warn if this driver is already booked on another overlapping trip
-      if (v && v !== "None" && state.driverConflicts?.has(v)) {
+      const isPrimaryConflict = v && v !== "None" && state.driverConflicts?.has(v);
+      const isReliefConflict = v && v !== "None" && state.driverReliefConflicts?.has(v);
+      if (isPrimaryConflict || isReliefConflict) {
         btn.classList.add("driver-conflict-item");
         const warnIcon = document.createElement("span");
         warnIcon.className = "material-symbols-outlined dropdown__conflict-icon";
-        warnIcon.textContent = "warning";
-        warnIcon.title = `${v} is already assigned to another trip on these dates`;
+        warnIcon.textContent = isPrimaryConflict ? "person" : "emergency_home";
+        warnIcon.title = isPrimaryConflict
+          ? `${v} is already assigned as a driver on these dates`
+          : `${v} is already assigned as a relief driver on these dates`;
         btn.appendChild(warnIcon);
       }
 
@@ -7783,6 +7845,7 @@ function wireEvents() {
       reqSleeper: $("reqSleeper")?.getAttribute("aria-pressed") === "true",
       reqLift: $("reqLift")?.getAttribute("aria-pressed") === "true",
       reqRelief: $("reqRelief")?.getAttribute("aria-pressed") === "true",
+      reqRelief2: $("reqRelief2")?.getAttribute("aria-pressed") === "true",
       reqCoDriver: $("reqCoDriver")?.getAttribute("aria-pressed") === "true",
       reqHotel: $("reqHotel")?.getAttribute("aria-pressed") === "true",
     };
@@ -7882,9 +7945,15 @@ function wireEvents() {
       r.d1StatusSel.value = "Pending";
       r.d2Sel.value = "None";
       r.d2StatusSel.value = "Pending";
+      r.d3Sel.value = "None";
+      r.d3StatusSel.value = "Pending";
+      r.d4Sel.value = "None";
+      r.d4StatusSel.value = "Pending";
       r.busSel.dispatchEvent(new Event("change", { bubbles: true }));
       r.d1Sel.dispatchEvent(new Event("change", { bubbles: true }));
       r.d2Sel.dispatchEvent(new Event("change", { bubbles: true }));
+      r.d3Sel.dispatchEvent(new Event("change", { bubbles: true }));
+      r.d4Sel.dispatchEvent(new Event("change", { bubbles: true }));
     });
     syncBusSelectEmptyState();
 
