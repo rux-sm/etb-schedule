@@ -292,9 +292,6 @@
   justify-content: center;
 }
 
-.schedule-grid__trip-bar.has-multi-bus .schedule-grid__trip-bar__row--1 {
-  padding-inline: var(--tripbar-multi-bus-indent);
-}
 
 .schedule-grid__trip-bar__paid-badge {
   flex-shrink: 0;
@@ -315,9 +312,6 @@
   justify-content: center;
 }
 
-.schedule-grid__trip-bar.has-paid-badge .schedule-grid__trip-bar__row--1 {
-  padding-inline-end: 18px;
-}
 
 .schedule-grid__trip-bar__sub {
   font-size: var(--tripbar-r2-font-size);
