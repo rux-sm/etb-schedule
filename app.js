@@ -3228,8 +3228,6 @@ function _renderAgendaInner() {
         { key: "req56Pass", icon: "tatami_seat" },
         { key: "reqSleeper", icon: "airline_seat_flat" },
         { key: "reqLift", icon: "accessible" },
-        { key: "reqRelief", icon: "emergency_home" },
-        { key: "reqRelief2", icon: "emergency_home" },
         { key: "reqHotel", icon: "apartment" },
       ];
       if (bar._reqIcons) {
