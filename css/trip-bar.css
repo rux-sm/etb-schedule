@@ -554,3 +554,24 @@
     justify-content: flex-end !important;
   }
 }
+
+/* ── Single-column partial bars: show only the colored bar ──────────────────
+   cont-single = the bar occupies exactly one day column AND continues
+   left or right (trip started/ends outside this week). Only hide content
+   when the bar is physically narrow — wide single-column bars still show data. */
+@container (max-width: 120px) {
+  .schedule-grid__trip-bar.cont-single {
+    .schedule-grid__trip-bar__row--1,
+    .schedule-grid__trip-bar__row--2,
+    .schedule-grid__trip-bar__row--3,
+    .schedule-grid__trip-bar__row--4,
+    .schedule-grid__trip-bar__row--5,
+    .schedule-grid__trip-bar__row--6,
+    .schedule-grid__trip-bar__row--7 {
+      visibility: hidden;
+      height: 0;
+      margin: 0;
+      padding: 0;
+    }
+  }
+}

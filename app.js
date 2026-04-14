@@ -78,7 +78,7 @@ if (document.readyState === "loading") {
 // ======================================================
 const CONFIG = {
   APP_NAME: "Trip Schedule",
-  APP_VERSION: "0.9.4",
+  APP_VERSION: "",
   ENDPOINT:
     "https://script.google.com/macros/s/AKfycbzSsVByHnMuzdmaITv2Ht-q1hUQ0y5cVVIEzV6E-h7-1EhnVWJDYlhj5K4RhY0wldBk/exec",
   BUS_LANES: ["218", "763", "470", "133", "506", "746", "607", "897", "898", "474"],
@@ -3231,6 +3231,7 @@ function _renderAgendaInner() {
 
       bar.classList.toggle("cont-left", continuesLeft);
       bar.classList.toggle("cont-right", continuesRight);
+      bar.classList.toggle("cont-single", (continuesLeft || continuesRight) && startIdx === endIdx);
 
       const pay = String(t.paymentStatus || "").toLowerCase();
       // Red unconfirmed if "Pending Quote" or "Quoted" (or legacy "pending")
@@ -4464,6 +4465,27 @@ function clearTripInfoCardForNextTrip() {
   if (conflictBanner) conflictBanner.classList.add("is-hidden");
   
   dom.tripForm.reset();
+  state.busRows.forEach((r) => {
+    r.busSel.value = "None";
+    r.d1Sel.value = "None";
+    r.d1StatusSel.value = "Pending";
+    r.d2Sel.value = "None";
+    r.d2StatusSel.value = "Pending";
+    r.d3Sel.value = "None";
+    r.d3StatusSel.value = "Pending";
+    r.d4Sel.value = "None";
+    r.d4StatusSel.value = "Pending";
+    // Fire change events so custom dropdown triggers update their display labels
+    r.busSel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d1Sel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d1StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d2Sel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d2StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d3Sel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d3StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d4Sel.dispatchEvent(new Event("change", { bubbles: true }));
+    r.d4StatusSel.dispatchEvent(new Event("change", { bubbles: true }));
+  });
   resetRequirementToggles();
   refreshEmptyStateUI();
   setModeNew();
@@ -5492,6 +5514,22 @@ async function openTripForEdit(tripKey) {
   const conflictBanner = document.getElementById("tripConflictBanner");
   if (conflictBanner) conflictBanner.classList.add("is-hidden");
 
+  // If the trip panel is already open, keep old data visible but lock all inputs.
+  // If the panel is closed, it will open after the fetch with fresh data.
+  const panelAlreadyOpen = getCardPanel("trip") !== null;
+
+  // Disable/enable all form inputs during load
+  const setFormDisabled = (disabled) => {
+    if (!dom.tripForm) return;
+    dom.tripForm.querySelectorAll("input, select, textarea").forEach((el) => {
+      el.disabled = disabled;
+    });
+    ["req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqRelief2", "reqCoDriver", "reqHotel"].forEach((id) => {
+      const btn = document.getElementById(id);
+      if (btn) btn.disabled = disabled;
+    });
+  };
+
   // Helper to populate the form fully
   const populateFormFromData = (t, assigns) => {
     $("destination").value = t.destination || "";
@@ -5595,18 +5633,11 @@ async function openTripForEdit(tripKey) {
     if (typeof syncEmptyFields === "function") syncEmptyFields();
   };
 
-  const cachedTrip = state.tripByKey[tripKey];
-  const cachedAssigns = state.assignmentsByTripKey[tripKey];
-  const hasCache = !!cachedTrip;
-
-  if (hasCache) {
-    populateFormFromData(cachedTrip, cachedAssigns);
-    setSidePanelMode("trip"); // open panel immediately — already populated from cache
-    dom.saveBtn.disabled = true;
-    if (dom.deleteBtn) dom.deleteBtn.disabled = true;
-    state.tripFormDirty = false;
+  if (panelAlreadyOpen) {
+    // Panel is visible — lock inputs so old data stays readable but not editable
+    setFormDisabled(true);
   } else {
-    // CLEAR PREVIOUS DATA
+    // Panel is closed — blank the form while we fetch
     if (dom.tripForm) dom.tripForm.reset();
     state.busRows.forEach((r) => {
       r.busSel.value = "None";
@@ -5622,9 +5653,9 @@ async function openTripForEdit(tripKey) {
     $("tripIdBadge").textContent = "";
     $("tripIdBadge").classList.add("is-hidden");
     updateBusRowVisibility();
-    dom.saveBtn.disabled = true;
-    if (dom.deleteBtn) dom.deleteBtn.disabled = true;
   }
+  dom.saveBtn.disabled = true;
+  if (dom.deleteBtn) dom.deleteBtn.disabled = true;
 
   try {
     const startTime = Date.now();
@@ -5645,63 +5676,17 @@ async function openTripForEdit(tripKey) {
     const serverTrip = tripResp.trip || {};
     const serverAssigns = assignResp?.ok && assignResp.assignments ? assignResp.assignments : [];
 
-    // Conflict detection logic
-    let hasConflict = false;
-    if (hasCache) {
-      for (const key of Object.keys(cachedTrip)) {
-        if (key === "tripKey" || key === "tripId" || typeof cachedTrip[key] === "object") continue;
-        const normC = String(cachedTrip[key] || "");
-        const normS = String(serverTrip[key] || "");
-        if (normC !== normS && (normC !== "00:00" || normS)) { // rudimentary normalization fallback
-          if (key === "departureTime" || key === "arrivalTime" || key === "spotTime") {
-            if (normalizeTime(normC) !== normalizeTime(normS)) { hasConflict = true; break; }
-          } else {
-            hasConflict = true; break;
-          }
-        }
-      }
-      
-      if (!hasConflict) {
-        if ((cachedAssigns || []).length !== serverAssigns.length) hasConflict = true;
-        else {
-           for (const ca of cachedAssigns) {
-              const sa = serverAssigns.find(a => Number(a.busNumber) === Number(ca.busNumber));
-              if (!sa || sa.busId !== ca.busId || sa.driver1 !== ca.driver1 || sa.driver2 !== ca.driver2 || sa.driver3 !== ca.driver3 || sa.driver4 !== ca.driver4) {
-                 hasConflict = true; break;
-              }
-           }
-        }
-      }
-    }
-
-    if (!hasCache) {
-      populateFormFromData(serverTrip, serverAssigns);
-      setSidePanelMode("trip"); // no cache — panel opens only now, fully populated
-    } else if (hasConflict) {
-      if (state.tripFormDirty) {
-        if (conflictBanner) conflictBanner.classList.remove("is-hidden");
-      } else {
-        // Silently overwrite since user hasn't touched the form
-        populateFormFromData(serverTrip, serverAssigns);
-        state.tripFormDirty = false;
-      }
-    } else {
-      // Data is mostly identical but server response might have extra fields (like itinerary), so apply them if safe
-      if (!state.tripFormDirty) {
-        populateFormFromData(serverTrip, serverAssigns);
-        state.tripFormDirty = false;
-      }
-    }
+    populateFormFromData(serverTrip, serverAssigns);
+    setFormDisabled(false);
+    setSidePanelMode("trip");
+    state.tripFormDirty = false;
+    $("destination")?.focus?.({ preventScroll: true });
 
     showHeaderStatusNotice("Trip ready", "success", {
       duration: 1200,
       source: "trip-load",
       priority: 55,
     });
-
-    if (!hasCache) {
-      $("destination")?.focus?.({ preventScroll: true });
-    }
   } catch (e) {
     showHeaderStatusNotice("Could not load trip", "danger", {
       duration: 2200,
@@ -5709,12 +5694,13 @@ async function openTripForEdit(tripKey) {
       priority: 60,
     });
     console.error(e);
-    if (!hasCache) alert("Could not open trip for editing.");
+    alert("Could not open trip for editing.");
   } finally {
     tripLoadInFlight = false;
+    setFormDisabled(false);
     dom.saveBtn.disabled = false;
     if (dom.deleteBtn) dom.deleteBtn.disabled = dom.action.value === "create";
-    if (!hasCache) state.tripFormDirty = false;
+    state.tripFormDirty = false;
   }
 }
 

@@ -169,7 +169,7 @@
 
   .o-app-layout__sidebar--right > .c-card {
     /* M3 Bottom Sheet look for mobile */
-    border-radius: 16px 16px 0 0;
+    border-radius: 20px 20px 0 0;
     box-shadow: 0px -1px 3px 0px rgba(0, 0, 0, 0.2);
     min-height: 100%;
   }

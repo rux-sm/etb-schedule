@@ -101,7 +101,7 @@
 
   --rux-space-xs: 4px;
   --rux-space-sm: 8px;
-  --rux-space-md: 16px;
+  --rux-space-md: 12px;
   --rux-space-lg: 24px;
   --rux-space-xl: 32px;
 
@@ -127,7 +127,7 @@
   --rux-radius-xs:     2px;
   --rux-radius-sm:     4px;
   --rux-radius-md:     8px;
-  --rux-radius-lg:    16px;
+  --rux-radius-lg:    20px;
   --rux-radius-xl:    24px;
   --rux-radius-pill: 9999px;
 
@@ -137,7 +137,7 @@
   --rux-radius-section:   var(--rux-radius-md);   /* Groups nested inside cards */
   --rux-radius-control:   var(--rux-radius-sm);   /* Inputs, selects, toolbars */
   --rux-radius-badge:     var(--rux-radius-xs);   /* Chips, tags, mini-badges */
-  --rux-radius-button:    var(--rux-radius-xl);   /* Pill/squircle buttons */
+  --rux-radius-button:    var(--rux-radius-md);   /* Pill/squircle buttons */
 
   /* ==========================================================================
    # 2. SYSTEM TOKENS
