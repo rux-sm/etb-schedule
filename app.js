@@ -2021,7 +2021,15 @@ async function fetchWeekDataCached(start, end, notesKey, force = false) {
 function applyWeekRespToState(resp) {
   const ok = !!resp?.ok;
 
-  state.trips = ok ? asArray(resp.trips) : [];
+  let trips = ok ? asArray(resp.trips) : [];
+
+  // DEFENSIVE: Filter out any pending-delete trips to prevent zombie resurrection
+  if (state.pendingWrite?.action === "delete" && state.pendingWrite?.tripKey) {
+    const deletingKey = String(state.pendingWrite.tripKey);
+    trips = trips.filter((t) => String(t.tripKey || "").trim() !== deletingKey);
+  }
+
+  state.trips = trips
   state.trips = state.trips
     .map((t) => ({
       ...t,
@@ -2035,6 +2043,13 @@ function applyWeekRespToState(resp) {
   for (const t of state.trips) state.tripByKey[t.tripKey] = t;
 
   const asnList = ok ? asArray(resp.assignments) : [];
+
+  // DEFENSIVE: Also filter assignments for pending-delete trips
+  if (state.pendingWrite?.action === "delete" && state.pendingWrite?.tripKey) {
+    const deletingKey = String(state.pendingWrite.tripKey);
+    asnList = asnList.filter((a) => String(a.tripKey || "").trim() !== deletingKey);
+  }
+
   state.assignmentsByTripKey = {};
   for (const a of asnList) {
     const k = String(a.tripKey || "").trim();
@@ -4358,6 +4373,12 @@ async function loadTripsForWeek(reqId) {
 }
 
 async function refreshWeekData({ silent = false } = {}) {
+  // CRITICAL: Skip background refresh if a delete/save is pending
+  // to avoid applying stale data before the server mutation completes
+  if (silent && state.pendingWrite) {
+    return;
+  }
+
   const reqId = ++state.weekReqId;
   const weekLoadStatusOpts = {
     source: "week-load",
@@ -7895,11 +7916,17 @@ function wireEvents() {
     // clear all cached week data (both in-memory and persistent).
     try {
       state.weekCache.clear();
-    } catch { }
+    } catch (e) {
+      console.error("Failed to clear weekCache:", e);
+    }
 
     try {
-      CACHE.clearAll();
-    } catch { }
+      if (CACHE && CACHE.clearAll) {
+        CACHE.clearAll();
+      }
+    } catch (e) {
+      console.error("Failed to clear persistent CACHE:", e);
+    }
   }
 
   dom.tripDetailsModal?.addEventListener("click", (e) => {
