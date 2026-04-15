@@ -1151,6 +1151,29 @@
   border: none;
   padding: 0 0.02in;
   color: var(--env-ink);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.env-req-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 14px;
+}
+
+.env-req-icon {
+  font-size: 0.18in;
+  line-height: 1;
+  font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 20;
+}
+
+.env-req-label {
+  font-size: 0.14in;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 /* Print: hide toolbar, show only envelope pages */
@@ -1227,14 +1250,6 @@
   gap: 8px;
 }
 
-/* ── Trip Editor: section spacing standardization ─────────────────── */
-/* Ensures borders have room to "breathe" and match global subsection rhythm */
-.envelope-overrides-section,
-.assignments-overrides-section {
-  margin-top: 0px;
-  padding-top: 0px;
-  border-top: 1px solid transparent;
-}
 
 /* ── Trip Editor: envelope notes input stack ──────────────────────── */
 .envelope-notes-stack {

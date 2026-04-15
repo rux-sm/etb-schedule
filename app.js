@@ -314,12 +314,7 @@ const dom = {
   copyDriverContactBtn: $("copyDriverContactBtn"),
   copyDriverReminderBtn: $("copyDriverReminderBtn"),
 
-  // Envelope Modal & Overrides
-  envelopeOverridesSection:
-    document.querySelector('[data-js="trip-envelope-section"]') || $("envelopeOverridesSection"),
-  envelopeNote1: $("envelopeNote1"),
-  envelopeNote2: $("envelopeNote2"),
-  envelopeNote3: $("envelopeNote3"),
+  // Envelope Modal
   envelopeModal: $("envelopeModal"),
   envelopeModalPages: $("envelopeModalPages"),
   envelopeAssignmentSelect: $("envelopeAssignmentSelect"),
@@ -4016,7 +4011,7 @@ function setSelectOptions(sel, options, selectedValue) {
 
 function getBusOptions() {
   const base = [
-    { value: "None", label: "None" },
+    { value: "None", label: "" },
     { value: "WAITING_LIST", label: "W/L" },
   ];
   const mapped = state.busesList.map((b) => ({
@@ -4027,7 +4022,7 @@ function getBusOptions() {
 }
 
 function getDriverOptions() {
-  const base = [{ value: "None", label: "None" }];
+  const base = [{ value: "None", label: "" }];
   const mapped = state.driversList.map((d) => ({
     value: d.driverName ? String(d.driverName) : String(d.driverId),
     label: d.driverName ? String(d.driverName) : String(d.driverId),
@@ -4036,6 +4031,7 @@ function getDriverOptions() {
 }
 
 const DRIVER_STATUS_OPTIONS = [
+  { value: "Pending", label: "Pending" },
   { value: "Assigned", label: "Assigned" },
   { value: "Confirmed", label: "Confirmed" },
 ];
@@ -4044,10 +4040,11 @@ function makeDriverStatusSelect(name) {
   const sel = document.createElement("select");
   sel.name = name;
   sel.setAttribute("aria-label", "Driver status");
-  const emptyOpt = document.createElement("option");
-  emptyOpt.value = "Pending";
-  emptyOpt.textContent = "Pending";
-  sel.appendChild(emptyOpt);
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.disabled = true;
+  placeholder.selected = true;
+  sel.appendChild(placeholder);
 
   DRIVER_STATUS_OPTIONS.forEach((o) => {
     const opt = document.createElement("option");
@@ -4055,7 +4052,6 @@ function makeDriverStatusSelect(name) {
     opt.textContent = o.label;
     sel.appendChild(opt);
   });
-  sel.value = "Pending"; // Default to Pending; ensures consistency before visibility toggles
   return sel;
 }
 
@@ -4145,13 +4141,13 @@ function updateBusRowVisibility() {
     if (!show) {
       r.busSel.value = "None";
       r.d1Sel.value = "None";
-      r.d1StatusSel.value = "Pending";
+      r.d1StatusSel.value = "";
       r.d2Sel.value = "None";
-      r.d2StatusSel.value = "Pending";
+      r.d2StatusSel.value = "";
       r.d3Sel.value = "None";
-      r.d3StatusSel.value = "Pending";
+      r.d3StatusSel.value = "";
       r.d4Sel.value = "None";
-      r.d4StatusSel.value = "Pending";
+      r.d4StatusSel.value = "";
     }
   });
 
@@ -4487,13 +4483,13 @@ function clearTripInfoCardForNextTrip() {
   state.busRows.forEach((r) => {
     r.busSel.value = "None";
     r.d1Sel.value = "None";
-    r.d1StatusSel.value = "Pending";
+    r.d1StatusSel.value = "";
     r.d2Sel.value = "None";
-    r.d2StatusSel.value = "Pending";
+    r.d2StatusSel.value = "";
     r.d3Sel.value = "None";
-    r.d3StatusSel.value = "Pending";
+    r.d3StatusSel.value = "";
     r.d4Sel.value = "None";
-    r.d4StatusSel.value = "Pending";
+    r.d4StatusSel.value = "";
     // Fire change events so custom dropdown triggers update their display labels
     r.busSel.dispatchEvent(new Event("change", { bubbles: true }));
     r.d1Sel.dispatchEvent(new Event("change", { bubbles: true }));
@@ -4932,8 +4928,8 @@ function createEnvelopePageElement() {
         <div class="env-trip">
           <div class="env-trip-row env-cols-3">
             <div class="env-cell"><span class="env-label">BUS:</span><span class="env-value" data-field="busno"></span></div>
-            <div class="env-cell"><span class="env-label">DRIVER:</span><span class="env-value" data-field="driver"></span></div>
-            <div class="env-cell"><span class="env-label">CO-DRIVER:</span><span class="env-value" data-field="codriver"></span></div>
+            <div class="env-cell"><span class="env-label" data-field="driverlabel">DRIVER:</span><span class="env-value" data-field="driver"></span></div>
+            <div class="env-cell"><span class="env-label" data-field="codriverlabel">CO-DRIVER:</span><span class="env-value" data-field="codriver"></span></div>
           </div>
           <div class="env-trip-row env-cols-2">
             <div class="env-cell">
@@ -5008,8 +5004,8 @@ function createAlternateEnvelopePageElement() {
         <div class="env-trip">
           <div class="env-trip-row env-cols-3">
             <div class="env-cell"><span class="env-label">BUS:</span><span class="env-value" data-field="busno"></span></div>
-            <div class="env-cell"><span class="env-label">DRIVER:</span><span class="env-value" data-field="driver"></span></div>
-            <div class="env-cell"><span class="env-label">CO-DRIVER:</span><span class="env-value" data-field="codriver"></span></div>
+            <div class="env-cell"><span class="env-label" data-field="driverlabel">DRIVER:</span><span class="env-value" data-field="driver"></span></div>
+            <div class="env-cell"><span class="env-label" data-field="codriverlabel">CO-DRIVER:</span><span class="env-value" data-field="codriver"></span></div>
           </div>
           <div class="env-trip-row env-cols-2">
             <div class="env-cell">
@@ -5125,8 +5121,13 @@ function fillEnvelopePage(pageEl, trip, assignment) {
     }
   };
 
-  const notesSrc = (trip.envelopeTripNotes || "").toString();
-  const notesLines = notesSrc.split("\n");
+  const setHTML = (field, html) => {
+    const el = pageEl.querySelector(`[data-field="${field}"]`);
+    if (el) el.innerHTML = html;
+  };
+
+  const busCount = parseInt(trip.busesNeeded, 10) || 1;
+  const busLabel = busCount === 1 ? "1 BUS" : `${busCount} BUSES`;
 
   const tripDateStr = envFormatDate(trip.departureDate);
   const returnDateStr = envFormatDate(trip.arrivalDate);
@@ -5137,6 +5138,9 @@ function fillEnvelopePage(pageEl, trip, assignment) {
   set("driver", driver1);
   // If there is no real co-driver, field stays blank
   set("codriver", driver2);
+  set("driverlabel", assignment?.isRelief ? "RELIEF DRIVER:" : "DRIVER:");
+  const coDriverLabel = assignment?.driver2IsRelief ? "RELIEF:" : assignment?.isRelief ? "DRIVER:" : "CO-DRIVER:";
+  set("codriverlabel", coDriverLabel);
   set("tripdate", tripDateStr);
   set("returndate", showReturn ? returnDateStr : "");
   set("returnlabel", showReturn ? "RETURN" : "");
@@ -5147,9 +5151,28 @@ function fillEnvelopePage(pageEl, trip, assignment) {
   set("phone", trip.envelopeTripPhone || "");
   set("startodo", "");
   set("endodo", "");
-  set("notes1", notesLines[0] || "");
-  set("notes2", notesLines[1] || "");
-  set("notes3", notesLines[2] || "");
+  set("notes1", busLabel);
+
+  const REQ_ITEMS = [
+    { key: "req56Pass",  icon: "tatami_seat",      label: "56 Pax Req" },
+    { key: "reqSleeper", icon: "airline_seat_flat", label: "Sleeper Req" },
+    { key: "reqLift",    icon: "accessible",        label: "Wheelchair Lift Req" },
+    { key: "reqHotel",   icon: "apartment",         label: "Hotel Req" },
+  ];
+  const activeReqs = REQ_ITEMS.filter((r) => trip[r.key]);
+  if (activeReqs.length) {
+    const html = activeReqs
+      .map(
+        (r) =>
+          `<span class="env-req-item"><span class="material-symbols-outlined env-req-icon">${r.icon}</span><span class="env-req-label">${r.label}</span></span>`,
+      )
+      .join("");
+    setHTML("notes2", html);
+  } else {
+    set("notes2", "");
+  }
+
+  set("notes3", "");
 }
 
 let stateEnvelope = {
@@ -5170,11 +5193,6 @@ function openEnvelopeModal(tripKey) {
   // If the envelope is opened for the trip currently being edited,
   // merge the unsaved form values so the envelope preview is accurate.
   if (dom.action?.value === "update" && dom.tripKey?.value === tripKey) {
-    const unsavedNotes1 = $("envelopeNote1")?.value || "";
-    const unsavedNotes2 = $("envelopeNote2")?.value || "";
-    const unsavedNotes3 = $("envelopeNote3")?.value || "";
-    const combinedNotes = [unsavedNotes1, unsavedNotes2, unsavedNotes3].filter(Boolean).join("\n");
-
     trip = {
       ...trip,
       destination: $("destination")?.value || trip.destination,
@@ -5191,7 +5209,7 @@ function openEnvelopeModal(tripKey) {
       envelopeTripPhone: $("envelopeTripPhone")
         ? $("envelopeTripPhone").value
         : trip.envelopeTripPhone || "",
-      envelopeTripNotes: combinedNotes !== undefined ? combinedNotes : trip.envelopeTripNotes || "",
+      envelopeTripNotes: trip.envelopeTripNotes || "",
     };
   }
 
@@ -5218,17 +5236,31 @@ function openEnvelopeModal(tripKey) {
     rawAssignments.forEach((a) => {
       const busId = a.busId || trip.busId || "";
       const d1 = (a.driver1 || "").toString().trim();
+
       const d2Raw = (a.driver2 || "").toString().trim();
       const hasD2 = d2Raw && d2Raw.toLowerCase() !== "none" && d2Raw !== "—";
       const d2 = hasD2 ? d2Raw : "";
 
-      // Variant 1: as-is (driver1 primary)
-      assignments.push({ busId, driver1: d1, driver2: d2 });
+      const d3Raw = (a.driver3 || "").toString().trim();
+      const hasD3 = d3Raw && d3Raw.toLowerCase() !== "none" && d3Raw !== "—";
+
+      const d4Raw = (a.driver4 || "").toString().trim();
+      const hasD4 = d4Raw && d4Raw.toLowerCase() !== "none" && d4Raw !== "—";
+
+      // Variant 1: driver1 primary; if no co-driver, show relief 1 in that spot
+      const d1CoDriver = d2 || (hasD3 ? d3Raw : "");
+      const d1CoIsRelief = !hasD2 && hasD3;
+      assignments.push({ busId, driver1: d1, driver2: d1CoDriver, driver2IsRelief: d1CoIsRelief });
 
       // Variant 2: swapped (co-driver primary), only if real co-driver exists
       if (hasD2) {
         assignments.push({ busId, driver1: d2, driver2: d1 });
       }
+
+      // Relief driver variants — co-driver field: relief 1 gets primary driver;
+      // relief 2 gets relief 1 as co (if present), otherwise primary driver.
+      if (hasD3) assignments.push({ busId, driver1: d3Raw, driver2: d1, isRelief: true });
+      if (hasD4) assignments.push({ busId, driver1: d4Raw, driver2: d1, isRelief: true });
     });
   } else {
     assignments.push({ busId: trip.busId || "", driver1: "", driver2: "" });
@@ -5246,7 +5278,7 @@ function openEnvelopeModal(tripKey) {
       const bus = a.busId || "—";
       const d1 = a.driver1 || "—";
       const d2 = a.driver2 ? ` / ${a.driver2}` : "";
-      opt.textContent = `Bus ${bus} — ${d1}${d2}`;
+      opt.textContent = a.isRelief ? `Bus ${bus} — ${d1} (Relief)` : `Bus ${bus} — ${d1}${d2}`;
       select.appendChild(opt);
     });
     select.selectedIndex = 0;
@@ -5437,12 +5469,7 @@ function setTripFormFromState(tripKey) {
   if ($("envelopeTripContact")) $("envelopeTripContact").value = t.envelopeTripContact || "";
   if ($("envelopeTripPhone")) $("envelopeTripPhone").value = t.envelopeTripPhone || "";
 
-  const notesStr = t.envelopeTripNotes || "";
-  const notesLines = notesStr.split("\n");
-  if ($("envelopeNote1")) $("envelopeNote1").value = notesLines[0] || "";
-  if ($("envelopeNote2")) $("envelopeNote2").value = notesLines[1] || "";
-  if ($("envelopeNote3")) $("envelopeNote3").value = notesLines[2] || "";
-  if ($("envelopeTripNotes")) $("envelopeTripNotes").value = notesStr;
+  if ($("envelopeTripNotes")) $("envelopeTripNotes").value = t.envelopeTripNotes || "";
 
   [
     "itineraryStatus",
@@ -5469,13 +5496,13 @@ function setTripFormFromState(tripKey) {
   state.busRows.forEach((r) => {
     r.busSel.value = "None";
     r.d1Sel.value = "None";
-    r.d1StatusSel.value = "Pending";
+    r.d1StatusSel.value = "";
     r.d2Sel.value = "None";
-    r.d2StatusSel.value = "Pending";
+    r.d2StatusSel.value = "";
     r.d3Sel.value = "None";
-    r.d3StatusSel.value = "Pending";
+    r.d3StatusSel.value = "";
     r.d4Sel.value = "None";
-    r.d4StatusSel.value = "Pending";
+    r.d4StatusSel.value = "";
   });
   assigns.forEach((a, i) => {
     const row = state.busRows[i];
@@ -5593,12 +5620,7 @@ async function openTripForEdit(tripKey) {
     if ($("envelopeTripContact")) $("envelopeTripContact").value = t.envelopeTripContact || "";
     if ($("envelopeTripPhone")) $("envelopeTripPhone").value = t.envelopeTripPhone || "";
 
-    const notesStr = t.envelopeTripNotes || "";
-    const notesLines = notesStr.split("\n");
-    if ($("envelopeNote1")) $("envelopeNote1").value = notesLines[0] || "";
-    if ($("envelopeNote2")) $("envelopeNote2").value = notesLines[1] || "";
-    if ($("envelopeNote3")) $("envelopeNote3").value = notesLines[2] || "";
-    if ($("envelopeTripNotes")) $("envelopeTripNotes").value = notesStr;
+    if ($("envelopeTripNotes")) $("envelopeTripNotes").value = t.envelopeTripNotes || "";
 
     setBusesNeededAndSync(t.busesNeeded ? String(t.busesNeeded) : "");
     dom.busesNeeded?.dispatchEvent(new Event("change", { bubbles: true }));
@@ -5608,13 +5630,13 @@ async function openTripForEdit(tripKey) {
     state.busRows.forEach((r) => {
       r.busSel.value = "None";
       r.d1Sel.value = "None";
-      r.d1StatusSel.value = "Pending";
+      r.d1StatusSel.value = "";
       r.d2Sel.value = "None";
-      r.d2StatusSel.value = "Pending";
+      r.d2StatusSel.value = "";
       r.d3Sel.value = "None";
-      r.d3StatusSel.value = "Pending";
+      r.d3StatusSel.value = "";
       r.d4Sel.value = "None";
-      r.d4StatusSel.value = "Pending";
+      r.d4StatusSel.value = "";
     });
 
     (assigns || []).forEach((a) => {
@@ -5661,13 +5683,13 @@ async function openTripForEdit(tripKey) {
     state.busRows.forEach((r) => {
       r.busSel.value = "None";
       r.d1Sel.value = "None";
-      r.d1StatusSel.value = "Pending";
+      r.d1StatusSel.value = "";
       r.d2Sel.value = "None";
-      r.d2StatusSel.value = "Pending";
+      r.d2StatusSel.value = "";
       r.d3Sel.value = "None";
-      r.d3StatusSel.value = "Pending";
+      r.d3StatusSel.value = "";
       r.d4Sel.value = "None";
-      r.d4StatusSel.value = "Pending";
+      r.d4StatusSel.value = "";
     });
     $("tripIdBadge").textContent = "";
     $("tripIdBadge").classList.add("is-hidden");
@@ -6675,6 +6697,14 @@ function wireDelegatedBarEvents() {
 
     toastShow("Deleting PDF...", "loading", { indeterminate: true, source: "pdf-delete" });
     trip.itineraryPdfUrl = ""; // Clear from local state
+    if (trip.itineraryStatus === "Received") {
+      trip.itineraryStatus = "Pending";
+      const itinStatusEl = $("itineraryStatus");
+      if (itinStatusEl) {
+        itinStatusEl.value = "Pending";
+        itinStatusEl.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    }
 
     // Trigger save process
     state.tripFormDirty = true;
@@ -7499,7 +7529,22 @@ function wireEvents() {
 
   /* agendaBody click listener removed - refactoring to use delegation in wireDelegatedBarEvents */
   dom.busGrid.addEventListener("change", (e) => {
-    if (e.target && e.target.tagName === "SELECT") syncBusSelectEmptyState();
+    const sel = e.target;
+    if (!sel || sel.tagName !== "SELECT") return;
+    syncBusSelectEmptyState();
+
+    // Sync paired status when a driver slot changes
+    if (sel.name && /^bus\d+_driver\d+$/.test(sel.name)) {
+      const statusSel = dom.busGrid.querySelector(`select[name="${sel.name}Status"]`);
+      if (statusSel) {
+        if (!sel.value || sel.value === "None") {
+          statusSel.value = "";
+        } else if (!statusSel.value) {
+          statusSel.value = "Pending";
+        }
+        statusSel.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    }
   });
 
   dom.busesNeeded.addEventListener("input", () => {
@@ -7650,15 +7695,6 @@ function wireEvents() {
     $("departureTime").value = normalizeTime($("departureTime").value);
     $("spotTime").value = normalizeTime($("spotTime").value);
     $("arrivalTime").value = normalizeTime($("arrivalTime").value);
-
-    // Combine the 3 envelope notes into the hidden envelopeTripNotes field
-    const n1 = $("envelopeNote1")?.value || "";
-    const n2 = $("envelopeNote2")?.value || "";
-    const n3 = $("envelopeNote3")?.value || "";
-    if ($("envelopeTripNotes")) {
-      // Join all 3 lines exactly as-is so blank middle lines are preserved
-      $("envelopeTripNotes").value = [n1, n2, n3].join("\n");
-    }
 
     // OPTIMISTIC UPDATE: Save locally immediately
     const action = dom.action.value;
@@ -7884,13 +7920,13 @@ function wireEvents() {
     state.busRows.forEach((r) => {
       r.busSel.value = "None";
       r.d1Sel.value = "None";
-      r.d1StatusSel.value = "Pending";
+      r.d1StatusSel.value = "";
       r.d2Sel.value = "None";
-      r.d2StatusSel.value = "Pending";
+      r.d2StatusSel.value = "";
       r.d3Sel.value = "None";
-      r.d3StatusSel.value = "Pending";
+      r.d3StatusSel.value = "";
       r.d4Sel.value = "None";
-      r.d4StatusSel.value = "Pending";
+      r.d4StatusSel.value = "";
       r.busSel.dispatchEvent(new Event("change", { bubbles: true }));
       r.d1Sel.dispatchEvent(new Event("change", { bubbles: true }));
       r.d2Sel.dispatchEvent(new Event("change", { bubbles: true }));

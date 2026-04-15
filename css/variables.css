@@ -162,23 +162,39 @@
 
   /* --rux-border-color: oklch(100% 0 0 / 10%); */
 
-  --rux-color-status-red: var(--rux-red-500);
-  --rux-color-status-red-alpha: oklch(60% 0.2 25 / 20%);
-  --rux-color-status-yellow: var(--rux-yellow-500);
-  --rux-color-status-yellow-alpha: oklch(60% 0.2 96 / 20%);
-  --rux-color-status-green: var(--rux-green-500);
-  --rux-color-status-green-alpha: oklch(60% 0.2 155 / 20%);
-  --rux-color-status-blue: var(--rux-blue-500);
-  --rux-color-status-blue-alpha: oklch(60% 0.2 260 / 20%);
+  /* ── Status semantic tokens (Layer 2) ────────────────────────────────────
+     alert   = needs action      (red)
+     caution = in progress       (yellow)
+     ok      = complete          (green)
+     info    = informational     (blue)
+  ──────────────────────────────────────────────────────────────────────── */
+  --rux-status-alert:          var(--rux-red-500);
+  --rux-status-alert-alpha:    oklch(60% 0.2 25 / 20%);
+  --rux-status-caution:        var(--rux-yellow-500);
+  --rux-status-caution-alpha:  oklch(60% 0.2 96 / 20%);
+  --rux-status-ok:             var(--rux-green-500);
+  --rux-status-ok-alpha:       oklch(60% 0.2 155 / 20%);
+  --rux-status-info:           var(--rux-blue-500);
+  --rux-status-info-alpha:     oklch(60% 0.2 260 / 20%);
+
+  /* ── Bridge aliases — point old names at new tokens ─────────────────── */
+  --rux-color-status-red:          var(--rux-status-alert);
+  --rux-color-status-red-alpha:    var(--rux-status-alert-alpha);
+  --rux-color-status-yellow:       var(--rux-status-caution);
+  --rux-color-status-yellow-alpha: var(--rux-status-caution-alpha);
+  --rux-color-status-green:        var(--rux-status-ok);
+  --rux-color-status-green-alpha:  var(--rux-status-ok-alpha);
+  --rux-color-status-blue:         var(--rux-status-info);
+  --rux-color-status-blue-alpha:   var(--rux-status-info-alpha);
 
 
 
 
 
-  --rux-accent-color: var(--rux-blue-500);
-  --rux-danger-color: var(--rux-red-500);
-  --rux-warning-color: var(--rux-yellow-300);
-  --rux-success-color: var(--rux-green-500);
+  --rux-accent-color:  var(--rux-blue-500);
+  --rux-danger-color:  var(--rux-status-alert);
+  --rux-warning-color: var(--rux-status-caution);
+  --rux-success-color: var(--rux-status-ok);
 
   --rux-blue-500-alpha: oklch(60% 0.2 260 / 20%);
   --rux-red-500-alpha: oklch(60% 0.2 25 / 20%);
@@ -195,23 +211,24 @@
   --gra-alpha: oklch(65% 0 0 / 20%);
   --gra-alert: oklch(80% 0 0);
 
-  --red-accent: oklch(65% 0.22 20);
-  --red-dark: oklch(55% 0.22 20);
-  --red: oklch(65% 0.22 20);
-  --red-alpha: oklch(65% 0.22 20 / 20%);
-  --red-alert: oklch(80% 0.22 20);
+  /* Legacy 3-letter tokens — bridged to Layer 2, retire in next pass */
+  --red-accent: var(--rux-status-alert);
+  --red-dark:   var(--rux-status-alert);
+  --red:        var(--rux-status-alert);
+  --red-alpha:  var(--rux-status-alert-alpha);
+  --red-alert:  var(--rux-status-alert);
 
   --org: oklch(65% 0.2 60);
   --org-alpha: oklch(65% 0.2 60 / 20%);
   --org-alert: oklch(80% 0.2 60);
 
-  --yel: oklch(65% 0.15 96);
-  --yel-alpha: oklch(65% 0.15 96 / 20%);
-  --yel-alert: oklch(80% 0.15 96);
+  --yel:       var(--rux-status-caution);
+  --yel-alpha: var(--rux-status-caution-alpha);
+  --yel-alert: var(--rux-status-caution);
 
-  --grn: oklch(65% 0.19 142);
-  --grn-alpha: oklch(65% 0.19 142 / 20%);
-  --grn-alert: oklch(80% 0.19 142);
+  --grn:       var(--rux-status-ok);
+  --grn-alpha: var(--rux-status-ok-alpha);
+  --grn-alert: var(--rux-status-ok);
 
   --tea: oklch(65% 0.15 180);
   --tea-alpha: oklch(65% 0.15 180 / 20%);
@@ -241,20 +258,19 @@
   --color-secondary: var(--gra-dark);
   --color-accent: var(--rux-accent-color);
 
-  --color-danger: var(--red-dark);
-  --color-danger-soft: var(--red-alpha);
-
-  --color-success: var(--wald-05);
-  --color-warning: var(--aube-05);
+  --color-danger:      var(--rux-status-alert);
+  --color-danger-soft: var(--rux-status-alert-alpha);
+  --color-success:     var(--rux-status-ok);
+  --color-warning:     var(--rux-status-caution);
 
   /* Semantic Mappings */
-  --color-status-pending: var(--red-alert);
-  --color-status-ok: var(--grn-alert);
-  --color-status-assigned: var(--yel-alert);
-  --color-status-blue: var(--rux-accent-color);
+  --color-status-pending:  var(--rux-status-alert);
+  --color-status-ok:       var(--rux-status-ok);
+  --color-status-assigned: var(--rux-status-caution);
+  --color-status-blue:     var(--rux-status-info);
 
-  --color-conflict-accent: var(--red-alert);
-  --color-conflict-bg: var(--red-alpha);
+  --color-conflict-accent: var(--rux-status-alert);
+  --color-conflict-bg:     var(--rux-status-alert-alpha);
 
   --white: #ffffff;
   --black: #000000;
@@ -308,10 +324,10 @@
 
 
   /* --- Text --------------------------------------------------------------- */
-  --text-primary: var(--base-12);
-  --text-secondary: var(--base-10);
-  --text-placeholder: var(--base-08);
-  --text-disabled: var(--base-06);
+  --text-primary:     var(--rux-gray-100);
+  --text-secondary:   var(--rux-gray-300);
+  --text-placeholder: var(--rux-gray-500);
+  --text-disabled:    var(--rux-gray-600);
   --text-muted: var(--text-secondary);
   --header-seperator: var(--border-default);
 
@@ -365,7 +381,7 @@
 
   /* Success */
   --btn-success-bg: var(--color-success);
-  --btn-success-text: var(--base-01);
+  --btn-success-text: var(--rux-gray-950);
   --btn-success-hover: color-mix(in srgb, var(--color-success) 85%, white);
   --btn-success-active: color-mix(in srgb, var(--color-success) 70%, white);
 

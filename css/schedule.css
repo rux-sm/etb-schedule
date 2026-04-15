@@ -1295,10 +1295,6 @@
   align-items: start;
 }
 
-.assignments-overrides-section {
-  row-gap: 0;
-}
-
 .bus-assign-header {
   margin-bottom: 4px;
 }

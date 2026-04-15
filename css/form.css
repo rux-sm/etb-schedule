@@ -230,6 +230,11 @@ textarea:focus-visible,
   overflow: hidden;
 }
 
+/* Muted icon color when trigger has no selection */
+.select-trigger.is-empty .dropdown-icon.is-active {
+  color: var(--text-placeholder);
+}
+
 /* Status icon colors inside select triggers */
 .dropdown-icon.status-pending {
   color: var(--color-status-pending);
@@ -260,7 +265,7 @@ textarea:focus-visible,
 
 .dropdown__item.status-assigned,
 .dropdown__item.status-assigned .dropdown-icon {
-  color: var(--rux-color-status-blue) !important;
+  color: var(--rux-color-status-yellow) !important;
 }
 
 .dropdown__item.status-blue,
