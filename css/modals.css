@@ -1233,14 +1233,31 @@
   display: none;
 }
 
-.env-choice::before {
-  content: "";
-  display: inline-block;
-  width: 0.12in;
-  height: 0.12in;
-  border: 1px solid #444;
-  margin-right: 0.04in;
+.env-choice-cell {
+  white-space: nowrap;
   vertical-align: middle;
+}
+
+.env-choice {
+  display: inline-flex;
+  align-items: center;
+  width: 0.52in;
+  flex-shrink: 0;
+}
+
+.env-choice::before {
+  content: "\e835"; /* check_box_outline_blank */
+  font-family: 'Material Symbols Outlined';
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+  font-size: 0.18in;
+  line-height: 1;
+  vertical-align: middle;
+  margin-right: 0.03in;
+}
+
+.env-choice.is-checked::before {
+  content: "\e834"; /* check_box */
+  font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 20;
 }
 
 /* ── Trip Editor: form actions grid ──────────────────────────────── */

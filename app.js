@@ -4967,9 +4967,9 @@ function createEnvelopePageElement() {
       </div>
       <div class="env-mini env-mini-standard">
         <table>
-          <tr><td>ELD VERIFIED</td><td><span class="env-choice">DRIVER</span> <span class="env-choice">OFFICE</span></td><td>HOTEL</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
-          <tr><td>ELD BACKUP USED</td><td><span class="env-choice">YES</span> <span class="env-choice">NO</span></td><td>DIESEL/BLUE DEF</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
-          <tr><td>CC FOR TRIP <span class="material-symbols-outlined env-cc-icon">credit_card</span></td><td><span class="env-choice">YES</span> <span class="env-choice">NO</span></td><td>REPAIRS</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
+          <tr><td>ELD VERIFIED</td><td class="env-choice-cell"><span class="env-choice">DRV</span><span class="env-choice">OFC</span></td><td>HOTEL</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
+          <tr><td>ELD BACKUP USED</td><td class="env-choice-cell"><span class="env-choice">YES</span><span class="env-choice">NO</span></td><td>DIESEL/BLUE DEF</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
+          <tr><td>CC FOR TRIP</td><td class="env-choice-cell"><span class="env-choice" data-field="ccYes">YES</span><span class="env-choice" data-field="ccNo">NO</span></td><td>REPAIRS</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
           <tr><td colspan="2" class="env-mini-td-left">CC RECEIVED BY</td><td>MISCELLANEOUS</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
           <tr><td colspan="2" class="env-mini-td-left">TOTAL TRIP MILES</td><td>TOTAL</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
         </table>
@@ -5064,9 +5064,9 @@ function createAlternateEnvelopePageElement() {
       
       <div class="env-mini">
         <table>
-          <tr><td>ELD VERIFIED</td><td><span class="env-choice">DRIVER</span> <span class="env-choice">OFFICE</span></td><td>HOTEL</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
-          <tr><td>ELD BACKUP USED</td><td><span class="env-choice">YES</span> <span class="env-choice">NO</span></td><td>DIESEL/BLUE DEF</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
-          <tr><td>CC FOR TRIP <span class="material-symbols-outlined env-cc-icon">credit_card</span></td><td><span class="env-choice">YES</span> <span class="env-choice">NO</span></td><td>REPAIRS</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
+          <tr><td>ELD VERIFIED</td><td class="env-choice-cell"><span class="env-choice">DRV</span><span class="env-choice">OFC</span></td><td>HOTEL</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
+          <tr><td>ELD BACKUP USED</td><td class="env-choice-cell"><span class="env-choice">YES</span><span class="env-choice">NO</span></td><td>DIESEL/BLUE DEF</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
+          <tr><td>CC FOR TRIP</td><td class="env-choice-cell"><span class="env-choice" data-field="ccYes">YES</span><span class="env-choice" data-field="ccNo">NO</span></td><td>REPAIRS</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
           <tr><td colspan="2" class="env-mini-td-left">CC RECEIVED BY</td><td>MISCELLANEOUS</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
           <tr><td colspan="2" class="env-mini-td-left">TOTAL TRIP MILES</td><td>TOTAL</td><td><div class="money"><span class="dollar">$</span><span class="amount-space"></span></div></td></tr>
         </table>
@@ -5156,9 +5156,9 @@ function fillEnvelopePage(pageEl, trip, assignment) {
   set("notes1", busLabel);
 
   const REQ_ITEMS = [
-    { key: "req56Pass",  icon: "tatami_seat",      label: "56 Pax Req" },
+    { key: "req56Pass",  icon: "tatami_seat",      label: "56 Pass Req" },
     { key: "reqSleeper", icon: "airline_seat_flat", label: "Sleeper Req" },
-    { key: "reqLift",    icon: "accessible",        label: "Wheelchair Lift Req" },
+    { key: "reqLift",    icon: "accessible",        label: "Lift Req" },
     { key: "reqHotel",   icon: "apartment",         label: "Hotel Req" },
     { key: "reqWifi",    icon: "wifi",              label: "Wifi Req" },
   ];
@@ -5179,6 +5179,14 @@ function fillEnvelopePage(pageEl, trip, assignment) {
     setHTML("notes3", `<span class="env-req-item"><span class="material-symbols-outlined env-req-icon">credit_card</span><span class="env-req-label">Fuel Card  _______________</span></span>`);
   } else {
     set("notes3", "");
+  }
+
+  // CC FOR TRIP checkbox — pre-check YES if fuel card required
+  const ccYesEl = pageEl.querySelector('[data-field="ccYes"]');
+  const ccNoEl  = pageEl.querySelector('[data-field="ccNo"]');
+  if (ccYesEl && ccNoEl) {
+    ccYesEl.classList.toggle("is-checked", !!trip.reqFuelCard);
+    ccNoEl.classList.toggle("is-checked", !trip.reqFuelCard);
   }
 }
 
