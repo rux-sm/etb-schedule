@@ -712,7 +712,7 @@ function truthyRequirement(v) {
 }
 
 function setRequirementTogglesFromTrip(t = {}) {
-  const ids = ["req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqRelief2", "reqCoDriver", "reqHotel"];
+  const ids = ["req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqRelief2", "reqCoDriver", "reqHotel", "reqFuelCard", "reqWifi"];
   ids.forEach((id) => {
     const btn = document.getElementById(id);
     if (!btn) return;
@@ -3163,7 +3163,7 @@ function _renderAgendaInner() {
           bar._bD2.classList.add("has-action");
           const glyph = bar._bD2.querySelector(".schedule-grid__trip-bar__badge-glyph");
           if (glyph) {
-            glyph.textContent = "person_add";
+            glyph.textContent = "person";
             glyph.dataset.action = "showDriverContact";
             glyph.dataset.tripkey = t.tripKey;
             glyph.style.cursor = "pointer";
@@ -3220,10 +3220,12 @@ function _renderAgendaInner() {
 
       // Requirement icons (left of status badges) from trip req flags
       const reqSpec = [
-        { key: "req56Pass", icon: "tatami_seat" },
+        { key: "req56Pass",  icon: "tatami_seat" },
         { key: "reqSleeper", icon: "airline_seat_flat" },
-        { key: "reqLift", icon: "accessible" },
-        { key: "reqHotel", icon: "apartment" },
+        { key: "reqLift",    icon: "accessible" },
+        { key: "reqHotel",   icon: "apartment" },
+        { key: "reqFuelCard", icon: "credit_card" },
+        { key: "reqWifi",    icon: "wifi" },
       ];
       if (bar._reqIcons) {
         bar._reqIcons.innerHTML = "";
@@ -5158,6 +5160,7 @@ function fillEnvelopePage(pageEl, trip, assignment) {
     { key: "reqSleeper", icon: "airline_seat_flat", label: "Sleeper Req" },
     { key: "reqLift",    icon: "accessible",        label: "Wheelchair Lift Req" },
     { key: "reqHotel",   icon: "apartment",         label: "Hotel Req" },
+    { key: "reqWifi",    icon: "wifi",              label: "Wifi Req" },
   ];
   const activeReqs = REQ_ITEMS.filter((r) => trip[r.key]);
   if (activeReqs.length) {
@@ -5172,7 +5175,11 @@ function fillEnvelopePage(pageEl, trip, assignment) {
     set("notes2", "");
   }
 
-  set("notes3", "");
+  if (trip.reqFuelCard) {
+    setHTML("notes3", `<span class="env-req-item"><span class="material-symbols-outlined env-req-icon">credit_card</span><span class="env-req-label">Fuel Card  _______________</span></span>`);
+  } else {
+    set("notes3", "");
+  }
 }
 
 let stateEnvelope = {
@@ -5570,7 +5577,7 @@ async function openTripForEdit(tripKey) {
     dom.tripForm.querySelectorAll("input, select, textarea").forEach((el) => {
       el.disabled = disabled;
     });
-    ["req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqRelief2", "reqCoDriver", "reqHotel"].forEach((id) => {
+    ["req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqRelief2", "reqCoDriver", "reqHotel", "reqFuelCard", "reqWifi"].forEach((id) => {
       const btn = document.getElementById(id);
       if (btn) btn.disabled = disabled;
     });
@@ -6939,7 +6946,7 @@ function wrapSelectInGlassDropdown(sel, opts) {
 
   function getBusDriverRoleIcon(name) {
     if (name.includes("_driver1Status")) return "person";
-    if (name.includes("_driver2Status")) return "person_add";
+    if (name.includes("_driver2Status")) return "person";
     if (name.includes("_driver3Status") || name.includes("_driver4Status")) return "emergency_home";
     return "";
   }
@@ -7826,6 +7833,8 @@ function wireEvents() {
       reqRelief2: $("reqRelief2")?.getAttribute("aria-pressed") === "true",
       reqCoDriver: $("reqCoDriver")?.getAttribute("aria-pressed") === "true",
       reqHotel: $("reqHotel")?.getAttribute("aria-pressed") === "true",
+      reqFuelCard: $("reqFuelCard")?.getAttribute("aria-pressed") === "true",
+      reqWifi: $("reqWifi")?.getAttribute("aria-pressed") === "true",
     };
 
     // Proactive Conflict Check
@@ -7861,7 +7870,7 @@ function wireEvents() {
     dom.saveBtn.disabled = true;
 
     // Sync requirement toggles to hidden inputs so backend receives them
-    ["req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqRelief2", "reqCoDriver", "reqHotel"].forEach((id) => {
+    ["req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqRelief2", "reqCoDriver", "reqHotel", "reqFuelCard"].forEach((id) => {
       const btn = $(id);
       const hidden = $(id + "Value");
       if (btn && hidden) {

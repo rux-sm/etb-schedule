@@ -62,6 +62,8 @@ const HEADERS = {
     "reqRelief2",
     "reqCoDriver",
     "reqHotel",
+    "reqFuelCard",
+    "reqWifi",
     "envelopePickup",
     "envelopeTripContact",
     "envelopeTripPhone",
@@ -693,6 +695,8 @@ function weekData_(p) {
   const iReqRelief2 = idx(tripsHdr, "reqRelief2");
   const iReqCoDriver = idx(tripsHdr, "reqCoDriver");
   const iReqHotel = idx(tripsHdr, "reqHotel");
+  const iReqFuelCard = idx(tripsHdr, "reqFuelCard");
+  const iReqWifi = idx(tripsHdr, "reqWifi");
   const iCreatedAt = idx(tripsHdr, "createdAt");
   const iUpdatedAt = idx(tripsHdr, "updatedAt");
   const iItineraryPdfUrl = idx(tripsHdr, "itineraryPdfUrl");
@@ -745,6 +749,8 @@ function weekData_(p) {
       reqRelief2: iReqRelief2 >= 0 ? truthy_(row[iReqRelief2]) : false,
       reqCoDriver: iReqCoDriver >= 0 ? truthy_(row[iReqCoDriver]) : false,
       reqHotel: iReqHotel >= 0 ? truthy_(row[iReqHotel]) : false,
+      reqFuelCard: iReqFuelCard >= 0 ? truthy_(row[iReqFuelCard]) : false,
+      reqWifi: iReqWifi >= 0 ? truthy_(row[iReqWifi]) : false,
       createdAt: iCreatedAt >= 0 ? row[iCreatedAt] || "" : "",
       updatedAt: iUpdatedAt >= 0 ? row[iUpdatedAt] || "" : "",
       itineraryPdfUrl: iItineraryPdfUrl >= 0 ? row[iItineraryPdfUrl] || "" : "",
@@ -952,6 +958,8 @@ function mapTripFromParams_(p, base) {
     reqRelief2: String(p.reqRelief2 || "").toLowerCase() === "true",
     reqCoDriver: String(p.reqCoDriver || "").toLowerCase() === "true",
     reqHotel: String(p.reqHotel || "").toLowerCase() === "true",
+    reqFuelCard: String(p.reqFuelCard || "").toLowerCase() === "true",
+    reqWifi: String(p.reqWifi || "").toLowerCase() === "true",
     envelopePickup: String(p.envelopePickup || "").trim(),
     envelopeTripContact: String(p.envelopeTripContact || "").trim(),
     envelopeTripPhone: String(p.envelopeTripPhone || "").trim(),

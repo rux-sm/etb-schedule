@@ -123,21 +123,21 @@
    * Depth 3  sm    4px  ── Nested controls            ( 8 − 4, half-step)
    * Depth 4  xs    2px  ── Atoms: badges, chips, tags ( 4 − 2, half-step)
    */
-  --rux-radius-none:   0px;
-  --rux-radius-xs:     2px;
-  --rux-radius-sm:     4px;
-  --rux-radius-md:     8px;
-  --rux-radius-lg:    20px;
-  --rux-radius-xl:    24px;
+  --rux-radius-none: 0px;
+  --rux-radius-xs: 2px;
+  --rux-radius-sm: 4px;
+  --rux-radius-md: 8px;
+  --rux-radius-lg: 20px;
+  --rux-radius-xl: 24px;
   --rux-radius-pill: 9999px;
 
   /* Semantic radius aliases — map roles to the optical scale */
-  --rux-radius-overlay:   var(--rux-radius-xl);   /* Modals, popovers, sheets */
-  --rux-radius-surface:   var(--rux-radius-lg);   /* Cards, panels, sidebars */
-  --rux-radius-section:   var(--rux-radius-md);   /* Groups nested inside cards */
-  --rux-radius-control:   var(--rux-radius-sm);   /* Inputs, selects, toolbars */
-  --rux-radius-badge:     var(--rux-radius-xs);   /* Chips, tags, mini-badges */
-  --rux-radius-button:    var(--rux-radius-md);   /* Pill/squircle buttons */
+  --rux-radius-overlay: var(--rux-radius-xl); /* Modals, popovers, sheets */
+  --rux-radius-surface: var(--rux-radius-lg); /* Cards, panels, sidebars */
+  --rux-radius-section: var(--rux-radius-md); /* Groups nested inside cards */
+  --rux-radius-control: var(--rux-radius-sm); /* Inputs, selects, toolbars */
+  --rux-radius-badge: var(--rux-radius-xs); /* Chips, tags, mini-badges */
+  --rux-radius-button: var(--rux-radius-md); /* Pill/squircle buttons */
 
   /* ==========================================================================
    # 2. SYSTEM TOKENS
@@ -168,31 +168,27 @@
      ok      = complete          (green)
      info    = informational     (blue)
   ──────────────────────────────────────────────────────────────────────── */
-  --rux-status-alert:          var(--rux-red-500);
-  --rux-status-alert-alpha:    oklch(60% 0.2 25 / 20%);
-  --rux-status-caution:        var(--rux-yellow-500);
-  --rux-status-caution-alpha:  oklch(60% 0.2 96 / 20%);
-  --rux-status-ok:             var(--rux-green-500);
-  --rux-status-ok-alpha:       oklch(60% 0.2 155 / 20%);
-  --rux-status-info:           var(--rux-blue-500);
-  --rux-status-info-alpha:     oklch(60% 0.2 260 / 20%);
+  --rux-status-alert: var(--rux-red-500);
+  --rux-status-alert-alpha: oklch(60% 0.2 25 / 20%);
+  --rux-status-caution: var(--rux-yellow-500);
+  --rux-status-caution-alpha: oklch(60% 0.2 96 / 20%);
+  --rux-status-ok: var(--rux-green-500);
+  --rux-status-ok-alpha: oklch(60% 0.2 155 / 20%);
+  --rux-status-info: var(--rux-blue-500);
+  --rux-status-info-alpha: oklch(60% 0.2 260 / 20%);
 
   /* ── Bridge aliases — point old names at new tokens ─────────────────── */
-  --rux-color-status-red:          var(--rux-status-alert);
-  --rux-color-status-red-alpha:    var(--rux-status-alert-alpha);
-  --rux-color-status-yellow:       var(--rux-status-caution);
+  --rux-color-status-red: var(--rux-status-alert);
+  --rux-color-status-red-alpha: var(--rux-status-alert-alpha);
+  --rux-color-status-yellow: var(--rux-status-caution);
   --rux-color-status-yellow-alpha: var(--rux-status-caution-alpha);
-  --rux-color-status-green:        var(--rux-status-ok);
-  --rux-color-status-green-alpha:  var(--rux-status-ok-alpha);
-  --rux-color-status-blue:         var(--rux-status-info);
-  --rux-color-status-blue-alpha:   var(--rux-status-info-alpha);
+  --rux-color-status-green: var(--rux-status-ok);
+  --rux-color-status-green-alpha: var(--rux-status-ok-alpha);
+  --rux-color-status-blue: var(--rux-status-info);
+  --rux-color-status-blue-alpha: var(--rux-status-info-alpha);
 
-
-
-
-
-  --rux-accent-color:  var(--rux-blue-500);
-  --rux-danger-color:  var(--rux-status-alert);
+  --rux-accent-color: var(--rux-blue-500);
+  --rux-danger-color: var(--rux-status-alert);
   --rux-warning-color: var(--rux-status-caution);
   --rux-success-color: var(--rux-status-ok);
 
@@ -203,9 +199,6 @@
    # 3. COMPONENT TOKENS
    ========================================================================== */
 
-
-
-
   --gra-dark: oklch(55% 0 0);
   --gra: oklch(65% 0 0);
   --gra-alpha: oklch(65% 0 0 / 20%);
@@ -213,20 +206,20 @@
 
   /* Legacy 3-letter tokens — bridged to Layer 2, retire in next pass */
   --red-accent: var(--rux-status-alert);
-  --red-dark:   var(--rux-status-alert);
-  --red:        var(--rux-status-alert);
-  --red-alpha:  var(--rux-status-alert-alpha);
-  --red-alert:  var(--rux-status-alert);
+  --red-dark: var(--rux-status-alert);
+  --red: var(--rux-status-alert);
+  --red-alpha: var(--rux-status-alert-alpha);
+  --red-alert: var(--rux-status-alert);
 
   --org: oklch(65% 0.2 60);
   --org-alpha: oklch(65% 0.2 60 / 20%);
   --org-alert: oklch(80% 0.2 60);
 
-  --yel:       var(--rux-status-caution);
+  --yel: var(--rux-status-caution);
   --yel-alpha: var(--rux-status-caution-alpha);
   --yel-alert: var(--rux-status-caution);
 
-  --grn:       var(--rux-status-ok);
+  --grn: var(--rux-status-ok);
   --grn-alpha: var(--rux-status-ok-alpha);
   --grn-alert: var(--rux-status-ok);
 
@@ -252,25 +245,24 @@
   --pin-alpha: oklch(65% 0.21 350 / 20%);
   --pin-alert: oklch(80% 0.21 350);
 
-
   /* --- Core Palettes --- */
   --color-primary: var(--rux-accent-color);
   --color-secondary: var(--gra-dark);
   --color-accent: var(--rux-accent-color);
 
-  --color-danger:      var(--rux-status-alert);
+  --color-danger: var(--rux-status-alert);
   --color-danger-soft: var(--rux-status-alert-alpha);
-  --color-success:     var(--rux-status-ok);
-  --color-warning:     var(--rux-status-caution);
+  --color-success: var(--rux-status-ok);
+  --color-warning: var(--rux-status-caution);
 
   /* Semantic Mappings */
-  --color-status-pending:  var(--rux-status-alert);
-  --color-status-ok:       var(--rux-status-ok);
+  --color-status-pending: var(--rux-status-alert);
+  --color-status-ok: var(--rux-status-ok);
   --color-status-assigned: var(--rux-status-caution);
-  --color-status-blue:     var(--rux-status-info);
+  --color-status-blue: var(--rux-status-info);
 
   --color-conflict-accent: var(--rux-status-alert);
-  --color-conflict-bg:     var(--rux-status-alert-alpha);
+  --color-conflict-bg: var(--rux-status-alert-alpha);
 
   --white: #ffffff;
   --black: #000000;
@@ -311,7 +303,6 @@
   --surface-03: var(--rux-gray-600);
   --surface-04: var(--rux-gray-500);
 
-
   /* --- Borders ------------------------------------------------------------ */
   --border-subtle: rgb(255, 0, 0);
   --border-default: var(--rux-gray-900);
@@ -319,15 +310,11 @@
   --border-focus: rgb(255 255 255 / 100%);
   --border: var(--border-default);
 
-
-
-
-
   /* --- Text --------------------------------------------------------------- */
-  --text-primary:     var(--rux-gray-100);
-  --text-secondary:   var(--rux-gray-300);
+  --text-primary: var(--rux-gray-100);
+  --text-secondary: var(--rux-gray-300);
   --text-placeholder: var(--rux-gray-500);
-  --text-disabled:    var(--rux-gray-600);
+  --text-disabled: var(--rux-gray-600);
   --text-muted: var(--text-secondary);
   --header-seperator: var(--border-default);
 
@@ -350,7 +337,7 @@
 
   --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   --card-shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  --card-shadow-context: 0 8px 16px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  --card-shadow-context: 0 8px 16px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   --card-shadow-left: -4px 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   --card-shadow-right: 4px 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
@@ -415,9 +402,9 @@
   --header-action-color: var(--md-ref-palette-neutral-100);
 
   /* Toggle tiles */
-  --btn-toggle-bg: var(--md-ref-palette-neutral-40);
+  --btn-toggle-bg: var(--color-secondary);
   --btn-toggle-border: transparent;
-  --btn-toggle-text: var(--text-secondary);
+  --btn-toggle-text: var(--text-primary);
   --btn-toggle-hover-bg: color-mix(in srgb, var(--md-ref-palette-neutral-40) 85%, white);
   --btn-toggle-active-bg: var(--rux-accent-color);
   --btn-toggle-active-border: var(--rux-accent-color);
@@ -440,12 +427,12 @@
   --btn-pagination-hover-bg: color-mix(in srgb, white 10%, transparent);
 
   /* Base (Aluminum default — no variant class) */
-  --btn-base-bg:           oklch(32% 0.01 250);
-  --btn-base-border:       oklch(45% 0.02 250);
-  --btn-base-text:         oklch(95% 0.005 250);
-  --btn-base-hover-bg:     oklch(38% 0.015 250);
+  --btn-base-bg: oklch(32% 0.01 250);
+  --btn-base-border: oklch(45% 0.02 250);
+  --btn-base-text: oklch(95% 0.005 250);
+  --btn-base-hover-bg: oklch(38% 0.015 250);
   --btn-base-hover-border: oklch(55% 0.02 250);
-  --btn-base-active-bg:    oklch(28% 0.01 250);
+  --btn-base-active-bg: oklch(28% 0.01 250);
 
   /* Shared sizing */
   --btn-padding-x: 16px;
@@ -638,7 +625,6 @@
  * ========================================================================== */
 [data-theme="light"] {
   color-scheme: light;
-
 
   /* Borders */
   --border-hover: rgba(0, 0, 0, 0.3);
