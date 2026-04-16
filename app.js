@@ -191,6 +191,7 @@ const dom = {
   itineraryModalField: $("itineraryModalField"),
   itineraryCopyBtn: $("itineraryCopyBtn"),
   itinerarySaveBtn: $("itinerarySaveBtn"),
+  itineraryPdfUrlInput: $("itineraryPdfUrl"),
 
   busesNeeded: $("busesNeeded"),
   busGrid: document.querySelector('[data-js="trip-bus-grid"]') || $("busGrid"),
@@ -5632,6 +5633,7 @@ async function openTripForEdit(tripKey) {
     updateInvoiceNumberVisibility();
 
     if ($("itinerary")) dom.itineraryField.value = t.itinerary || "";
+    if ($("itineraryPdfUrl")) $("itineraryPdfUrl").value = t.itineraryPdfUrl || "";
     if ($("notes")) $("notes").value = t.notes || "";
     if ($("comments")) $("comments").value = t.comments || "";
 
@@ -6693,7 +6695,8 @@ function wireDelegatedBarEvents() {
 
   dom.ctxRemoveItineraryPdfBtn?.addEventListener("click", async () => {
     if (!activeContextTripKey) return;
-    const trip = state.tripByKey?.[activeContextTripKey];
+    const capturedTripKey = activeContextTripKey; // capture before menu close clears it
+    const trip = state.tripByKey?.[capturedTripKey];
 
     if (!trip || !trip.itineraryPdfUrl) {
       toast("No itinerary PDF attached to remove.", "info", 2000);
@@ -6710,16 +6713,17 @@ function wireDelegatedBarEvents() {
 
     // Needs to be loaded in the editor for saveBtn.click() to save this specific trip
     const wasOpenKey = dom.tripKey?.value;
-    if (wasOpenKey !== activeContextTripKey) {
+    if (wasOpenKey !== capturedTripKey) {
       toastShow("Loading trip to remove PDF...", "loading", {
         indeterminate: true,
         source: "pdf-delete",
       });
-      await openTripForEdit(activeContextTripKey);
+      await openTripForEdit(capturedTripKey);
     }
 
     toastShow("Deleting PDF...", "loading", { indeterminate: true, source: "pdf-delete" });
     trip.itineraryPdfUrl = ""; // Clear from local state
+    if ($("itineraryPdfUrl")) $("itineraryPdfUrl").value = ""; // Clear from form so it submits empty
     if (trip.itineraryStatus === "Received") {
       trip.itineraryStatus = "Pending";
       const itinStatusEl = $("itineraryStatus");

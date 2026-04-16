@@ -1022,9 +1022,6 @@ function uploadItineraryPdf_(e) {
   const contentType = data.mimeType || "application/pdf";
   const filename = data.filename || "itinerary.pdf";
   
-  const decodedData = Utilities.base64Decode(base64String);
-  const blob = Utilities.newBlob(decodedData, contentType, filename);
-
   // --- THE BULLETPROOF METHOD ---
   // We use the raw Google Drive REST API to upload the file, bypassing DriveApp entirely.
   const token = ScriptApp.getOAuthToken();
@@ -1076,7 +1073,6 @@ function uploadItineraryPdf_(e) {
     muteHttpExceptions: true
   });
 
-  // Construct the viewable URL
   const viewUrl = `https://drive.google.com/file/d/${fileId}/view`;
 
   // Save URL to Spreadsheet
@@ -1088,7 +1084,12 @@ function uploadItineraryPdf_(e) {
     const headerRow = tripsSheet.getRange(1, 1, 1, tripsSheet.getLastColumn()).getValues()[0].map(String);
     const colPdfUrl = headerRow.indexOf("itineraryPdfUrl");
     const colStatus = headerRow.indexOf("itineraryStatus");
+    
     if (colPdfUrl >= 0) {
+      const existingUrl = String(tripsSheet.getRange(rowIndex, colPdfUrl + 1).getValue() || "").trim();
+      if (existingUrl) {
+        deleteOldPdfIfItExists_(existingUrl);
+      }
       tripsSheet.getRange(rowIndex, colPdfUrl + 1).setValue(viewUrl);
     }
     if (colStatus >= 0) {
@@ -1470,22 +1471,11 @@ function getUnavailability_(startStr, endStr) {
 
 function deleteOldPdfIfItExists_(oldUrl) {
   if (!oldUrl || !oldUrl.includes("drive.google.com")) return;
-  
+
   try {
-    // Extract the file ID from the URL (e.g. https://drive.google.com/file/d/1ABC123XYZ/view)
     const match = oldUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
     if (match && match[1]) {
-      const fileId = match[1];
-      
-      // Use the REST API to delete the file
-      const token = ScriptApp.getOAuthToken();
-      const deleteUrl = `https://www.googleapis.com/drive/v3/files/${fileId}`;
-      
-      UrlFetchApp.fetch(deleteUrl, {
-        method: "delete",
-        headers: { Authorization: "Bearer " + token },
-        muteHttpExceptions: true
-      });
+      DriveApp.getFileById(match[1]).setTrashed(true);
     }
   } catch (err) {
     console.error("Failed to delete old PDF:", err);
