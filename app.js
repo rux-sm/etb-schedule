@@ -1478,10 +1478,10 @@ function toastShow(message, variant = "info", opts = {}) {
 }
 
 function toastHide(delayMs = 0, { source = "toast" } = {}) {
-  if (state.toastTimer) clearTimeout(state.toastTimer);
-
   const token = state.activeStatusNotice?.source === source ? state.activeStatusNotice.token : null;
-  if (token == null) return;
+  if (token == null) return; // don't touch the timer if it belongs to a different source
+
+  if (state.toastTimer) clearTimeout(state.toastTimer);
 
   const hideNow = () => {
     clearHeaderStatusNotice(token);
@@ -4377,7 +4377,7 @@ async function refreshWeekData({ silent = false } = {}) {
   const weekLoadStatusOpts = {
     source: "week-load",
     priority: 45,
-    force: true,
+    force: !tripLoadInFlight, // yield to an active trip-load — don't hijack the bar
   };
 
   try {
