@@ -99,45 +99,27 @@
   --rux-pink-800: oklch(30% 0.2 350);
   --rux-pink-900: oklch(20% 0.2 350);
 
-  --rux-space-xs: 4px;
-  --rux-space-sm: 8px;
-  --rux-space-md: 12px;
-  --rux-space-lg: 24px;
-  --rux-space-xl: 32px;
+  --rux-space-0: 0px;
+  --rux-space-1: 4px;
+  --rux-space-2: 8px;   /* gap for buttons, inputs */
+  --rux-space-3: 12px;
+  --rux-space-4: 16px;  /* cards, panels, modals */
+  --rux-space-5: 20px;
 
-  /* Legacy radius scale — kept for backward compat, migrate to --rux-radius-* */
-  --rux-border-radius-sm: 4px;
-  --rux-border-radius-md: 8px;
-  --rux-border-radius-lg: 16px;
-  --rux-border-radius-xl: 32px;
+  --rux-radius-0: 0px;
+  --rux-radius-1: 4px;
+  --rux-radius-2: 8px;
+  --rux-radius-3: 12px;
+  --rux-radius-4: 16px;
+  --rux-radius-5: 20px;
 
-  /* Optical Radius Scale
-   * Consistent 8px nesting gap at every depth level:
-   *   r_inner = r_outer − 8px   (matches --rux-space-sm, the app's primary spacing unit)
-   * Halves to 4px at depth 3–4 for micro-nesting atoms.
-   * Pair with corner-shape: squircle for the full Apple squircle effect.
-   *
-   * Depth 0  xl   24px  ── Outermost: floating cards, pill buttons, modals
-   * Depth 1  lg   16px  ── Panels, cards             (24 − 8)
-   * Depth 2  md    8px  ── Controls: buttons, inputs  (16 − 8)
-   * Depth 3  sm    4px  ── Nested controls            ( 8 − 4, half-step)
-   * Depth 4  xs    2px  ── Atoms: badges, chips, tags ( 4 − 2, half-step)
-   */
-  --rux-radius-none: 0px;
-  --rux-radius-xs: 2px;
-  --rux-radius-sm: 4px;
-  --rux-radius-md: 8px;
-  --rux-radius-lg: 20px;
-  --rux-radius-xl: 24px;
-  --rux-radius-pill: 9999px;
-
-  /* Semantic radius aliases — map roles to the optical scale */
-  --rux-radius-overlay: var(--rux-radius-xl); /* Modals, popovers, sheets */
-  --rux-radius-surface: var(--rux-radius-lg); /* Cards, panels, sidebars */
-  --rux-radius-section: var(--rux-radius-md); /* Groups nested inside cards */
-  --rux-radius-control: var(--rux-radius-sm); /* Inputs, selects, toolbars */
-  --rux-radius-badge: var(--rux-radius-xs); /* Chips, tags, mini-badges */
-  --rux-radius-button: var(--rux-radius-md); /* Pill/squircle buttons */
+  /* Semantic radius aliases — optical nesting: each depth steps down one level */
+  --rux-radius-overlay: var(--rux-radius-5); /* 20px — modals, sheets, popovers */
+  --rux-radius-surface: var(--rux-radius-4); /* 16px — cards, panels, sidebars */
+  --rux-radius-section: var(--rux-radius-2); /* 8px  — groups nested inside cards */
+  --rux-radius-control: var(--rux-radius-1); /* 4px  — inputs, selects, toolbars */
+  --rux-radius-badge: var(--rux-radius-1);   /* 4px  — chips, tags, mini-badges */
+  --rux-radius-button: var(--rux-radius-2);  /* 8px  — buttons */
 
   /* ==========================================================================
    # 2. SYSTEM TOKENS
@@ -200,20 +182,14 @@
    ========================================================================== */
 
   --gra-dark: oklch(55% 0 0);
-  --gra: oklch(65% 0 0);
-  --gra-alpha: oklch(65% 0 0 / 20%);
-  --gra-alert: oklch(80% 0 0);
 
   /* Legacy 3-letter tokens — bridged to Layer 2, retire in next pass */
-  --red-accent: var(--rux-status-alert);
-  --red-dark: var(--rux-status-alert);
   --red: var(--rux-status-alert);
   --red-alpha: var(--rux-status-alert-alpha);
   --red-alert: var(--rux-status-alert);
 
   --org: oklch(65% 0.2 60);
   --org-alpha: oklch(65% 0.2 60 / 20%);
-  --org-alert: oklch(80% 0.2 60);
 
   --yel: var(--rux-status-caution);
   --yel-alpha: var(--rux-status-caution-alpha);
@@ -221,37 +197,26 @@
 
   --grn: var(--rux-status-ok);
   --grn-alpha: var(--rux-status-ok-alpha);
-  --grn-alert: var(--rux-status-ok);
 
   --tea: oklch(65% 0.15 180);
   --tea-alpha: oklch(65% 0.15 180 / 20%);
-  --tea-alert: oklch(80% 0.15 180);
 
   --cya: oklch(65% 0.15 200);
   --cya-alpha: oklch(65% 0.15 200 / 20%);
-  --cya-alert: oklch(80% 0.21 200);
 
-  --blue-accent: oklch(65% 0.18 255);
-  --blue-dark: oklch(55% 0.18 255);
   --blue: var(--rux-blue-500);
-  --blue-alpha: oklch(65% 0.18 255 / 20%);
-  --blue-alert: oklch(80% 0.18 255);
 
   --pur: oklch(65% 0.3 290);
   --pur-alpha: oklch(65% 0.3 290 / 20%);
-  --pur-alert: oklch(80% 0.3 290);
 
   --pin: oklch(65% 0.21 350);
   --pin-alpha: oklch(65% 0.21 350 / 20%);
-  --pin-alert: oklch(80% 0.21 350);
 
   /* --- Core Palettes --- */
-  --color-primary: var(--rux-accent-color);
   --color-secondary: var(--gra-dark);
   --color-accent: var(--rux-accent-color);
 
   --color-danger: var(--rux-status-alert);
-  --color-danger-soft: var(--rux-status-alert-alpha);
   --color-success: var(--rux-status-ok);
   --color-warning: var(--rux-status-caution);
 
@@ -263,33 +228,6 @@
 
   --color-conflict-accent: var(--rux-status-alert);
   --color-conflict-bg: var(--rux-status-alert-alpha);
-
-  --white: #ffffff;
-  --black: #000000;
-
-  /* core */
-
-  /* Surfaces */
-  --core-01: #000000;
-  /* Canvas / App bg */
-  --core-02: #1c1c1e;
-  /* Sidebars / Nav (Raised from canvas) */
-  --core-03: #323234;
-  /* Cards / Modals (Highest surface) */
-  --core-04: #505052;
-  /* Subtle Grid Lines (Low contrast against core-01) */
-  --core-05: oklch(35% 0.006 260);
-  /* Input Borders / Dividers */
-
-  /* Content */
-  --core-06: oklch(20% 0.006 260);
-  /* Muted Text */
-  --core-07: oklch(65% 0.006 260);
-  /* Secondary Text */
-  --core-08: oklch(85% 0.006 260);
-  /* Primary Text */
-  --core-09: oklch(98% 0.006 260);
-  /* Headlines / White */
 
   /* ==========================================================================
    * LAYER 3 — COMPONENT TOKENS (DARK DEFAULTS)
@@ -304,11 +242,13 @@
   --surface-04: var(--rux-gray-500);
 
   /* --- Borders ------------------------------------------------------------ */
-  --border-subtle: rgb(255, 0, 0);
-  --border-default: var(--rux-gray-900);
-  --border-hover: rgb(255 255 255 / 30%);
-  --border-focus: rgb(255 255 255 / 100%);
-  --border: var(--border-default);
+  --rux-border-subtle:  oklch(100% 0 0 /  8%); /* dividers, section lines */
+  --rux-border-default: oklch(100% 0 0 / 14%); /* inputs, cards, grid cells */
+  --rux-border-strong:  oklch(100% 0 0 / 28%); /* hover, emphasis */
+  --rux-border-focus:   var(--rux-accent-color);
+
+  --border-subtle:  var(--rux-border-subtle);
+  --border-default: var(--rux-border-default);
 
   /* --- Text --------------------------------------------------------------- */
   --text-primary: var(--rux-gray-100);
@@ -316,17 +256,14 @@
   --text-placeholder: var(--rux-gray-500);
   --text-disabled: var(--rux-gray-600);
   --text-muted: var(--text-secondary);
-  --header-seperator: var(--border-default);
 
   /* --- Fields ------------------------------------------------------------- */
   --field-bg: var(--rux-surface-input);
   --field-bg-hover: var(--surface-03);
-  --field-border: var(--surface-02);
   --field-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   --field-disabled-opacity: 0.5;
 
   /* --- Shadows & effects -------------------------------------------------- */
-  --heading-shadow: none;
   --heading-shadow-panel: 0px 1px 2px rgba(0, 0, 0, 0.6), 0px 2px 4px rgba(0, 0, 0, 0.3);
   --label-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
   --text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
@@ -337,7 +274,6 @@
   --btn-shadow-active-sm: inset 0 1px 2px rgba(0, 0, 0, 0.6);
 
   --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  --card-shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   --card-shadow-context: 0 8px 16px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   --card-shadow-left: -4px 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   --card-shadow-right: 4px 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
@@ -419,7 +355,7 @@
   --btn-icon-active-bg: var(--rux-accent-color);
   --btn-icon-disabled-bg: var(--surface-02);
   --btn-icon-disabled-text: var(--text-disabled);
-  --btn-icon-size: 16px;
+  --btn-icon-size: 18px;
   --btn-icon-nav-size: 24px;
 
   /* Pagination */
@@ -445,14 +381,12 @@
   --focus-ring-color: var(--rux-accent-color);
   --focus-ring: inset 0 0 0 2px var(--focus-ring-color);
   --transition-fast: 0.11s cubic-bezier(0.2, 0, 0.38, 0.9);
-  --control-radius-icon: 8px;
   --input-height: 32px;
   --input-padding-x: 6px;
   --input-font-size: 14px;
 
   /* --- Spacing & layout --------------------------------------------------- */
   --layout-container-max: 100%;
-  --space-xs: 4px;
   --space-sm: 8px;
   --space-md: 12px;
   --space-lg: 16px;
@@ -462,15 +396,10 @@
   --card-padding: 16px;
   --size-header-row: 48px;
   --size-header-action: 48px;
-  --size-toolbar-action: 32px;
   --schedule-row-height: 100px;
   --bus-col-w: 34px;
-  --week-picker-height: 32px;
   --day-row-h: 34px;
-  --schedule-edge-inset-right: 16px;
   --sync-progress: 0%;
-  --waiting-list-dynamic-height: var(--schedule-row-height);
-  --print-scale: 1;
 
   /* --- Typography --------------------------------------------------------- */
   --font-sans:
@@ -631,10 +560,6 @@
 [data-theme="light"] {
   color-scheme: light;
 
-  /* Borders */
-  --border-hover: rgba(0, 0, 0, 0.3);
-  --border-focus: rgba(0, 0, 0, 1);
-
   /* Text */
   --text-placeholder: var(--md-ref-palette-neutral-50);
   --text-disabled: var(--md-ref-palette-neutral-60);
@@ -649,7 +574,6 @@
   --overlay-hover: rgba(0, 0, 0, 0.04);
   --btn-shadow-inset: none;
   --card-shadow: var(--md-sys-elevation-level1);
-  --card-shadow-hover: var(--md-sys-elevation-level2);
   --card-shadow-context: var(--md-sys-elevation-level5);
 
   /* Buttons */
@@ -689,7 +613,6 @@
   /* Compact size override (light uses larger touch targets) */
   --btn-compact-height: 32px;
   --btn-compact-padding-x: 12px;
-  --btn-icon-size: 24px;
   --btn-icon-nav-size: 24px;
 
   /* Trip bar */

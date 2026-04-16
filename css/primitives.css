@@ -240,22 +240,39 @@
   box-sizing: border-box;
 }
 
-/* Optional card footer */
-.c-card__footer {
+/* Footer */
+.rux-footer {
+  --footer-bg:        var(--rux-surface-footer);
+  --footer-padding-x: var(--rux-space-3);
+  --footer-padding-y: var(--rux-space-3);
+  --footer-gap:       var(--rux-space-2);
+  --footer-shadow:    0 -4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: var(--rux-space-sm);
+  gap: var(--footer-gap);
   flex-wrap: wrap;
-  padding: var(--space-md) var(--rux-space-md);
-  margin-top: 0;
-  background: var(--rux-surface-footer);
-  border-radius: none;
-  border-top: none;
-  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  padding: var(--footer-padding-y) var(--footer-padding-x);
+  background: var(--footer-bg);
+  box-shadow: var(--footer-shadow);
   position: relative;
   z-index: 10;
+}
+
+/* Direct buttons share space equally */
+.rux-footer > .btn {
+  flex: 1;
+}
+
+@media (max-width: 899px) {
+  .rux-footer {
+    flex-direction: column;
+  }
+
+  .rux-footer > .btn {
+    width: 100%;
+  }
 }
 
 /* ==========================================================================

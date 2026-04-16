@@ -14,7 +14,9 @@
       "Bash(sed -n '215,240p' \"/Users/escamillatourbuses/Library/Mobile Documents/com~apple~CloudDocs/Projects/etb/etb_trip_schedule/css/primitives.css\")",
       "Bash(sed -n '45,60p' \"/Users/escamillatourbuses/Library/Mobile Documents/com~apple~CloudDocs/Projects/etb/etb_trip_schedule/css/schedule.css\")",
       "Bash(sed -n '50,65p' \"/Users/escamillatourbuses/Library/Mobile Documents/com~apple~CloudDocs/Projects/etb/etb_trip_schedule/css/trip-bar.css\")",
-      "Bash(grep -E \"\\\\.\\(css|js\\)$\")"
+      "Bash(grep -E \"\\\\.\\(css|js\\)$\")",
+      "Bash(cat)",
+      "Read(//tmp/**)"
     ]
   }
 }

@@ -369,7 +369,7 @@ select.is-empty:not(:focus),
   white-space: pre-wrap;
   color: var(--text-secondary);
   background: var(--surface-03);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-default);
   border-radius: 0;
 }
 
@@ -389,7 +389,7 @@ select.is-empty:not(:focus),
   line-height: 1.5;
   letter-spacing: normal;
   font-variant-numeric: normal;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-default);
   border-radius: 0;
   text-align: center;
   width: 100%;

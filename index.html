@@ -600,26 +600,24 @@
                 </div>
 
                 <!-- Action Footer -->
-                <div class="c-card__footer">
-                  <div class="form-actions u-w-full">
-                    <button
-                      type="button"
-                      class="btn btn--default u-w-full"
-                      id="quoteInfoBtn"
-                      aria-label="View Calculator Rules & Logic"
-                    >
-                      <span class="material-symbols-outlined">info</span>
-                      <span>Rules & Logic</span>
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn--accent u-w-full"
-                      id="quoteCopySummary"
-                    >
-                      <span class="material-symbols-outlined">content_copy</span>
-                      <span>Copy Summary</span>
-                    </button>
-                  </div>
+                <div class="rux-footer">
+                  <button
+                    type="button"
+                    class="btn btn--default"
+                    id="quoteInfoBtn"
+                    aria-label="View Calculator Rules & Logic"
+                  >
+                    <span class="material-symbols-outlined">info</span>
+                    <span>Rules & Logic</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn--accent"
+                    id="quoteCopySummary"
+                  >
+                    <span class="material-symbols-outlined">content_copy</span>
+                    <span>Copy Summary</span>
+                  </button>
                 </div>
               </div>
 
@@ -651,7 +649,7 @@
                   </div>
                 </div>
 
-                <div class="c-card__footer"></div>
+                <div class="rux-footer"></div>
               </div>
 
               <!-- Notes Card (hidden by default) -->
@@ -675,16 +673,14 @@
                   </div>
                 </div>
 
-                <div class="c-card__footer">
-                  <div class="form-actions">
-                    <button
-                      type="button"
-                      class="btn btn--accent"
-                      id="saveNotesBtn"
-                    >
-                      Save Notes
-                    </button>
-                  </div>
+                <div class="rux-footer">
+                  <button
+                    type="button"
+                    class="btn btn--accent"
+                    id="saveNotesBtn"
+                  >
+                    Save Notes
+                  </button>
                 </div>
               </div>
 
@@ -1260,37 +1256,33 @@
                   </form>
                 </div>
 
-                <div class="c-card__footer">
-                  <div class="form-actions form-actions--footer">
-                    <button
-                      type="button"
-                      class="btn btn--danger"
-                      id="deleteBtn"
-                      disabled
-                    >
-                      <span class="material-symbols-outlined">delete</span>
-                      Delete
-                    </button>
-                    <div class="form-actions__group">
-                      <button
-                        type="button"
-                        class="btn btn--default"
-                        id="newBtn"
-                      >
-                        <span class="material-symbols-outlined">restart_alt</span>
-                        Clear
-                      </button>
-                      <button
-                        type="submit"
-                        class="btn btn--accent"
-                        id="saveBtn"
-                        form="tripForm"
-                      >
-                        <span class="material-symbols-outlined">save</span>
-                        Save
-                      </button>
-                    </div>
-                  </div>
+                <div class="rux-footer">
+                  <button
+                    type="button"
+                    class="btn btn--danger"
+                    id="deleteBtn"
+                    disabled
+                  >
+                    <span class="material-symbols-outlined">delete</span>
+                    Delete
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn--default"
+                    id="newBtn"
+                  >
+                    <span class="material-symbols-outlined">restart_alt</span>
+                    Clear
+                  </button>
+                  <button
+                    type="submit"
+                    class="btn btn--accent"
+                    id="saveBtn"
+                    form="tripForm"
+                  >
+                    <span class="material-symbols-outlined">save</span>
+                    Save
+                  </button>
                 </div>
 
                 <iframe
@@ -1872,38 +1864,36 @@
             class="envelope-modal__pages"
           ></div>
         </div>
-        <div class="modal__foot">
-          <div class="envelope-modal__actions">
-            <button
-              id="closeEnvelopeBtn"
-              class="btn btn--compact"
-              type="button"
-              aria-label="Close"
-            >
-              Close
-            </button>
-            <button
-              id="envelopeWhiteBtn"
-              class="btn btn--compact"
-              type="button"
-            >
-              White
-            </button>
-            <button
-              id="envelopeYellowBtn"
-              class="btn btn--compact"
-              type="button"
-            >
-              Yellow
-            </button>
-            <button
-              id="envelopePrintBtn"
-              class="btn btn--accent btn--compact"
-              type="button"
-            >
-              Print
-            </button>
-          </div>
+        <div class="modal__foot rux-footer">
+          <button
+            id="closeEnvelopeBtn"
+            class="btn btn--default"
+            type="button"
+            aria-label="Close"
+          >
+            Close
+          </button>
+          <button
+            id="envelopeWhiteBtn"
+            class="btn btn--default"
+            type="button"
+          >
+            White
+          </button>
+          <button
+            id="envelopeYellowBtn"
+            class="btn btn--default"
+            type="button"
+          >
+            Yellow
+          </button>
+          <button
+            id="envelopePrintBtn"
+            class="btn btn--accent"
+            type="button"
+          >
+            Print
+          </button>
         </div>
       </div>
     </div>

@@ -130,13 +130,6 @@
 
 .modal__foot {
   flex-shrink: 0;
-  padding: 16px;
-  border-top: 1px solid var(--border-subtle);
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  background: var(--surface-02);
 }
 
 /* --- Variants: Itinerary Modal --- */
@@ -521,7 +514,7 @@
 
 .next-day-report__day {
   margin-bottom: 40px;
-  border-bottom: 2px dashed var(--border);
+  border-bottom: 2px dashed var(--border-default);
   padding-bottom: 20px;
 }
 
@@ -591,7 +584,7 @@
 }
 
 .next-day-report__table thead tr {
-  border-bottom: 2px solid var(--border);
+  border-bottom: 2px solid var(--border-default);
   text-align: left;
 }
 
@@ -651,7 +644,7 @@
   margin: 0 0 15px 0;
   font-size: 20px;
   font-weight: bold;
-  border-bottom: 2px solid var(--border);
+  border-bottom: 2px solid var(--border-default);
   padding-bottom: 5px;
 }
 
@@ -798,16 +791,6 @@
   /* Let global select styles (_forms.css) handle border/bg/glass effect */
 }
 
-.envelope-modal__actions {
-  display: flex;
-  gap: 8px;
-  width: 100%;
-}
-
-.envelope-modal__actions>.btn {
-  flex: 1;
-  justify-content: center;
-}
 
 .envelope-modal__pages {
   display: flex;
@@ -1291,7 +1274,7 @@
 
 .driver-contact__divider {
   border: none;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-default);
   margin-top: 12px;
 }
 

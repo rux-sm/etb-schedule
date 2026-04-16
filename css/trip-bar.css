@@ -28,7 +28,8 @@
     transform var(--transition-fast),
     box-shadow var(--transition-fast),
     filter var(--transition-fast),
-    border-color var(--transition-fast);
+    border-color var(--transition-fast),
+    outline-color var(--transition-fast);
   will-change: transform, filter, box-shadow;
   background: var(--tripbar-color);
   /*will-change: filter, box-shadow;
@@ -38,34 +39,42 @@
   -webkit-backdrop-filter: blur(30px); */
 
   /* 3. Soften the edge */
-  border: 1px solid color-mix(in srgb, var(--tripbar-border-color) 50%, transparent);
-  border-left: 4px solid var(--tripbar-text-color);
+  border: 1px solid color-mix(in srgb, var(--tripbar-border-color) 100%, transparent);
+  border-left: 6px solid var(--tripbar-text-color);
 }
 
 
 /* Raise the row-bars container so the bar's shadow renders above other trip bars */
 .schedule-grid__row-bars:has(.schedule-grid__trip-bar:hover),
 .schedule-grid__row-bars:has(.schedule-grid__trip-bar.selected) {
-  z-index: 99999;
+  z-index: 800;
 }
 
-/* Hover: shadow only, no lift */
-.schedule-grid__trip-bar:hover,
-.schedule-grid__trip-bar.selected {
-  z-index: 99999;
-  box-shadow: var(--tripbar-shadow-hover);
+/* Hover: lit surface — inset highlight + brightness, no glow */
+.schedule-grid__trip-bar:hover {
+  z-index: 800;
+  filter: brightness(1.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 4px 8px rgba(0, 0, 0, 0.4);
   cursor: pointer;
 }
 
-/* Click: lift + shadow */
+/* Click: press down */
 .schedule-grid__trip-bar:active {
-  transform: translateY(-2px);
-  box-shadow: var(--tripbar-shadow-hover);
+  transform: scale(0.97);
+  filter: brightness(0.95);
 }
 
-/* Selected: keep shadow even after mouse leaves */
+/* Selected: lit surface + crisp outline ring */
 .schedule-grid__trip-bar.selected {
-  box-shadow: var(--tripbar-shadow-hover);
+  z-index: 800;
+  filter: brightness(1.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 4px 8px rgba(0, 0, 0, 0.4);
+  outline: 2px solid var(--tripbar-border-color);
+  outline-offset: 1px;
 }
 
 .schedule-grid__trip-bar.danger::after {

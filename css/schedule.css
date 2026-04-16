@@ -513,11 +513,6 @@
   background-color: var(--rux-surface-panel);
 }
 
-/* Shared Sidebar Footer Padding */
-.o-app-layout__sidebar--left>.c-card:not(.is-hidden) .c-card__footer,
-.o-app-layout__sidebar--right>.c-card:not(.is-hidden) .c-card__footer {
-  padding: var(--space-md) var(--rux-space-md);
-}
 
 /* ==========================================================================
    RIGHT SIDEBAR CARDS: NOTES + QUOTE CALCULATOR
@@ -663,7 +658,7 @@
 }
 
 .quote-calculator__select-mini:focus {
-  border-color: var(--border);
+  border-color: var(--border-default);
 }
 
 .quote-calculator__summary {
@@ -744,7 +739,7 @@
 
 /* ==========================================================================
    SCHEDULE GRID BORDERS
-   Centralized container and cell borders (1px solid var(--border))
+   Centralized container and cell borders (1px solid var(--border-default))
    ========================================================================== */
 
 /* Outer Boundaries */

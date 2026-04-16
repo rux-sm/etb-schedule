@@ -98,6 +98,7 @@ button {
 }
 
 .btn .material-symbols-outlined,
+.btn--toggle .material-symbols-outlined,
 .btn--toggle__icon {
   font-size: var(--btn-icon-size);
   font-variation-settings:
@@ -285,12 +286,6 @@ button {
   --btn-icon-fill: 1;
 }
 
-/* Toggle button icon — solid fill, larger size */
-.btn--toggle .toggle-pill__icon {
-  font-size: 18px;
-  font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
-}
-
 /* Toggle button icon */
 .btn--toggle .btn--toggle__icon {
   opacity: var(--btn-toggle-icon-opacity);
@@ -338,39 +333,11 @@ button {
   flex: 1;
 }
 
-/* Trip editor footer: Delete (left) | Clear + Save (right) */
-.form-actions--footer {
-  display: grid;
-  width: 100%;
-  grid-template-columns: 1fr 2fr;
-  gap: var(--rux-space-sm);
-  padding: 0;
-}
-
-.form-actions__group {
-  display: flex;
-  gap: var(--rux-space-sm);
-  width: 100%;
-}
-
-.form-actions__group .btn {
-  flex: 1;
-}
-
-.form-actions--footer > .btn--danger {
-  width: 100%;
-}
-
 /* ── 11. Responsive ─────────────────────────────────────────────────────── */
 
 @media (max-width: 899px) {
-
   .btn,
   .btn--toggle {
     min-height: 44px;
-  }
-
-  .form-actions--footer {
-    grid-template-columns: 1fr;
   }
 }
