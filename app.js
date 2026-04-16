@@ -5560,7 +5560,10 @@ function setTripFormFromState(tripKey) {
 let tripLoadInFlight = false;
 
 async function openTripForEdit(tripKey) {
-  if (tripLoadInFlight) return;
+  if (tripLoadInFlight) {
+    toast("Trip is already loading…", "info", 1200);
+    return;
+  }
   tripLoadInFlight = true;
   if (isMobileOnly()) { tripLoadInFlight = false; return openTripDetailsModal(tripKey); }
 
@@ -5568,16 +5571,10 @@ async function openTripForEdit(tripKey) {
     sticky: true,
     source: "trip-load",
     priority: 55,
+    force: true,
   });
 
-  const conflictBanner = document.getElementById("tripConflictBanner");
-  if (conflictBanner) conflictBanner.classList.add("is-hidden");
-
-  // If the trip panel is already open, keep old data visible but lock all inputs.
-  // If the panel is closed, it will open after the fetch with fresh data.
-  const panelAlreadyOpen = getCardPanel("trip") !== null;
-
-  // Disable/enable all form inputs during load
+  // Disable/enable all form inputs during load — defined outside try so finally can call it
   const setFormDisabled = (disabled) => {
     if (!dom.tripForm) return;
     dom.tripForm.querySelectorAll("input, select, textarea").forEach((el) => {
@@ -5588,6 +5585,15 @@ async function openTripForEdit(tripKey) {
       if (btn) btn.disabled = disabled;
     });
   };
+
+  try {
+
+  const conflictBanner = document.getElementById("tripConflictBanner");
+  if (conflictBanner) conflictBanner.classList.add("is-hidden");
+
+  // If the trip panel is already open, keep old data visible but lock all inputs.
+  // If the panel is closed, it will open after the fetch with fresh data.
+  const panelAlreadyOpen = getCardPanel("trip") !== null;
 
   // Helper to populate the form fully
   const populateFormFromData = (t, assigns) => {
@@ -5711,7 +5717,6 @@ async function openTripForEdit(tripKey) {
   dom.saveBtn.disabled = true;
   if (dom.deleteBtn) dom.deleteBtn.disabled = true;
 
-  try {
     const startTime = Date.now();
 
     const [tripResp, assignResp] = await Promise.all([
@@ -5751,6 +5756,11 @@ async function openTripForEdit(tripKey) {
     alert("Could not open trip for editing.");
   } finally {
     tripLoadInFlight = false;
+    // Safety net: if neither success nor error notice replaced the loading bar, clear it now.
+    if (state.activeStatusNotice?.source === "trip-load" &&
+        state.activeStatusNotice?.entry?.mode === "loading") {
+      toastHide(0, { source: "trip-load" });
+    }
     setFormDisabled(false);
     dom.saveBtn.disabled = false;
     if (dom.deleteBtn) dom.deleteBtn.disabled = dom.action.value === "create";
