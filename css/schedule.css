@@ -804,7 +804,7 @@
 
 .schedule-grid {
   width: 100%;
-  min-width: 1436px;
+  min-width: 1602px;
   height: auto;
   background: var(--rux-surface-base);
   table-layout: fixed;
@@ -844,7 +844,7 @@
 /* Day columns */
 .schedule-grid__header-cell:not(:first-child),
 .schedule-grid__cell:not(:first-child) {
-  min-width: 200px;
+  min-width: 224px;
 }
 
 .schedule-grid__header-cell:first-child {

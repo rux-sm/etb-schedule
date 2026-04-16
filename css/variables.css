@@ -551,37 +551,41 @@
 
   --tripbar-r1-font-size: 0.75rem;
   --tripbar-r1-row-height: 14px;
-  --tripbar-r1-font-weight: 600;
+  --tripbar-r1-font-weight: 500;
   --tripbar-r1-line-height: 14px;
-  --tripbar-r1-letter-spacing: 0.02em;
+  --tripbar-r1-letter-spacing: 0em;
 
   --tripbar-r2-font-size: 0.6875rem;
   --tripbar-r2-row-height: 12px;
-  --tripbar-r2-font-weight: 500;
+  --tripbar-r2-font-weight: 400;
   --tripbar-r2-line-height: 12px;
-  --tripbar-r2-letter-spacing: 0.02em;
+  --tripbar-r2-letter-spacing: 0em;
 
   --tripbar-r3-row-height: 13px;
 
   --tripbar-r4-font-size: 0.6875rem;
   --tripbar-r4-row-height: 13px;
-  --tripbar-r4-font-weight: 700;
+  --tripbar-r4-font-weight: 400;
   --tripbar-r4-line-height: 13px;
-  --tripbar-r4-letter-spacing: 0.05em;
+  --tripbar-r4-letter-spacing: 0em;
 
   --tripbar-r5-row-height: 14px;
+  --tripbar-r5-font-size: 0.75rem;
+  --tripbar-r5-font-weight: 400;
+  --tripbar-r5-line-height: 14px;
+  --tripbar-r5-letter-spacing: 0em;
 
   --tripbar-r6-font-size: 0.625rem;
   --tripbar-r6-row-height: 12px;
-  --tripbar-r6-font-weight: 400;
+  --tripbar-r6-font-weight: 500;
   --tripbar-r6-line-height: 12px;
-  --tripbar-r6-letter-spacing: 0.02em;
+  --tripbar-r6-letter-spacing: -0.03em;
 
   --tripbar-r7-font-size: 0.75rem;
   --tripbar-r7-row-height: 14px;
-  --tripbar-r7-font-weight: 700;
+  --tripbar-r7-font-weight: 500;
   --tripbar-r7-line-height: 14px;
-  --tripbar-r7-letter-spacing: 0.05em;
+  --tripbar-r7-letter-spacing: 0em;
 
   --tripbar-mini-badge: 14px;
   --tripbar-badge-radius: 0;

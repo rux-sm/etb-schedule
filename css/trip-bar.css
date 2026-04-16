@@ -502,31 +502,15 @@
   border-end-start-radius: 0;
 }
 
-.schedule-grid__trip-bar.cont-left::before {
-  content: "chevron_left";
-}
-
 /* ── cont-left: arrival time gets the full row width ───────────────────────
    isStartDay is always false on cont-left bars so left/center are empty.
-   Collapse them to zero so the right (arrival) item owns the whole row,
-   then pad past the small chip so text can never clip under it. */
+   Collapse them to zero so the right (arrival) item owns the whole row. */
 .schedule-grid__trip-bar.cont-left .schedule-grid__trip-bar__time--left,
 .schedule-grid__trip-bar.cont-left .schedule-grid__trip-bar__time--center {
   flex: 0;
   overflow: hidden;
 }
 
-.schedule-grid__trip-bar.cont-left .schedule-grid__trip-bar__time-row {
-  padding-inline-start: calc(var(--icon-arrow-offset, 4px) + var(--icon-arrow-size, 1.125rem) + 2px);
-}
-
-/* On narrow half-day bars left-align the arrival time so it reads "10:0…"
-   instead of being left-clipped to "0 AM" when right-aligned. */
-@container (max-width: 80px) {
-  .schedule-grid__trip-bar.cont-left .schedule-grid__trip-bar__time--right {
-    justify-content: flex-start;
-  }
-}
 
 .schedule-grid__trip-bar.cont-right {
   border-inline-end: none;
@@ -534,20 +518,6 @@
   border-end-end-radius: 0;
 }
 
-.schedule-grid__trip-bar.cont-right::after {
-  content: "chevron_right";
-}
-
-/* ── cont-right: departure time & spot time must remain centered ─────────
-   By NOT collapsing the empty right item, it acts as a natural bumper
-   for the chevron icon, keeping the center item perfectly in the middle. */
-
-/* On narrow half-day bars right-align departure time */
-@container (max-width: 80px) {
-  .schedule-grid__trip-bar.cont-right .schedule-grid__trip-bar__time--left {
-    justify-content: flex-end !important;
-  }
-}
 
 /* ── Single-column partial bars: show only the colored bar ──────────────────
    cont-single = the bar occupies exactly one day column AND continues
@@ -555,10 +525,10 @@
    when the bar is physically narrow — wide single-column bars still show data. */
 @container (max-width: 120px) {
   .schedule-grid__trip-bar.cont-single {
+    /* Collapse all content rows — keep row 4 (time row) visible */
     .schedule-grid__trip-bar__row--1,
     .schedule-grid__trip-bar__row--2,
     .schedule-grid__trip-bar__row--3,
-    .schedule-grid__trip-bar__row--4,
     .schedule-grid__trip-bar__row--5,
     .schedule-grid__trip-bar__row--6,
     .schedule-grid__trip-bar__row--7 {
@@ -567,5 +537,19 @@
       margin: 0;
       padding: 0;
     }
+
+    /* Always hide spot time — it would overlap the chevron arrows */
+    .schedule-grid__trip-bar__time--center {
+      display: none;
+    }
   }
+
+  /* cont-right: trip continues into next week → show departure (left) only */
+  .schedule-grid__trip-bar.cont-single.cont-right {
+    .schedule-grid__trip-bar__time--right {
+      display: none;
+    }
+  }
+  /* cont-left: trip came from previous week → show arrival (right) only     */
+  /* No extra rule needed — base .cont-left already collapses left + center. */
 }

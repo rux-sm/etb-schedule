@@ -24,9 +24,7 @@
   }
 }
 
-#printRoot.print-mode-legal .icon-arrow,
-#printRoot.print-mode-legal .schedule-grid__trip-bar.cont-left::before,
-#printRoot.print-mode-legal .schedule-grid__trip-bar.cont-right::after {
+#printRoot.print-mode-legal .icon-arrow {
   text-shadow: none !important;
   box-shadow: none !important;
   filter: none !important;
@@ -39,12 +37,7 @@
     border-top: 1px solid #d3d3d3 !important;
   }
 }
-@media print {
-  #printRoot.print-mode-legal .print-table .schedule-grid__trip-bar.cont-left::before,
-  #printRoot.print-mode-legal .print-table .schedule-grid__trip-bar.cont-right::after {
-    color: #111 !important;
-  }
-}
+
 #printRoot.print-mode-legal .c-header.c-header--schedule {
   border-top: none !important;
   border-bottom: none !important;

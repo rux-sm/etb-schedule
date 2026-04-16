@@ -2664,10 +2664,8 @@ function _renderAgendaInner() {
   }
 
   // ---- Handoff detection: find days where one trip ends and another begins on same bus ----
-  function snapToQuarter(frac) {
-    if (frac < 0.375) return 0.25;
-    if (frac < 0.625) return 0.50;
-    return 0.75;
+  function snapToThird(frac) {
+    return frac < 0.5 ? 1 / 3 : 2 / 3;
   }
 
   function timeToFrac(timeStr) {
@@ -2731,15 +2729,15 @@ function _renderAgendaInner() {
     }
     if (!hasValidPair) continue;
 
-    let arrFrac = snapToQuarter(bestArrFrac);
-    let depFrac = snapToQuarter(bestDepFrac);
+    let arrFrac = snapToThird(bestArrFrac);
+    let depFrac = snapToThird(bestDepFrac);
 
     if (bestArrIsSD && bestDepIsSD) {
       arrFrac = 0.5; depFrac = 0.5;
     } else if (bestArrIsSD) {
-      arrFrac = 0.75; depFrac = Math.max(depFrac, 0.75);
+      arrFrac = 2 / 3; depFrac = Math.max(depFrac, 2 / 3);
     } else if (bestDepIsSD) {
-      depFrac = 0.25; arrFrac = Math.min(arrFrac, 0.25);
+      depFrac = 1 / 3; arrFrac = Math.min(arrFrac, 1 / 3);
     } else if (arrFrac > depFrac) {
       arrFrac = 0.5; depFrac = 0.5;
     }
@@ -3389,7 +3387,7 @@ function _renderAgendaInner() {
         bar.dataset.handoffArr = String(endHandoff.arrFrac);
       } else {
         delete bar.dataset.handoffArr;
-        // Half-day truncation: shorten bar to 50% of last column if trip returns 4AM–11:59AM
+        // Half-day truncation: shorten bar to 1/3 of last column if trip returns 4AM–11:59AM
         const isHalfDayReturn =
           !isActualSingleDay &&
           isEndDay &&
@@ -3400,7 +3398,7 @@ function _renderAgendaInner() {
         if (isHalfDayReturn) {
           const currentWidth = parseFloat(bar.style.width) || 0;
           const lastColW = col.widths[endIdx] ?? 0;
-          bar.style.width = `${Math.max(0, currentWidth - lastColW / 2)}px`;
+          bar.style.width = `${Math.max(0, currentWidth - (lastColW * 2) / 3)}px`;
         }
       }
 
@@ -3411,20 +3409,20 @@ function _renderAgendaInner() {
         bar.dataset.handoffDep = String(startHandoff.depFrac);
       } else {
         delete bar.dataset.handoffDep;
-        // Half-day departure: shift bar right by 50% of first column if trip departs after 6PM
+        // Half-day departure: shift bar right by 2/3 of first column if trip departs after 10PM
         const isHalfDayDepart =
           !isActualSingleDay &&
           isStartDay &&
           !!depTime &&
-          depTime >= "18:00";
+          depTime >= "22:00";
         bar.classList.toggle("half-day-depart", isHalfDayDepart);
         if (isHalfDayDepart) {
           const firstColW = col.widths[startIdx] ?? 0;
-          const half = firstColW / 2;
+          const twoThirds = (firstColW * 2) / 3;
           const currentLeft = parseFloat(bar.style.left) || 0;
           const currentWidth = parseFloat(bar.style.width) || 0;
-          bar.style.left = `${currentLeft + half}px`;
-          bar.style.width = `${Math.max(0, currentWidth - half)}px`;
+          bar.style.left = `${currentLeft + twoThirds}px`;
+          bar.style.width = `${Math.max(0, currentWidth - twoThirds)}px`;
         }
       }
 

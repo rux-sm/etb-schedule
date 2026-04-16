@@ -122,9 +122,7 @@
 }
 
 /* ── 6. Continuation Arrow (trip bar extends past week) ────── */
-.icon-arrow,
-.schedule-grid__trip-bar.cont-left::before,
-.schedule-grid__trip-bar.cont-right::after {
+.icon-arrow {
   font-family: "Material Symbols Outlined";
   font-size: var(--icon-arrow-size, 1.125rem);
   font-variation-settings:
@@ -138,14 +136,12 @@
   text-shadow: none !important;
 }
 
-.icon-arrow--left,
-.schedule-grid__trip-bar.cont-left::before {
+.icon-arrow--left {
   inset-inline-start: var(--icon-arrow-offset, 4px);
   animation: arrow-left-bounce 0.75s infinite ease-in-out;
 }
 
-.icon-arrow--right,
-.schedule-grid__trip-bar.cont-right::after {
+.icon-arrow--right {
   inset-inline-end: var(--icon-arrow-offset, 4px);
   animation: arrow-right-bounce 0.75s infinite ease-in-out;
 }
