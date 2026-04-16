@@ -196,7 +196,7 @@ textarea:focus-visible,
 }
 
 .select-trigger:disabled {
-  opacity: 0.5;
+  opacity: var(--field-disabled-opacity);
   cursor: not-allowed;
   border-bottom-style: solid;
 }

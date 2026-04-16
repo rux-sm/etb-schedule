@@ -1313,16 +1313,17 @@
 
 /* Locked state: visible but dimmed and non-interactive until the toggle unlocks the slot */
 .bus-assign__driver-block.is-locked {
-  opacity: 0.4;
+  opacity: var(--field-disabled-opacity);
   pointer-events: none;
 }
 
 /* Bus assignment cells: no borders — status is communicated via bg, text, and icon color only */
-.bus-assign__driver-block .select-trigger {
+.bus-assign__driver-block .select-trigger,
+#busGrid.bus-assign > .select-dropdown .select-trigger {
   border: none !important;
 }
 
-/* Locked triggers: reset trigger's own :disabled opacity so parent is-locked (0.4) is the sole source */
+/* Locked triggers: reset trigger's own :disabled opacity so parent is-locked is the sole source */
 .bus-assign__driver-block.is-locked .select-trigger {
   opacity: 1;
 }

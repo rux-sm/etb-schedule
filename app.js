@@ -4089,8 +4089,8 @@ function updateBusRowVisibility() {
   const wantsD4 = document.getElementById("reqRelief2")?.getAttribute("aria-pressed") === "true";
 
   state.busRows.forEach((r, idx) => {
-    const show = idx < n;
-    const enabled = raw > 0 && show;
+    const show = idx < n || idx === 0;
+    const enabled = raw > 0 && idx < n;
 
     const showD2 = show && (wantsD2 || (r.d2Sel.value && r.d2Sel.value !== "None"));
     const showD3 = show && (wantsD3 || (r.d3Sel.value && r.d3Sel.value !== "None"));
