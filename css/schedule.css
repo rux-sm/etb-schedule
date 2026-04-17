@@ -1298,10 +1298,6 @@
 
 .bus-assign-header .field-label {
   margin-bottom: 0;
-  font-size: 0.6875rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  letter-spacing: 0.04em;
 }
 
 /* Relief slots pin to their driver's column so they appear stacked below Driver 1 / Driver 2 */

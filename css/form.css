@@ -319,11 +319,12 @@ select.is-empty:not(:focus),
 .field-label {
   display: block;
   font-size: var(--form-label-font-size);
-  font-weight: 400;
+  font-weight: var(--form-label-weight);
   color: var(--form-label-color);
   line-height: 1.25;
   margin-bottom: var(--form-label-margin) !important;
-  letter-spacing: 0.02em;
+  padding-left: var(--form-label-indent);
+  letter-spacing: var(--form-label-spacing);
   width: 100%;
   text-shadow: var(--label-shadow);
 }
@@ -535,11 +536,11 @@ hr.form-divider {
 }
 
 .form-divider__label {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: var(--form-section-label-size);
+  font-weight: var(--form-section-label-weight);
+  letter-spacing: var(--form-section-label-spacing);
   text-transform: uppercase;
-  color: var(--text-secondary);
+  color: var(--form-section-label-color);
   white-space: nowrap;
   flex-shrink: 0;
 }

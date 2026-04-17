@@ -259,8 +259,18 @@
   --rux-form-label-gap:     8px; /* vertical gap between a field and its label (e.g. the "First Name" label and its input) */
   --form-label-margin:      4px; /* margin-bottom below field labels (e.g. "First Name") */
   --form-section-gap:       16px; /* gap between a section divider label and its content (e.g. toggle buttons, bus grid) */
-  --form-label-color:       var(--rux-blue-700);
-  --form-label-font-size:   14px;
+  /* field labels — e.g. "Destination", "Name" */
+  --form-label-color:       var(--rux-blue-200);
+  --form-label-font-size:   12px;
+  --form-label-weight:      500;
+  --form-label-spacing:     0.02em;
+  --form-label-indent:      2px; /* left offset — set to 1px to align with invisible border edge */
+
+  /* section divider labels — e.g. "REQUIREMENTS", "BUS ASSIGNMENT" */
+  --form-section-label-color:   var(--rux-green-200);
+  --form-section-label-size:    12px;
+  --form-section-label-weight:  500;
+  --form-section-label-spacing: 0.02em;
 
   --bus-grid-row-gap:       4px; /* gap between grid rows (between bus #1 block and bus #2 block) */
   --bus-driver-block-gap:   4px; /* gap between driver select and status select within a single driver block */
@@ -456,7 +466,7 @@
   ──────────────────────────────────────────────────────────────── */
 
   --font-sans:
-    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Google Sans", "Inter",
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     "Helvetica Neue", Arial, sans-serif;
   --font-mono:
     ui-monospace, "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",

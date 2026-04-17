@@ -1285,15 +1285,6 @@
 
 /* ── Trip Editor UI Refactoring ────────────────────────────────────── */
 
-/* Updated label styling for Trip Editor */
-#tripForm label,
-.trip-editor__req-label {
-  font-size: 0.75rem;
-  font-weight: 400;
-  color: var(--text-muted);
-  letter-spacing: 0.05em;
-  text-transform: none;
-}
 
 /* Dividers & Section Labels */
 .trip-editor__divider {
