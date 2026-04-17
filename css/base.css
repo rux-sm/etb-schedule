@@ -641,7 +641,7 @@ samp {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 8px;
+  gap: var(--icon-text-gap);
   width: 100%;
   padding: 0 16px;
 
@@ -671,13 +671,17 @@ samp {
 .context-item .material-symbols-outlined,
 .context-menu__item .material-symbols-outlined {
   display: inline-flex;
-  width: 20px;
+  width: var(--icon-field-size);
   flex: 0 0 auto;
   justify-content: center;
   align-items: center;
-  font-size: 1.125rem;
+  font-size: var(--icon-field-size);
+  font-variation-settings:
+    "FILL" var(--icon-field-fill),
+    "wght" var(--icon-field-wght),
+    "GRAD" var(--icon-field-grad),
+    "opsz" var(--icon-field-opsz);
   color: var(--text-secondary);
-  /* Icons default to secondary color */
 }
 
 /* Carbon Hover: 10% brighter background mix */

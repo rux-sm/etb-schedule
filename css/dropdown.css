@@ -9,7 +9,7 @@
   width: max-content;
   padding: 8px 0;
   margin: 2px 0 0;
-  font-size: 0.875rem;
+  font-size: var(--input-font-size);
   text-align: left;
   list-style: none;
   background-color: var(--rux-surface-menu);
@@ -43,7 +43,7 @@
   background: transparent;
   color: var(--text-primary);
   font-family: var(--font-sans);
-  font-size: 0.875rem;
+  font-size: var(--input-font-size);
   text-align: left;
   box-sizing: border-box;
   border: none;
@@ -66,8 +66,12 @@
 }
 
 .dropdown__icon {
-  font-size: 1.125rem;
-  margin-right: 12px;
+  font-size: var(--icon-field-size);
+  font-variation-settings:
+    "FILL" var(--icon-field-fill),
+    "wght" var(--icon-field-wght),
+    "GRAD" var(--icon-field-grad),
+    "opsz" var(--icon-field-opsz);
   flex-shrink: 0;
   color: var(--text-secondary);
 }
@@ -88,7 +92,7 @@
   border-bottom: 1px solid var(--border-subtle);
   color: var(--text-primary);
   font-family: var(--font-sans);
-  font-size: 0.875rem;
+  font-size: var(--input-font-size);
   outline: none;
   box-sizing: border-box;
 }
@@ -103,5 +107,5 @@ option {
   color: var(--text-primary) !important;
   padding: 8px 12px;
   font-family: var(--font-sans);
-  font-size: var(--input-font-size, 0.875rem);
+  font-size: var(--input-font-size);
 }

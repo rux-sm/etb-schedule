@@ -196,10 +196,12 @@
   height: 48px;
   width: 100%;
   flex-shrink: 0;
-  padding: 0 var(--rux-space-md);
-  border-bottom: 1px solid var(--rux-border-color);
+  padding: 0 var(--rux-space-3);
+  border-bottom: 1px solid var(--border-default);
   background-color: var(--rux-surface-header);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05);
   position: relative;
   z-index: 10;
 }
@@ -242,11 +244,11 @@
 
 /* Footer */
 .rux-footer {
-  --footer-bg:        var(--rux-surface-footer);
+  --footer-bg: var(--rux-surface-footer);
   --footer-padding-x: var(--rux-space-3);
   --footer-padding-y: var(--rux-space-3);
-  --footer-gap:       var(--rux-space-2);
-  --footer-shadow:    0 -4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --footer-gap: var(--rux-space-2);
+  --footer-shadow: 0 -4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
   flex-shrink: 0;
   display: flex;
@@ -285,8 +287,8 @@
 }
 
 .cds-accordion__item {
-  border-radius: var(--rux-border-radius-md);
-  border: 1px solid var(--rux-border-color);
+  border-radius: var(--rux-radius-section);
+  border: 1px solid var(--border-default);
   margin-bottom: 8px;
   overflow: hidden;
 }

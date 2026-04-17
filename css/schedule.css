@@ -646,15 +646,16 @@
 }
 
 .quote-calculator__select-mini {
-  background: var(--surface-02);
-  border: 1px solid var(--border-subtle);
-  border-radius: 0px;
+  background-color: var(--field-bg);
+  border: 1px solid var(--field-border);
+  border-radius: var(--rux-radius-control);
   color: var(--text-primary);
-  font-size: 13px;
-  padding: 0 4px;
+  font-size: inherit;
+  padding: 0 var(--input-padding-x);
   outline: none;
   cursor: pointer;
-  height: 30px;
+  height: var(--rux-form-height);
+  box-sizing: border-box;
 }
 
 .quote-calculator__select-mini:focus {
@@ -1266,7 +1267,7 @@
 #driver-col-hl {
   position: absolute;
   pointer-events: none;
-  border: 2px solid var(--rux-gray-300);
+  border: 2px solid var(--rux-neutral-300);
   border-radius: 0px;
   z-index: 100;
 }
@@ -1310,12 +1311,6 @@
 .bus-assign__driver-block.is-locked {
   opacity: var(--field-disabled-opacity);
   pointer-events: none;
-}
-
-/* Bus assignment cells: no borders — status is communicated via bg, text, and icon color only */
-.bus-assign__driver-block .select-trigger,
-#busGrid.bus-assign > .select-dropdown .select-trigger {
-  border: none !important;
 }
 
 /* Locked triggers: reset trigger's own :disabled opacity so parent is-locked is the sole source */

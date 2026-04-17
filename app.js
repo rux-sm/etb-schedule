@@ -7020,8 +7020,6 @@ function wrapSelectInGlassDropdown(sel, opts) {
     if (iconName) {
       const iconSpan = document.createElement("span");
       iconSpan.className = "material-symbols-outlined dropdown-icon is-active";
-      iconSpan.style.marginRight = "8px";
-      iconSpan.style.fontSize = "18px";
 
       const colorClass = getStatusColorClass(
         statusId || (sel.name && sel.name.endsWith("Status") ? "driverStatus" : null),
