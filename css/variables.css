@@ -254,9 +254,18 @@
 
 
   --rux-form-height:        32px;
-  --form-row-gap:           0px;
-  --form-col-gap:           8px;
-  --rux-form-label-gap:     0px;
+  --form-row-gap:           8px; /* gap between rows of fields (e.g. between "First Name" and "Last Name" rows) */
+  --form-col-gap:           8px; /* gap between fields in the same row */
+  --rux-form-label-gap:     8px; /* vertical gap between a field and its label (e.g. the "First Name" label and its input) */
+  --form-label-margin:      4px; /* margin-bottom below field labels (e.g. "First Name") */
+  --form-section-gap:       16px; /* gap between a section divider label and its content (e.g. toggle buttons, bus grid) */
+  --form-label-color:       var(--rux-blue-700);
+  --form-label-font-size:   14px;
+
+  --bus-grid-row-gap:       4px; /* gap between grid rows (between bus #1 block and bus #2 block) */
+  --bus-driver-block-gap:   4px; /* gap between driver select and status select within a single driver block */
+
+  --bus-header-margin:      0px;  /* margin-bottom below .bus-assign-header labels */
 
   --field-bg:               var(--rux-surface-input);
   --field-bg-hover:         var(--surface-03); /* not currently used */

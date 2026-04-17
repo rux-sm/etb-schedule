@@ -318,11 +318,11 @@ select.is-empty:not(:focus),
 .form-group>label,
 .field-label {
   display: block;
-  font-size: 0.8125rem;
+  font-size: var(--form-label-font-size);
   font-weight: 400;
-  color: var(--text-secondary);
+  color: var(--form-label-color);
   line-height: 1.25;
-  margin-bottom: 4px !important;
+  margin-bottom: var(--form-label-margin) !important;
   letter-spacing: 0.02em;
   width: 100%;
   text-shadow: var(--label-shadow);

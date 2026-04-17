@@ -1283,16 +1283,17 @@
 .bus-assign-header {
   display: grid;
   grid-template-columns: 64px 1fr 1fr;
-  column-gap: 12px;
+  column-gap: var(--form-col-gap);
 }
 
 #busGrid.bus-assign {
-  row-gap: 10px;
+  row-gap: var(--bus-grid-row-gap);
   align-items: start;
 }
 
 .bus-assign-header {
-  margin-bottom: 4px;
+  margin-top: var(--form-section-gap);
+  margin-bottom: var(--bus-header-margin);
 }
 
 .bus-assign-header .field-label {
@@ -1322,7 +1323,7 @@
 .bus-assign__driver-block {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--bus-driver-block-gap);
   min-width: 0;
 }
 
