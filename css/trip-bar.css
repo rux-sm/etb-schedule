@@ -17,7 +17,6 @@
   max-height: var(--tripbar-height) !important;
   box-sizing: border-box;
   padding: var(--tripbar-padding-y) var(--tripbar-padding-x);
-  font-variant-numeric: tabular-nums;
   text-shadow: var(--tripbar-text-shadow);
 
   border-radius: var(--tripbar-radius);
@@ -31,39 +30,40 @@
     border-color var(--transition-fast),
     outline-color var(--transition-fast);
   will-change: transform, filter, box-shadow;
-  background: var(--tripbar-color);
 
-  border: 1px solid color-mix(in srgb, var(--tripbar-border-color) 100%, transparent);
-  border-left: 6px solid var(--tripbar-text-color);
+  --trip-accent-color: var(--rux-mana-500);
+  --trip-l: 60%;
+  --trip-c: 0.2;
+  --trip-alpha: 25%;
+
+  background: oklch(from var(--trip-accent-color) var(--trip-l) var(--trip-c) h / var(--trip-alpha));
+  border: 1px solid oklch(from var(--trip-accent-color) var(--trip-l) var(--trip-c) h / 100%);
+  border-left: 6px solid var(--trip-accent-color);
 }
 
-
-/* Raise the row-bars container so the bar's shadow renders above other trip bars */
-.schedule-grid__row-bars:has(.schedule-grid__trip-bar:hover),
-.schedule-grid__row-bars:has(.schedule-grid__trip-bar.selected) {
-  z-index: 800;
-}
-
-/* Hover: lit surface — inset highlight + brightness, no glow */
+/* Hover: Increase Lightness only */
 .schedule-grid__trip-bar:hover {
-  z-index: 800;
-  filter: brightness(1.12);
+  z-index: 600;
+  --trip-l: 70%;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.22),
     0 4px 8px rgba(0, 0, 0, 0.4);
   cursor: pointer;
 }
 
-/* Click: press down */
+/* Click: Drop Lightness significantly */
 .schedule-grid__trip-bar:active {
-  transform: scale(0.97);
-  filter: brightness(0.95);
+  transform: scale(0.98);
+  --trip-l: 60%;
+  --trip-c: 0.2;
+  --trip-alpha: 15%;
 }
 
-/* Selected: brighter + elevated shadow */
+/* Selected: Maximum Lightness + increased Opacity */
 .schedule-grid__trip-bar.selected {
-  z-index: 800;
-  filter: brightness(1.35);
+  z-index: 600;
+  --trip-l: 60%;
+  --trip-alpha: 5%;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
     0 8px 20px rgba(0, 0, 0, 0.55),
@@ -92,19 +92,19 @@
    the base rule's glass gradient + color-mix background
    automatically picks up the new --tripbar-color. */
 .schedule-grid__trip-bar {
-  --tripbar-r1-color: var(--tripbar-text-color);
-  --tripbar-r2-color: var(--tripbar-text-color);
-  --tripbar-r3-color: var(--tripbar-text-color);
-  --tripbar-r4-color: var(--yel-alert);
-  --tripbar-r5-color: var(--tripbar-text-color);
-  --tripbar-r6-color: color-mix(in srgb, var(--yel-alert) 50%, white);
+  --tripbar-r1-color: oklch(from var(--trip-accent-color) 80% c h / 100%);
+  --tripbar-r2-color: oklch(from var(--trip-accent-color) 80% c h / 100%);
+  --tripbar-r3-color: oklch(from var(--trip-accent-color) 80% c h / 100%);
+  --tripbar-r4-color: oklch(from var(--trip-accent-color) 80% c h / 100%);
+  --tripbar-r5-color: oklch(from var(--trip-accent-color) 80% c h / 100%);
+  --tripbar-r6-color: oklch(from var(--trip-accent-color) 80% c h / 100%);
 
-  --tripbar-badge-text-color: color-mix(in srgb, var(--red-alert) 80%, white);
+  --tripbar-badge-text-color: var(--rux-status-red);
   --tripbar-status-pending-bg: var(--red-alpha);
   --tripbar-status-pending-color: color-mix(in srgb,
       var(--red-alert) 25%,
       var(--gray-900));
-  --tripbar-status-ok-bg: var(--grn-alpha);
+  --tripbar-status-ok-bg: var(--rux-blut-500);
 
   &.out-of-service {
     --tripbar-color: var(--red-alpha);
@@ -153,60 +153,44 @@
 
   &.one-way {
     background: repeating-linear-gradient(-45deg,
-        color-mix(in srgb, var(--tripbar-color) 25%, transparent),
-        color-mix(in srgb, var(--tripbar-color) 25%, transparent) 8px,
-        color-mix(in srgb, var(--tripbar-color) 100%, transparent) 8px,
-        color-mix(in srgb, var(--tripbar-color) 100%, transparent) 16px);
-    border: 1px solid color-mix(in srgb, var(--tripbar-border-color) 50%, transparent);
-    border-left: 4px solid var(--tripbar-text-color);
+        color-mix(in srgb, var(--trip-accent-color) 25%, transparent),
+        color-mix(in srgb, var(--trip-accent-color) 25%, transparent) 8px,
+        color-mix(in srgb, var(--trip-accent-color) 5%, transparent) 8px,
+        color-mix(in srgb, var(--trip-accent-color) 5%, transparent) 16px);
+    border: 1px solid color-mix(in srgb, var(--trip-accent-color) 50%, transparent);
+    border-left: 4px solid var(--trip-accent-color);
   }
 
   &.unconfirmed {
-    --tripbar-color: var(--rux-red-500-alpha);
-    --tripbar-border-color: var(--rux-red-500);
-    --tripbar-text-color: var(--rux-red-500);
+    --trip-accent-color: var(--rux-blut-500);
   }
 
   &.color-green {
-    --tripbar-color: var(--grn-alpha);
-    --tripbar-border-color: var(--grn);
-    --tripbar-text-color: var(--grn);
+    --trip-accent-color: var(--rux-celt-500);
   }
 
   &.color-yellow {
-    --tripbar-color: var(--yel-alpha);
-    --tripbar-border-color: var(--yel);
-    --tripbar-text-color: var(--yel);
+    --trip-accent-color: var(--rux-sand-500);
   }
 
   &.color-purple {
-    --tripbar-color: var(--pur-alpha);
-    --tripbar-border-color: var(--pur);
-    --tripbar-text-color: var(--pur);
+    --trip-accent-color: var(--rux-void-500);
   }
 
   &.color-pink {
-    --tripbar-color: var(--pin-alpha);
-    --tripbar-border-color: var(--pin);
-    --tripbar-text-color: var(--pin);
+    --trip-accent-color: var(--rux-pink-500);
   }
 
   &.color-orange {
-    --tripbar-color: var(--org-alpha);
-    --tripbar-border-color: var(--org);
-    --tripbar-text-color: var(--org);
+    --trip-accent-color: var(--rux-dusk-500);
   }
 
   &.color-teal {
-    --tripbar-color: var(--tea-alpha);
-    --tripbar-border-color: var(--tea);
-    --tripbar-text-color: var(--tea);
+    --trip-accent-color: var(--rux-teal-500);
   }
 
   &.color-cyan {
-    --tripbar-color: var(--cya-alpha);
-    --tripbar-border-color: var(--cya);
-    --tripbar-text-color: var(--cya);
+    --trip-accent-color: var(--rux-cyan-500);
   }
 
 }
@@ -285,7 +269,7 @@
   transform: translateY(-50%);
   font-size: var(--tripbar-multi-badge-font-size);
   font-weight: 500;
-  color: var(--tripbar-text-color);
+  color: var(--tripbar-r1-color);
   text-shadow: var(--text-shadow);
   width: 22px;
   height: 14px;
@@ -305,7 +289,7 @@
   font-size: 14px;
   font-weight: 400;
   font-variation-settings: 'FILL' 1, 'opsz' 20;
-  color: var(--rux-color-status-green);
+  color: var(--rux-status-green);
   text-shadow: var(--text-shadow);
   width: 14px;
   height: 14px;
@@ -406,12 +390,12 @@
 
 .schedule-grid__trip-bar__mini-badge.is-ok {
   background: transparent;
-  color: var(--tripbar-text-color);
+  color: var(--tripbar-r5-color);
 }
 
 .schedule-grid__trip-bar__mini-badge.is-blue {
   background: transparent;
-  color: var(--rux-accent-color);
+  color: var(--tripbar-r5-color);
 }
 
 .schedule-grid__trip-bar__mini-badge.is-yellow {
@@ -436,7 +420,7 @@
   width: auto;
   padding-inline-end: 2px;
   gap: 0;
-  color: var(--tripbar-text-color);
+  color: var(--tripbar-r5-color);
 }
 
 .schedule-grid__trip-bar__mini-badge .schedule-grid__trip-bar__mini-badge-text {
@@ -446,7 +430,7 @@
 
 /* Invoice number text uses the standard trip bar color, not the badge accent color */
 .schedule-grid__trip-bar__mini-badge .icon-invoice-text {
-  color: var(--tripbar-text-color);
+  color: var(--tripbar-r5-color);
 }
 
 .schedule-grid__trip-bar__pre-drivers {
@@ -527,6 +511,7 @@
    when the bar is physically narrow — wide single-column bars still show data. */
 @container (max-width: 120px) {
   .schedule-grid__trip-bar.cont-single {
+
     /* Collapse all content rows — keep row 4 (time row) visible */
     .schedule-grid__trip-bar__row--1,
     .schedule-grid__trip-bar__row--2,
@@ -552,6 +537,7 @@
       display: none;
     }
   }
+
   /* cont-left: trip came from previous week → show arrival (right) only     */
   /* No extra rule needed — base .cont-left already collapses left + center. */
 }

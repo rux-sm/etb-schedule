@@ -261,43 +261,43 @@ textarea:focus-visible,
 /* Status colors on dropdown menu items */
 .dropdown__item.status-pending,
 .dropdown__item.status-pending .dropdown-icon {
-  color: var(--rux-color-status-red) !important;
+  color: var(--rux-status-red) !important;
 }
 
 .dropdown__item.status-ok,
 .dropdown__item.status-ok .dropdown-icon {
-  color: var(--rux-color-status-green) !important;
+  color: var(--rux-status-green) !important;
 }
 
 .dropdown__item.status-assigned,
 .dropdown__item.status-assigned .dropdown-icon {
-  color: var(--rux-color-status-yellow) !important;
+  color: var(--rux-status-yellow) !important;
 }
 
 .dropdown__item.status-blue,
 .dropdown__item.status-blue .dropdown-icon {
-  color: var(--rux-color-status-blue) !important;
+  color: var(--rux-status-blue) !important;
 }
 
 /* Status colors on the select field itself */
 .select-trigger.status-pending {
-  background-color: color-mix(in srgb, var(--rux-color-status-red) 8%, var(--field-bg));
-  color: var(--rux-color-status-red);
+  background-color: color-mix(in srgb, var(--rux-status-red) 8%, var(--field-bg));
+  color: var(--rux-status-red);
 }
 
 .select-trigger.status-ok {
-  background-color: color-mix(in srgb, var(--rux-color-status-green) 8%, var(--field-bg));
-  color: var(--rux-color-status-green);
+  background-color: color-mix(in srgb, var(--rux-status-green) 8%, var(--field-bg));
+  color: var(--rux-status-green);
 }
 
 .select-trigger.status-assigned {
-  background-color: color-mix(in srgb, var(--rux-color-status-yellow) 8%, var(--field-bg));
-  color: var(--rux-color-status-yellow);
+  background-color: color-mix(in srgb, var(--rux-status-yellow) 8%, var(--field-bg));
+  color: var(--rux-status-yellow);
 }
 
 .select-trigger.status-blue {
-  background-color: color-mix(in srgb, var(--rux-color-status-blue) 8%, var(--field-bg));
-  color: var(--rux-color-status-blue);
+  background-color: color-mix(in srgb, var(--rux-status-blue) 8%, var(--field-bg));
+  color: var(--rux-status-blue);
 }
 
 /* ── 8. Empty State ──────────────────────────────────────────────────────── */
