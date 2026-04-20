@@ -4803,14 +4803,34 @@ function openDriverContactModal(tripKey) {
 
       if (isAssigned(d1Name)) {
         const d1 = getDriverObj(d1Name);
+        const d1Full = (d1 && d1.driverNameFull) ? d1.driverNameFull : d1Name;
         officeBlocks.push(
-          `Name:  ${d1Name}\nPhone: ${d1 ? d1.phone || "None" : "None"}\nBus:   ${busId}`,
+          `Name:  ${d1Full}\nPhone: ${d1 ? d1.phone || "None" : "None"}\nBus:   ${busId}`,
         );
       }
       if (isAssigned(d2Name)) {
         const d2 = getDriverObj(d2Name);
+        const d2Full = (d2 && d2.driverNameFull) ? d2.driverNameFull : d2Name;
         officeBlocks.push(
-          `Name:  ${d2Name}\nPhone: ${d2 ? d2.phone || "None" : "None"}\nBus:   ${busId}`,
+          `Name:  ${d2Full}\nPhone: ${d2 ? d2.phone || "None" : "None"}\nBus:   ${busId}`,
+        );
+      }
+
+      const d3Name = assignment.driver3 && assignment.driver3 !== "—" ? assignment.driver3 : "";
+      const d4Name = assignment.driver4 && assignment.driver4 !== "—" ? assignment.driver4 : "";
+
+      if (isAssigned(d3Name)) {
+        const d3 = getDriverObj(d3Name);
+        const d3Full = (d3 && d3.driverNameFull) ? d3.driverNameFull : d3Name;
+        officeBlocks.push(
+          `Name:  ${d3Full} (Relief)\nPhone: ${d3 ? d3.phone || "None" : "None"}\nBus:   ${busId}`,
+        );
+      }
+      if (isAssigned(d4Name)) {
+        const d4 = getDriverObj(d4Name);
+        const d4Full = (d4 && d4.driverNameFull) ? d4.driverNameFull : d4Name;
+        officeBlocks.push(
+          `Name:  ${d4Full} (Relief)\nPhone: ${d4 ? d4.phone || "None" : "None"}\nBus:   ${busId}`,
         );
       }
     });
@@ -5086,6 +5106,14 @@ function fillEnvelopePage(pageEl, trip, assignment) {
       ? rawDriver2
       : "";
 
+  const fullName = (shortName) => {
+    if (!shortName) return shortName;
+    const d = (state.driversList || []).find(
+      (d) => String(d.driverName).trim().toLowerCase() === String(shortName).trim().toLowerCase(),
+    );
+    return (d && d.driverNameFull) ? d.driverNameFull : shortName;
+  };
+
   const set = (field, text) => {
     const el = pageEl.querySelector(`[data-field="${field}"]`);
     if (!el) return;
@@ -5136,9 +5164,9 @@ function fillEnvelopePage(pageEl, trip, assignment) {
 
   set("day", envFormatWeekday(trip.departureDate));
   set("busno", busId);
-  set("driver", driver1);
+  set("driver", fullName(driver1));
   // If there is no real co-driver, field stays blank
-  set("codriver", driver2);
+  set("codriver", fullName(driver2));
   set("driverlabel", assignment?.isRelief ? "RELIEF DRIVER:" : "DRIVER:");
   const coDriverLabel = assignment?.driver2IsRelief ? "RELIEF:" : assignment?.isRelief ? "DRIVER:" : "CO-DRIVER:";
   set("codriverlabel", coDriverLabel);

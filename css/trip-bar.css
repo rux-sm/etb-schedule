@@ -64,36 +64,39 @@
 
   background: var(--tripbar-bg);
   border: 1px solid var(--tripbar-border-color);
-  border-left: 8px solid var(--tripbar-border-left-color);
+  border-left: 7px solid var(--tripbar-border-left-color);
 }
 
-/* Hover: Increase bg + border lightness */
+/* Hover: subtle lift + gentle brighten */
 .schedule-grid__trip-bar:hover {
   z-index: 600;
-  --tripbar-bg-l: 50%;
-  --tripbar-border-l: 50%;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.22),
-    0 4px 8px rgba(0, 0, 0, 0.4);
+  --tripbar-bg-l: 55%;
+  --tripbar-bg-a: 28%;
   cursor: pointer;
+  transform: translateY(-0px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Click: Drop bg lightness + alpha */
+/* Active: press down */
 .schedule-grid__trip-bar:active {
-  transform: scale(0.98);
-  --tripbar-bg-l: 35%;
-  --tripbar-bg-a: 80%;
+  transform: translateY(0px) scale(0.99);
+  --tripbar-bg-l: 55%;
+  --tripbar-bg-a: 20%;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25);
 }
 
-/* Selected: fade bg heavily */
+/* Selected: white borders + accent ring */
 .schedule-grid__trip-bar.selected {
   z-index: 600;
-  --tripbar-bg-l: 35%;
-  --tripbar-bg-a: 15%;
+  --tripbar-bg-l: 65%;
+  --tripbar-bg-a: 20%;
+  border-color: rgba(255, 255, 255, 1);
+  border-left-color: rgba(255, 255, 255, 1);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    0 8px 20px rgba(0, 0, 0, 0.55),
-    0 2px 6px rgba(0, 0, 0, 0.35);
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 6px 16px rgba(0, 0, 0, 0.4);
 }
 
 .schedule-grid__trip-bar.danger::after {
@@ -183,8 +186,8 @@
         color-mix(in srgb, var(--trip-accent-color) 25%, transparent) 8px,
         color-mix(in srgb, var(--trip-accent-color) 5%, transparent) 8px,
         color-mix(in srgb, var(--trip-accent-color) 5%, transparent) 16px);
-    border: 1px solid color-mix(in srgb, var(--trip-accent-color) 50%, transparent);
-    border-left: 4px solid var(--trip-accent-color);
+    border: 1px solid var(--tripbar-border-color);
+    border-left: 7px solid var(--tripbar-border-left-color);
   }
 
   &.unconfirmed {

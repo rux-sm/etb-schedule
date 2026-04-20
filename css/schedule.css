@@ -459,7 +459,7 @@
 }
 
 .o-app-layout__main .schedule-grid-container {
-  border-radius: 0;
+  border-radius: var(--rux-radius-section);
   margin-bottom: 0;
 }
 
@@ -744,7 +744,9 @@
    ========================================================================== */
 
 /* Outer Boundaries */
-.schedule-grid {
+.schedule-grid__header-cell:first-child,
+.schedule-grid__cell:first-child,
+.schedule-grid__bus-cell {
   border-inline-start: 1px solid var(--border-default);
   /* Left boundary */
 }
@@ -752,6 +754,14 @@
 .schedule-grid__header-cell {
   border-top: 1px solid var(--border-default);
   /* Top boundary */
+}
+
+.schedule-grid__header-cell:first-child {
+  border-start-start-radius: var(--rux-radius-section);
+}
+
+.schedule-grid__header-cell:last-child {
+  border-start-end-radius: var(--rux-radius-section);
 }
 
 .schedule-grid__header-cell:last-child,
@@ -764,6 +774,16 @@
 .schedule-grid tbody tr:last-child>.schedule-grid__cell,
 .schedule-grid tbody tr:last-child>.schedule-grid__bus-cell {
   border-bottom: 1px solid var(--border-default);
+}
+
+.schedule-grid tbody tr:last-child>.schedule-grid__cell:first-child,
+.schedule-grid tbody tr:last-child>.schedule-grid__bus-cell:first-child {
+  border-end-start-radius: var(--rux-radius-section);
+}
+
+.schedule-grid tbody tr:last-child>.schedule-grid__cell:last-child,
+.schedule-grid tbody tr:last-child>.schedule-grid__bus-cell:last-child {
+  border-end-end-radius: var(--rux-radius-section);
 }
 
 /* Inner Gridlines */
@@ -897,8 +917,8 @@
   width: 24px;
   height: 24px;
   background: var(--rux-accent-color);
-  color: white;
-  border-radius: 0;
+  color: var(--white);
+  border-radius: var(--rux-radius-pill);
   text-shadow: var(--text-shadow);
   font-weight: 600;
 }
@@ -1301,8 +1321,13 @@
 }
 
 /* Relief slots pin to their driver's column so they appear stacked below Driver 1 / Driver 2 */
-.bus-assign__driver-block--relief1 { grid-column: 2; }
-.bus-assign__driver-block--relief2 { grid-column: 3; }
+.bus-assign__driver-block--relief1 {
+  grid-column: 2;
+}
+
+.bus-assign__driver-block--relief2 {
+  grid-column: 3;
+}
 
 /* Locked state: visible but dimmed and non-interactive until the toggle unlocks the slot */
 .bus-assign__driver-block.is-locked {

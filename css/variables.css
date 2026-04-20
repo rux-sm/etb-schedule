@@ -60,6 +60,8 @@
 
   /* --- STATUS COLORS --- */
 
+  --rux-accent-color: var(--rux-mana);
+
   --rux-status-red: oklch(from var(--rux-wine) 75% c h);
   --rux-status-red-alpha: oklch(from var(--rux-wine) l c h / 25%);
   --rux-status-yellow: oklch(from var(--rux-sand) 75% c h);
@@ -69,7 +71,14 @@
   --rux-status-blue: oklch(from var(--rux-mana) 75% c h);
   --rux-status-blue-alpha: oklch(from var(--rux-mana) l c h / 25%);
 
-  --rux-accent-color: var(--rux-mana);
+  /* 2D. Text Color
+  ──────────────────────────────────────────────────────────────── */
+
+
+  --rux-text-primary: oklch(100% 0.014 250);
+  --rux-text-secondary: oklch(80% 0.014 250);
+  --rux-text-disabled: oklch(70% 0.014 250);
+  --rux-text-hover: oklch(45% 0.014 250);
 
   /* 2D. Border Roles
   ──────────────────────────────────────────────────────────────── */
@@ -155,9 +164,9 @@
   /* left offset — set to 1px to align with invisible border edge */
 
   /* section divider labels — e.g. "REQUIREMENTS", "BUS ASSIGNMENT" */
-  --form-section-label-color: oklch(from var(--rux-celt) 80% c h);
+  --form-section-label-color: var(--rux-text-secondary);
   --form-section-label-size: 12px;
-  --form-section-label-weight: 500;
+  --form-section-label-weight: 400;
   --form-section-label-spacing: 0.02em;
 
   --bus-grid-row-gap: 4px;
@@ -422,7 +431,7 @@
   ──────────────────────────────────────────────────────────────── */
 
   --tripbar-height: 99px;
-  --tripbar-radius: 8px;
+  --tripbar-radius: 7px;
   --tripbar-lane-step: 100px;
   --tripbar-bg-mix-percent: 100%;
   --tripbar-text-shadow: 0 1px 2px rgba(0, 0, 0, 1);

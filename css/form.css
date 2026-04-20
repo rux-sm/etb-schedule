@@ -320,7 +320,7 @@ select.is-empty:not(:focus),
   display: block;
   font-size: var(--form-label-font-size);
   font-weight: var(--form-label-weight);
-  color: var(--form-label-color);
+  color: var(--rux-text-secondary);
   line-height: 1.25;
   margin-bottom: var(--form-label-margin) !important;
   padding-left: var(--form-label-indent);
@@ -519,6 +519,7 @@ hr.form-divider {
     justify-content: flex-start;
   }
 }
+
 /* ── Section Dividers ────────────────────────────────────────── */
 .form-divider {
   grid-column: span 12;

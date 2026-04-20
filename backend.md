@@ -73,7 +73,7 @@ const HEADERS = {
     "itineraryPdfUrl",
   ],
   BusAssignments: ["tripKey", "busNumber", "busId", "driver1", "driver2", "driver1Status", "driver2Status", "driver3", "driver3Status", "driver4", "driver4Status"],
-  Drivers: ["driverId", "driverName", "phone", "active", "notes"],
+  Drivers: ["driverId", "driverName", "driverNameFull", "phone", "active", "notes"],
   Buses: ["busId", "busName", "capacity", "hasLift", "hasSleeper", "active", "notes", "busColor"],
   WeekNotes: ["WeekStart", "Notes", "LastUpdated"],
   Unavailability: ["driverName", "dateYmd"], // <--- ADDED
