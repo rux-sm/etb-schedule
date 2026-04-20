@@ -263,19 +263,10 @@
 }
 
 /* Direct buttons share space equally */
-.rux-footer > .btn {
+.rux-footer>.btn {
   flex: 1;
 }
 
-@media (max-width: 899px) {
-  .rux-footer {
-    flex-direction: column;
-  }
-
-  .rux-footer > .btn {
-    width: 100%;
-  }
-}
 
 /* ==========================================================================
    ACCORDION (IBM Carbon Style)

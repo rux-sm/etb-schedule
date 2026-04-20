@@ -144,38 +144,27 @@
   ──────────────────────────────────────────────────────────────── */
 
 
-  --rux-form-height: 32px;
+  --rux-form-height: 30px;
   --form-row-gap: 8px;
-  /* gap between rows of fields (e.g. between "First Name" and "Last Name" rows) */
   --form-col-gap: 8px;
-  /* gap between fields in the same row */
   --rux-form-label-gap: 8px;
-  /* vertical gap between a field and its label (e.g. the "First Name" label and its input) */
   --form-label-margin: 4px;
-  /* margin-bottom below field labels (e.g. "First Name") */
   --form-section-gap: 16px;
-  /* gap between a section divider label and its content (e.g. toggle buttons, bus grid) */
-  /* field labels — e.g. "Destination", "Name" */
   --form-label-color: oklch(from var(--rux-mana) 75% c h);
   --form-label-font-size: 12px;
   --form-label-weight: 500;
   --form-label-spacing: 0.02em;
   --form-label-indent: 2px;
-  /* left offset — set to 1px to align with invisible border edge */
 
-  /* section divider labels — e.g. "REQUIREMENTS", "BUS ASSIGNMENT" */
   --form-section-label-color: var(--rux-text-secondary);
   --form-section-label-size: 12px;
   --form-section-label-weight: 400;
   --form-section-label-spacing: 0.02em;
 
   --bus-grid-row-gap: 4px;
-  /* gap between grid rows (between bus #1 block and bus #2 block) */
   --bus-driver-block-gap: 4px;
-  /* gap between driver select and status select within a single driver block */
 
   --bus-header-margin: 0px;
-  /* margin-bottom below .bus-assign-header labels */
 
   --field-bg: var(--rux-surface-input);
   --field-bg-hover: var(--surface-03);
@@ -187,14 +176,6 @@
   --input-padding-x: var(--rux-space-2);
   --input-font-size: 14px;
 
-  /*
-   * --icon-field-* consumers:
-   *   base.css     .dropdown-icon, .dropdown__icon,
-   *                .context-item .material-symbols-outlined,
-   *                .context-menu__item .material-symbols-outlined
-   *   dropdown.css .dropdown__icon
-   *   form.css     .dropdown__conflict-icon
-   */
   --icon-field-size: 18px;
   /* display size */
   --icon-field-fill: 1;
@@ -323,7 +304,7 @@
   --btn-icon-nav-size: 24px;
 
   /* Pagination */
-  --btn-pagination-size: 32px;
+  --btn-pagination-size: 30px;
   --btn-pagination-text: var(--text-primary);
   --btn-pagination-hover-bg: color-mix(in srgb, white 10%, transparent);
 
@@ -463,25 +444,25 @@
   --tripbar-gap-inline: 2px;
   --tripbar-gap-drivers: 6px;
 
-  --tripbar-r1-font-size: 0.75rem;
+  --tripbar-r1-font-size: 12px;
   --tripbar-r1-row-height: 14px;
-  --tripbar-r1-font-weight: 600;
+  --tripbar-r1-font-weight: 500;
   --tripbar-r1-line-height: 14px;
   --tripbar-r1-letter-spacing: 0.02em;
 
-  --tripbar-r2-font-size: 0.6875rem;
+  --tripbar-r2-font-size: 11px;
   --tripbar-r2-row-height: 12px;
   --tripbar-r2-font-weight: 500;
   --tripbar-r2-line-height: 12px;
   --tripbar-r2-letter-spacing: 0.02em;
 
-  --tripbar-r3-row-height: 13px;
+  --tripbar-r3-row-height: 12px;
 
-  --tripbar-r4-font-size: 0.6875rem;
+  --tripbar-r4-font-size: 12px;
   --tripbar-r4-row-height: 13px;
-  --tripbar-r4-font-weight: 700;
+  --tripbar-r4-font-weight: 500;
   --tripbar-r4-line-height: 13px;
-  --tripbar-r4-letter-spacing: 0.05em;
+  --tripbar-r4-letter-spacing: 0em;
 
   --tripbar-r5-row-height: 14px;
 
@@ -554,8 +535,4 @@
   --color-conflict-accent: var(--rux-status-red);
   --color-conflict-bg: var(--rux-status-red-alpha);
 
-}
-
-[data-theme="light"] {
-  color-scheme: light;
 }

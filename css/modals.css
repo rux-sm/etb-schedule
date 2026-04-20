@@ -45,29 +45,6 @@
   overflow: hidden;
   animation: modalPopIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 
-  @media (max-width: 899px) {
-    max-width: 100% !important;
-    margin: 0 !important;
-    height: 90vh !important;
-    max-height: 90vh !important;
-
-    /* Trip Details: status grid collapses to 2 columns on mobile */
-    .detail-meta-grid,
-    .trip-details__meta-grid {
-      grid-template-columns: repeat(2, 1fr) !important;
-    }
-
-    .detail-hide-mobile,
-    .trip-details__hide-mobile {
-      display: none !important;
-    }
-
-    @media (orientation: landscape) {
-      height: 90vh !important;
-      max-height: 90vh !important;
-      max-width: 80vw !important;
-    }
-  }
 }
 
 /* --- Base: header, body, footer --- */
@@ -396,30 +373,6 @@
   font-weight: 600;
 }
 
-@media (max-width: 560px) {
-  .picross-toolbar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .picross-history-bar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .picross-stats {
-    justify-content: stretch;
-  }
-
-  .picross-stat {
-    flex: 1 1 0;
-  }
-
-  .picross-board {
-    --picross-cell-size: 28px;
-    gap: 4px;
-  }
-}
 
 
 /* --- Trip Details: content structure (BEM: .trip-details__*) --- */

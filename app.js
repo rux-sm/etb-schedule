@@ -8033,12 +8033,6 @@ function wireEvents() {
     updateWeekDates();
   });
 
-  $("todayBtnMobile")?.addEventListener("click", () => {
-    const today = new Date();
-    // dom.weekPicker.value = toLocalDateInputValue(today); // Removed
-    state.currentDate = startOfWeek(today);
-    updateWeekDates();
-  });
 
   // Toggle buttons — click toggles aria-pressed
   document.querySelectorAll(".btn--toggle").forEach((btn) => {

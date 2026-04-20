@@ -1,3 +1,30 @@
+/* ==================================================================
+   RUX UI : VISUAL COMPONENT SPEC
+   Component: [ Button ]    Variant: [ Default ]
+   ================================================================== */
+
+      Typography: [ ____________________ ] 
+      Height:     [ 30px ]
+      Radius:     [ 8px ]
+
+                 [ Pad Top: ____px ]
+                   |             |
+             +-----|-------------|-----+  - - - - -
+             |     v             v     |          |
+ [ Pad L ]   |                         |   [ Pad R ]
+ [ ____px ]-->   [Icon] <-Gap-> [Text] <-- [ ____px ]
+             |    ____px               |          |
+             |     ^             ^     |          |
+             +-----|-------------|-----+  - - - - -
+                   |             |
+                 [ Pad Bot: ____px ]
+
+   Tokens:
+   - Background: var(--color-__________)
+   - Content:    var(--color-__________)
+   - Border:     var(--color-__________)
+================================================================== */
+
 # Rux UI — Design System Guide & Migration Tracker
 
 > Living document. Update checkboxes as work is completed.

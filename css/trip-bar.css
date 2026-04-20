@@ -13,8 +13,8 @@
   position: absolute;
   z-index: 501;
   /* above sticky bus cell (500) so trip bar receives hover when overlapping */
-  height: var(--tripbar-height) !important;
-  max-height: var(--tripbar-height) !important;
+  height: var(--tripbar-height);
+  max-height: var(--tripbar-height);
   box-sizing: border-box;
   padding: var(--tripbar-padding-y) var(--tripbar-padding-x);
   text-shadow: var(--tripbar-text-shadow);
@@ -367,8 +367,6 @@
   flex: 1;
   min-width: 0;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .schedule-grid__trip-bar__time--left {
@@ -537,6 +535,14 @@
   border-end-end-radius: 0;
 }
 
+
+/* ── Time row: scale down font on narrow bars so all 3 times stay visible ── */
+@container (max-width: 200px) {
+  .schedule-grid__trip-bar__time-row {
+    font-size: 0.65rem;
+    letter-spacing: -0.01em;
+  }
+}
 
 /* ── Single-column partial bars: show only the colored bar ──────────────────
    cont-single = the bar occupies exactly one day column AND continues

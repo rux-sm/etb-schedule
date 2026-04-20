@@ -97,81 +97,6 @@
   gap: 6px;
 }
 
-#todayBtnMobile {
-  display: none;
-}
-
-@media (max-width: 899px) {
-
-  /* Hide desktop-only toolbar buttons */
-  #notesBtn,
-  #waitingListBtn,
-  #themeToggle,
-  #todayBtn,
-  #tripInputBtn,
-  #driversBtn,
-  #printBtn,
-  #refreshBtn,
-  .week-start {
-    display: none !important;
-  }
-
-  .app-header__btn-mobile {
-    display: inline-flex;
-  }
-
-  .app-header__inner {
-    padding: 0 16px !important;
-    /* Slightly wider horizontal breathing room on mobile. */
-  }
-
-  .app-header__logo-wrap {
-    display: none !important;
-  }
-
-  .app-header__start {
-    display: flex !important;
-    align-items: center;
-    gap: 2px;
-    flex: 1;
-    min-width: 0;
-  }
-
-  .status-grid {
-    grid-template-columns: 1fr;
-    /* Stack on mobile to avoid horizontal compression. */
-    gap: 12px;
-  }
-
-  .app-header__end {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    margin-inline-start: auto;
-    flex-shrink: 0;
-  }
-
-  .nav-controls {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    margin: 0 !important;
-    flex-shrink: 0;
-    position: relative;
-    z-index: 10;
-  }
-
-  .dropdown-menu,
-  .dropdown__menu {
-    inset-inline-end: -10px;
-    min-width: 180px;
-  }
-
-  .o-app-layout__main .c-card__body,
-  .c-card .c-card__body {
-    padding: 0;
-  }
-}
 
 /* See u-hidden in base.css for display:none utility */
 
@@ -199,7 +124,7 @@
   align-items: center;
   column-gap: 8px;
   height: auto;
-  padding: var(--space-lg) 0;
+  padding: var(--rux-space-2) 0;
   position: relative;
 }
 
@@ -321,31 +246,6 @@
   background: color-mix(in srgb, var(--color-danger), transparent 74%);
 }
 
-@media (max-width: 899px) {
-  .c-header.c-header--schedule {
-    display: flex;
-    flex-wrap: wrap;
-    row-gap: 4px;
-  }
-
-  .agenda-header__sync-center {
-    position: static;
-    inset-inline-start: auto;
-    top: auto;
-    transform: none;
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    order: 3;
-  }
-
-  .schedule-sync-status {
-    font-size: 0.6875rem;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
 
 .agenda-header__icon-group {
   display: flex;
@@ -452,11 +352,6 @@
   border-inline-start: none;
 }
 
-@media (max-width: 899px) {
-  .schedule-grid {
-    min-width: 100%;
-  }
-}
 
 .o-app-layout__main .schedule-grid-container {
   border-radius: var(--rux-radius-section);
@@ -820,7 +715,7 @@
 
 .schedule-grid {
   width: 100%;
-  min-width: 1602px;
+  min-width: 1200px;
   height: auto;
   background: var(--rux-surface-base);
   table-layout: fixed;
@@ -836,7 +731,6 @@
 }
 
 .schedule-grid__col-day {
-  /* Default width for day columns */
   width: auto;
 }
 
@@ -1214,7 +1108,7 @@
 }
 
 .driver-week__table tbody tr:nth-child(even) td.driver-week__cell--unavailable {
-  background-color: var(--rux-danger-color);
+  background-color: var(--rux-wine);
 }
 
 .driver-week__table th:last-child,
@@ -1257,8 +1151,8 @@
 }
 
 .driver-week__cell--unavailable {
-  background: var(--rux-danger-color) !important;
-  color: var(--text-primary) !important;
+  background: var(--rux-wine);
+  color: var(--text-primary);
 }
 
 .driver-week__cell--on {

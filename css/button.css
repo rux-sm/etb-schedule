@@ -33,15 +33,18 @@ button {
   justify-content: center;
   gap: 8px;
   /* Increased to 34px for better optical balance with squircles */
-  height: 34px;
+  height: 30px;
   padding: 0 16px;
 
   /* Typography */
   font-family: var(--font-sans);
-  font-size: 14px; /* Dropped from 16px for that 'Pro' utility look */
-  font-weight: 500; /* Medium weight holds up better on black backgrounds */
+  font-size: 14px;
+  /* Dropped from 16px for that 'Pro' utility look */
+  font-weight: 500;
+  /* Medium weight holds up better on black backgrounds */
   line-height: 1;
-  letter-spacing: -0.01em; /* Subtle Apple-style tightening */
+  letter-spacing: -0.01em;
+  /* Subtle Apple-style tightening */
   text-decoration: none;
   white-space: nowrap;
   user-select: none;
@@ -329,15 +332,9 @@ button {
   align-items: center;
 }
 
-.form-actions > .btn {
+.form-actions>.btn {
   flex: 1;
 }
 
 /* ── 11. Responsive ─────────────────────────────────────────────────────── */
 
-@media (max-width: 899px) {
-  .btn,
-  .btn--toggle {
-    min-height: 44px;
-  }
-}

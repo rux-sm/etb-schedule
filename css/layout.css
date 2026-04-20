@@ -34,58 +34,16 @@
   /* Allow overlays/dropdowns to escape container bounds. */
 }
 
-/* --- APP SHELL MOBILE --- */
-@media (max-width: 899px) {
-  .app {
-    height: 100vh;
-    overflow: hidden;
-  }
-
-  .main {
-    padding: 0;
-    width: 100%;
-    max-width: 100%;
-
-    /* Portrait: Home bar protection at bottom */
-    @media (orientation: portrait) {
-      padding-bottom: env(safe-area-inset-bottom, 20px);
-    }
-
-    /* Landscape: Notch protection on sides + Home bar bottom */
-    @media (orientation: landscape) {
-      padding-left: env(safe-area-inset-left, 0);
-      padding-right: env(safe-area-inset-right, 0);
-      padding-bottom: env(safe-area-inset-bottom, 12px);
-    }
-  }
-
-  .container {
-    padding: 0;
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .schedule-grid {
-    min-width: 100%;
-  }
-
-  .schedule-grid th:not(:first-child),
-  .schedule-grid td:not(:first-child) {
-    min-width: 180px;
-  }
-}
 
 /* --- LAYOUT PANELS (Sidebars & Main Schedule Area) --- */
 .o-app-layout {
-  display: grid;
-  grid-template-columns: var(--panel-width) 1fr var(--panel-width);
-  gap: 0;
-  align-items: start;
-  overflow: visible;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
   flex: 1;
-  /* Fill remaining app space. */
+  overflow: visible;
   min-height: 0;
-  /* Required so nested flex children can shrink/scroll correctly. */
+  gap: var(--layout-panel-gap);
 }
 
 .o-app-layout__sidebar--right,
@@ -135,207 +93,115 @@
   min-height: 0;
 }
 
-/* Mobile: let the schedule table fit the screen instead of forcing 1150px */
-@media (max-width: 899px) {
-  /* Ensure the main card reaches the edges for a full-screen mobile look */
-  .o-app-layout__main > .c-card {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-    border-radius: 0;
-  }
 
-  /* Scheduler layout — single column on mobile */
-  .o-app-layout {
-    grid-template-columns: 1fr;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-    gap: 8px;
-  }
-
-  .o-app-layout__sidebar--right {
-    display: none;
-    flex: 0 0 auto;
-    max-height: 45vh;
-    overflow-y: auto;
-    width: 100%;
-  }
-
-  .o-app-layout__sidebar--right.is-active {
-    display: block;
-  }
-
-  .o-app-layout__sidebar--right > .c-card {
-    /* M3 Bottom Sheet look for mobile */
-    border-radius: 20px 20px 0 0;
-    box-shadow: 0px -1px 3px 0px rgba(0, 0, 0, 0.2);
-    min-height: 100%;
-  }
-
-  .o-app-layout__main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    order: 2;
-    width: 100%;
-    min-height: 0;
-  }
-
-  .o-app-layout__main > .c-card {
-    flex: 0 1 auto;
-    height: auto;
-    width: 100%;
-    max-height: 100%;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .o-app-layout__main .schedule-grid-container,
-  .schedule-grid-container {
-    flex: 0 1 auto;
-    display: block;
-    overflow-x: auto;
-    overflow-y: auto;
-  }
+.o-app-layout__main {
+  flex: 1;
+  order: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  align-items: stretch;
+  position: relative;
+  z-index: 1;
 }
 
-@media (min-width: 900px) {
-  .o-app-layout {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    flex: 1;
-    overflow: visible;
-    min-height: 0;
-    gap: var(--layout-panel-gap);
-  }
+.o-app-layout__main > .c-card {
+  height: auto;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  box-shadow: none;
+}
 
-  .o-app-layout__main {
-    flex: 1;
-    order: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: visible;
-    align-items: stretch;
-  }
+.o-app-layout__main .schedule-grid-container {
+  flex: 1;
+  min-height: 0;
+  overflow-x: auto;
+  overflow-y: auto;
+}
 
-  .o-app-layout__main > .c-card {
-    height: auto;
-    /* Match table height; avoid forced stretch. */
-    max-height: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow: visible;
-    /* Let the table container own scrolling. */
-  }
+.o-app-layout__sidebar--left,
+.o-app-layout__sidebar--right {
+  width: var(--panel-width);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  border-right: none;
+  transition:
+    width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: visible;
+}
 
-  .o-app-layout__main .schedule-grid-container {
-    flex: 1;
-    min-height: 0;
-    overflow-x: auto;
-    overflow-y: auto;
-  }
+.o-app-layout__sidebar--left {
+  order: 0;
+}
 
-  .o-app-layout__sidebar--left,
-  .o-app-layout__sidebar--right {
-    width: var(--panel-width);
-    flex-shrink: 0;
-    position: relative; /* Spacers push the calendar */
-    z-index: 1001; /* Above header */
-    display: flex;
-    flex-direction: column;
-    border-right: none;
-    transition:
-      width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: visible;
-  }
+.o-app-layout__sidebar--right {
+  order: 2;
+}
 
-  .o-app-layout__sidebar--left {
-    order: 0;
-  }
+.o-app-layout__sidebar--left.is-collapsed,
+.o-app-layout__sidebar--right.is-collapsed {
+  width: 0 !important;
+  margin: 0 !important;
+  pointer-events: none;
+}
 
-  .o-app-layout__sidebar--right {
-    order: 2;
-  }
+.o-app-layout__sidebar--left > .c-card,
+.o-app-layout__sidebar--right > .c-card {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: var(--panel-width);
+  height: 100vh;
+  box-shadow: 0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.3);
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.2s ease;
+}
 
-  .o-app-layout__sidebar--left.is-collapsed,
-  .o-app-layout__sidebar--right.is-collapsed {
-    width: 0 !important;
-    margin: 0 !important;
-    pointer-events: none;
-  }
+.o-app-layout__sidebar--left > .c-card {
+  left: 0;
+  border-radius: 0 16px 16px 0 !important;
+  transform: translateX(0);
+}
 
-  .o-app-layout__sidebar--left > .c-card,
-  .o-app-layout__sidebar--right > .c-card {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    width: var(--panel-width);
-    height: 100vh;
-    box-shadow: 0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.3);
-    transition:
-      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      opacity 0.2s ease;
-  }
+.o-app-layout__sidebar--right > .c-card {
+  right: 0;
+  border-radius: 16px 0 0 16px !important;
+  transform: translateX(0);
+}
 
-  .o-app-layout__sidebar--left > .c-card {
-    left: 0;
-    border-radius: 0 16px 16px 0 !important;
-    transform: translateX(0);
-  }
+.o-app-layout__sidebar--left.is-collapsed > .c-card {
+  transform: translateX(-100%);
+  opacity: 0;
+}
 
-  .o-app-layout__sidebar--right > .c-card {
-    right: 0;
-    border-radius: 16px 0 0 16px !important;
-    transform: translateX(0);
-  }
+.o-app-layout__sidebar--right.is-collapsed > .c-card {
+  transform: translateX(100%);
+  opacity: 0;
+}
 
-  .o-app-layout__sidebar--left.is-collapsed > .c-card {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
+.o-app-layout__sidebar--left > .c-card:not(.is-hidden),
+.o-app-layout__sidebar--right > .c-card:not(.is-hidden) {
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
 
-  .o-app-layout__sidebar--right.is-collapsed > .c-card {
-    transform: translateX(100%);
-    opacity: 0;
-  }
+.o-app-layout__sidebar--left > .c-card:not(.is-hidden) .c-card__body,
+.o-app-layout__sidebar--right > .c-card:not(.is-hidden) .c-card__body {
+  flex: auto;
+  overflow-y: auto;
+  min-height: 0;
+}
 
-  .o-app-layout__sidebar--left > .c-card:not(.is-hidden),
-  .o-app-layout__sidebar--right > .c-card:not(.is-hidden) {
-    flex: auto;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden; /* Clips the background of nested headers/bodies to preserve the border-radius */
-  }
-
-  .o-app-layout__sidebar--left > .c-card:not(.is-hidden) .c-card__body {
-    flex: auto;
-    overflow-y: auto;
-    min-height: 0;
-  }
-
-  /* Right sidebar body scroll region. */
-  .o-app-layout__sidebar--right > .c-card:not(.is-hidden) .c-card__body {
-    flex: auto;
-    overflow-y: auto;
-    min-height: 0;
-  }
-
-  .o-app-layout__main {
-    position: relative;
-    z-index: 1;
-  }
-
-  .o-app-layout__main > .c-card {
-    box-shadow: none;
-  }
-
-  .o-app-layout__sidebar--right.is-hidden {
-    display: none;
-  }
+.o-app-layout__sidebar--right.is-hidden {
+  display: none;
 }
 

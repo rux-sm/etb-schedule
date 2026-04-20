@@ -501,24 +501,6 @@ hr.form-divider {
   }
 }
 
-@media (max-width: 600px) {
-
-  .form-grid .col-2,
-  .form-grid .col-4,
-  .form-grid .col-5,
-  .form-grid .col-6,
-  .form-grid .col-8 {
-    grid-column: span 12;
-  }
-
-  .form-grid .subsection-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .form-grid .form-actions {
-    justify-content: flex-start;
-  }
-}
 
 /* ── Section Dividers ────────────────────────────────────────── */
 .form-divider {
