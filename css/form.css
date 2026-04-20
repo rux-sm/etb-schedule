@@ -25,7 +25,7 @@ textarea,
   height: var(--rux-form-height);
   padding: 0 var(--input-padding-x);
   background-color: var(--field-bg);
-  border: 1px solid var(--border-default);
+  border: 1px solid var(--rux-surface-input);
   border-radius: var(--rux-radius-control);
   font-size: var(--input-font-size);
   font-weight: var(--input-weight);
@@ -321,8 +321,8 @@ select.is-empty:not(:focus),
   font-size: var(--form-label-font-size);
   font-weight: var(--form-label-weight);
   color: var(--rux-text-secondary);
-  line-height: 1.25;
-  margin-bottom: var(--form-label-margin) !important;
+  line-height: 1;
+  margin-bottom: var(--form-label-margin);
   padding-left: var(--form-label-indent);
   letter-spacing: var(--form-label-spacing);
   width: 100%;

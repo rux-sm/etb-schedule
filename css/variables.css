@@ -49,13 +49,13 @@
   /* --- SURFACE COLORS --- */
 
   --rux-surface-base: oklch(from var(--rux-mono) 8% c h);
-  --rux-surface-app-header: oklch(from var(--rux-mono) 24% c h);
-  --rux-surface-panel: oklch(from var(--rux-mono) 32% c h);
-  --rux-surface-header: oklch(from var(--rux-mono) 32% c h);
-  --rux-surface-footer: oklch(from var(--rux-mono) 32% c h);
+  --rux-surface-app-header: oklch(from var(--rux-mono) 28% c h);
+  --rux-surface-panel: oklch(from var(--rux-mono) 28% c h);
+  --rux-surface-header: oklch(from var(--rux-mono) 28% c h);
+  --rux-surface-footer: oklch(from var(--rux-mono) 28% c h);
   --rux-surface-modal: oklch(from var(--rux-mono) 18% c h);
-  --rux-surface-input: oklch(from var(--rux-mono) 16% c h);
-  --rux-surface-menu: oklch(from var(--rux-mono) 24% c h);
+  --rux-surface-input: oklch(from var(--rux-mono) 20% c h);
+  --rux-surface-menu: oklch(from var(--rux-mono) 28% c h);
   --rux-surface-textarea: oklch(from var(--rux-mono) 16% c h);
 
   /* --- STATUS COLORS --- */
@@ -76,7 +76,7 @@
 
 
   --rux-text-primary: oklch(100% 0.014 250);
-  --rux-text-secondary: oklch(80% 0.014 250);
+  --rux-text-secondary: oklch(70% 0.014 250);
   --rux-text-disabled: oklch(70% 0.014 250);
   --rux-text-hover: oklch(45% 0.014 250);
 
@@ -144,13 +144,13 @@
   ──────────────────────────────────────────────────────────────── */
 
 
-  --rux-form-height: 30px;
+  --rux-form-height: 32px;
   --form-row-gap: 8px;
   --form-col-gap: 8px;
   --rux-form-label-gap: 8px;
   --form-label-margin: 4px;
   --form-section-gap: 16px;
-  --form-label-color: oklch(from var(--rux-mana) 75% c h);
+  --form-label-color: oklch(from var(--rux-mana) 50% c h);
   --form-label-font-size: 12px;
   --form-label-weight: 500;
   --form-label-spacing: 0.02em;
@@ -164,7 +164,7 @@
   --bus-grid-row-gap: 4px;
   --bus-driver-block-gap: 4px;
 
-  --bus-header-margin: 0px;
+  --bus-header-margin: 4px;
 
   --field-bg: var(--rux-surface-input);
   --field-bg-hover: var(--surface-03);

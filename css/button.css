@@ -33,7 +33,7 @@ button {
   justify-content: center;
   gap: 8px;
   /* Increased to 34px for better optical balance with squircles */
-  height: 30px;
+  height: 32px;
   padding: 0 16px;
 
   /* Typography */
@@ -337,4 +337,3 @@ button {
 }
 
 /* ── 11. Responsive ─────────────────────────────────────────────────────── */
-
