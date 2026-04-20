@@ -291,10 +291,7 @@
 
 .schedule-grid__trip-bar__multi-badge {
   flex-shrink: 0;
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  z-index: 1;
+  order: -1;
   font-size: var(--tripbar-multi-badge-font-size);
   font-weight: 500;
   color: var(--tripbar-r1-color);
@@ -315,10 +312,7 @@
 
 .schedule-grid__trip-bar__paid-badge {
   flex-shrink: 0;
-  position: absolute;
-  right: 0px;
-  top: 0px;
-  z-index: 1;
+  order: 1;
   font-size: 14px;
   font-weight: 400;
   font-variation-settings: 'FILL' 0, 'opsz' 10;
