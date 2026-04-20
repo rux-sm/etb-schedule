@@ -131,7 +131,7 @@
   line-height: 1;
   position: absolute;
   top: 48%;
-  color: color-mix(in srgb, var(--yel-alert) 100%, white);
+  color: color-mix(in srgb, var(--rux-status-yellow) 100%, white);
   transform: translateY(-50%);
   text-shadow: none !important;
 }

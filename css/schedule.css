@@ -409,7 +409,7 @@
 .agenda-header__week-date .wk-dates {
   margin-right: 4px;
 
-  color: var(--gray-01);
+  color: var(--text-primary);
   font-weight: 700;
   letter-spacing: 0;
 
@@ -431,7 +431,7 @@
 .agenda-header__week-date .wk-year {
   margin-right: 4px;
 
-  color: var(--gray-400);
+  color: var(--text-secondary);
   font-weight: 700;
   letter-spacing: 0;
 
@@ -711,7 +711,7 @@
 
 .quote-summary__row--discount .quote-summary__label,
 .quote-summary__row--discount .quote-summary__value {
-  color: var(--yellow);
+  color: var(--rux-status-yellow);
 }
 
 .quote-summary__row--primary {
@@ -1267,7 +1267,7 @@
 #driver-col-hl {
   position: absolute;
   pointer-events: none;
-  border: 2px solid var(--rux-neutral-300);
+  border: 2px solid var(--text-secondary);
   border-radius: 0px;
   z-index: 100;
 }

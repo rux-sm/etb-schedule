@@ -6,116 +6,22 @@
   /* SECTION 1: PRIMITIVE TOKENS                                                */
   /* -------------------------------------------------------------------------- */
 
-  /* --- NEUTRAL PALETTE --- */
+  /* --- PALETTE SEEDS — one per hue, derive all lightness with oklch(from var(--seed) L c h) --- */
 
   --black: oklch(0% 0 255);
   --white: oklch(100% 0 255);
+  --rux-mono: oklch(50% 0.014 270);
 
-  --rux-mono-100: oklch(95% 0.004 250);
-  --rux-mono-200: oklch(85% 0.004 250);
-  --rux-mono-300: oklch(75% 0.004 250);
-  --rux-mono-400: oklch(65% 0.004 250);
-  --rux-mono-500: oklch(55% 0.004 250);
-  --rux-mono-600: oklch(45% 0.004 250);
-  --rux-mono-700: rgb(58, 58, 60);
-  --rux-mono-800: rgb(44, 44, 46);
-  --rux-mono-900: rgb(28, 28, 30);
+  --rux-wine: oklch(55% 0.2 25);
+  --rux-dusk: oklch(60% 0.2 65);
+  --rux-sand: oklch(55% 0.2 100);
+  --rux-celt: oklch(60% 0.2 155);
+  --rux-teal: oklch(55% 0.2 195);
+  --rux-cyan: oklch(55% 0.2 220);
+  --rux-mana: oklch(55% 0.2 255);
+  --rux-void: oklch(60% 0.2 300);
+  --rux-pink: oklch(60% 0.2 350);
 
-  /* --- RED PALETTE --- */
-
-  --rux-blut-100: oklch(95% 0.2 20);
-  --rux-blut-200: oklch(85% 0.2 20);
-  --rux-blut-300: oklch(75% 0.2 20);
-  --rux-blut-400: oklch(65% 0.2 20);
-  --rux-blut-500: oklch(55% 0.2 20);
-  --rux-blut-600: oklch(45% 0.2 20);
-  --rux-blut-700: oklch(35% 0.2 20);
-  --rux-blut-800: oklch(25% 0.2 20);
-  --rux-blut-900: oklch(15% 0.2 20);
-
-  /* --- ORANGE PALETTE --- */
-
-  --rux-dusk-100: oklch(100% 0.2 65);
-  --rux-dusk-200: oklch(90% 0.2 65);
-  --rux-dusk-300: oklch(80% 0.2 65);
-  --rux-dusk-400: oklch(70% 0.2 65);
-  --rux-dusk-500: oklch(60% 0.2 65);
-  --rux-dusk-600: oklch(50% 0.2 65);
-  --rux-dusk-700: oklch(40% 0.2 65);
-  --rux-dusk-800: oklch(30% 0.2 65);
-  --rux-dusk-900: oklch(20% 0.2 65);
-
-  /* --- YELLOW PALETTE --- */
-
-  --rux-sand-100: oklch(95% 0.2 100);
-  --rux-sand-200: oklch(85% 0.2 100);
-  --rux-sand-300: oklch(75% 0.2 100);
-  --rux-sand-400: oklch(65% 0.2 100);
-  --rux-sand-500: oklch(55% 0.2 100);
-  --rux-sand-600: oklch(45% 0.2 100);
-  --rux-sand-700: oklch(35% 0.2 100);
-  --rux-sand-800: oklch(25% 0.2 100);
-  --rux-sand-900: oklch(15% 0.2 100);
-
-  /* --- GREEN PALETTE --- */
-
-  --rux-celt-100: oklch(100% 0.2 155);
-  --rux-celt-200: oklch(90% 0.2 155);
-  --rux-celt-300: oklch(80% 0.2 155);
-  --rux-celt-400: oklch(70% 0.2 155);
-  --rux-celt-500: oklch(60% 0.2 155);
-  --rux-celt-600: oklch(50% 0.2 155);
-  --rux-celt-700: oklch(40% 0.2 155);
-  --rux-celt-800: oklch(30% 0.2 155);
-  --rux-celt-900: oklch(20% 0.2 155);
-
-  /* --- CYAN PALETTE --- */
-
-  --rux-cyan-100: oklch(95% 0.2 220);
-  --rux-cyan-200: oklch(85% 0.2 220);
-  --rux-cyan-300: oklch(75% 0.2 220);
-  --rux-cyan-400: oklch(65% 0.2 220);
-  --rux-cyan-500: oklch(55% 0.2 220);
-  --rux-cyan-600: oklch(45% 0.2 220);
-  --rux-cyan-700: oklch(35% 0.2 220);
-  --rux-cyan-800: oklch(25% 0.2 220);
-  --rux-cyan-900: oklch(15% 0.2 220);
-
-  /* --- BLUE PALETTE --- */
-
-  --rux-mana-100: oklch(95% 0.2 260);
-  --rux-mana-200: oklch(85% 0.2 260);
-  --rux-mana-300: oklch(75% 0.2 260);
-  --rux-mana-400: oklch(65% 0.2 260);
-  --rux-mana-500: oklch(55% 0.2 260);
-  --rux-mana-600: oklch(45% 0.2 260);
-  --rux-mana-700: oklch(35% 0.2 260);
-  --rux-mana-800: oklch(25% 0.2 260);
-  --rux-mana-900: oklch(15% 0.2 260);
-
-  /* --- PURPLE PALETTE --- */
-
-  --rux-void-100: oklch(100% 0.2 300);
-  --rux-void-200: oklch(90% 0.2 300);
-  --rux-void-300: oklch(80% 0.2 300);
-  --rux-void-400: oklch(70% 0.2 300);
-  --rux-void-500: oklch(60% 0.2 300);
-  --rux-void-600: oklch(50% 0.2 300);
-  --rux-void-700: oklch(40% 0.2 300);
-  --rux-void-800: oklch(30% 0.2 300);
-  --rux-void-900: oklch(20% 0.2 300);
-
-  /* --- PINK PALETTE --- */
-
-  --rux-pink-100: oklch(100% 0.2 350);
-  --rux-pink-200: oklch(90% 0.2 350);
-  --rux-pink-300: oklch(80% 0.2 350);
-  --rux-pink-400: oklch(70% 0.2 350);
-  --rux-pink-500: oklch(60% 0.2 350);
-  --rux-pink-600: oklch(50% 0.2 350);
-  --rux-pink-700: oklch(40% 0.2 350);
-  --rux-pink-800: oklch(30% 0.2 350);
-  --rux-pink-900: oklch(20% 0.2 350);
 
   /* --- SPACING SCALE --- */
 
@@ -142,32 +48,28 @@
 
   /* --- SURFACE COLORS --- */
 
-  --rux-surface-base: rgb(0, 0, 0);
-  --rux-surface-app-header: rgb(22, 22, 23);
-  --rux-surface-panel: rgb(30, 30, 32);
-  --rux-surface-header: rgb(30, 30, 32);
-  --rux-surface-footer: rgb(30, 30, 32);
-  --rux-surface-modal: rgb(30, 30, 32);
-  --rux-surface-input: rgb(0, 0, 0);
-  --rux-surface-menu: rgb(30, 30, 32);
-  --rux-surface-textarea: rgb(30, 30, 32);
+  --rux-surface-base: oklch(from var(--rux-mono) 8% c h);
+  --rux-surface-app-header: oklch(from var(--rux-mono) 24% c h);
+  --rux-surface-panel: oklch(from var(--rux-mono) 32% c h);
+  --rux-surface-header: oklch(from var(--rux-mono) 32% c h);
+  --rux-surface-footer: oklch(from var(--rux-mono) 32% c h);
+  --rux-surface-modal: oklch(from var(--rux-mono) 18% c h);
+  --rux-surface-input: oklch(from var(--rux-mono) 16% c h);
+  --rux-surface-menu: oklch(from var(--rux-mono) 24% c h);
+  --rux-surface-textarea: oklch(from var(--rux-mono) 16% c h);
 
   /* --- STATUS COLORS --- */
 
-  --rux-status-red: var(--rux-blut-300);
-  --rux-status-red-alpha: oklch(from var(--rux-blut-500) l c h / 25%);
-  --rux-status-yellow: var(--rux-sand-300);
-  --rux-status-yellow-alpha: oklch(from var(--rux-sand-500) l c h / 25%);
-  --rux-status-green: var(--rux-celt-300);
-  --rux-status-green-alpha: oklch(from var(--rux-celt-500) l c h / 25%);
-  --rux-status-blue: var(--rux-mana-300);
-  --rux-status-blue-alpha: oklch(from var(--rux-mana-500) l c h / 25%);
+  --rux-status-red: oklch(from var(--rux-wine) 75% c h);
+  --rux-status-red-alpha: oklch(from var(--rux-wine) l c h / 25%);
+  --rux-status-yellow: oklch(from var(--rux-sand) 75% c h);
+  --rux-status-yellow-alpha: oklch(from var(--rux-sand) l c h / 25%);
+  --rux-status-green: oklch(from var(--rux-celt) 80% c h);
+  --rux-status-green-alpha: oklch(from var(--rux-celt) l c h / 25%);
+  --rux-status-blue: oklch(from var(--rux-mana) 75% c h);
+  --rux-status-blue-alpha: oklch(from var(--rux-mana) l c h / 25%);
 
-
-  --rux-accent-color: var(--rux-mana-500);
-  --rux-danger-color: var(--rux-status-red);
-  --rux-warning-color: var(--rux-status-yellow);
-  --rux-success-color: var(--rux-status-green);
+  --rux-accent-color: var(--rux-mana);
 
   /* 2D. Border Roles
   ──────────────────────────────────────────────────────────────── */
@@ -194,29 +96,6 @@
   --rux-radius-button: var(--rux-radius-2);
   /* pill / squircle buttons */
 
-  /* 2F. Status Bridge Aliases — deprecated
-         Point old --rux-color-status-* names at new --rux-status-* tokens.
-         Remove after all consumers are updated.
-  ──────────────────────────────────────────────────────────────── */
-
-  --rux-color-status-red: var(--rux-status-red);
-  --rux-color-status-red-alpha: var(--rux-status-red-alpha);
-  --rux-color-status-yellow: var(--rux-status-yellow);
-  --rux-color-status-yellow-alpha: var(--rux-status-yellow-alpha);
-  --rux-color-status-green: var(--rux-status-green);
-  --rux-color-status-green-alpha: var(--rux-status-green-alpha);
-  --rux-color-status-blue: var(--rux-status-blue);
-  --rux-color-status-blue-alpha: var(--rux-status-blue-alpha);
-
-  /* 2G. Material Design Bridge Aliases — deprecated
-         Replace consumers with --rux-* equivalents, then remove.
-         Used by: --btn-toggle-hover-bg, --header-action-*, --tripbar-r*-color
-  ──────────────────────────────────────────────────────────────── */
-
-  --md-ref-palette-neutral-40: var(--rux-neutral-600);
-  --md-ref-palette-neutral-80: var(--rux-neutral-200);
-  --md-ref-palette-neutral-100: var(--rux-neutral-100);
-
   /* ============================================================
      TIER 3 — COMPONENT TOKENS
      Tied to specific UI elements. No --rux- prefix.
@@ -226,11 +105,11 @@
   /* 3A. Layout Surfaces
   ──────────────────────────────────────────────────────────────── */
 
-  --surface-00: var(--rux-neutral-900);
-  --surface-01: var(--rux-neutral-800);
-  --surface-02: var(--rux-neutral-700);
-  --surface-03: var(--rux-neutral-600);
-  --surface-04: var(--rux-neutral-500);
+  --surface-00: oklch(from var(--rux-mono) 8% c h);
+  --surface-01: oklch(from var(--rux-mono) 14% c h);
+  --surface-02: oklch(from var(--rux-mono) 22% c h);
+  --surface-03: oklch(from var(--rux-mono) 30% c h);
+  --surface-04: oklch(from var(--rux-mono) 38% c h);
 
   /* 3B. Borders
   ──────────────────────────────────────────────────────────────── */
@@ -244,10 +123,10 @@
   /* 3C. Text
   ──────────────────────────────────────────────────────────────── */
 
-  --text-primary: var(--rux-neutral-100);
-  --text-secondary: var(--rux-neutral-300);
-  --text-placeholder: var(--rux-neutral-500);
-  --text-disabled: var(--rux-neutral-600);
+  --text-primary: oklch(from var(--rux-mono) 92% c h);
+  --text-secondary: oklch(from var(--rux-mono) 72% c h);
+  --text-placeholder: oklch(from var(--rux-mono) 52% c h);
+  --text-disabled: oklch(from var(--rux-mono) 42% c h);
   --text-muted: var(--text-secondary);
   --header-separator: var(--border-default);
   /* fixed typo: seperator → separator */
@@ -268,7 +147,7 @@
   --form-section-gap: 16px;
   /* gap between a section divider label and its content (e.g. toggle buttons, bus grid) */
   /* field labels — e.g. "Destination", "Name" */
-  --form-label-color: var(--rux-blue-200);
+  --form-label-color: oklch(from var(--rux-mana) 75% c h);
   --form-label-font-size: 12px;
   --form-label-weight: 500;
   --form-label-spacing: 0.02em;
@@ -276,7 +155,7 @@
   /* left offset — set to 1px to align with invisible border edge */
 
   /* section divider labels — e.g. "REQUIREMENTS", "BUS ASSIGNMENT" */
-  --form-section-label-color: var(--rux-green-200);
+  --form-section-label-color: oklch(from var(--rux-celt) 80% c h);
   --form-section-label-size: 12px;
   --form-section-label-weight: 500;
   --form-section-label-spacing: 0.02em;
@@ -356,7 +235,7 @@
   ──────────────────────────────────────────────────────────────── */
 
   /* Primary */
-  --btn-primary-bg: var(--color-accent);
+  --btn-primary-bg: oklch(from var(--rux-mana) 55% c h);
   --btn-primary-text: var(--text-primary);
   --btn-primary-hover: color-mix(in srgb, var(--color-accent) 85%, white);
   --btn-primary-active: color-mix(in srgb, var(--color-accent) 70%, white);
@@ -364,7 +243,7 @@
   --btn-primary-border: transparent;
 
   /* Secondary */
-  --btn-secondary-bg: var(--color-secondary);
+  --btn-secondary-bg: oklch(from var(--rux-mono) 55% c h);
   --btn-secondary-text: var(--text-primary);
   --btn-secondary-hover: color-mix(in srgb, var(--color-secondary) 85%, black);
   --btn-secondary-active: color-mix(in srgb, var(--color-secondary) 70%, black);
@@ -372,7 +251,7 @@
   --btn-secondary-border: transparent;
 
   /* Danger */
-  --btn-danger-bg: var(--color-danger);
+  --btn-danger-bg: oklch(from var(--rux-wine) 55% c h);
   --btn-danger-text: var(--text-primary);
   --btn-danger-hover: color-mix(in srgb, var(--color-danger) 85%, white);
   --btn-danger-active: color-mix(in srgb, var(--color-danger) 70%, white);
@@ -381,7 +260,7 @@
 
   /* Success */
   --btn-success-bg: var(--color-success);
-  --btn-success-text: var(--rux-neutral-900);
+  --btn-success-text: oklch(from var(--rux-mono) 10% c h);
   --btn-success-hover: color-mix(in srgb, var(--color-success) 85%, white);
   --btn-success-active: color-mix(in srgb, var(--color-success) 70%, white);
 
@@ -409,16 +288,16 @@
   --btn-toolbar-padding-x: 16px;
 
   /* Header action */
-  --header-action-bg: var(--md-ref-palette-neutral-40);
-  --header-action-hover-bg: color-mix(in srgb, var(--md-ref-palette-neutral-40) 85%, white);
-  --header-action-active-bg: color-mix(in srgb, var(--md-ref-palette-neutral-40) 70%, white);
-  --header-action-color: var(--md-ref-palette-neutral-100);
+  --header-action-bg: oklch(from var(--rux-mono) 40% c h);
+  --header-action-hover-bg: oklch(from var(--rux-mono) 46% c h);
+  --header-action-active-bg: oklch(from var(--rux-mono) 34% c h);
+  --header-action-color: var(--text-primary);
 
   /* Toggle */
-  --btn-toggle-bg: var(--color-secondary);
+  --btn-toggle-bg: oklch(from var(--rux-mono) 55% c h);
   --btn-toggle-border: transparent;
   --btn-toggle-text: var(--text-primary);
-  --btn-toggle-hover-bg: color-mix(in srgb, var(--md-ref-palette-neutral-40) 85%, white);
+  --btn-toggle-hover-bg: oklch(from var(--rux-mono) 46% c h);
   --btn-toggle-active-bg: var(--rux-accent-color);
   --btn-toggle-active-border: var(--rux-accent-color);
   --btn-toggle-icon-opacity: 0.7;
@@ -543,22 +422,21 @@
   ──────────────────────────────────────────────────────────────── */
 
   --tripbar-height: 99px;
-  --tripbar-radius: 6px;
+  --tripbar-radius: 8px;
   --tripbar-lane-step: 100px;
   --tripbar-bg-mix-percent: 100%;
   --tripbar-text-shadow: 0 1px 2px rgba(0, 0, 0, 1);
   --tripbar-shadow-hover: 0 10px 20px rgba(0, 0, 0, 0.5), 0 6px 6px rgba(0, 0, 0, 0.3);
   --tripbar-color: var(--rux-status-blue-alpha);
   --tripbar-border-color: var(--rux-accent-color);
-  --tripbar-text-color: var(--rux-accent-color);
 
   --tripbar-badge-text-color: var(--text-primary);
-  --tripbar-r1-color: var(--md-ref-palette-neutral-100);
-  --tripbar-r2-color: var(--md-ref-palette-neutral-80);
-  --tripbar-r4-color: var(--md-ref-palette-neutral-100);
-  --tripbar-r5-color: var(--md-ref-palette-neutral-100);
-  --tripbar-r6-color: var(--md-ref-palette-neutral-80);
-  --tripbar-r7-color: var(--md-ref-palette-neutral-100);
+  --tripbar-r1-color: var(--text-primary);
+  --tripbar-r2-color: var(--text-secondary);
+  --tripbar-r4-color: var(--text-primary);
+  --tripbar-r5-color: var(--text-primary);
+  --tripbar-r6-color: var(--text-secondary);
+  --tripbar-r7-color: var(--text-primary);
 
   --tripbar-hover-brightness-from: 1.05;
   --tripbar-hover-brightness-to: 1.15;
@@ -615,7 +493,7 @@
   --tripbar-danger-size: 16px;
   --tripbar-danger-font: 0.6875rem;
   --tripbar-danger-offset: 4px;
-  --tripbar-multi-badge-font-size: 0.625rem;
+  --tripbar-multi-badge-font-size: 11px;
   --tripbar-multi-bus-indent: 0px;
 
   /* 3M. Icons
@@ -652,7 +530,7 @@
   /* 3P. Status & Role Mappings
   ──────────────────────────────────────────────────────────────── */
 
-  --color-secondary: oklch(55% 0 0);
+  --color-secondary: oklch(from var(--rux-mono) 35% c h);
   --color-accent: var(--rux-accent-color);
   --color-danger: var(--rux-status-red);
   --color-danger-soft: var(--rux-status-red-alpha);
@@ -667,55 +545,6 @@
   --color-conflict-accent: var(--rux-status-red);
   --color-conflict-bg: var(--rux-status-red-alpha);
 
-  /* 3Q. Legacy Color Aliases — deprecated 3-letter shortcuts
-         Bridge old component references. Migrate consumers to --rux-status-*
-         or --rux-{color}-{scale} tokens, then remove this block.
-  ──────────────────────────────────────────────────────────────── */
-
-  --gra-dark: oklch(55% 0 0);
-  --gra: oklch(65% 0 0);
-  --gra-alpha: oklch(65% 0 0 / 20%);
-  --gra-alert: oklch(80% 0 0);
-
-  --red-accent: var(--rux-status-red);
-  --red-dark: var(--rux-status-red);
-  --red: var(--rux-status-red);
-  --red-alpha: var(--rux-status-red-alpha);
-  --red-alert: var(--rux-status-red);
-
-  --org: oklch(65% 0.2 60);
-  --org-alpha: oklch(65% 0.2 60 / 20%);
-  --org-alert: oklch(80% 0.2 60);
-
-  --yel: var(--rux-status-yellow);
-  --yel-alpha: var(--rux-status-yellow-alpha);
-  --yel-alert: var(--rux-status-yellow);
-
-  --grn: var(--rux-status-green);
-  --grn-alpha: var(--rux-status-green-alpha);
-  --grn-alert: var(--rux-status-green);
-
-  --tea: oklch(65% 0.15 180);
-  --tea-alpha: oklch(65% 0.15 180 / 20%);
-  --tea-alert: oklch(80% 0.15 180);
-
-  --cya: oklch(65% 0.15 200);
-  --cya-alpha: oklch(65% 0.15 200 / 20%);
-  --cya-alert: oklch(80% 0.21 200);
-
-  --blue-accent: oklch(65% 0.18 255);
-  --blue-dark: oklch(55% 0.18 255);
-  --blue: var(--rux-mana-500);
-  --blue-alpha: oklch(65% 0.18 255 / 20%);
-  --blue-alert: oklch(80% 0.18 255);
-
-  --pur: oklch(65% 0.3 290);
-  --pur-alpha: oklch(65% 0.3 290 / 20%);
-  --pur-alert: oklch(80% 0.3 290);
-
-  --pin: oklch(65% 0.21 350);
-  --pin-alpha: oklch(65% 0.21 350 / 20%);
-  --pin-alert: oklch(80% 0.21 350);
 }
 
 [data-theme="light"] {

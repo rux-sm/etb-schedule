@@ -717,7 +717,7 @@ samp {
 .dropdown-icon.is-active,
 .dropdown__icon.is-active,
 .dropdown-item.is-active {
-  color: var(--blue);
+  color: var(--rux-mana);
   /* Carbon uses primary blue to indicate current selection */
   font-weight: 600;
 }

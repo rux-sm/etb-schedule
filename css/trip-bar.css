@@ -31,39 +31,65 @@
     outline-color var(--transition-fast);
   will-change: transform, filter, box-shadow;
 
-  --trip-accent-color: var(--rux-mana-500);
-  --trip-l: 60%;
-  --trip-c: 0.2;
-  --trip-alpha: 25%;
+  --trip-accent-color: var(--rux-mana);
 
-  background: oklch(from var(--trip-accent-color) var(--trip-l) var(--trip-c) h / var(--trip-alpha));
-  border: 1px solid oklch(from var(--trip-accent-color) var(--trip-l) var(--trip-c) h / 100%);
-  border-left: 6px solid var(--trip-accent-color);
+  /* Background LCHA */
+  --tripbar-bg-l: 60%;
+  --tripbar-bg-c: 0.2;
+  --tripbar-bg-h: 0;
+  --tripbar-bg-a: 20%;
+
+  /* Border LCHA */
+  --tripbar-border-l: 65%;
+  --tripbar-border-c: 0.2;
+  --tripbar-border-h: 0;
+  --tripbar-border-a: 100%;
+
+  /* Border-left LCHA */
+  --tripbar-border-left-l: 65%;
+  --tripbar-border-left-c: 0.2;
+  --tripbar-border-left-h: 0;
+  --tripbar-border-left-a: 100%;
+
+  /* Text LCHA */
+  --tripbar-text-l: 65%;
+  --tripbar-text-c: 0.2;
+  --tripbar-text-h: 0;
+  --tripbar-text-a: 100%;
+
+  --tripbar-bg: oklch(from var(--trip-accent-color) var(--tripbar-bg-l) var(--tripbar-bg-c) calc(h + var(--tripbar-bg-h)) / var(--tripbar-bg-a));
+  --tripbar-border-color: oklch(from var(--trip-accent-color) var(--tripbar-border-l) var(--tripbar-border-c) calc(h + var(--tripbar-border-h)) / var(--tripbar-border-a));
+  --tripbar-border-left-color: oklch(from var(--trip-accent-color) var(--tripbar-border-left-l) var(--tripbar-border-left-c) calc(h + var(--tripbar-border-left-h)) / var(--tripbar-border-left-a));
+  --tripbar-text-color: oklch(from var(--trip-accent-color) var(--tripbar-text-l) var(--tripbar-text-c) calc(h + var(--tripbar-text-h)) / var(--tripbar-text-a));
+
+  background: var(--tripbar-bg);
+  border: 1px solid var(--tripbar-border-color);
+  border-left: 8px solid var(--tripbar-border-left-color);
 }
 
-/* Hover: Increase Lightness only */
+/* Hover: Increase bg + border lightness */
 .schedule-grid__trip-bar:hover {
   z-index: 600;
-  --trip-l: 70%;
+  --tripbar-bg-l: 50%;
+  --tripbar-border-l: 50%;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.22),
     0 4px 8px rgba(0, 0, 0, 0.4);
   cursor: pointer;
 }
 
-/* Click: Drop Lightness significantly */
+/* Click: Drop bg lightness + alpha */
 .schedule-grid__trip-bar:active {
   transform: scale(0.98);
-  --trip-l: 60%;
-  --trip-c: 0.2;
-  --trip-alpha: 15%;
+  --tripbar-bg-l: 35%;
+  --tripbar-bg-a: 80%;
 }
 
-/* Selected: Maximum Lightness + increased Opacity */
+/* Selected: fade bg heavily */
 .schedule-grid__trip-bar.selected {
   z-index: 600;
-  --trip-l: 60%;
-  --trip-alpha: 5%;
+  --tripbar-bg-l: 35%;
+  --tripbar-bg-a: 15%;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
     0 8px 20px rgba(0, 0, 0, 0.55),
@@ -82,38 +108,38 @@
   height: var(--tripbar-danger-size);
   font-size: var(--tripbar-danger-font);
   font-weight: 700;
-  color: var(--red-alert);
-  background: var(--red-alpha);
+  color: var(--rux-status-red);
+  background: var(--rux-status-red-alpha);
   border-radius: 999px;
-  box-shadow: 0 0 6px color-mix(in srgb, var(--red-alert) 50%, transparent);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--rux-status-red) 50%, transparent);
 }
 
 /* Color variants — only override the accent variable;
    the base rule's glass gradient + color-mix background
    automatically picks up the new --tripbar-color. */
 .schedule-grid__trip-bar {
-  --tripbar-r1-color: oklch(from var(--trip-accent-color) 80% c h / 100%);
-  --tripbar-r2-color: oklch(from var(--trip-accent-color) 80% c h / 100%);
-  --tripbar-r3-color: oklch(from var(--trip-accent-color) 80% c h / 100%);
-  --tripbar-r4-color: oklch(from var(--trip-accent-color) 80% c h / 100%);
-  --tripbar-r5-color: oklch(from var(--trip-accent-color) 80% c h / 100%);
-  --tripbar-r6-color: oklch(from var(--trip-accent-color) 80% c h / 100%);
+  --tripbar-r1-color: var(--tripbar-text-color);
+  --tripbar-r2-color: var(--tripbar-text-color);
+  --tripbar-r3-color: var(--tripbar-text-color);
+  --tripbar-r4-color: var(--tripbar-text-color);
+  --tripbar-r5-color: var(--tripbar-text-color);
+  --tripbar-r6-color: var(--tripbar-text-color);
 
   --tripbar-badge-text-color: var(--rux-status-red);
-  --tripbar-status-pending-bg: var(--red-alpha);
+  --tripbar-status-pending-bg: var(--rux-status-red-alpha);
   --tripbar-status-pending-color: color-mix(in srgb,
-      var(--red-alert) 25%,
-      var(--gray-900));
-  --tripbar-status-ok-bg: var(--rux-blut-500);
+      var(--rux-status-red) 25%,
+      oklch(from var(--rux-mono) 8% c h));
+  --tripbar-status-ok-bg: var(--rux-wine);
 
   &.out-of-service {
-    --tripbar-color: var(--red-alpha);
+    --tripbar-color: var(--rux-status-red-alpha);
     background: repeating-linear-gradient(-45deg,
-        color-mix(in srgb, var(--red-alpha) 10%, transparent),
-        color-mix(in srgb, var(--red-alpha) 10%, transparent) 8px,
-        color-mix(in srgb, var(--red-alpha) 50%, transparent) 8px,
-        color-mix(in srgb, var(--red-alpha) 50%, transparent) 16px);
-    border: 1px solid color-mix(in srgb, var(--red-alpha) 0%, transparent);
+        color-mix(in srgb, var(--rux-status-red-alpha) 10%, transparent),
+        color-mix(in srgb, var(--rux-status-red-alpha) 10%, transparent) 8px,
+        color-mix(in srgb, var(--rux-status-red-alpha) 50%, transparent) 8px,
+        color-mix(in srgb, var(--rux-status-red-alpha) 50%, transparent) 16px);
+    border: 1px solid color-mix(in srgb, var(--rux-status-red-alpha) 0%, transparent);
     border-left: none;
 
     /* Overrides for crisp text and recessed look */
@@ -162,35 +188,35 @@
   }
 
   &.unconfirmed {
-    --trip-accent-color: var(--rux-blut-500);
+    --trip-accent-color: var(--rux-wine);
   }
 
   &.color-green {
-    --trip-accent-color: var(--rux-celt-500);
+    --trip-accent-color: var(--rux-celt);
   }
 
   &.color-yellow {
-    --trip-accent-color: var(--rux-sand-500);
+    --trip-accent-color: var(--rux-sand);
   }
 
   &.color-purple {
-    --trip-accent-color: var(--rux-void-500);
+    --trip-accent-color: var(--rux-void);
   }
 
   &.color-pink {
-    --trip-accent-color: var(--rux-pink-500);
+    --trip-accent-color: var(--rux-pink);
   }
 
   &.color-orange {
-    --trip-accent-color: var(--rux-dusk-500);
+    --trip-accent-color: var(--rux-dusk);
   }
 
   &.color-teal {
-    --trip-accent-color: var(--rux-teal-500);
+    --trip-accent-color: var(--rux-teal);
   }
 
   &.color-cyan {
-    --trip-accent-color: var(--rux-cyan-500);
+    --trip-accent-color: var(--rux-cyan);
   }
 
 }
@@ -263,32 +289,36 @@
 .schedule-grid__trip-bar__multi-badge {
   flex-shrink: 0;
   position: absolute;
-  left: 2px;
-  top: 50%;
+  left: 0px;
+  top: 0px;
   z-index: 1;
-  transform: translateY(-50%);
   font-size: var(--tripbar-multi-badge-font-size);
   font-weight: 500;
   color: var(--tripbar-r1-color);
   text-shadow: var(--text-shadow);
-  width: 22px;
-  height: 14px;
+  border-radius: 999px;
+  border: none;
+  box-sizing: border-box;
+  width: auto;
+  height: 11px;
+  padding-inline: 2px;
   display: flex;
   align-items: center;
   justify-content: center;
+  line-height: 1;
+  text-align: center;
 }
 
 
 .schedule-grid__trip-bar__paid-badge {
   flex-shrink: 0;
   position: absolute;
-  right: 2px;
-  top: 50%;
+  right: 0px;
+  top: 0px;
   z-index: 1;
-  transform: translateY(-50%);
   font-size: 14px;
   font-weight: 400;
-  font-variation-settings: 'FILL' 1, 'opsz' 20;
+  font-variation-settings: 'FILL' 0, 'opsz' 10;
   color: var(--rux-status-green);
   text-shadow: var(--text-shadow);
   width: 14px;
@@ -385,7 +415,7 @@
 
 .schedule-grid__trip-bar__mini-badge.is-pending {
   background: transparent;
-  color: var(--red-alert);
+  color: var(--rux-status-red);
 }
 
 .schedule-grid__trip-bar__mini-badge.is-ok {
@@ -400,7 +430,7 @@
 
 .schedule-grid__trip-bar__mini-badge.is-yellow {
   background: transparent;
-  color: var(--yel-alert);
+  color: var(--rux-status-yellow);
 }
 
 .schedule-grid__trip-bar__mini-badge.has-pdf,
