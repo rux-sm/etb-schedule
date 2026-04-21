@@ -3779,7 +3779,7 @@ function renderDriverWeekGrid() {
 
       return `
 <tr>
-<td>${escHtml(name)}</td>
+<td class="driver-week__name-cell" data-driver-name="${escHtml(name)}">${escHtml(name)}</td>
 ${cells}
 </tr>
 `;
@@ -6539,8 +6539,56 @@ async function loadDriversAndBuses(forceRefresh = false) {
 let activeContextTripKey = null;
 let activeCellContext = null;
 let selectedTripBar = null;
+let selectedDriverName = null;
+
+function selectDriverBars(driverName) {
+  // Clear existing trip bar selection
+  if (selectedTripBar) {
+    selectedTripBar.classList.remove("selected");
+    selectedTripBar = null;
+  }
+
+  // Clear previous driver name highlight
+  document.querySelectorAll(".driver-week__name-cell.is-selected")
+    .forEach(el => el.classList.remove("is-selected"));
+
+  // Toggle off if same driver clicked again
+  if (selectedDriverName === driverName) {
+    selectedDriverName = null;
+    document.querySelectorAll(".schedule-grid__trip-bar.selected")
+      .forEach(el => el.classList.remove("selected"));
+    document.body.classList.remove("driver-filter-active");
+    return;
+  }
+
+  selectedDriverName = driverName;
+  document.body.classList.add("driver-filter-active");
+
+  // Highlight the name cell
+  document.querySelectorAll(`.driver-week__name-cell[data-driver-name="${CSS.escape(driverName)}"]`)
+    .forEach(el => el.classList.add("is-selected"));
+
+  // Clear any previously selected bars then select matching ones
+  document.querySelectorAll(".schedule-grid__trip-bar.selected")
+    .forEach(el => el.classList.remove("selected"));
+
+  document.querySelectorAll(".schedule-grid__trip-bar").forEach(bar => {
+    const names = Array.from(bar.querySelectorAll(".schedule-grid__trip-bar__driver"))
+      .map(el => el.textContent.trim())
+      .filter(Boolean);
+    if (names.includes(driverName)) bar.classList.add("selected");
+  });
+}
 
 function selectTripBar(barEl) {
+  // Clear driver selection
+  if (selectedDriverName) {
+    selectedDriverName = null;
+    document.body.classList.remove("driver-filter-active");
+    document.querySelectorAll(".driver-week__name-cell.is-selected")
+      .forEach(el => el.classList.remove("is-selected"));
+  }
+
   if (selectedTripBar && selectedTripBar !== barEl) {
     selectedTripBar.classList.remove("selected");
   }
@@ -7496,6 +7544,12 @@ function wireEvents() {
     }
 
     hideCard(cardType);
+  });
+
+  dom.driverWeekBody?.addEventListener("click", (e) => {
+    const nameCell = e.target.closest(".driver-week__name-cell");
+    if (!nameCell) return;
+    selectDriverBars(nameCell.dataset.driverName);
   });
 
   dom.driverWeekBody.addEventListener("mousedown", (e) => {

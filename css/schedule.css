@@ -1155,6 +1155,32 @@
   border-inline-start: 1px solid transparent;
 }
 
+.driver-week__name-cell {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.driver-week__name-cell:hover {
+  background-color: oklch(from var(--rux-surface-panel) calc(l + var(--rux-button-hover)) c h);
+}
+
+.driver-week__name-cell.is-selected {
+  color: var(--rux-accent-color);
+  font-weight: 600;
+}
+
+/* Dim all non-selected trip bars when a driver filter is active */
+body.driver-filter-active .schedule-grid__trip-bar:not(.selected) {
+  opacity: 0.2;
+  filter: saturate(0.2);
+  transition: opacity 0.2s ease, filter 0.2s ease;
+}
+
+body.driver-filter-active .schedule-grid__trip-bar.selected {
+  transition: opacity 0.2s ease, filter 0.2s ease;
+}
+
 .driver-week__count {
   font-weight: 500;
   color: var(--text-secondary);
