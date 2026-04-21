@@ -1161,7 +1161,7 @@
   transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
-.driver-week__name-cell:hover {
+.driver-week__table tbody tr .driver-week__name-cell:hover {
   background-color: oklch(from var(--rux-surface-panel) calc(l + var(--rux-button-hover)) c h);
 }
 
