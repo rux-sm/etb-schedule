@@ -186,6 +186,7 @@
   display: flex;
   align-items: center;
   height: 100%;
+  gap: 4px;
 }
 
 /* --- Side Panel Headers (Carbon UI Shell Inspired) --- */
@@ -229,6 +230,7 @@
   display: flex;
   align-items: center;
   height: 100%;
+  gap: 4px;
 }
 
 .c-header__actions span.material-symbols-outlined {

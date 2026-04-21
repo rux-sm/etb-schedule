@@ -16,7 +16,7 @@
   align-items: center;
   height: 100%;
   position: relative;
-  padding: 0 var(--space-lg);
+  padding-right: var(--space-lg);
 }
 
 /* The Carbon Vertical Divider */
@@ -73,6 +73,7 @@
   position: sticky;
   top: 0;
   z-index: 1000;
+  padding-inline: 12px;
   background-color: var(--rux-surface-app-header);
   border-bottom: none;
   box-shadow:
