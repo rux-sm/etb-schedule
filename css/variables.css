@@ -443,6 +443,8 @@
   --tripbar-r1-color: var(--text-primary);
   --tripbar-r2-color: var(--text-secondary);
   --tripbar-r4-color: var(--text-primary);
+  --tripbar-time-color: var(--tripbar-r4-color);
+  --tripbar-time-color-flagged: var(--rux-status-yellow);
   --tripbar-r5-color: var(--text-primary);
   --tripbar-r6-color: var(--text-secondary);
   --tripbar-r7-color: var(--text-primary);

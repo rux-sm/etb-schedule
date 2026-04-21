@@ -3346,6 +3346,10 @@ function _renderAgendaInner() {
         bar._left.textContent = tDep || "--";
         bar._center.textContent = tSpot || "--";
         bar._right.textContent = tArr || "--";
+
+        bar._left.dataset.severity   = getTimeSeverity(depTime,  "depart");
+        bar._center.dataset.severity = "normal";
+        bar._right.dataset.severity  = getTimeSeverity(arrTime,  "arrive");
       } else {
         // Multi-Day:
         // Left side shows Dep Time (only if this bar is the trip start)
@@ -3353,15 +3357,21 @@ function _renderAgendaInner() {
         if (isStartDay) {
           bar._left.textContent = formatTime12(depTime) || "--";
           bar._center.textContent = formatTime12(spotTime) || "--";
+          bar._left.dataset.severity   = getTimeSeverity(depTime,  "depart");
+          bar._center.dataset.severity = "normal";
         } else {
           bar._left.textContent = "";
           bar._center.textContent = "";
+          bar._left.dataset.severity   = "normal";
+          bar._center.dataset.severity = "normal";
         }
 
         if (isEndDay) {
           bar._right.textContent = formatTime12(arrTime) || "--";
+          bar._right.dataset.severity = getTimeSeverity(arrTime, "arrive");
         } else {
           bar._right.textContent = "";
+          bar._right.dataset.severity = "normal";
         }
       }
 
@@ -3784,6 +3794,21 @@ function updateDriverWeekIfVisible() {
 // 22) LEFT PANEL MODE + DESKTOP ENFORCEMENT
 // ======================================================
 // Card-to-panel mapping
+const TIME_SEVERITY_CONFIG = {
+  depart: { flagBeforeMinutes: 4 * 60 + 30 }, // before 4:30 AM → flagged
+  arrive: { flagAfter: 23, flagBefore: 3 },    // 11:00 PM+ or midnight–2:59 AM → flagged
+};
+
+function getTimeSeverity(timeStr, role) {
+  const hhmm = normalizeTime(timeStr);
+  if (!hhmm) return "normal";
+  const [h, m] = hhmm.split(":").map(Number);
+  const cfg = TIME_SEVERITY_CONFIG[role];
+  if (role === "depart" && h * 60 + m < cfg.flagBeforeMinutes) return "flagged";
+  if (role === "arrive" && (h >= cfg.flagAfter || h < cfg.flagBefore)) return "flagged";
+  return "normal";
+}
+
 const CARD_CONFIG = {
   trip: { card: dom.tripInfoCard, btn: dom.tripInputBtn },
   drivers: { card: dom.driverWeekCard, btn: dom.driversBtn },

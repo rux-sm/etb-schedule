@@ -40,10 +40,10 @@ button {
   font-family: var(--font-sans);
   font-size: 14px;
   /* Dropped from 16px for that 'Pro' utility look */
-  font-weight: 500;
+  font-weight: 400;
   /* Medium weight holds up better on black backgrounds */
   line-height: 1;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.0em;
   /* Subtle Apple-style tightening */
   text-decoration: none;
   white-space: nowrap;
@@ -214,9 +214,9 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--size-header-action);
-  height: var(--size-header-action);
-  min-width: var(--size-header-action);
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
   padding: 0;
 
   /* Visuals */
@@ -249,12 +249,12 @@ button {
 }
 
 .btn--icon .material-symbols-outlined {
-  font-size: var(--btn-icon-nav-size);
+  font-size: 20px;
   font-variation-settings:
     "FILL" var(--btn-icon-fill, 0),
     "wght" var(--btn-icon-wght, 400),
     "GRAD" 0,
-    "opsz" 24;
+    "opsz" 18;
 }
 
 /* ── 9. Toggle (Requirements) ───────────────────────────────────────────── */

@@ -361,6 +361,11 @@
   flex: 1;
   min-width: 0;
   white-space: nowrap;
+  color: var(--tripbar-time-color);
+}
+
+.schedule-grid__trip-bar__time[data-severity="flagged"] {
+  color: var(--tripbar-time-color-flagged);
 }
 
 .schedule-grid__trip-bar__time--left {
@@ -531,7 +536,7 @@
 
 
 /* ── Time row: scale down font on narrow bars so all 3 times stay visible ── */
-@container (max-width: 200px) {
+@container (max-width: 175px) {
   .schedule-grid__trip-bar__time-row {
     font-size: 0.65rem;
     letter-spacing: -0.01em;
