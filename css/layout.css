@@ -65,7 +65,7 @@
   /* box-shadow removed for flat UI */
 }
 
-.o-app-layout__main > .c-card {
+.o-app-layout__main>.c-card {
   height: auto;
   /* Match table height; avoid forced stretch. */
   max-height: 100%;
@@ -105,7 +105,7 @@
   z-index: 1;
 }
 
-.o-app-layout__main > .c-card {
+.o-app-layout__main>.c-card {
   height: auto;
   max-height: 100%;
   display: flex;
@@ -151,51 +151,50 @@
   pointer-events: none;
 }
 
-.o-app-layout__sidebar--left > .c-card,
-.o-app-layout__sidebar--right > .c-card {
+.o-app-layout__sidebar--left>.c-card,
+.o-app-layout__sidebar--right>.c-card {
   position: fixed;
-  top: 0;
-  bottom: 0;
+  top: calc(var(--size-header-row) + var(--rux-space-3));
+  bottom: var(--rux-space-3);
   width: var(--panel-width);
-  height: 100vh;
   box-shadow: 0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.3);
   transition:
     transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     opacity 0.2s ease;
 }
 
-.o-app-layout__sidebar--left > .c-card {
+.o-app-layout__sidebar--left>.c-card {
   left: 0;
   border-radius: 0 16px 16px 0 !important;
   transform: translateX(0);
 }
 
-.o-app-layout__sidebar--right > .c-card {
+.o-app-layout__sidebar--right>.c-card {
   right: 0;
   border-radius: 16px 0 0 16px !important;
   transform: translateX(0);
 }
 
-.o-app-layout__sidebar--left.is-collapsed > .c-card {
+.o-app-layout__sidebar--left.is-collapsed>.c-card {
   transform: translateX(-100%);
   opacity: 0;
 }
 
-.o-app-layout__sidebar--right.is-collapsed > .c-card {
+.o-app-layout__sidebar--right.is-collapsed>.c-card {
   transform: translateX(100%);
   opacity: 0;
 }
 
-.o-app-layout__sidebar--left > .c-card:not(.is-hidden),
-.o-app-layout__sidebar--right > .c-card:not(.is-hidden) {
+.o-app-layout__sidebar--left>.c-card:not(.is-hidden),
+.o-app-layout__sidebar--right>.c-card:not(.is-hidden) {
   flex: auto;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 
-.o-app-layout__sidebar--left > .c-card:not(.is-hidden) .c-card__body,
-.o-app-layout__sidebar--right > .c-card:not(.is-hidden) .c-card__body {
+.o-app-layout__sidebar--left>.c-card:not(.is-hidden) .c-card__body,
+.o-app-layout__sidebar--right>.c-card:not(.is-hidden) .c-card__body {
   flex: auto;
   overflow-y: auto;
   min-height: 0;
@@ -204,4 +203,3 @@
 .o-app-layout__sidebar--right.is-hidden {
   display: none;
 }
-

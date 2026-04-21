@@ -95,9 +95,8 @@ button {
 .btn:focus-visible,
 .btn--toggle:focus-visible,
 .btn--icon:focus-visible {
-  outline: 2px solid var(--rux-accent-color) !important;
-  outline-offset: -2px !important;
-  border-color: transparent !important;
+  outline: 2px solid var(--rux-accent-color);
+  border-color: transparent;
 }
 
 .btn .material-symbols-outlined,
@@ -117,7 +116,7 @@ button {
 .btn--toggle[aria-disabled="true"],
 .btn--icon:disabled,
 .btn--icon[aria-disabled="true"] {
-  background-color: var(--surface-02) !important;
+  background-color: var(--rux-surface-modal) !important;
   color: var(--text-disabled) !important;
   box-shadow: none !important;
   cursor: not-allowed;
@@ -193,18 +192,18 @@ button {
   border-color: var(--btn-ghost-border);
   color: var(--btn-ghost-text);
   text-shadow: var(--btn-ghost-text-shadow);
-  box-shadow: var(--btn-shadow-inset);
+  box-shadow: none;
 }
 
 .btn--ghost:hover {
   background-color: var(--btn-ghost-hover-bg);
-  box-shadow: var(--btn-shadow-inset);
+  box-shadow: none;
 }
 
 .btn--ghost:active {
   background-color: var(--btn-ghost-active-bg);
   border-color: var(--border-default);
-  box-shadow: var(--btn-shadow-active-sm);
+  box-shadow: none;
 }
 
 /* ── 8. .btn--icon (48×48, app header — Trip, Drivers, Settings…) ────────── */
@@ -237,11 +236,11 @@ button {
 }
 
 .btn--icon:hover {
-  background-color: var(--surface-03);
+  background-color: var(--rux-surface-panel);
 }
 
 .btn--icon:active {
-  background-color: var(--surface-02);
+  background-color: var(--rux-surface-modal);
   box-shadow: var(--btn-shadow-active-sm);
 }
 

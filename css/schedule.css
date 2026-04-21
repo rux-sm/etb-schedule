@@ -124,7 +124,7 @@
   align-items: center;
   column-gap: 8px;
   height: auto;
-  padding: var(--rux-space-2) 0;
+  padding: var(--rux-space-3) 0;
   position: relative;
 }
 
@@ -549,7 +549,7 @@
   padding: 0 var(--input-padding-x);
   outline: none;
   cursor: pointer;
-  height: var(--rux-form-height);
+  height: var(--form-height);
   box-sizing: border-box;
 }
 

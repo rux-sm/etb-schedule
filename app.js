@@ -3851,9 +3851,11 @@ function showCardInPanel(cardType, panel) {
   config.card.classList.remove("is-hidden");
 
   // Reset animation
-  config.card.classList.remove("slide-in-left", "fade-in", "slide-out-left");
+  const inClass = panel === "right" ? "slide-in-right" : "slide-in-left";
+  const outClass = panel === "right" ? "slide-out-right" : "slide-out-left";
+  config.card.classList.remove("slide-in-left", "slide-in-right", "slide-out-left", "slide-out-right", "fade-in");
   void config.card.offsetWidth; // force reflow
-  config.card.classList.add("slide-in-left");
+  config.card.classList.add(inClass);
 
   // Update state
   state.cardPanelAssignments[cardType] = panel;
@@ -3883,9 +3885,10 @@ function hideCard(cardType) {
   const panel = state.cardPanelAssignments[cardType];
   
   // Explicitly trigger the slide-out animation independently from the wrapper's CSS
-  config.card.classList.remove("slide-in-left", "slide-out-left");
+  const outClass = panel === "right" ? "slide-out-right" : "slide-out-left";
+  config.card.classList.remove("slide-in-left", "slide-in-right", "slide-out-left", "slide-out-right");
   void config.card.offsetWidth; // force reflow
-  config.card.classList.add("slide-out-left");
+  config.card.classList.add(outClass);
   
   state.cardPanelAssignments[cardType] = null;
 
@@ -3924,19 +3927,21 @@ function toggleCard(cardType) {
   const currentPanel = getCardPanel(cardType);
 
   if (currentPanel) {
-    // Card is open, close it
+    // Card is open — close it
     hideCard(cardType);
   } else {
-    // Exclusive left-panel mode:
-    // First, close ANY currently open cards across the board
-    Object.keys(state.cardPanelAssignments).forEach((k) => {
-      if (state.cardPanelAssignments[k]) {
-        hideCard(k);
-      }
-    });
-    
-    // Now proudly display the new card on the left
-    showCardInPanel(cardType, "left");
+    const panel = getFirstAvailablePanel();
+    if (panel) {
+      // Open in the first available slot (left first, then right)
+      showCardInPanel(cardType, panel);
+    } else {
+      // Both panels occupied — replace the right (secondary) panel
+      const rightCard = Object.keys(state.cardPanelAssignments).find(
+        (k) => state.cardPanelAssignments[k] === "right"
+      );
+      if (rightCard) hideCard(rightCard);
+      showCardInPanel(cardType, "right");
+    }
   }
 }
 

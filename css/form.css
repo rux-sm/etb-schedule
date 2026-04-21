@@ -22,10 +22,10 @@ textarea,
   display: block;
   width: 100%;
   box-sizing: border-box;
-  height: var(--rux-form-height);
+  height: var(--form-height);
   padding: 0 var(--input-padding-x);
   background-color: var(--field-bg);
-  border: 1px solid var(--rux-surface-input);
+  border: 1px solid var(--field-bg);
   border-radius: var(--rux-radius-control);
   font-size: var(--input-font-size);
   font-weight: var(--input-weight);
@@ -109,7 +109,7 @@ select.select--centered {
 /* ── 5. Textarea ─────────────────────────────────────────────────────────── */
 
 textarea {
-  min-height: var(--rux-form-height);
+  min-height: var(--form-height);
   height: auto;
   padding: 11px var(--input-padding-x);
   resize: vertical;
@@ -281,22 +281,22 @@ textarea:focus-visible,
 
 /* Status colors on the select field itself */
 .select-trigger.status-pending {
-  background-color: color-mix(in srgb, var(--rux-status-red) 8%, var(--field-bg));
+  background-color: color-mix(in srgb, var(--rux-status-red) 20%, var(--field-bg));
   color: var(--rux-status-red);
 }
 
 .select-trigger.status-ok {
-  background-color: color-mix(in srgb, var(--rux-status-green) 8%, var(--field-bg));
+  background-color: color-mix(in srgb, var(--rux-status-green) 20%, var(--field-bg));
   color: var(--rux-status-green);
 }
 
 .select-trigger.status-assigned {
-  background-color: color-mix(in srgb, var(--rux-status-yellow) 8%, var(--field-bg));
+  background-color: color-mix(in srgb, var(--rux-status-yellow) 20%, var(--field-bg));
   color: var(--rux-status-yellow);
 }
 
 .select-trigger.status-blue {
-  background-color: color-mix(in srgb, var(--rux-status-blue) 8%, var(--field-bg));
+  background-color: color-mix(in srgb, var(--rux-status-blue) 20%, var(--field-bg));
   color: var(--rux-status-blue);
 }
 
@@ -371,7 +371,7 @@ select.is-empty:not(:focus),
   font-variant-numeric: normal;
   white-space: pre-wrap;
   color: var(--text-secondary);
-  background: var(--surface-03);
+  background: var(--rux-surface-panel);
   border: 1px solid var(--border-default);
   border-radius: 0;
 }
@@ -387,7 +387,7 @@ select.is-empty:not(:focus),
   font-size: 0.875rem;
   white-space: pre;
   color: var(--text-secondary);
-  background: var(--surface-03);
+  background: var(--rux-surface-panel);
   padding: 12px;
   line-height: 1.5;
   letter-spacing: normal;
@@ -508,7 +508,7 @@ hr.form-divider {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding-top: var(--rux-form-label-gap);
+  padding-top: var(--form-label-gap);
 }
 
 .form-divider::after {

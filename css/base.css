@@ -264,6 +264,38 @@ samp {
   animation: slideOutLeftSheet 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
 }
 
+@keyframes slideInRightSheet {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slide-in-right {
+  animation: slideInRightSheet 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+}
+
+@keyframes slideOutRightSheet {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.slide-out-right {
+  animation: slideOutRightSheet 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+}
+
 @keyframes slideDown {
   from {
     opacity: 0;
@@ -689,7 +721,7 @@ samp {
 .dropdown__item:hover,
 .context-item:hover,
 .context-menu__item:hover {
-  background-color: var(--surface-04);
+  background-color: var(--rux-surface-overlay);
   color: var(--text-primary);
 }
 
@@ -698,7 +730,7 @@ samp {
 .dropdown__item:active,
 .context-item:active,
 .context-menu__item:active {
-  background-color: var(--surface-03);
+  background-color: var(--rux-surface-panel);
 }
 
 .dropdown__item--meta {
@@ -709,7 +741,7 @@ samp {
 
 .dropdown__item--meta:hover,
 .dropdown__item--meta:active {
-  background-color: var(--surface-04);
+  background-color: var(--rux-surface-overlay);
   color: var(--text-secondary);
 }
 

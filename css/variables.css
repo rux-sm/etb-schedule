@@ -9,16 +9,16 @@
   /* --- PALETTE SEEDS — one per hue, derive all lightness with oklch(from var(--seed) L c h) --- */
 
   --black: oklch(0% 0 255);
-  --white: oklch(100% 0 255);
-  --rux-mono: oklch(50% 0.014 270);
+  --white: oklch(100% 0 265);
+  --rux-mono: oklch(50% 0.008 260);
 
-  --rux-wine: oklch(55% 0.2 25);
+  --rux-wine: oklch(60% 0.2 25);
   --rux-dusk: oklch(60% 0.2 65);
-  --rux-sand: oklch(55% 0.2 100);
+  --rux-sand: oklch(60% 0.2 100);
   --rux-celt: oklch(60% 0.2 155);
-  --rux-teal: oklch(55% 0.2 195);
-  --rux-cyan: oklch(55% 0.2 220);
-  --rux-mana: oklch(55% 0.2 255);
+  --rux-teal: oklch(60% 0.2 195);
+  --rux-cyan: oklch(60% 0.2 210);
+  --rux-mana: oklch(60% 0.2 255);
   --rux-void: oklch(60% 0.2 300);
   --rux-pink: oklch(60% 0.2 350);
 
@@ -46,22 +46,43 @@
   /* SECTION 2: SEMANTIC TOKENS                                                 */
   /* -------------------------------------------------------------------------- */
 
-  /* --- SURFACE COLORS --- */
+  /* 2A. Surface Colors
+  ──────────────────────────────────────────────────────────────── */
 
-  --rux-surface-base: oklch(from var(--rux-mono) 8% c h);
-  --rux-surface-app-header: oklch(from var(--rux-mono) 28% c h);
-  --rux-surface-panel: oklch(from var(--rux-mono) 28% c h);
-  --rux-surface-header: oklch(from var(--rux-mono) 28% c h);
-  --rux-surface-footer: oklch(from var(--rux-mono) 28% c h);
+  /* Elevated Surface Scale */
+  --rux-surface-base: oklch(from var(--rux-mono) 0% c h);
+  /* 0% - Pure black canvas */
+  --rux-surface-card: oklch(from var(--rux-mono) 12% c h);
+  /* 12% - Subtle lift for schedule background */
   --rux-surface-modal: oklch(from var(--rux-mono) 18% c h);
-  --rux-surface-input: oklch(from var(--rux-mono) 20% c h);
-  --rux-surface-menu: oklch(from var(--rux-mono) 28% c h);
-  --rux-surface-textarea: oklch(from var(--rux-mono) 16% c h);
+  /* 18% - Higher lift for modals */
 
-  /* --- STATUS COLORS --- */
+  /* App Chrome & Panels */
+  --rux-surface-app-header: oklch(from var(--rux-mono) 24% c h);
+  /* 24% - Structural top bar */
+  --rux-surface-panel: oklch(from var(--rux-mono) 24% c h);
+  /* 24% - Editor panel (darkened to let 36% buttons pop) */
+  --rux-surface-header: oklch(from var(--rux-mono) 24% c h);
+  /* 24% - Match panel */
+  --rux-surface-footer: oklch(from var(--rux-mono) 24% c h);
+  /* 24% - Match panel */
+
+  /* Floating / Overlays */
+  --rux-surface-menu: oklch(from var(--rux-mono) 28% c h);
+  /* 28% - Floating menus */
+  --rux-surface-overlay: oklch(from var(--rux-mono) 28% c h);
+  /* 28% - Tooltips/popovers */
+
+  /* Form Fields */
+  --rux-surface-input: oklch(from var(--rux-mono) 16% c h);
+  /* 16% - Gently inset compared to the 24% panel */
+  --rux-surface-textarea: var(--rux-surface-input);
+  /* Unified with inputs */
+
+  /* 2B. Status Colors
+  ──────────────────────────────────────────────────────────────── */
 
   --rux-accent-color: var(--rux-mana);
-
   --rux-status-red: oklch(from var(--rux-wine) 75% c h);
   --rux-status-red-alpha: oklch(from var(--rux-wine) l c h / 25%);
   --rux-status-yellow: oklch(from var(--rux-sand) 75% c h);
@@ -71,13 +92,12 @@
   --rux-status-blue: oklch(from var(--rux-mana) 75% c h);
   --rux-status-blue-alpha: oklch(from var(--rux-mana) l c h / 25%);
 
-  /* 2D. Text Color
+  /* 2C. Text Colors
   ──────────────────────────────────────────────────────────────── */
-
 
   --rux-text-primary: oklch(100% 0.014 250);
   --rux-text-secondary: oklch(70% 0.014 250);
-  --rux-text-disabled: oklch(70% 0.014 250);
+  --rux-text-disabled: oklch(45% 0.014 250);
   --rux-text-hover: oklch(45% 0.014 250);
 
   /* 2D. Border Roles
@@ -111,15 +131,6 @@
      Reference Tier 2 tokens; avoid referencing Tier 1 directly.
      ============================================================ */
 
-  /* 3A. Layout Surfaces
-  ──────────────────────────────────────────────────────────────── */
-
-  --surface-00: oklch(from var(--rux-mono) 8% c h);
-  --surface-01: oklch(from var(--rux-mono) 14% c h);
-  --surface-02: oklch(from var(--rux-mono) 22% c h);
-  --surface-03: oklch(from var(--rux-mono) 30% c h);
-  --surface-04: oklch(from var(--rux-mono) 38% c h);
-
   /* 3B. Borders
   ──────────────────────────────────────────────────────────────── */
 
@@ -128,6 +139,9 @@
   --border-hover: var(--rux-border-hover);
   --border-focus: var(--rux-border-focus);
   --border: var(--border-default);
+  /* shorthand — same as --border-default */
+  --header-separator: var(--border-default);
+  /* border token — moved here from text section */
 
   /* 3C. Text
   ──────────────────────────────────────────────────────────────── */
@@ -137,20 +151,21 @@
   --text-placeholder: oklch(from var(--rux-mono) 52% c h);
   --text-disabled: oklch(from var(--rux-mono) 42% c h);
   --text-muted: var(--text-secondary);
-  --header-separator: var(--border-default);
-  /* fixed typo: seperator → separator */
+  /* alias — in heavy use; same as --text-secondary */
 
   /* 3D. Fields / Inputs
   ──────────────────────────────────────────────────────────────── */
 
-
-  --rux-form-height: 32px;
+  --form-height: 32px;
+  /* was --rux-form-height; dropped --rux- prefix (Tier 3 token) */
   --form-row-gap: 8px;
   --form-col-gap: 8px;
-  --rux-form-label-gap: 8px;
+  --form-label-gap: 8px;
+  /* was --rux-form-label-gap; dropped --rux- prefix */
   --form-label-margin: 4px;
   --form-section-gap: 16px;
-  --form-label-color: oklch(from var(--rux-mana) 50% c h);
+  --form-label-color: oklch(from var(--rux-accent-color) 50% c h);
+  /* fixed: was var(--rux-mana) direct Tier 1 ref */
   --form-label-font-size: 12px;
   --form-label-weight: 500;
   --form-label-spacing: 0.02em;
@@ -161,20 +176,17 @@
   --form-section-label-weight: 400;
   --form-section-label-spacing: 0.02em;
 
-  --bus-grid-row-gap: 4px;
-  --bus-driver-block-gap: 4px;
-
-  --bus-header-margin: 4px;
-
   --field-bg: var(--rux-surface-input);
-  --field-bg-hover: var(--surface-03);
+  --field-bg-hover: var(--rux-surface-panel);
   /* not currently used */
-  --field-border: var(--surface-02);
+  --field-border: var(--rux-surface-modal);
   --field-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   /* not currently used */
   --field-disabled-opacity: 0.5;
   --input-padding-x: var(--rux-space-2);
   --input-font-size: 14px;
+  --input-weight: 400;
+  /* added: was referenced in form.css but never defined */
 
   --icon-field-size: 18px;
   /* display size */
@@ -198,11 +210,6 @@
   --chevron-opacity: 0.8;
   /* resting opacity */
 
-  /* trip bar arrow icons — not form/dropdown */
-  --icon-arrow-size: 40px;
-  --icon-arrow-offset: 4px;
-
-
   /* 3E. Shadows & Effects
   ──────────────────────────────────────────────────────────────── */
 
@@ -211,8 +218,8 @@
   --text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   --overlay-hover: rgba(0, 0, 0, 0.05);
 
-  --btn-shadow-inset: 0 2px 4px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  --btn-shadow-active: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+  --btn-shadow-inset: 0 2px 4px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  --btn-shadow-active: inset 0 2px 4px rgba(0, 0, 0, 0.8);
   --btn-shadow-active-sm: inset 0 1px 2px rgba(0, 0, 0, 0.6);
 
   --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
@@ -225,30 +232,33 @@
   ──────────────────────────────────────────────────────────────── */
 
   /* Primary */
-  --btn-primary-bg: oklch(from var(--rux-mana) 55% c h);
+  --btn-primary-bg: oklch(from var(--rux-mana) 50% c h);
   --btn-primary-text: var(--text-primary);
   --btn-primary-hover: color-mix(in srgb, var(--color-accent) 85%, white);
   --btn-primary-active: color-mix(in srgb, var(--color-accent) 70%, white);
-  --btn-primary-disabled: var(--surface-02);
+  --btn-primary-disabled: var(--rux-surface-modal);
+  /* unused — button.css applies --surface-02 directly */
   --btn-primary-border: transparent;
 
   /* Secondary */
-  --btn-secondary-bg: oklch(from var(--rux-mono) 55% c h);
+  --btn-secondary-bg: oklch(from var(--rux-mono) 50% c h);
   --btn-secondary-text: var(--text-primary);
-  --btn-secondary-hover: color-mix(in srgb, var(--color-secondary) 85%, black);
-  --btn-secondary-active: color-mix(in srgb, var(--color-secondary) 70%, black);
-  --btn-secondary-disabled: var(--surface-02);
+  --btn-secondary-hover: color-mix(in srgb, var(--color-secondary) 85%, white);
+  --btn-secondary-active: color-mix(in srgb, var(--color-secondary) 70%, white);
+  --btn-secondary-disabled: var(--rux-surface-modal);
+  /* unused — button.css applies --surface-02 directly */
   --btn-secondary-border: transparent;
 
   /* Danger */
-  --btn-danger-bg: oklch(from var(--rux-wine) 55% c h);
+  --btn-danger-bg: oklch(from var(--rux-wine) 50% c h);
   --btn-danger-text: var(--text-primary);
   --btn-danger-hover: color-mix(in srgb, var(--color-danger) 85%, white);
   --btn-danger-active: color-mix(in srgb, var(--color-danger) 70%, white);
-  --btn-danger-disabled: var(--surface-02);
+  --btn-danger-disabled: var(--rux-surface-modal);
+  /* unused — button.css applies --surface-02 directly */
   --btn-danger-border: transparent;
 
-  /* Success */
+  /* Success — reserved, no .btn--success class yet */
   --btn-success-bg: var(--color-success);
   --btn-success-text: oklch(from var(--rux-mono) 10% c h);
   --btn-success-hover: color-mix(in srgb, var(--color-success) 85%, white);
@@ -264,7 +274,7 @@
   --btn-ghost-icon-size: 18px;
   --btn-ghost-text-shadow: 0px 2px 2px rgba(0, 0, 0, 1), 0px 4px 6px rgba(0, 0, 0, 0.8);
 
-  /* Toolbar */
+  /* Toolbar — reserved, no .btn--toolbar class yet */
   --btn-toolbar-hover-bg: color-mix(in srgb, white 10%, transparent);
   --btn-toolbar-active-bg: color-mix(in srgb, white 20%, transparent);
   --btn-toolbar-shadow-hover: var(--btn-shadow-inset);
@@ -284,12 +294,12 @@
   --header-action-color: var(--text-primary);
 
   /* Toggle */
-  --btn-toggle-bg: oklch(from var(--rux-mono) 55% c h);
+  --btn-toggle-bg: oklch(from var(--rux-mono) 50% c h);
   --btn-toggle-border: transparent;
   --btn-toggle-text: var(--text-primary);
-  --btn-toggle-hover-bg: oklch(from var(--rux-mono) 46% c h);
-  --btn-toggle-active-bg: var(--rux-accent-color);
-  --btn-toggle-active-border: var(--rux-accent-color);
+  --btn-toggle-hover-bg: oklch(from var(--rux-mono) 50% c h);
+  --btn-toggle-active-bg: oklch(from var(--rux-mana) 50% c h);
+  --btn-toggle-active-border: oklch(from var(--rux-mana) 50% c h);
   --btn-toggle-icon-opacity: 0.7;
 
   /* Icon */
@@ -298,7 +308,7 @@
   --btn-icon-hover-bg: color-mix(in srgb, white 10%, transparent);
   --btn-icon-hover-text: var(--text-primary);
   --btn-icon-active-bg: var(--rux-accent-color);
-  --btn-icon-disabled-bg: var(--surface-02);
+  --btn-icon-disabled-bg: var(--rux-surface-modal);
   --btn-icon-disabled-text: var(--text-disabled);
   --btn-icon-size: 16px;
   --btn-icon-nav-size: 24px;
@@ -309,12 +319,14 @@
   --btn-pagination-hover-bg: color-mix(in srgb, white 10%, transparent);
 
   /* Base (aluminum default — no variant class) */
-  --btn-base-bg: oklch(32% 0.01 250);
-  --btn-base-border: oklch(45% 0.02 250);
-  --btn-base-text: oklch(95% 0.005 250);
-  --btn-base-hover-bg: oklch(38% 0.015 250);
-  --btn-base-hover-border: oklch(55% 0.02 250);
-  --btn-base-active-bg: oklch(28% 0.01 250);
+  --btn-base-bg: oklch(from var(--rux-mono) 36% c h);
+  /* above overlay — reads as interactive */
+  --btn-base-border: oklch(from var(--rux-mono) 48% c h);
+  --btn-base-text: oklch(from var(--rux-mono) 92% c h);
+  --btn-base-hover-bg: oklch(from var(--rux-mono) 42% c h);
+  --btn-base-hover-border: oklch(from var(--rux-mono) 54% c h);
+  --btn-base-active-bg: oklch(from var(--rux-mono) 26% c h);
+  /* sinks to panel level on press */
 
   /* Shared sizing */
   --btn-padding-x: 16px;
@@ -330,7 +342,6 @@
   --transition-fast: 0.11s cubic-bezier(0.2, 0, 0.38, 0.9);
   --control-radius-icon: 8px;
 
-
   /* 3H. Spacing & Layout
   ──────────────────────────────────────────────────────────────── */
 
@@ -344,9 +355,9 @@
   --space-lg: var(--rux-space-4);
   /* 16px */
   --space-xl: var(--rux-space-6);
-  /* 24px */
+  /* 24px — note: --rux-space-5 (20px) has no alias */
   --panel-width: 400px;
-  --layout-panel-gap: var(--space-xl);
+  --layout-panel-gap: var(--rux-space-3);
   --card-padding: 16px;
   --size-header-row: 48px;
   --size-header-action: 48px;
@@ -356,9 +367,12 @@
   --week-picker-height: 32px;
   --day-row-h: 34px;
   --schedule-edge-inset-right: 16px;
-  --sync-progress: 0%;
-  --waiting-list-dynamic-height: var(--schedule-row-height);
   --print-scale: 1;
+  /* runtime default — JS overrides this */
+  --sync-progress: 0%;
+  /* runtime default — JS overrides this */
+  --waiting-list-dynamic-height: var(--schedule-row-height);
+  /* runtime default — JS overrides this */
 
   /* 3I. Typography
   ──────────────────────────────────────────────────────────────── */
@@ -406,7 +420,12 @@
   --bus-num-line-height: 1;
   --bus-lift-color: var(--rux-accent-color);
   --bus-sleeper-color: var(--text-primary);
-  --bus-accent-color: var(--surface-01);
+  --bus-accent-color: var(--rux-surface-card);
+
+  --bus-grid-row-gap: 4px;
+  /* moved from 3D — bus layout, not form fields */
+  --bus-driver-block-gap: 4px;
+  --bus-header-margin: 4px;
 
   /* 3L. Trip Bar
   ──────────────────────────────────────────────────────────────── */
@@ -498,6 +517,10 @@
   --icon-status-size: 14px;
   --icon-btn-size: 32px;
 
+  --icon-arrow-size: 40px;
+  /* trip bar directional arrows — moved here from 3D */
+  --icon-arrow-offset: 4px;
+
   /* 3N. Envelope / Print
   ──────────────────────────────────────────────────────────────── */
 
@@ -533,6 +556,7 @@
   --color-status-blue: var(--rux-status-blue);
 
   --color-conflict-accent: var(--rux-status-red);
+  /* same value as --color-danger; kept separate in case conflict red diverges */
   --color-conflict-bg: var(--rux-status-red-alpha);
 
 }

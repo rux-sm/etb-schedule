@@ -61,7 +61,7 @@
 
 .dropdown__item:hover,
 .dropdown__item:focus-visible {
-  background-color: var(--surface-04);
+  background-color: var(--rux-surface-overlay);
   outline: none;
 }
 
@@ -87,7 +87,7 @@
   display: block;
   width: 100%;
   padding: 6px 12px;
-  background: var(--surface-04);
+  background: var(--rux-surface-overlay);
   border: none;
   border-bottom: 1px solid var(--border-subtle);
   color: var(--text-primary);
@@ -103,7 +103,7 @@
 
 /* Style all <option> tags globally for dark theme consistency */
 option {
-  background: var(--surface-03) !important;
+  background: var(--rux-surface-panel) !important;
   color: var(--text-primary) !important;
   padding: 8px 12px;
   font-family: var(--font-sans);
