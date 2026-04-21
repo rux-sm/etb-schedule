@@ -219,8 +219,8 @@
   --overlay-hover: rgba(0, 0, 0, 0.05);
 
   --btn-shadow-inset: 0 2px 4px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  --btn-shadow-active: inset 0 2px 4px rgba(0, 0, 0, 0.8);
-  --btn-shadow-active-sm: inset 0 1px 2px rgba(0, 0, 0, 0.6);
+  --btn-shadow-active: inset 0 2px 4px rgba(0, 0, 0, 1);
+  --btn-shadow-active-sm: inset 0 2px 4px rgba(0, 0, 0, 1);
 
   --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   --card-shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
@@ -231,53 +231,47 @@
   /* 3F. Buttons
   ──────────────────────────────────────────────────────────────── */
 
+  /* Universal hover lightness lift — applied to all button variants */
+  --rux-button-hover: 0.08;
+
   /* Primary */
   --btn-primary-bg: oklch(from var(--rux-mana) 50% c h);
   --btn-primary-text: var(--text-primary);
-  --btn-primary-hover: color-mix(in srgb, var(--color-accent) 85%, white);
+  --btn-primary-hover: oklch(from var(--btn-primary-bg) calc(l + var(--rux-button-hover)) c h);
   --btn-primary-active: color-mix(in srgb, var(--color-accent) 70%, white);
-  --btn-primary-disabled: var(--rux-surface-modal);
-  /* unused — button.css applies --surface-02 directly */
   --btn-primary-border: transparent;
 
   /* Secondary */
   --btn-secondary-bg: oklch(from var(--rux-mono) 50% c h);
   --btn-secondary-text: var(--text-primary);
-  --btn-secondary-hover: color-mix(in srgb, var(--color-secondary) 85%, white);
+  --btn-secondary-hover: oklch(from var(--btn-secondary-bg) calc(l + var(--rux-button-hover)) c h);
   --btn-secondary-active: color-mix(in srgb, var(--color-secondary) 70%, white);
-  --btn-secondary-disabled: var(--rux-surface-modal);
-  /* unused — button.css applies --surface-02 directly */
   --btn-secondary-border: transparent;
 
   /* Danger */
   --btn-danger-bg: oklch(from var(--rux-wine) 50% c h);
   --btn-danger-text: var(--text-primary);
-  --btn-danger-hover: color-mix(in srgb, var(--color-danger) 85%, white);
+  --btn-danger-hover: oklch(from var(--btn-danger-bg) calc(l + var(--rux-button-hover)) c h);
   --btn-danger-active: color-mix(in srgb, var(--color-danger) 70%, white);
-  --btn-danger-disabled: var(--rux-surface-modal);
-  /* unused — button.css applies --surface-02 directly */
   --btn-danger-border: transparent;
 
   /* Success — reserved, no .btn--success class yet */
   --btn-success-bg: var(--color-success);
   --btn-success-text: oklch(from var(--rux-mono) 10% c h);
-  --btn-success-hover: color-mix(in srgb, var(--color-success) 85%, white);
   --btn-success-active: color-mix(in srgb, var(--color-success) 70%, white);
 
   /* Ghost */
   --btn-ghost-bg: transparent;
   --btn-ghost-border: var(--border-default);
   --btn-ghost-text: var(--text-primary);
-  --btn-ghost-hover-bg: color-mix(in srgb, white 10%, transparent);
+  --btn-ghost-hover-bg: oklch(from var(--rux-surface-panel) calc(l + var(--rux-button-hover)) c h);
   --btn-ghost-active-bg: color-mix(in srgb, white 20%, transparent);
   --btn-ghost-active-border: var(--rux-accent-color);
   --btn-ghost-icon-size: 18px;
-  --btn-ghost-text-shadow: 0px 2px 2px rgba(0, 0, 0, 1), 0px 4px 6px rgba(0, 0, 0, 0.8);
+  --btn-ghost-text-shadow: none;
 
   /* Toolbar — reserved, no .btn--toolbar class yet */
-  --btn-toolbar-hover-bg: color-mix(in srgb, white 10%, transparent);
   --btn-toolbar-active-bg: color-mix(in srgb, white 20%, transparent);
-  --btn-toolbar-shadow-hover: var(--btn-shadow-inset);
   --btn-toolbar-shadow-active: var(--btn-shadow-active-sm);
   --btn-toolbar-text: var(--text-primary);
   --btn-toolbar-border: var(--border-default);
@@ -289,7 +283,6 @@
 
   /* Header action */
   --header-action-bg: oklch(from var(--rux-mono) 40% c h);
-  --header-action-hover-bg: oklch(from var(--rux-mono) 46% c h);
   --header-action-active-bg: oklch(from var(--rux-mono) 34% c h);
   --header-action-color: var(--text-primary);
 
@@ -297,7 +290,7 @@
   --btn-toggle-bg: oklch(from var(--rux-mono) 50% c h);
   --btn-toggle-border: transparent;
   --btn-toggle-text: var(--text-primary);
-  --btn-toggle-hover-bg: oklch(from var(--rux-mono) 50% c h);
+  --btn-toggle-hover-bg: oklch(from var(--btn-toggle-bg) calc(l + var(--rux-button-hover)) c h);
   --btn-toggle-active-bg: oklch(from var(--rux-mana) 50% c h);
   --btn-toggle-active-border: oklch(from var(--rux-mana) 50% c h);
   --btn-toggle-icon-opacity: 0.7;
@@ -305,8 +298,6 @@
   /* Icon */
   --btn-icon-bg: transparent;
   --btn-icon-text: var(--text-secondary);
-  --btn-icon-hover-bg: color-mix(in srgb, white 10%, transparent);
-  --btn-icon-hover-text: var(--text-primary);
   --btn-icon-active-bg: var(--rux-accent-color);
   --btn-icon-disabled-bg: var(--rux-surface-modal);
   --btn-icon-disabled-text: var(--text-disabled);
@@ -316,17 +307,13 @@
   /* Pagination */
   --btn-pagination-size: 30px;
   --btn-pagination-text: var(--text-primary);
-  --btn-pagination-hover-bg: color-mix(in srgb, white 10%, transparent);
 
   /* Base (aluminum default — no variant class) */
   --btn-base-bg: oklch(from var(--rux-mono) 36% c h);
-  /* above overlay — reads as interactive */
   --btn-base-border: oklch(from var(--rux-mono) 48% c h);
   --btn-base-text: oklch(from var(--rux-mono) 92% c h);
-  --btn-base-hover-bg: oklch(from var(--rux-mono) 42% c h);
-  --btn-base-hover-border: oklch(from var(--rux-mono) 54% c h);
+  --btn-base-hover-bg: oklch(from var(--btn-base-bg) calc(l + var(--rux-button-hover)) c h);
   --btn-base-active-bg: oklch(from var(--rux-mono) 26% c h);
-  /* sinks to panel level on press */
 
   /* Shared sizing */
   --btn-padding-x: 16px;
@@ -359,8 +346,8 @@
   --panel-width: 400px;
   --layout-panel-gap: var(--rux-space-3);
   --card-padding: 16px;
-  --size-header-row: 48px;
-  --size-header-action: 48px;
+  --size-header-row: 40px;
+  --size-header-action: 40px;
   --size-toolbar-action: 32px;
   --schedule-row-height: 100px;
   --bus-col-w: 34px;

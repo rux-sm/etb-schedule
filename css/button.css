@@ -78,7 +78,6 @@ button {
 /* Base hover/active — scoped away from variants to prevent border-color bleed */
 .btn:not(.btn--accent):not(.btn--default):not(.btn--danger):not(.btn--ghost):hover {
   background-color: var(--btn-base-hover-bg);
-  border-color: var(--btn-base-hover-border);
 }
 
 .btn:not(.btn--accent):not(.btn--default):not(.btn--danger):not(.btn--ghost):active {
@@ -221,8 +220,6 @@ button {
 
   /* Visuals */
   border: 1px solid transparent;
-  border-top: 3px solid transparent;
-  border-bottom: 3px solid transparent;
   background-color: transparent;
   color: var(--text-primary);
   cursor: pointer;
@@ -236,25 +233,29 @@ button {
 }
 
 .btn--icon:hover {
-  background-color: var(--rux-surface-panel);
+  background-color: oklch(from var(--rux-surface-panel) calc(l + var(--rux-button-hover)) c h);
 }
 
 .btn--icon:active {
-  background-color: var(--rux-surface-modal);
+  background-color: var(--btn-toggle-active-bg);
   box-shadow: var(--btn-shadow-active-sm);
 }
 
 .btn--icon[aria-pressed="true"] {
-  border-bottom-color: var(--rux-accent-color);
+  background-color: var(--btn-toggle-active-bg);
+  border-color: transparent;
+  box-shadow: var(--btn-shadow-active-sm);
+  --btn-icon-fill: 1;
 }
 
 .btn--icon .material-symbols-outlined {
-  font-size: 24px;
+  font-size: 22px;
   font-variation-settings:
-    "FILL" 0,
-    "wght" 400,
-    "GRAD" -25,
-    "opsz" 24;
+    'opsz' 24,
+    'wght' 400,
+    'GRAD' 0,
+    'FILL' var(--btn-icon-fill, 0);
+  transition: font-variation-settings var(--transition-fast);
 }
 
 /* ── 9. Toggle (Requirements) ───────────────────────────────────────────── */

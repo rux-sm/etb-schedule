@@ -48,7 +48,7 @@
   gap: 4px;
   font-weight: var(--heading-1-weight);
   text-rendering: optimizeLegibility;
-  text-shadow: var(--btn-ghost-text-shadow);
+
 }
 
 .app-header__title--org {
@@ -75,7 +75,6 @@
   z-index: 1000;
   padding-inline: 12px;
   background-color: var(--rux-surface-app-header);
-  border-bottom: none;
   box-shadow:
     inset 0 -1px 0 rgba(255, 255, 255, 0.06),
     /* The "crisp" edge catching the light */
@@ -164,6 +163,9 @@
   transform: none;
   pointer-events: none;
   min-width: 0;
+  border: var(--border-default);
+  border-color: var(--border-default);
+  border-radius: var(--rux-radius-control);
 }
 
 .schedule-sync-status {
@@ -178,7 +180,6 @@
   min-height: 32px;
   padding: 0 8px;
   font-weight: 300;
-  /*border: 1px solid var(--border-subtle);*/
   font-size: 14px;
   line-height: 1;
   text-shadow: var(--text-shadow);
@@ -188,6 +189,8 @@
   max-width: min(46vw, 520px);
   overflow: hidden;
   text-overflow: ellipsis;
+  border: 1px solid var(--border-default);
+  border-radius: var(--rux-radius-control);
 }
 
 .schedule-sync-status::before {
@@ -1267,3 +1270,70 @@
 
 /* Standardized status pattern - apply colors directly from semantic tokens */
 /* Consolidate bus grid definition */
+
+/* ==========================================================================
+   DAILY CHECKLIST CARD
+   ========================================================================== */
+
+.todo-trips {
+  padding: var(--rux-space-3);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.todo-trips__label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin: 0 0 var(--rux-space-2);
+}
+
+.todo-trips__empty {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.todo-trip-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: var(--rux-space-1) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.todo-trip-row:last-child {
+  border-bottom: none;
+}
+
+.todo-trip-row__time    { font-size: 11px; color: var(--text-secondary); }
+.todo-trip-row__dest    { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+.todo-trip-row__drivers { font-size: 11px; color: var(--text-secondary); }
+
+.todo-checklist {
+  list-style: none;
+  margin: 0;
+  padding: var(--rux-space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--rux-space-2);
+}
+
+.todo-item__label {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--rux-space-2);
+  cursor: pointer;
+}
+
+.todo-item__text {
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.todo-item.is-done .todo-item__text {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+}

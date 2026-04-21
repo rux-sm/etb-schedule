@@ -108,6 +108,14 @@
             <span class="material-symbols-outlined">sticky_note_2</span>
           </button>
           <button
+            id="todoBtn"
+            class="btn btn--icon"
+            type="button"
+            title="Daily checklist"
+          >
+            <span class="material-symbols-outlined">checklist</span>
+          </button>
+          <button
             id="waitingListBtn"
             class="btn btn--icon"
             type="button"
@@ -125,7 +133,7 @@
               title="Settings"
               aria-label="Settings"
             >
-              <span class="material-symbols-outlined">settings</span>
+              <span class="material-symbols-outlined">menu</span>
             </button>
             <div
               id="settingsMenu"
@@ -671,6 +679,22 @@
                   >
                     Save Notes
                   </button>
+                </div>
+              </div>
+
+              <!-- Daily Checklist Card -->
+              <div
+                class="c-card c-card--compact is-hidden"
+                id="todoCard"
+                data-js="panel-card-todo"
+              >
+                <div class="c-header c-header--panel">
+                  <h2 class="c-header__title">Daily Checklist</h2>
+                  <div class="c-header__actions"></div>
+                </div>
+                <div class="c-card__body">
+                  <div class="todo-trips" id="todoTripsList"></div>
+                  <ul class="todo-checklist" id="todoChecklist"></ul>
                 </div>
               </div>
 

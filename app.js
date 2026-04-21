@@ -235,6 +235,10 @@ const dom = {
 
   driversBtn: $("driversBtn"),
   notesBtn: $("notesBtn"),
+  todoBtn: $("todoBtn"),
+  todoCard: document.querySelector('[data-js="panel-card-todo"]') || $("todoCard"),
+  todoTripsList: $("todoTripsList"),
+  todoChecklist: $("todoChecklist"),
   waitingListBtn: $("waitingListBtn"),
   quoteBtn: $("quoteBtn"),
   waitingBody: document.querySelector('[data-js="schedule-waiting-body"]') || $("waitingBody"),
@@ -1847,6 +1851,7 @@ function applyWeekStart(isMonday) {
 
   // Force driver panel to re-render its headers/days for the new week Start
   updateDriverWeekIfVisible();
+  updateTodoCardIfVisible();
 }
 
 function setHeaderOrder() {
@@ -3790,6 +3795,75 @@ function updateDriverWeekIfVisible() {
   if (driverCardVisible) renderDriverWeekGrid();
 }
 
+const TODO_ITEMS = [
+  "Print envelope for tomorrow's trips",
+  "Send driver trip reminder for tomorrow's trips",
+  "Send driver information to customer",
+  "Make sure fuel cards are assigned if needed",
+  "Make sure Hours of Service form is included for part time drivers",
+];
+
+function updateTodoCardIfVisible() {
+  if (!getCardPanel("todo")) return;
+  renderTodoCard();
+}
+
+function renderTodoCard() {
+  const tripsEl = dom.todoTripsList;
+  const listEl  = dom.todoChecklist;
+  if (!tripsEl || !listEl) return;
+
+  // Tomorrow's departing trips
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowYMD = ymd(tomorrow);
+  const trips = (state.trips || [])
+    .filter((t) => t.departureDate === tomorrowYMD)
+    .sort((a, b) => (a.departureTime || "").localeCompare(b.departureTime || ""));
+
+  if (trips.length === 0) {
+    tripsEl.innerHTML = `<p class="todo-trips__empty">No trips departing tomorrow.</p>`;
+  } else {
+    const label = tomorrow.toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" });
+    tripsEl.innerHTML = `<p class="todo-trips__label">Departing ${label}</p>` +
+      trips.map((t) => {
+        const time    = formatTime12(t.departureTime) || "--";
+        const dest    = t.destination || t.name || "—";
+        const drivers = [t.driver1, t.driver2].filter(Boolean).join(" · ");
+        return `<div class="todo-trip-row">
+          <span class="todo-trip-row__time">${time}</span>
+          <span class="todo-trip-row__dest">${dest}</span>
+          ${drivers ? `<span class="todo-trip-row__drivers">${drivers}</span>` : ""}
+        </div>`;
+      }).join("");
+  }
+
+  // Checklist — persisted by today's date
+  const todayKey = `etb-todo-${ymd(new Date())}`;
+  const saved = JSON.parse(localStorage.getItem(todayKey) || "[]");
+
+  listEl.innerHTML = TODO_ITEMS.map((text, i) => {
+    const checked = !!saved[i];
+    return `<li class="todo-item${checked ? " is-done" : ""}">
+      <label class="todo-item__label">
+        <input type="checkbox" class="todo-item__check" data-index="${i}" ${checked ? "checked" : ""}>
+        <span class="todo-item__text">${text}</span>
+      </label>
+    </li>`;
+  }).join("");
+
+  listEl.querySelectorAll(".todo-item__check").forEach((cb) => {
+    cb.addEventListener("change", () => {
+      const checks = TODO_ITEMS.map((_, i) => {
+        const el = listEl.querySelector(`[data-index="${i}"]`);
+        return el ? el.checked : false;
+      });
+      localStorage.setItem(todayKey, JSON.stringify(checks));
+      cb.closest(".todo-item").classList.toggle("is-done", cb.checked);
+    });
+  });
+}
+
 // ======================================================
 // 22) LEFT PANEL MODE + DESKTOP ENFORCEMENT
 // ======================================================
@@ -3814,6 +3888,7 @@ const CARD_CONFIG = {
   drivers: { card: dom.driverWeekCard, btn: dom.driversBtn },
   notes: { card: dom.notesCard, btn: dom.notesBtn },
   quote: { card: dom.quoteCard, btn: dom.quoteBtn },
+  todo: { card: dom.todoCard, btn: dom.todoBtn },
 };
 
 function getCardPanel(cardType) {
@@ -3896,6 +3971,9 @@ function showCardInPanel(cardType, panel) {
   }
   if (cardType === "drivers") {
     updateDriverWeekIfVisible();
+  }
+  if (cardType === "todo") {
+    renderTodoCard();
   }
 
   scheduleAgendaReflow();
@@ -4324,6 +4402,7 @@ function updateWeekDates() {
   if (cached?.ok) {
     applyWeekRespToState(cached);
     updateDriverWeekIfVisible();
+    updateTodoCardIfVisible();
     scheduleAgendaReflow();
     refreshWeekData({ silent: true });
   } else {
@@ -4370,6 +4449,7 @@ async function loadTripsForWeek(reqId) {
     if (reqId != null && reqId !== state.weekReqId) return;
     applyWeekRespToState(localData);
     updateDriverWeekIfVisible();
+    updateTodoCardIfVisible();
     scheduleAgendaReflow();
     setWeekSyncStatus("sync");
 
@@ -4390,6 +4470,7 @@ async function loadTripsForWeek(reqId) {
 
   applyWeekRespToState(resp);
   updateDriverWeekIfVisible();
+  updateTodoCardIfVisible();
   scheduleAgendaReflow();
 
   if (resp?.__stale) {
@@ -7520,6 +7601,8 @@ function wireEvents() {
 
     toggleCard("notes");
   });
+
+  dom.todoBtn?.addEventListener("click", () => toggleCard("todo"));
 
   // Track notes dirty state
   dom.scheduleNotes?.addEventListener("input", () => {
