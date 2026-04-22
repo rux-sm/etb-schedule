@@ -4010,6 +4010,9 @@ async function renderTodoCard() {
 
   listEl.innerHTML = html;
 
+  // Debounce timers keyed by tripKey — prevents duplicate sheet rows from rapid clicks
+  const syncTimers = {};
+
   listEl.querySelectorAll(".todo-item__check").forEach((cb) => {
     cb.addEventListener("change", () => {
       const item     = cb.closest(".todo-item");
@@ -4031,8 +4034,12 @@ async function renderTodoCard() {
           card.classList.toggle("has-pending", cardItems.length > 0 && !allDone);
         }
       }
-      // Persist to server in background — silently ignore failures
-      api.setChecklist(tripKey, todayYMD, saved).catch((err) => console.warn("[checklist sync]", err));
+      // Debounce server persist — waits 600ms after last change for this trip before POSTing
+      clearTimeout(syncTimers[tripKey]);
+      syncTimers[tripKey] = setTimeout(() => {
+        const latest = JSON.parse(localStorage.getItem(savedKey) || "{}");
+        api.setChecklist(tripKey, todayYMD, latest).catch((err) => console.warn("[checklist sync]", err));
+      }, 600);
     });
   });
 
