@@ -325,6 +325,10 @@
   justify-content: center;
 }
 
+.schedule-grid__trip-bar__paid-badge.is-alert {
+  color: var(--rux-status-red);
+}
+
 
 .schedule-grid__trip-bar__sub {
   font-size: var(--tripbar-r2-font-size);

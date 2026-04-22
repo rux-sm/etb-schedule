@@ -446,9 +446,10 @@ const state = {
   // Pending trip key for itinerary PDF upload
   pendingItineraryTripKey: null,
 
-  // Notes dirty tracking
+  // Notes tracking
   notesDirty: false,
   savedNotesValue: "",
+  notesLoaded: false,
 
   // Trip form dirty tracking
   tripFormDirty: false,
@@ -1051,8 +1052,8 @@ const api = {
     );
   },
 
-  saveWeekNote(notesKey, notes) {
-    return fetchAPI("saveWeekNote", { notesKey, notes });
+  saveWeekNote(notes) {
+    return fetchAPI("saveWeekNote", { notes });
   },
 
   getTrip(tripKey) {
@@ -2069,12 +2070,13 @@ function applyWeekRespToState(resp) {
     });
   }
 
-  // Populate Notes if present
-  if (dom.scheduleNotes) {
+  // Refresh note only when not dirty — preserves in-progress edits
+  if (dom.scheduleNotes && !state.notesDirty) {
     const notesValue = resp.weekNotes || "";
-    dom.scheduleNotes.value = notesValue;
-    state.savedNotesValue = notesValue;
-    state.notesDirty = false;
+    if (notesValue !== state.savedNotesValue) {
+      dom.scheduleNotes.value = notesValue;
+      state.savedNotesValue = notesValue;
+    }
   }
 
   // Populate Unavailability
@@ -3256,8 +3258,19 @@ function _renderAgendaInner() {
         const payment = String(t.paymentStatus || "").trim().toLowerCase();
         const invoice = String(t.invoiceStatus || "").trim().toLowerCase();
         const isAllClear = payment === "po received" || payment === "not required" || invoice === "paid in full";
-        bar._paidBadge.classList.toggle("is-hidden", !isAllClear);
-        bar.classList.toggle("has-paid-badge", isAllClear);
+
+        if (isAllClear) {
+          bar._paidBadge.textContent = "check_circle";
+          bar._paidBadge.classList.remove("is-hidden", "is-alert");
+        } else if (!isUnconfirmed) {
+          bar._paidBadge.textContent = "error";
+          bar._paidBadge.classList.remove("is-hidden");
+          bar._paidBadge.classList.add("is-alert");
+        } else {
+          bar._paidBadge.classList.add("is-hidden");
+          bar._paidBadge.classList.remove("is-alert");
+        }
+        bar.classList.toggle("has-paid-badge", isAllClear || !isUnconfirmed);
       }
 
       const ds = String(effectiveDriverStatus || "")
@@ -4411,12 +4424,6 @@ function updateWeekDates() {
 }
 
 function changeWeek(direction) {
-  // Warn if there are unsaved notes
-  if (state.notesDirty) {
-    if (!confirm("You have unsaved notes changes. Discard them?")) return;
-    state.notesDirty = false;
-  }
-
   // Abort any in-flight requests to prevent stale data
   if (state.activeAbortController) {
     state.activeAbortController.abort();
@@ -7565,13 +7572,6 @@ function wireEvents() {
     const cardType = closeBtn.dataset.card;
     if (!cardType) return;
 
-    // Reuse notes dirty-check logic
-    if (cardType === "notes" && state.notesDirty) {
-      if (!confirm("You have unsaved notes changes. Discard them?")) return;
-      dom.scheduleNotes.value = state.savedNotesValue;
-      state.notesDirty = false;
-    }
-
     hideCard(cardType);
   });
 
@@ -7671,19 +7671,7 @@ function wireEvents() {
     state.dragSelection.dates.add(date);
   }
 
-  dom.notesBtn.addEventListener("click", () => {
-    const isOpen = getCardPanel("notes") !== null;
-
-    // Warn if closing with unsaved changes
-    if (isOpen && state.notesDirty) {
-      if (!confirm("You have unsaved notes changes. Discard them?")) return;
-      // Reset to saved value
-      dom.scheduleNotes.value = state.savedNotesValue;
-      state.notesDirty = false;
-    }
-
-    toggleCard("notes");
-  });
+  dom.notesBtn.addEventListener("click", () => toggleCard("notes"));
 
   dom.todoBtn?.addEventListener("click", () => toggleCard("todo"));
 
@@ -7694,7 +7682,6 @@ function wireEvents() {
 
   dom.saveNotesBtn?.addEventListener("click", async () => {
     const notes = dom.scheduleNotes.value;
-    const { notesKey } = getWeekRange();
 
     if (!navigator.onLine) {
       toast("No internet connection", "danger", 3000);
@@ -7705,7 +7692,7 @@ function wireEvents() {
     toastShow("Saving notes...", "loading");
 
     try {
-      const res = await api.saveWeekNote(notesKey, notes);
+      const res = await api.saveWeekNote(notes);
       if (res.ok) {
         state.savedNotesValue = notes;
         state.notesDirty = false;
