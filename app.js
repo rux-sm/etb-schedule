@@ -6544,7 +6544,10 @@ let selectedDriverName = null;
 function selectDriverBars(driverName) {
   // Clear existing trip bar selection
   if (selectedTripBar) {
-    selectedTripBar.classList.remove("selected");
+    const prevKey = selectedTripBar.dataset.tripkey;
+    document.querySelectorAll(`.schedule-grid__trip-bar[data-tripkey="${CSS.escape(prevKey)}"]`)
+      .forEach(el => el.classList.remove("selected"));
+    document.body.classList.remove("trip-bar-selected");
     selectedTripBar = null;
   }
 
@@ -6589,8 +6592,28 @@ function selectTripBar(barEl) {
       .forEach(el => el.classList.remove("is-selected"));
   }
 
-  if (selectedTripBar && selectedTripBar !== barEl) {
-    selectedTripBar.classList.remove("selected");
+  // Toggle off if same trip clicked again
+  if (selectedTripBar && barEl?.dataset.tripkey === selectedTripBar.dataset.tripkey) {
+    const key = selectedTripBar.dataset.tripkey;
+    document.querySelectorAll(`.schedule-grid__trip-bar[data-tripkey="${CSS.escape(key)}"]`)
+      .forEach(el => el.classList.remove("selected"));
+    document.body.classList.remove("trip-bar-selected");
+    document.querySelectorAll(
+      ".driver-week__cell--trip-highlight, .driver-week__header-cell--trip-highlight"
+    ).forEach(el => el.classList.remove(
+      "driver-week__cell--trip-highlight",
+      "driver-week__header-cell--trip-highlight"
+    ));
+    const overlay = document.getElementById("driver-col-hl");
+    if (overlay) overlay.hidden = true;
+    selectedTripBar = null;
+    return;
+  }
+
+  if (selectedTripBar) {
+    const prevKey = selectedTripBar.dataset.tripkey;
+    document.querySelectorAll(`.schedule-grid__trip-bar[data-tripkey="${CSS.escape(prevKey)}"]`)
+      .forEach(el => el.classList.remove("selected"));
   }
   // Clear previous driver column highlights
   document.querySelectorAll(
@@ -6603,9 +6626,15 @@ function selectTripBar(barEl) {
   if (existingOverlay) existingOverlay.hidden = true;
 
   selectedTripBar = barEl || null;
-  if (!selectedTripBar) return;
+  if (!selectedTripBar) {
+    document.body.classList.remove("trip-bar-selected");
+    return;
+  }
 
-  selectedTripBar.classList.add("selected");
+  const tripKey = selectedTripBar.dataset.tripkey;
+  document.querySelectorAll(`.schedule-grid__trip-bar[data-tripkey="${CSS.escape(tripKey)}"]`)
+    .forEach(el => el.classList.add("selected"));
+  document.body.classList.add("trip-bar-selected");
 
   const sidx = parseInt(selectedTripBar.dataset.sidx, 10);
   const eidx = parseInt(selectedTripBar.dataset.eidx, 10);

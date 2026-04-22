@@ -1172,13 +1172,23 @@
 
 /* Dim all non-selected trip bars when a driver filter is active */
 body.driver-filter-active .schedule-grid__trip-bar:not(.selected) {
-  opacity: 0.2;
-  filter: saturate(0.2);
+  opacity: var(--tripbar-dim-opacity);
+  filter: saturate(var(--tripbar-dim-opacity));
   transition: opacity 0.2s ease, filter 0.2s ease;
 }
 
 body.driver-filter-active .schedule-grid__trip-bar.selected {
   transition: opacity 0.2s ease, filter 0.2s ease;
+}
+
+/* Dim all non-selected trip bars when a trip bar is selected */
+body.trip-bar-selected .schedule-grid__trip-bar:not(.selected) {
+  opacity: var(--tripbar-dim-opacity);
+  transition: opacity var(--rux-duration-2) ease;
+}
+
+body.trip-bar-selected .schedule-grid__trip-bar.selected {
+  transition: opacity var(--rux-duration-2) ease;
 }
 
 .driver-week__count {
