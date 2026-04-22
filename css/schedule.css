@@ -821,7 +821,7 @@
   width: 26px;
   height: 26px;
   background: var(--rux-accent-color);
-  color: var(--white);
+  color: var(--rux-color-white);
   border-radius: var(--rux-radius-2);
   text-shadow: var(--text-shadow);
   font-weight: 600;
@@ -1119,7 +1119,7 @@
 }
 
 .driver-week__table tbody tr:nth-child(even) td.driver-week__cell--unavailable {
-  background-color: var(--rux-wine);
+  background-color: var(--rux-color-wine);
 }
 
 .driver-week__table th:last-child,
@@ -1188,7 +1188,7 @@ body.driver-filter-active .schedule-grid__trip-bar.selected {
 }
 
 .driver-week__cell--unavailable {
-  background: var(--rux-wine);
+  background: var(--rux-color-wine);
   color: var(--text-primary);
 }
 
