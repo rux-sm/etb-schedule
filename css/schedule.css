@@ -1372,6 +1372,18 @@ body.trip-bar-selected .schedule-grid__trip-bar.selected {
   border: 1px solid var(--border-subtle);
 }
 
+.todo-trip-card.has-pending {
+  background: oklch(50% 0.15 25 / 12%);
+  border-color: oklch(60% 0.2 25 / 40%);
+  border-left: 4px solid oklch(60% 0.2 25 / 90%);
+}
+
+.todo-trip-card.is-complete {
+  background: oklch(55% 0.15 145 / 12%);
+  border-color: oklch(65% 0.15 145 / 40%);
+  border-left: 4px solid oklch(65% 0.15 145 / 90%);
+}
+
 .todo-trip-card__dest {
   font-size: 14px;
   font-weight: 600;

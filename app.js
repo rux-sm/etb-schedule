@@ -3899,7 +3899,12 @@ function buildTripCard(t, todayYMD, getAsns) {
       </label>
     </li>`;
   }).join("");
-  return `<div class="todo-trip-card" data-trip="${t.tripKey}">
+  let statusClass = "";
+  if (items.length > 0) {
+    const allDone = items.every(({ key }) => !!saved[key]);
+    statusClass = allDone ? " is-complete" : " has-pending";
+  }
+  return `<div class="todo-trip-card${statusClass}" data-trip="${t.tripKey}">
     <p class="todo-trip-card__dest">${dest}</p>
     ${customer   ? `<p class="todo-trip-card__customer">${customer}</p>`  : ""}
     <p class="todo-trip-card__meta">Depart ${depart} ${spot}</p>
@@ -4011,6 +4016,17 @@ async function renderTodoCard() {
       saved[key]     = cb.checked;
       localStorage.setItem(savedKey, JSON.stringify(saved));
       item.classList.toggle("is-done", cb.checked);
+      // Update card status class live
+      const card = cb.closest(".todo-trip-card");
+      if (card) {
+        const trip = (state.trips || []).find((tr) => tr.tripKey === tripKey);
+        if (trip) {
+          const cardItems = TRIP_CHECKLIST.filter(({ show }) => show(trip));
+          const allDone = cardItems.length > 0 && cardItems.every(({ key: k }) => !!saved[k]);
+          card.classList.toggle("is-complete", allDone);
+          card.classList.toggle("has-pending", cardItems.length > 0 && !allDone);
+        }
+      }
       // Persist to server in background — silently ignore failures
       api.setChecklist(tripKey, todayYMD, saved).catch(() => {});
     });
@@ -4041,6 +4057,14 @@ async function syncChecklistFromServer(date) {
         const cb = itemEl.querySelector(".todo-item__check");
         if (cb) cb.checked = saved[k];
         itemEl.classList.toggle("is-done", saved[k]);
+      }
+      // Refresh card status class after server reconcile
+      const trip = (state.trips || []).find((tr) => tr.tripKey === tripKey);
+      if (trip) {
+        const cardItems = TRIP_CHECKLIST.filter(({ show }) => show(trip));
+        const allDone = cardItems.length > 0 && cardItems.every(({ key: k }) => !!saved[k]);
+        cardEl.classList.toggle("is-complete", allDone);
+        cardEl.classList.toggle("has-pending", cardItems.length > 0 && !allDone);
       }
     }
   } catch (_) { /* server unavailable — localStorage state stays */ }
