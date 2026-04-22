@@ -1111,12 +1111,14 @@ const api = {
       fuelCard:   String(!!saved.fuelCard),
       hos:        String(!!saved.hos),
     });
-    return fetch(CONFIG.ENDPOINT, {
+    const resp = await fetch(CONFIG.ENDPOINT, {
       method: "POST",
       body,
       mode: "cors",
       credentials: "omit",
     }).then((r) => r.json());
+    if (!resp?.ok) console.warn("[checklist setChecklist] GAS error:", resp?.error, resp);
+    return resp;
   },
 };
 
@@ -4030,7 +4032,7 @@ async function renderTodoCard() {
         }
       }
       // Persist to server in background — silently ignore failures
-      api.setChecklist(tripKey, todayYMD, saved).catch(() => {});
+      api.setChecklist(tripKey, todayYMD, saved).catch((err) => console.warn("[checklist sync]", err));
     });
   });
 
@@ -4069,7 +4071,7 @@ async function syncChecklistFromServer(date) {
         cardEl.classList.toggle("has-pending", cardItems.length > 0 && !allDone);
       }
     }
-  } catch (_) { /* server unavailable — localStorage state stays */ }
+  } catch (err) { console.warn("[checklist getChecklist]", err); }
 }
 
 // ======================================================
