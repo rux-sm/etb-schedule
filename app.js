@@ -318,6 +318,8 @@ const dom = {
   closeDriverContactBackdrop: $("closeDriverContactBackdrop"),
   copyDriverContactBtn: $("copyDriverContactBtn"),
   copyDriverReminderBtn: $("copyDriverReminderBtn"),
+  tripInfoBody: $("tripInfoBody"),
+  copyTripInfoBtn: $("copyTripInfoBtn"),
 
   // Envelope Modal
   envelopeModal: $("envelopeModal"),
@@ -1098,7 +1100,7 @@ const api = {
     return fetchAPI("getChecklist", { date });
   },
 
-  setChecklist(tripKey, date, saved) {
+  async setChecklist(tripKey, date, saved) {
     const body = new URLSearchParams({
       action: "setChecklist",
       tripKey,
@@ -5193,9 +5195,53 @@ function openDriverContactModal(tripKey) {
     reminderText += `\n\nItinerary: ${trip.itineraryPdfUrl}`;
   }
 
+  // --- 3. Generate TRIP INFORMATION Message (SMS-friendly) ---
+  let tripInfoText = "";
+  if (dDate) {
+    const aDate = trip.arrivalDate ? parseYMD(trip.arrivalDate) : null;
+    const fmtShortDate = (d) => {
+      const day = d.toLocaleDateString("en-US", { weekday: "short" }).toUpperCase();
+      const md  = `${d.getMonth() + 1}/${d.getDate()}`;
+      return `${day} ${md}`;
+    };
+    const fmtLongDate = (d) => {
+      const day = d.toLocaleDateString("en-US", { weekday: "long" });
+      return `${day}, ${d.getMonth() + 1}/${d.getDate()}`;
+    };
+    const assignmentDate = (aDate && aDate > dDate)
+      ? `${fmtLongDate(dDate)} – ${fmtLongDate(aDate)}`
+      : fmtLongDate(dDate);
+    const firstAsn = rowA && rowA.length > 0 ? rowA[0] : null;
+    const busNum   = (firstAsn?.busId && firstAsn.busId !== "—") ? firstAsn.busId : (trip.busId || "");
+    const yardTime = envFormatTime(trip.departureTime || "");
+    const spotTime2 = envFormatTime(trip.spotTime || "");
+    // First driver's first name for greeting
+    const firstDriverName = (() => {
+      const asns = rowA || [];
+      for (const a of asns) {
+        for (const key of ["driver1", "driver2", "driver3", "driver4"]) {
+          const n = String(a[key] || "").trim();
+          if (n && n.toLowerCase() !== "none") return n.split(" ")[0];
+        }
+      }
+      return "[Name]";
+    })();
+
+    tripInfoText += `Hello ${firstDriverName}, here is your trip assignment for ${assignmentDate}:\n\n`;
+    if (busNum)              tripInfoText += `BUS: ${busNum}\n`;
+    if (yardTime)            tripInfoText += `YARD: ${yardTime}\n`;
+    if (spotTime2)           tripInfoText += `SPOT: ${spotTime2}\n`;
+    if (trip.envelopePickup) tripInfoText += `FROM: ${trip.envelopePickup}\n`;
+    if (trip.destination)    tripInfoText += `DEST: ${trip.destination}\n`;
+    if (trip.itineraryPdfUrl) tripInfoText += `LINK: ${trip.itineraryPdfUrl}`;
+  } else {
+    tripInfoText = "No trip date set.";
+  }
+
   // Set values and show modal
   dom.driverContactBody.value = officeText;
   dom.driverReminderBody.value = reminderText;
+  dom.tripInfoBody.value = tripInfoText;
   openModalA11y(dom.driverContactModal, dom.driverContactBody);
 }
 
@@ -9205,6 +9251,25 @@ if (dom.copyDriverReminderBtn) {
         dom.driverReminderBody.select();
         document.execCommand("copy");
         toast("Driver Reminder copied!");
+      }
+    } catch (err) {
+      toast("Failed to copy", "danger");
+    }
+  });
+}
+
+if (dom.copyTripInfoBtn) {
+  dom.copyTripInfoBtn.addEventListener("click", async () => {
+    const text = dom.tripInfoBody.value;
+    if (!text) return;
+    try {
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(text);
+        toast("Trip Info copied!");
+      } else {
+        dom.tripInfoBody.select();
+        document.execCommand("copy");
+        toast("Trip Info copied!");
       }
     } catch (err) {
       toast("Failed to copy", "danger");
