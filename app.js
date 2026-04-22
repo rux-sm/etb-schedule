@@ -237,8 +237,8 @@ const dom = {
   notesBtn: $("notesBtn"),
   todoBtn: $("todoBtn"),
   todoCard: document.querySelector('[data-js="panel-card-todo"]') || $("todoCard"),
-  todoTripsList: $("todoTripsList"),
-  todoChecklist: $("todoChecklist"),
+  todoHeader: $("todoHeader"),
+  todoList: $("todoList"),
   waitingListBtn: $("waitingListBtn"),
   quoteBtn: $("quoteBtn"),
   waitingBody: document.querySelector('[data-js="schedule-waiting-body"]') || $("waitingBody"),
@@ -1092,6 +1092,29 @@ const api = {
       dates: dates.join(","),
       mode,
     });
+  },
+
+  getChecklist(date) {
+    return fetchAPI("getChecklist", { date });
+  },
+
+  setChecklist(tripKey, date, saved) {
+    const body = new URLSearchParams({
+      action: "setChecklist",
+      tripKey,
+      date,
+      envelope:   String(!!saved.envelope),
+      reminder:   String(!!saved.reminder),
+      driverInfo: String(!!saved.driverInfo),
+      fuelCard:   String(!!saved.fuelCard),
+      hos:        String(!!saved.hos),
+    });
+    return fetch(CONFIG.ENDPOINT, {
+      method: "POST",
+      body,
+      mode: "cors",
+      credentials: "omit",
+    }).then((r) => r.json());
   },
 };
 
@@ -3808,12 +3831,45 @@ function updateDriverWeekIfVisible() {
   if (driverCardVisible) renderDriverWeekGrid();
 }
 
-const TODO_ITEMS = [
-  "Print envelope for tomorrow's trips",
-  "Send driver trip reminder for tomorrow's trips",
-  "Send driver information to customer",
-  "Make sure fuel cards are assigned if needed",
-  "Make sure Hours of Service form is included for part time drivers",
+const TRIP_CHECKLIST = [
+  {
+    key: "envelope",
+    label: "Envelope Printed",
+    // Only relevant when an envelope pickup location has been set for the trip
+    show: (t) => !!t.envelopePickup,
+  },
+  {
+    key: "reminder",
+    label: "Trip Reminder Sent",
+    show: () => true,
+  },
+  {
+    key: "driverInfo",
+    label: "Driver Info Sent",
+    // Only relevant when customer contact is required (not "Not Required")
+    show: (t) => t.contactStatus !== "Not Required",
+  },
+  {
+    key: "fuelCard",
+    label: "Fuel Card Assigned",
+    show: (t) => !!t.reqFuelCard,
+  },
+  {
+    key: "hos",
+    label: "Hours of Service form",
+    show: (t) => {
+      const asns = state.assignmentsByTripKey?.[t.tripKey] || [];
+      const names = asns.flatMap((a) =>
+        [a.driver1, a.driver2, a.driver3, a.driver4].filter((d) => d && d.toLowerCase() !== "none")
+      );
+      return names.some((name) => {
+        const d = (state.driversList || []).find(
+          (d) => String(d.driverName).trim().toLowerCase() === name.trim().toLowerCase()
+        );
+        return d?.status === "Part-Time";
+      });
+    },
+  },
 ];
 
 function updateTodoCardIfVisible() {
@@ -3821,60 +3877,173 @@ function updateTodoCardIfVisible() {
   renderTodoCard();
 }
 
-function renderTodoCard() {
-  const tripsEl = dom.todoTripsList;
-  const listEl  = dom.todoChecklist;
-  if (!tripsEl || !listEl) return;
-
-  // Tomorrow's departing trips
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const tomorrowYMD = ymd(tomorrow);
-  const trips = (state.trips || [])
-    .filter((t) => t.departureDate === tomorrowYMD)
-    .sort((a, b) => (a.departureTime || "").localeCompare(b.departureTime || ""));
-
-  if (trips.length === 0) {
-    tripsEl.innerHTML = `<p class="todo-trips__empty">No trips departing tomorrow.</p>`;
-  } else {
-    const label = tomorrow.toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" });
-    tripsEl.innerHTML = `<p class="todo-trips__label">Departing ${label}</p>` +
-      trips.map((t) => {
-        const time    = formatTime12(t.departureTime) || "--";
-        const dest    = t.destination || t.name || "—";
-        const drivers = [t.driver1, t.driver2].filter(Boolean).join(" · ");
-        return `<div class="todo-trip-row">
-          <span class="todo-trip-row__time">${time}</span>
-          <span class="todo-trip-row__dest">${dest}</span>
-          ${drivers ? `<span class="todo-trip-row__drivers">${drivers}</span>` : ""}
-        </div>`;
-      }).join("");
-  }
-
-  // Checklist — persisted by today's date
-  const todayKey = `etb-todo-${ymd(new Date())}`;
-  const saved = JSON.parse(localStorage.getItem(todayKey) || "[]");
-
-  listEl.innerHTML = TODO_ITEMS.map((text, i) => {
-    const checked = !!saved[i];
-    return `<li class="todo-item${checked ? " is-done" : ""}">
+function buildTripCard(t, todayYMD, getAsns) {
+  const dest       = t.destination || "—";
+  const customer   = t.customer || "";
+  const depart     = formatTime12(t.departureTime) || "--";
+  const spot       = t.spotTime ? `· Spot ${formatTime12(t.spotTime)}` : "";
+  const asns       = getAsns(t.tripKey);
+  const allDrivers = asns.flatMap((a) =>
+    [a.driver1, a.driver2, a.driver3, a.driver4].filter((d) => d && d.toLowerCase() !== "none")
+  );
+  const driverLine = [...new Set(allDrivers)].join(" · ");
+  const savedKey   = `etb-todo-${t.tripKey}-${todayYMD}`;
+  const saved      = JSON.parse(localStorage.getItem(savedKey) || "{}");
+  const items      = TRIP_CHECKLIST.filter(({ show }) => show(t));
+  const checks     = items.map(({ key, label }) => {
+    const checked = !!saved[key];
+    return `<li class="todo-item${checked ? " is-done" : ""}" data-trip="${t.tripKey}" data-key="${key}">
       <label class="todo-item__label">
-        <input type="checkbox" class="todo-item__check" data-index="${i}" ${checked ? "checked" : ""}>
-        <span class="todo-item__text">${text}</span>
+        <input type="checkbox" class="todo-item__check" ${checked ? "checked" : ""}>
+        <span class="todo-item__text">${label}</span>
       </label>
     </li>`;
   }).join("");
+  return `<div class="todo-trip-card" data-trip="${t.tripKey}">
+    <p class="todo-trip-card__dest">${dest}</p>
+    ${customer   ? `<p class="todo-trip-card__customer">${customer}</p>`  : ""}
+    <p class="todo-trip-card__meta">Depart ${depart} ${spot}</p>
+    ${driverLine ? `<p class="todo-trip-card__meta">${driverLine}</p>`    : ""}
+    ${items.length ? `<ul class="todo-trip-card__checks">${checks}</ul>` : ""}
+  </div>`;
+}
+
+async function renderTodoCard() {
+  const headerEl = dom.todoHeader;
+  const listEl   = dom.todoList;
+  if (!headerEl || !listEl) return;
+
+  const today    = new Date();
+  const todayYMD = ymd(today);
+  const dow      = today.getDay(); // 0=Sun 1=Mon … 5=Fri 6=Sat
+
+  // Weekend — not working
+  if (dow === 0 || dow === 6) {
+    headerEl.innerHTML = "";
+    listEl.innerHTML = `<p class="todo-list__empty todo-list__empty--rest">Sergio doesn't work today.</p>`;
+    return;
+  }
+
+  // Friday → prep Sat + Sun + Mon; otherwise → just tomorrow
+  const daysAhead = dow === 5 ? [1, 2, 3] : [1];
+  const prepDates = daysAhead.map((offset) => {
+    const d = new Date(today);
+    d.setDate(today.getDate() + offset);
+    return d;
+  });
+  const prepYMDs = prepDates.map(ymd);
+
+  // On Fridays, Monday may fall in next week which isn't loaded yet — fetch it
+  let bonusTrips       = [];
+  let bonusAssignments = {};
+  if (dow === 5) {
+    const mondayYMD   = prepYMDs[2];
+    const loadedDates = new Set(getWeekDates());
+    if (!loadedDates.has(mondayYMD)) {
+      try {
+        const { start, end, notesKey } = getWeekRange(prepDates[2]);
+        // prefetchAdjacentWeeks already fetched this — reads from cache, no network call
+        const resp = await fetchWeekDataCached(start, end, notesKey);
+        if (resp.ok) {
+          bonusTrips = resp.trips.filter((t) => t.departureDate === mondayYMD);
+          for (const a of resp.assignments) {
+            (bonusAssignments[a.tripKey] ||= []).push(a);
+          }
+        }
+      } catch (_) { /* Monday cards will appear without driver info */ }
+    }
+  }
+
+  const tripPool = [...(state.trips || []), ...bonusTrips];
+  const getAsns  = (tripKey) =>
+    state.assignmentsByTripKey?.[tripKey] || bonusAssignments[tripKey] || [];
+
+  const allTrips = tripPool
+    .filter((t) => prepYMDs.includes(t.departureDate))
+    .sort((a, b) =>
+      a.departureDate !== b.departureDate
+        ? a.departureDate.localeCompare(b.departureDate)
+        : (a.departureTime || "").localeCompare(b.departureTime || "")
+    );
+
+  // Header
+  if (dow === 5) {
+    headerEl.innerHTML = `
+      <p class="todo-header__date">Weekend Prep</p>
+      <p class="todo-header__count">${allTrips.length} trip${allTrips.length !== 1 ? "s" : ""} departing</p>`;
+  } else {
+    const dateLabel = prepDates[0].toLocaleDateString("en-US", {
+      weekday: "long", month: "long", day: "numeric", year: "numeric",
+    });
+    headerEl.innerHTML = `
+      <p class="todo-header__date">Departing ${dateLabel}</p>
+      <p class="todo-header__count">${allTrips.length} trip${allTrips.length !== 1 ? "s" : ""} departing</p>`;
+  }
+
+  if (allTrips.length === 0) {
+    listEl.innerHTML = `<p class="todo-list__empty">No trips departing.</p>`;
+    return;
+  }
+
+  // On Fridays group cards under a day label per date
+  let html = "";
+  if (dow === 5) {
+    for (const d of prepDates) {
+      const dayTrips = allTrips.filter((t) => t.departureDate === ymd(d));
+      if (!dayTrips.length) continue;
+      const dayLabel = d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+      html += `<p class="todo-day-label">${dayLabel} — ${dayTrips.length} trip${dayTrips.length !== 1 ? "s" : ""}</p>`;
+      html += dayTrips.map((t) => buildTripCard(t, todayYMD, getAsns)).join("");
+    }
+  } else {
+    html = allTrips.map((t) => buildTripCard(t, todayYMD, getAsns)).join("");
+  }
+
+  listEl.innerHTML = html;
 
   listEl.querySelectorAll(".todo-item__check").forEach((cb) => {
     cb.addEventListener("change", () => {
-      const checks = TODO_ITEMS.map((_, i) => {
-        const el = listEl.querySelector(`[data-index="${i}"]`);
-        return el ? el.checked : false;
-      });
-      localStorage.setItem(todayKey, JSON.stringify(checks));
-      cb.closest(".todo-item").classList.toggle("is-done", cb.checked);
+      const item     = cb.closest(".todo-item");
+      const tripKey  = item.dataset.trip;
+      const key      = item.dataset.key;
+      const savedKey = `etb-todo-${tripKey}-${todayYMD}`;
+      const saved    = JSON.parse(localStorage.getItem(savedKey) || "{}");
+      saved[key]     = cb.checked;
+      localStorage.setItem(savedKey, JSON.stringify(saved));
+      item.classList.toggle("is-done", cb.checked);
+      // Persist to server in background — silently ignore failures
+      api.setChecklist(tripKey, todayYMD, saved).catch(() => {});
     });
   });
+
+  // Reconcile with server state in background after rendering from localStorage
+  syncChecklistFromServer(todayYMD);
+}
+
+async function syncChecklistFromServer(date) {
+  try {
+    const resp = await api.getChecklist(date);
+    if (!resp?.ok || !resp.rows?.length) return;
+    const KEYS = ["envelope", "reminder", "driverInfo", "fuelCard", "hos"];
+    for (const row of resp.rows) {
+      const tripKey  = String(row.tripKey || "").trim();
+      if (!tripKey) continue;
+      const saved = {};
+      for (const k of KEYS) saved[k] = String(row[k] || "").toLowerCase() === "true";
+      // Update localStorage so next open is already fresh
+      localStorage.setItem(`etb-todo-${tripKey}-${date}`, JSON.stringify(saved));
+      // Patch the live DOM without re-rendering
+      const cardEl = dom.todoList?.querySelector(`[data-trip="${tripKey}"]`);
+      if (!cardEl) continue;
+      for (const k of KEYS) {
+        const itemEl = cardEl.querySelector(`.todo-item[data-key="${k}"]`);
+        if (!itemEl) continue;
+        const cb = itemEl.querySelector(".todo-item__check");
+        if (cb) cb.checked = saved[k];
+        itemEl.classList.toggle("is-done", saved[k]);
+      }
+    }
+  } catch (_) { /* server unavailable — localStorage state stays */ }
 }
 
 // ======================================================
@@ -4995,6 +5164,10 @@ function openDriverContactModal(tripKey) {
   }
 
   reminderText += `\n\nPlease remember to:\n\nFinal Inspection: Perform a walkthrough to ensure no belongings are left behind.\n\nBus Tidiness: Kindly ask passengers to take all trash with them upon arrival.\n\nService Excellence: Prioritize professional and courteous customer service.`;
+
+  if (trip.itineraryPdfUrl) {
+    reminderText += `\n\nItinerary: ${trip.itineraryPdfUrl}`;
+  }
 
   // Set values and show modal
   dom.driverContactBody.value = officeText;

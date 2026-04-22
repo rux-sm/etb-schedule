@@ -20,13 +20,14 @@
 - CONFIG
 - ============================= \*/
   const CONFIG = {
-  SPREADSHEET_ID: "14rQW4xXfe_FQhTRDMq-N70_cV1WOjiChjrtwPIP2md8", // <-- REQUIRED
+  SPREADSHEET_ID: "14rQW4xXfe_FQhTRDMq-N70_cV1WOjiChjrtwPIP2md8",
   SHEET_TRIPS: "Trips",
   SHEET_BUS_ASSIGN: "BusAssignments",
   SHEET_DRIVERS: "Drivers",
   SHEET_BUSES: "Buses",
   SHEET_NOTES: "WeekNotes",
-  SHEET_UNAVAILABILITY: "Unavailability", // <--- ADDED
+  SHEET_UNAVAILABILITY: "Unavailability",
+  SHEET_CHECKLIST: "Checklist",
   MAX_BUSES: 10,
   ENFORCE_TRIPID_MATCH_ON_DELETE_IF_PROVIDED: true,
   ITINERARY_FOLDER_ID: "1Xj-FjP53QnfNY-bHiCaU9VLCaeNUisYv",
@@ -74,12 +75,15 @@
   "itineraryPdfUrl",
   ],
   BusAssignments: ["tripKey", "busNumber", "busId", "driver1", "driver2", "driver1Status", "driver2Status", "driver3", "driver3Status", "driver4", "driver4Status"],
-  Drivers: ["driverId", "driverName", "driverNameFull", "phone", "active", "notes"],
+  Drivers: ["driverId", "driverName", "driverNameFull", "phone", "active", "notes", "priority", "status"],
   Buses: ["busId", "busName", "capacity", "hasLift", "hasSleeper", "active", "notes", "busColor"],
   WeekNotes: ["WeekStart", "Notes", "LastUpdated"],
-  Unavailability: ["driverName", "dateYmd"], // <--- ADDED
+  Unavailability: ["driverName", "dateYmd"],
+  Checklist: ["tripKey", "date", "envelope", "reminder", "driverInfo", "fuelCard", "hos"],
   };
-  /\*\* =============================
+
+/\*\* =============================
+
 - PERF: WEEK CACHE (biggest win)
 - ============================= \*/
   const WEEK*CACHE_TTL_SECONDS = 120; // 60–300 typical
@@ -157,13 +161,20 @@
   invalidateWeekCache*();
   return jsonOut*({ ok: true, ...result });
   }
-  return jsonOut*({ ok: false, error: "Unknown action. Use create|update|delete|saveWeekNote." });
-  } catch (err) {
-  return jsonOut*({ ok: false, error: String(err && err.stack ? err.stack : err) });
+  if (action === "setchecklist") {
+  const result = setChecklist*(p);
+  return jsonOut*({ ok: true, ...result });
   }
+  return jsonOut\_({ ok: false, error: "Unknown action. Use create|update|delete|saveWeekNote|setChecklist." });
+
+      } catch (err) {
+        return jsonOut_({ ok: false, error: String(err && err.stack ? err.stack : err) });
+      }
+
   });
   }
   /\*\*
+
 - Logs errors to the ErrorLogs sheet
 - Creates the sheet automatically if it doesn't exist
   \*/
@@ -209,69 +220,129 @@
   return jsonOut({ ok: false, error: String(err) });
   }
   }
-  function doGet(e) {
-  try {
-  const p = e && e.parameter ? e.parameter : {};
-  const fn = (p.fn || "listTrips").trim();
-  ensureAllSheets*();
-  let data;
-  switch (fn) {
-  case "debugTrips":
-  data = debugTrips*();
-  break;
-  case "weekData":
-  data = weekData*(p);
-  break;
-  case "batchUnavailability": // <--- ADDED
-  data = batchUnavailability*(p);
-  break;
-  case "listTrips":
-  data = listTrips*(p);
-  break;
-  case "getTrip":
-  data = getTrip*(p.tripKey);
-  break;
-  case "listDrivers":
-  data = listDrivers*(p);
-  break;
-  case "listBuses":
-  data = listBuses*(p);
-  break;
-  case "getBusAssignments":
-  data = getBusAssignments*(p.tripKey);
-  break;
-  case "listBusAssignmentsForRange":
-  data = listBusAssignmentsForRange*(p);
-  break;
-  case "logError":
-  data = logError(e);
-  break;
-  case "saveWeekNote":
-  data = saveWeekNote*(p);
-  break;
-  case "updateTripItineraryPdf": // <--- NEW
-  data = updateTripItineraryPdf*(p);
-  break;  
-   default:
-  data = {
-  ok: false,
-  error:
-  "Unknown fn. Use weekData|listTrips|getTrip|listDrivers|listBuses|getBusAssignments|listBusAssignmentsForRange|logError.",
-  };
+  function getChecklist*(p) {
+  const date = String(p.date || "").trim();
+  if (!date) return { ok: false, error: "date is required (YYYY-MM-DD)" };
+  const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(CONFIG.SHEET_CHECKLIST);
+  if (!sheet) return { ok: true, rows: [] };
+  const rows = readAllAsObjects*(sheet, HEADERS.Checklist)
+  .filter(r => String(r.date || "").trim() === date);
+  return { ok: true, rows };
   }
-  // JSONP support for static sites: ?callback=foo
-  if (p.callback) {
-  return jsonpOut*(p.callback, data);
-  }
-  return jsonOut*(data);
-  } catch (err) {
-  const payload = { ok: false, error: String(err && err.stack ? err.stack : err) };
-  const cb = e && e.parameter && e.parameter.callback;
-  if (cb) return jsonpOut*(cb, payload);
-  return jsonOut*(payload);
-  }
-  }
-  /\*\* =============================
+
+function setChecklist\_(p) {
+const tripKey = String(p.tripKey || "").trim();
+const date = String(p.date || "").trim();
+if (!tripKey || !date) return { ok: false, error: "tripKey and date are required" };
+
+const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
+const sheet = ss.getSheetByName(CONFIG.SHEET_CHECKLIST);
+if (!sheet) return { ok: false, error: "Checklist sheet not found" };
+
+// Prune rows older than 30 days
+const cutoff = new Date();
+cutoff.setDate(cutoff.getDate() - 30);
+const cutoffYMD = cutoff.toISOString().slice(0, 10);
+const all = readAllAsObjects\_(sheet, HEADERS.Checklist);
+const stale = all
+.map((r, i) => ({ r, rowNum: i + 2 }))
+.filter(({ r }) => String(r.date || "") < cutoffYMD);
+for (let i = stale.length - 1; i >= 0; i--) {
+sheet.deleteRow(stale[i].rowNum);
+}
+
+// Upsert: find existing row for this tripKey + date
+const fresh = readAllAsObjects*(sheet, HEADERS.Checklist);
+const rowObj = {
+tripKey,
+date,
+envelope: String(p.envelope || "false"),
+reminder: String(p.reminder || "false"),
+driverInfo: String(p.driverInfo || "false"),
+fuelCard: String(p.fuelCard || "false"),
+hos: String(p.hos || "false"),
+};
+const idx = fresh.findIndex(
+r => String(r.tripKey).trim() === tripKey && String(r.date).trim() === date
+);
+if (idx >= 0) {
+const rowNum = idx + 2;
+const values = HEADERS.Checklist.map(h => rowObj[h] ?? "");
+sheet.getRange(rowNum, 1, 1, values.length).setValues([values]);
+} else {
+appendRowByHeaders*(sheet, HEADERS.Checklist, rowObj);
+}
+
+return { ok: true };
+}
+
+function doGet(e) {
+try {
+const p = e && e.parameter ? e.parameter : {};
+const fn = (p.fn || "listTrips").trim();
+ensureAllSheets*();
+let data;
+switch (fn) {
+case "debugTrips":
+data = debugTrips*();
+break;
+case "weekData":
+data = weekData*(p);
+break;
+case "batchUnavailability": // <--- ADDED
+data = batchUnavailability*(p);
+break;
+case "listTrips":
+data = listTrips*(p);
+break;
+case "getTrip":
+data = getTrip*(p.tripKey);
+break;
+case "listDrivers":
+data = listDrivers*(p);
+break;
+case "listBuses":
+data = listBuses*(p);
+break;
+case "getBusAssignments":
+data = getBusAssignments*(p.tripKey);
+break;
+case "listBusAssignmentsForRange":
+data = listBusAssignmentsForRange*(p);
+break;
+case "logError":
+data = logError(e);
+break;
+case "saveWeekNote":
+data = saveWeekNote*(p);
+break;
+case "updateTripItineraryPdf":
+data = updateTripItineraryPdf*(p);
+break;
+case "getChecklist":
+data = getChecklist*(p);
+break;
+default:
+data = {
+ok: false,
+error:
+"Unknown fn. Use weekData|listTrips|getTrip|listDrivers|listBuses|getBusAssignments|listBusAssignmentsForRange|logError.",
+};
+}
+// JSONP support for static sites: ?callback=foo
+if (p.callback) {
+return jsonpOut*(p.callback, data);
+}
+return jsonOut*(data);
+} catch (err) {
+const payload = { ok: false, error: String(err && err.stack ? err.stack : err) };
+const cb = e && e.parameter && e.parameter.callback;
+if (cb) return jsonpOut*(cb, payload);
+return jsonOut\_(payload);
+}
+}
+/\*\* =============================
 
 - NORMALIZE OUTPUT (API)
 - ============================= _/
@@ -1120,12 +1191,14 @@ const drivers = ss.getSheetByName(CONFIG.SHEET_DRIVERS) || ss.insertSheet(CONFIG
 const buses = ss.getSheetByName(CONFIG.SHEET_BUSES) || ss.insertSheet(CONFIG.SHEET_BUSES);
 const notes = ss.getSheetByName(CONFIG.SHEET_NOTES) || ss.insertSheet(CONFIG.SHEET_NOTES);
 const unavail = ss.getSheetByName(CONFIG.SHEET_UNAVAILABILITY) || ss.insertSheet(CONFIG.SHEET_UNAVAILABILITY);
+const checklist = ss.getSheetByName(CONFIG.SHEET_CHECKLIST) || ss.insertSheet(CONFIG.SHEET_CHECKLIST);
 ensureHeaders*(trips, HEADERS.Trips);
 ensureHeaders*(bus, HEADERS.BusAssignments);
 ensureHeaders*(drivers, HEADERS.Drivers);
 ensureHeaders*(buses, HEADERS.Buses);
 ensureHeaders*(notes, HEADERS.WeekNotes);
 ensureHeaders*(unavail, HEADERS.Unavailability);
+ensureHeaders*(checklist, HEADERS.Checklist);
 }
 function ensureHeaders*(sheet, headers) {
 const data = sheet.getDataRange().getValues();
@@ -1193,7 +1266,7 @@ obj[h] = idx >= 0 ? row[idx] : "";
 });
 return obj;
 }
-function findRowIndexByValue\_(sheet, headerName, value) {
+function findRowIndexByValue*(sheet, headerName, value) {
 const v = String(value || "").trim();
 if (!v) return -1;
 const header = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0].map(String);

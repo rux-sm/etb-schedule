@@ -1311,62 +1311,125 @@ body.trip-bar-selected .schedule-grid__trip-bar.selected {
    DAILY CHECKLIST CARD
    ========================================================================== */
 
-.todo-trips {
-  padding: var(--rux-space-3);
-  border-bottom: 1px solid var(--border-subtle);
+.todo-header {
+  padding: var(--rux-space-3) var(--rux-space-3) 0;
 }
 
-.todo-trips__label {
+.todo-header__date {
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--text-secondary);
+  margin: 0 0 2px;
+}
+
+.todo-header__count {
+  font-size: 13px;
+  color: var(--text-secondary);
   margin: 0 0 var(--rux-space-2);
 }
 
-.todo-trips__empty {
+.todo-list {
+  display: flex;
+  flex-direction: column;
+  padding: var(--rux-space-2) var(--rux-space-3) var(--rux-space-3);
+  gap: var(--rux-space-3);
+}
+
+.todo-list__empty {
   font-size: 13px;
+  color: var(--text-secondary);
+  padding: var(--rux-space-3);
+  margin: 0;
+}
+
+.todo-list__empty--rest {
+  text-align: center;
+  padding: var(--rux-space-6) var(--rux-space-3);
+}
+
+.todo-day-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin: var(--rux-space-3) 0 var(--rux-space-1);
+}
+
+.todo-day-label:first-child {
+  margin-top: 0;
+}
+
+.todo-trip-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rux-space-2);
+  padding: var(--rux-space-3);
+  border-radius: var(--rux-radius-section);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+}
+
+.todo-trip-card__dest {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.todo-trip-card__customer {
+  font-size: 12px;
   color: var(--text-secondary);
   margin: 0;
 }
 
-.todo-trip-row {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  padding: var(--rux-space-1) 0;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.todo-trip-row:last-child {
-  border-bottom: none;
-}
-
-.todo-trip-row__time    { font-size: 11px; color: var(--text-secondary); }
-.todo-trip-row__dest    { font-size: 13px; font-weight: 500; color: var(--text-primary); }
-.todo-trip-row__drivers { font-size: 11px; color: var(--text-secondary); }
-
-.todo-checklist {
-  list-style: none;
+.todo-trip-card__meta {
+  font-size: 12px;
+  color: var(--text-secondary);
   margin: 0;
-  padding: var(--rux-space-3);
-  display: flex;
-  flex-direction: column;
-  gap: var(--rux-space-2);
+}
+
+.todo-trip-card__checks {
+  list-style: none;
+  margin: var(--rux-space-2) 0 0;
+  padding: var(--rux-space-2) 0 0;
+  border-top: 1px solid var(--border-subtle);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--rux-space-2) var(--rux-space-2);
+}
+
+.todo-trip-card__checks .todo-item:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
 }
 
 .todo-item__label {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: var(--rux-space-2);
   cursor: pointer;
+  min-width: 0;
+}
+
+.todo-item__check {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  cursor: pointer;
+  accent-color: var(--color-accent);
+  margin: 0;
 }
 
 .todo-item__text {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-primary);
-  line-height: 1.4;
+  line-height: 1.3;
+}
+
+.todo-item.is-done .todo-item__check {
+  opacity: 0.6;
 }
 
 .todo-item.is-done .todo-item__text {
