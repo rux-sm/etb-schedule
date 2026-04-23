@@ -59,6 +59,7 @@ input[type="number"] {
 input[type="date"],
 input[type="time"] {
   line-height: var(--form-height);
+  color-scheme: dark; /* Natively turns default icons white */
 }
 
 input[type="date"]::-webkit-datetime-edit,
@@ -68,30 +69,26 @@ input[type="time"]::-webkit-datetime-edit-fields-wrapper {
   padding-block: 0;
 }
 
-/* Calendar & time icons — white in dark mode (WebKit/Chromium) */
-input[type="date"]::-webkit-calendar-picker-indicator,
-input[type="time"]::-webkit-calendar-picker-indicator {
-  color: var(--text-placeholder);
-  opacity: 1;
-  background: transparent;
+/* ── Consolidated Global Calendar/Time Picker Icon ── */
+::-webkit-calendar-picker-indicator {
+  opacity: 1; /* Override any native transparency */
+  cursor: pointer;
+  padding: 6px;
+  margin-inline-start: 0px;
+  /* Dims the pure white icon to ~68% lightness, visually matching var(--text-secondary) */
+  filter: brightness(0.7); 
+  transition: filter var(--transition-fast);
 }
 
-/* Firefox (limited support) */
+/* Brighten icon to pure white on hover for better UX */
+::-webkit-calendar-picker-indicator:hover {
+  filter: brightness(1); 
+}
+
+/* Firefox Fallback */
 input[type="date"]::-moz-calendar-picker-indicator,
 input[type="time"]::-moz-calendar-picker-indicator {
-  color: white;
-  opacity: 1;
-}
-
-/* Global calendar/time picker icon */
-::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-  opacity: 0.85;
-  cursor: pointer;
-  padding: 4px;
-}
-
-::-webkit-calendar-picker-indicator:hover {
+  color: var(--text-secondary);
   opacity: 1;
 }
 
@@ -102,7 +99,8 @@ select {
   -webkit-appearance: none;
   appearance: none;
   color-scheme: dark;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  /* Stroke is set to %23A0A0A0 (Hex #A0A0A0) to visually match your --text-secondary token */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A0A0A0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right var(--chevron-inset) center;
   background-size: var(--chevron-size);
@@ -138,13 +136,6 @@ textarea::placeholder {
   opacity: 1;
 }
 
-input:hover,
-select:hover,
-textarea:hover,
-.select-trigger:hover {
-  /* background-color: var(--field-bg-hover);
-  border-color: var(--gray-200); */
-}
 
 input:focus,
 select:focus,
@@ -488,7 +479,7 @@ select.is-empty:not(:focus),
 hr.form-divider {
   grid-column: span 12;
   border: 0;
-  border-top: 1px solid var(--border-subtle);
+  border-top: 1px solid var(--rux-border-form-divider);
   margin: 0;
   padding: 0;
 }
@@ -528,15 +519,14 @@ hr.form-divider {
   content: '';
   flex: 1;
   height: 1px;
-  background: var(--border-default);
+  background: var(--rux-border-form-divider);
 }
 
 .form-divider__label {
   font-size: var(--form-section-label-size);
   font-weight: var(--form-section-label-weight);
   letter-spacing: var(--form-section-label-spacing);
-  text-transform: uppercase;
-  color: var(--form-section-label-color);
+  color: var(--text-secondary);
   white-space: nowrap;
   flex-shrink: 0;
 }

@@ -38,9 +38,9 @@ button {
 
   /* Typography */
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: var(--rux-font-size-5);
   /* Dropped from 16px for that 'Pro' utility look */
-  font-weight: 400;
+  font-weight: var(--rux-font-weight-regular);
   /* Medium weight holds up better on black backgrounds */
   line-height: 1;
   letter-spacing: 0.0em;
@@ -49,12 +49,6 @@ button {
   white-space: nowrap;
   user-select: none;
   -webkit-user-select: none;
-
-  /* Squircle shape: border-radius is the rendered curve.
-     corner-shape: squircle is a forward-looking CSS property with limited
-     browser support as of 2025 — kept here as progressive enhancement.
-     Browsers that don't support it fall back to the border-radius value.
-     Uses --rux-radius-button (depth 0 in the optical radius scale). */
   border-radius: var(--rux-radius-button);
 
   cursor: pointer;
@@ -70,7 +64,7 @@ button {
 /* Aluminum visual defaults — unstyled .btn only (variants own their colors) */
 .btn {
   background-color: var(--btn-base-bg);
-  color: var(--btn-base-text);
+  color: var(--text-primary);
   border: 1px solid var(--btn-base-border);
   min-width: var(--btn-min-width, 80px);
 }
@@ -126,7 +120,7 @@ button {
 
 .btn--accent {
   background-color: var(--btn-primary-bg);
-  color: var(--btn-primary-text);
+  color: var(--text-primary);
   border-color: var(--btn-primary-border);
   box-shadow: var(--btn-shadow-inset);
 }
@@ -144,7 +138,7 @@ button {
 
 .btn--default {
   background-color: var(--btn-secondary-bg);
-  color: var(--btn-secondary-text);
+  color: var(--text-primary);
   border-color: var(--btn-secondary-border);
   box-shadow: var(--btn-shadow-inset);
 }
@@ -162,7 +156,7 @@ button {
 
 .btn--danger {
   background-color: var(--btn-danger-bg);
-  color: var(--btn-danger-text);
+  color: var(--text-primary);
   border-color: var(--btn-danger-border);
   box-shadow: var(--btn-shadow-inset);
 }

@@ -3839,8 +3839,13 @@ const TRIP_CHECKLIST = [
   {
     key: "envelope",
     label: "Envelope Printed",
-    // Only relevant when an envelope pickup location has been set for the trip
-    show: (t) => !!t.envelopePickup,
+    show: () => true,
+  },
+  {
+    key: "envelopeInfo",
+    type: "warning",
+    label: "Envelope info incomplete",
+    show: (t) => !t.envelopePickup || !t.envelopeTripContact || !t.envelopeTripPhone,
   },
   {
     key: "reminder",
@@ -3894,7 +3899,16 @@ function buildTripCard(t, todayYMD, getAsns) {
   const savedKey   = `etb-todo-${t.tripKey}-${todayYMD}`;
   const saved      = JSON.parse(localStorage.getItem(savedKey) || "{}");
   const items      = TRIP_CHECKLIST.filter(({ show }) => show(t));
-  const checks     = items.map(({ key, label }) => {
+  const checkItems = items.filter(({ type }) => type !== "warning");
+  const checks     = items.map(({ key, label, type }) => {
+    if (type === "warning") {
+      return `<li class="todo-item todo-item--warning" data-trip="${t.tripKey}" data-key="${key}">
+        <span class="todo-item__label">
+          <span class="material-symbols-outlined todo-item__warn-icon">warning</span>
+          <span class="todo-item__text">${label}</span>
+        </span>
+      </li>`;
+    }
     const checked = !!saved[key];
     return `<li class="todo-item${checked ? " is-done" : ""}" data-trip="${t.tripKey}" data-key="${key}">
       <label class="todo-item__label">
@@ -3904,8 +3918,8 @@ function buildTripCard(t, todayYMD, getAsns) {
     </li>`;
   }).join("");
   let statusClass = "";
-  if (items.length > 0) {
-    const allDone = items.every(({ key }) => !!saved[key]);
+  if (checkItems.length > 0) {
+    const allDone = checkItems.every(({ key }) => !!saved[key]);
     statusClass = allDone ? " is-complete" : " has-pending";
   }
   return `<div class="todo-trip-card${statusClass}" data-trip="${t.tripKey}">
@@ -3968,7 +3982,7 @@ async function renderTodoCard() {
     state.assignmentsByTripKey?.[tripKey] || bonusAssignments[tripKey] || [];
 
   const allTrips = tripPool
-    .filter((t) => prepYMDs.includes(t.departureDate))
+    .filter((t) => prepYMDs.includes(t.departureDate) && t.tripColor !== "Out of Service")
     .sort((a, b) =>
       a.departureDate !== b.departureDate
         ? a.departureDate.localeCompare(b.departureDate)
@@ -4028,7 +4042,7 @@ async function renderTodoCard() {
       if (card) {
         const trip = (state.trips || []).find((tr) => tr.tripKey === tripKey);
         if (trip) {
-          const cardItems = TRIP_CHECKLIST.filter(({ show }) => show(trip));
+          const cardItems = TRIP_CHECKLIST.filter(({ show, type }) => show(trip) && type !== "warning");
           const allDone = cardItems.length > 0 && cardItems.every(({ key: k }) => !!saved[k]);
           card.classList.toggle("is-complete", allDone);
           card.classList.toggle("has-pending", cardItems.length > 0 && !allDone);
@@ -4072,7 +4086,7 @@ async function syncChecklistFromServer(date) {
       // Refresh card status class after server reconcile
       const trip = (state.trips || []).find((tr) => tr.tripKey === tripKey);
       if (trip) {
-        const cardItems = TRIP_CHECKLIST.filter(({ show }) => show(trip));
+        const cardItems = TRIP_CHECKLIST.filter(({ show, type }) => show(trip) && type !== "warning");
         const allDone = cardItems.length > 0 && cardItems.every(({ key: k }) => !!saved[k]);
         cardEl.classList.toggle("is-complete", allDone);
         cardEl.classList.toggle("has-pending", cardItems.length > 0 && !allDone);

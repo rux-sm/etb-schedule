@@ -157,10 +157,8 @@
   top: calc(var(--size-header-row) + var(--rux-space-3));
   bottom: var(--rux-space-3);
   width: var(--panel-width);
-  box-shadow: 0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.3);
-  transition:
-    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.2s ease;
+  box-shadow: none;
+  transition:none;
 }
 
 .o-app-layout__sidebar--left>.c-card {

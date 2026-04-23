@@ -200,13 +200,7 @@
   padding: 0 var(--rux-space-3);
   border-bottom: none;
   background-color: var(--rux-surface-header);
-  box-shadow:
-    inset 0 -1px 0 rgba(255, 255, 255, 0.06),
-    /* The "crisp" edge catching the light */
-    0 4px 8px -2px rgba(0, 0, 0, 0.3),
-    /* Soft, short shadow cast on the content */
-    0 1px 2px rgba(0, 0, 0, 0.4);
-  /* Contact seam */
+  box-shadow:0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
   position: relative;
   z-index: 10;
 }
@@ -254,11 +248,7 @@
   --footer-padding-x: var(--rux-space-3);
   --footer-padding-y: var(--rux-space-3);
   --footer-gap: var(--rux-space-2);
-  --footer-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    /* The crisp highlight on the TOP edge */
-    0 -4px 8px -2px rgba(0, 0, 0, 0.3),
-    /* Soft, short shadow cast UPWARDS onto the content */
-    0 -1px 2px rgba(0, 0, 0, 0.4);
+  --footer-shadow: 0 -3px 6px rgba(0,0,0,0.16), 0 -3px 6px rgba(0,0,0,0.23);
   /* Tight contact seam */
 
   flex-shrink: 0;
