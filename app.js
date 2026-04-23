@@ -3896,6 +3896,27 @@ function buildTripCard(t, todayYMD, getAsns) {
     [a.driver1, a.driver2, a.driver3, a.driver4].filter((d) => d && d.toLowerCase() !== "none")
   );
   const driverLine = [...new Set(allDrivers)].join(" · ");
+
+  const assignedFleets = asns
+    .filter((a) => a.busId && a.busId !== "WAITING_LIST")
+    .map((a) => {
+      const bus = (state.busesList || []).find((b) => b.busId === a.busId);
+      return bus?.busNumber ? `#${bus.busNumber}` : null;
+    })
+    .filter(Boolean);
+  const busDisplay =
+    assignedFleets.length > 0
+      ? assignedFleets.join(" · ")
+      : t.busesNeeded > 0
+      ? `${t.busesNeeded} bus${t.busesNeeded !== 1 ? "es" : ""} needed`
+      : "";
+  const uniqueDriverCount = new Set(allDrivers).size;
+  const envelopeDisplay =
+    uniqueDriverCount > 0
+      ? `${uniqueDriverCount} envelope${uniqueDriverCount !== 1 ? "s" : ""}`
+      : "";
+  const statsLine = [busDisplay, envelopeDisplay].filter(Boolean).join('<span class="todo-stat__sep"> · </span>');
+
   const savedKey   = `etb-todo-${t.tripKey}-${todayYMD}`;
   const saved      = JSON.parse(localStorage.getItem(savedKey) || "{}");
   const items      = TRIP_CHECKLIST.filter(({ show }) => show(t));
@@ -3927,6 +3948,7 @@ function buildTripCard(t, todayYMD, getAsns) {
     ${customer   ? `<p class="todo-trip-card__customer">${customer}</p>`  : ""}
     <p class="todo-trip-card__meta">Depart ${depart} ${spot}</p>
     ${driverLine ? `<p class="todo-trip-card__meta">${driverLine}</p>`    : ""}
+    ${statsLine   ? `<p class="todo-trip-card__stats">${statsLine}</p>`  : ""}
     ${items.length ? `<ul class="todo-trip-card__checks">${checks}</ul>` : ""}
   </div>`;
 }
@@ -7950,11 +7972,6 @@ function wireEvents() {
   dom.saveNotesBtn?.addEventListener("click", async () => {
     const notes = dom.scheduleNotes.value;
 
-    if (!navigator.onLine) {
-      toast("No internet connection", "danger", 3000);
-      return;
-    }
-
     dom.saveNotesBtn.disabled = true;
     toastShow("Saving notes...", "loading");
 
@@ -8102,10 +8119,6 @@ function wireEvents() {
   dom.tripForm.action = CONFIG.ENDPOINT;
 
   dom.deleteBtn.addEventListener("click", () => {
-    if (!navigator.onLine) {
-      toast("No internet connection", "danger", 3000);
-      return;
-    }
     if (!dom.tripKey.value) return;
     if (!confirm("Delete this trip?")) return;
 
@@ -8170,10 +8183,6 @@ function wireEvents() {
       return;
     }
 
-    if (!navigator.onLine) {
-      toast("No internet connection", "danger", 3000);
-      return;
-    }
     if (dom.saveBtn.disabled) return;
     if (dom.action.value === "delete") return;
 
