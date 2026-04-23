@@ -287,21 +287,21 @@
   --rux-button-hover: 0.08;
 
   /* Primary */
-  --btn-primary-bg: oklch(from var(--rux-color-mana) 65% c h);
+  --btn-primary-bg: oklch(from var(--rux-color-mana) 50% c h);
   --btn-primary-text: var(--text-primary);
   --btn-primary-hover: oklch(from var(--btn-primary-bg) calc(l + var(--rux-button-hover)) c h);
   --btn-primary-active: color-mix(in srgb, var(--color-accent) 70%, white);
   --btn-primary-border: transparent;
 
   /* Secondary */
-  --btn-secondary-bg: oklch(from var(--rux-color-gray) 65% c h);
+  --btn-secondary-bg: oklch(from var(--rux-color-gray) 50% c h);
   --btn-secondary-text: var(--text-primary);
   --btn-secondary-hover: oklch(from var(--btn-secondary-bg) calc(l + var(--rux-button-hover)) c h);
   --btn-secondary-active: color-mix(in srgb, var(--color-secondary) 70%, white);
   --btn-secondary-border: transparent;
 
   /* Danger */
-  --btn-danger-bg: oklch(from var(--rux-color-wine) 65% c h);
+  --btn-danger-bg: oklch(from var(--rux-color-wine) 50% c h);
   --btn-danger-text: var(--text-primary);
   --btn-danger-hover: oklch(from var(--btn-danger-bg) calc(l + var(--rux-button-hover)) c h);
   --btn-danger-active: color-mix(in srgb, var(--color-danger) 70%, white);
@@ -339,18 +339,18 @@
   --header-action-color: var(--text-primary);
 
   /* Toggle */
-  --btn-toggle-bg: oklch(from var(--rux-color-gray) 60% c h);
+  --btn-toggle-bg: oklch(from var(--rux-color-gray) 50% c h);
   --btn-toggle-border: transparent;
   --btn-toggle-text: var(--text-primary);
   --btn-toggle-hover-bg: oklch(from var(--btn-toggle-bg) calc(l + var(--rux-button-hover)) c h);
-  --btn-toggle-active-bg: var(--rux-color-primary-button);
+  --btn-toggle-active-bg: var(--btn-primary-bg);
   --btn-toggle-active-border: var(--rux-color-primary-button);
   --btn-toggle-icon-opacity: 0.7;
 
   /* Icon */
   --btn-icon-bg: transparent;
-  --btn-icon-text: var(--text-secondary);
-  --btn-icon-active-bg: var(--rux-accent-color);
+  --btn-icon-text: var(--text-primary);
+  --btn-icon-active-bg: var(--btn-primary-bg);
   --btn-icon-disabled-bg: var(--rux-surface-modal);
   --btn-icon-disabled-text: var(--text-disabled);
   --btn-icon-size: 16px;

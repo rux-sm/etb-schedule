@@ -200,7 +200,7 @@
   padding: 0 var(--rux-space-3);
   border-bottom: none;
   background-color: var(--rux-surface-header);
-  box-shadow:0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  box-shadow:none;
   position: relative;
   z-index: 10;
 }
@@ -258,7 +258,7 @@
   flex-wrap: wrap;
   padding: var(--footer-padding-y) var(--footer-padding-x);
   background: var(--footer-bg);
-  box-shadow: var(--footer-shadow);
+  box-shadow: none;
   position: relative;
   z-index: 10;
 }
