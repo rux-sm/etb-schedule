@@ -52,9 +52,10 @@
   min-width: 0;
 }
 
+
 /* Margin below center schedule card only */
 .o-app-layout__main {
-  padding-bottom: var(--space-xl);
+  padding-bottom: var(--rux-space-3);
 }
 
 /* Sidebar symmetry: structural reset only (visual skin lives in component layer) */

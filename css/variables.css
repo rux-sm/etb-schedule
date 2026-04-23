@@ -89,7 +89,7 @@
   ──────────────────────────────────────────────────────────────── */
 
   /* Elevated Surface Scale */
-  --rux-surface-base: oklch(from var(--rux-color-gray) 18% c h);
+  --rux-surface-base: oklch(from var(--rux-color-gray) 0% c h);
   /* 0% - Pure black canvas */
   --rux-surface-card: oklch(from var(--rux-color-gray) 12% c h);
   /* 12% - Subtle lift for schedule background */
