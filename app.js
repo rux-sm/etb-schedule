@@ -7782,6 +7782,7 @@ function wireEvents() {
   setInterval(() => {
     if (navigator.onLine && !document.hidden) {
       refreshWeekData({ silent: true });
+      if (state.cardPanelAssignments?.todo) syncChecklistFromServer(ymd(new Date()));
     }
   }, CONFIG.AUTO_REFRESH_INTERVAL);
 
