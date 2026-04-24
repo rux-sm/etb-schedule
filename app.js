@@ -77,7 +77,7 @@ if (document.readyState === "loading") {
 // 2) CONFIG
 // ======================================================
 const CONFIG = {
-  APP_NAME: "Trip Schedule",
+  APP_NAME: "ETB Schedule",
   APP_VERSION: "",
   ENDPOINT:
     "https://script.google.com/macros/s/AKfycbzSsVByHnMuzdmaITv2Ht-q1hUQ0y5cVVIEzV6E-h7-1EhnVWJDYlhj5K4RhY0wldBk/exec",
