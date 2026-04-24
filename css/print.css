@@ -327,8 +327,8 @@
     border: none !important;
     border-inline-start: none !important;
     /* Main outer left/top borders for the entire grid */
-    border-top: 1px solid var(--border-default) !important;
-    border-left: 1px solid var(--border-default) !important;
+    border-top: 1px solid var(--rux-color-border-default) !important;
+    border-left: 1px solid var(--rux-color-border-default) !important;
   }
 
   /* Letter full: force 1400px so column metrics and scale are tightly coupled; 52px bus matches JS colMetrics */
@@ -387,8 +387,8 @@
     border-left: none !important;
     border-inline-start: none !important;
     border-inline-end: none !important;
-    border-right: 1px solid var(--border-default) !important;
-    border-bottom: 1px solid var(--border-default) !important;
+    border-right: 1px solid var(--rux-color-border-default) !important;
+    border-bottom: 1px solid var(--rux-color-border-default) !important;
     background-color: white !important;
     box-sizing: border-box !important;
     padding: 2px !important;
@@ -403,8 +403,8 @@
     border-left: none !important;
     border-inline-start: none !important;
     border-inline-end: none !important;
-    border-right: 1px solid var(--border-default) !important;
-    border-bottom: 1px solid var(--border-default) !important;
+    border-right: 1px solid var(--rux-color-border-default) !important;
+    border-bottom: 1px solid var(--rux-color-border-default) !important;
     box-sizing: border-box !important;
     padding: 2px !important;
     font-size: 9pt !important;

@@ -24,7 +24,7 @@
   content: "";
   width: 1px;
   height: 20px;
-  background: var(--header-separator);
+  background: var(--rux-color-border-default);
   position: absolute;
   right: 0;
 }
@@ -157,8 +157,8 @@
   transform: none;
   pointer-events: none;
   min-width: 0;
-  border: var(--border-default);
-  border-color: var(--border-default);
+  border: var(--rux-color-border-default);
+  border-color: var(--rux-color-border-default);
   border-radius: var(--rux-radius-control);
 }
 
@@ -183,7 +183,7 @@
   max-width: min(46vw, 520px);
   overflow: hidden;
   text-overflow: ellipsis;
-  border: 1px solid var(--border-default);
+  border: 1px solid var(--rux-color-border-default);
   border-radius: var(--rux-radius-control);
 }
 
@@ -223,18 +223,18 @@
 
 .schedule-sync-status.is-idle {
   color: var(--text-primary);
-  border-color: var(--border-subtle);
+  border-color: var(--rux-color-border-subtle);
 }
 
 .schedule-sync-status.is-sync,
 .schedule-sync-status.is-loading {
   color: var(--text-primary);
-  border-color: color-mix(in srgb, var(--rux-accent-color), var(--border-subtle) 45%);
+  border-color: color-mix(in srgb, var(--rux-accent-color), var(--rux-color-border-subtle) 45%);
 }
 
 .schedule-sync-status.is-stale {
   color: var(--color-warning);
-  border-color: color-mix(in srgb, var(--color-warning), var(--border-subtle) 40%);
+  border-color: color-mix(in srgb, var(--color-warning), var(--rux-color-border-subtle) 40%);
 }
 
 .schedule-sync-status.is-stale::before {
@@ -243,7 +243,7 @@
 
 .schedule-sync-status.is-error {
   color: var(--color-danger);
-  border-color: color-mix(in srgb, var(--color-danger), var(--border-subtle) 40%);
+  border-color: color-mix(in srgb, var(--color-danger), var(--rux-color-border-subtle) 40%);
 }
 
 .schedule-sync-status.is-error::before {
@@ -546,7 +546,7 @@
 
 .quote-calculator__select-mini {
   background-color: var(--field-bg);
-  border: 1px solid var(--field-border);
+  border: 1px solid var(--rux-color-border-default);
   border-radius: var(--rux-radius-control);
   color: var(--text-primary);
   font-size: inherit;
@@ -558,13 +558,13 @@
 }
 
 .quote-calculator__select-mini:focus {
-  border-color: var(--border-default);
+  border-color: var(--rux-color-border-default);
 }
 
 .quote-calculator__summary {
   padding: 0 !important;
   background: var(--rux-surface-panel);
-  border-top: 1px solid var(--border-default);
+  border-top: 1px solid var(--rux-color-border-default);
   margin-top: auto;
   display: flex;
   flex-direction: column;
@@ -578,7 +578,7 @@
   align-items: center;
   height: 32px;
   padding: 0 16px;
-  border-bottom: 1px solid var(--border-default);
+  border-bottom: 1px solid var(--rux-color-border-default);
 }
 
 .quote-summary__label {
@@ -639,19 +639,19 @@
 
 /* ==========================================================================
    SCHEDULE GRID BORDERS
-   Centralized container and cell borders (1px solid var(--border-default))
+   Centralized container and cell borders (1px solid var(--rux-color-border-default))
    ========================================================================== */
 
 /* Outer Boundaries */
 .schedule-grid__header-cell:first-child,
 .schedule-grid__cell:first-child,
 .schedule-grid__bus-cell {
-  border-inline-start: 1px solid var(--border-default);
+  border-inline-start: 1px solid var(--rux-color-border-default);
   /* Left boundary */
 }
 
 .schedule-grid__header-cell {
-  border-top: 1px solid var(--border-default);
+  border-top: 1px solid var(--rux-color-border-default);
   /* Top boundary */
 }
 
@@ -665,14 +665,14 @@
 
 .schedule-grid__header-cell:last-child,
 .schedule-grid__cell:last-child {
-  border-inline-end: 1px solid var(--border-default);
+  border-inline-end: 1px solid var(--rux-color-border-default);
   /* Right boundary */
 }
 
 /* Bottom outer boundary */
 .schedule-grid tbody tr:last-child>.schedule-grid__cell,
 .schedule-grid tbody tr:last-child>.schedule-grid__bus-cell {
-  border-bottom: 1px solid var(--border-default);
+  border-bottom: 1px solid var(--rux-color-border-default);
 }
 
 .schedule-grid tbody tr:last-child>.schedule-grid__cell:first-child,
@@ -688,9 +688,9 @@
 /* Inner Gridlines */
 .schedule-grid__header-cell,
 .schedule-grid__cell {
-  border-inline-end: 1px solid var(--border-default);
+  border-inline-end: 1px solid var(--rux-color-border-default);
   /* Vertical tracking lines */
-  border-bottom: 1px solid var(--border-default);
+  border-bottom: 1px solid var(--rux-color-border-default);
   /* Horizontal tracking lines */
 }
 
@@ -861,7 +861,7 @@
 
 .waiting-list-row .schedule-grid__bus-cell {
   background-color: var(--rux-surface-base) !important;
-  border-top: 1px solid var(--border-subtle);
+  border-top: 1px solid var(--rux-color-border-subtle);
   color: var(--text-muted);
   font-size: 0.6875rem;
   text-align: center;
@@ -1065,7 +1065,7 @@
   scrollbar-width: none;
   /* Firefox */
   border-radius: 8px;
-  border: 1px solid var(--border-default);
+  border: 1px solid var(--rux-color-border-default);
 }
 
 .driver-week__wrap::-webkit-scrollbar {
@@ -1100,8 +1100,8 @@
   text-align: center;
   white-space: nowrap;
   cursor: pointer;
-  border-inline-end: 1px solid var(--border-default);
-  border-bottom: 1px solid var(--border-default);
+  border-inline-end: 1px solid var(--rux-color-border-default);
+  border-bottom: 1px solid var(--rux-color-border-default);
 }
 
 .driver-week__table tbody tr:nth-child(even) td {
@@ -1363,7 +1363,7 @@ body.trip-bar-selected .schedule-grid__trip-bar.selected {
   padding: var(--rux-space-3);
   border-radius: var(--rux-radius-section);
   background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--rux-color-border-subtle);
 }
 
 .todo-trip-card.has-pending {
@@ -1416,7 +1416,7 @@ body.trip-bar-selected .schedule-grid__trip-bar.selected {
   list-style: none;
   margin: var(--rux-space-2) 0 0;
   padding: var(--rux-space-2) 0 0;
-  border-top: 1px solid var(--border-subtle);
+  border-top: 1px solid var(--rux-color-border-subtle);
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--rux-space-2) var(--rux-space-2);

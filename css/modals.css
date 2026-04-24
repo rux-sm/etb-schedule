@@ -52,7 +52,7 @@
   flex-shrink: 0;
   height: var(--size-header-row);
   padding: 0 var(--space-lg);
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--rux-color-border-subtle);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -185,7 +185,7 @@
   margin: 0;
   min-width: 80px;
   padding: 4px 7px;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--rux-color-border-subtle);
   background: color-mix(in srgb, var(--rux-surface-panel), transparent 20%);
   color: var(--text-primary);
   font-family: var(--font-mono);
@@ -201,7 +201,7 @@
 
 .picross-progress-chip {
   padding: 4px 7px;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--rux-color-border-subtle);
   background: color-mix(in srgb, var(--rux-surface-panel), transparent 20%);
   color: var(--text-secondary);
   font-size: 0.6875rem;
@@ -251,7 +251,7 @@
 }
 
 .picross-clues {
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--rux-color-border-subtle);
   background: var(--rux-surface-panel);
 }
 
@@ -277,7 +277,7 @@
   font-family: var(--font-mono);
   font-size: 0.75rem;
   line-height: 1.1;
-  border: 1px solid color-mix(in srgb, var(--border-subtle), transparent 55%);
+  border: 1px solid color-mix(in srgb, var(--rux-color-border-subtle), transparent 55%);
   background: color-mix(in srgb, var(--rux-surface-modal), transparent 20%);
 }
 
@@ -307,8 +307,8 @@
 .picross-grid {
   display: grid;
   gap: 2px;
-  border: 1px solid var(--border-subtle);
-  background: var(--border-subtle);
+  border: 1px solid var(--rux-color-border-subtle);
+  background: var(--rux-color-border-subtle);
   padding: 2px;
   width: max-content;
   touch-action: none;
@@ -326,7 +326,7 @@
   min-width: var(--picross-cell-size);
   min-height: var(--picross-cell-size);
   padding: 0;
-  border: 1px solid var(--border-default);
+  border: 1px solid var(--rux-color-border-default);
   background: var(--rux-surface-panel);
   color: var(--text-secondary);
   font-weight: 600;
@@ -417,7 +417,7 @@
   min-height: 56px;
   margin-bottom: 0;
   padding: 8px 10px;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--rux-color-border-subtle);
   background: color-mix(in srgb, var(--rux-surface-panel), transparent 75%);
 }
 
@@ -467,7 +467,7 @@
 
 .next-day-report__day {
   margin-bottom: 40px;
-  border-bottom: 2px dashed var(--border-default);
+  border-bottom: 2px dashed var(--rux-color-border-default);
   padding-bottom: 20px;
 }
 
@@ -537,7 +537,7 @@
 }
 
 .next-day-report__table thead tr {
-  border-bottom: 2px solid var(--border-default);
+  border-bottom: 2px solid var(--rux-color-border-default);
   text-align: left;
 }
 
@@ -547,7 +547,7 @@
 }
 
 .next-day-report__table tbody tr {
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--rux-color-border-subtle);
 }
 
 .next-day-report__table tbody tr:hover {
@@ -597,7 +597,7 @@
   margin: 0 0 15px 0;
   font-size: 20px;
   font-weight: bold;
-  border-bottom: 2px solid var(--border-default);
+  border-bottom: 2px solid var(--rux-color-border-default);
   padding-bottom: 5px;
 }
 
@@ -1227,7 +1227,7 @@
 
 .driver-contact__divider {
   border: none;
-  border-top: 1px solid var(--border-default);
+  border-top: 1px solid var(--rux-color-border-default);
   margin-top: 12px;
 }
 

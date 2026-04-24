@@ -659,7 +659,7 @@ samp {
 
 .dropdown-divider,
 .dropdown__divider {
-  border: 0;
+  border: none;
   height: 1px;
   margin: 4px 0;
   background-color: none ;

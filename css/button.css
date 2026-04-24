@@ -195,7 +195,7 @@ button {
 
 .btn--ghost:active {
   background-color: var(--btn-ghost-active-bg);
-  border-color: var(--border-default);
+  border-color: var(--rux-color-border-default);
   box-shadow: none;
 }
 

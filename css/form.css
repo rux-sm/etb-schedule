@@ -25,11 +25,11 @@ textarea,
   height: var(--form-height);
   padding: 0 var(--input-padding-x);
   background-color: var(--field-bg);
-  border: 1px solid var(--field-bg);
+  border: none;
   border-radius: var(--rux-radius-control);
   font-size: var(--input-font-size);
   font-weight: var(--input-weight);
-  color: var(--text-primary);
+  color: var(--rux-text-primary);
   text-align: left;
   outline: none;
   cursor: text;
@@ -376,7 +376,7 @@ select.is-empty:not(:focus),
   white-space: pre-wrap;
   color: var(--text-secondary);
   background: var(--rux-surface-panel);
-  border: 1px solid var(--border-default);
+  border: none;
   border-radius: 0;
 }
 
@@ -396,7 +396,7 @@ select.is-empty:not(:focus),
   line-height: 1.5;
   letter-spacing: normal;
   font-variant-numeric: normal;
-  border: 1px solid var(--border-default);
+  border: none;
   border-radius: 0;
   text-align: center;
   width: 100%;
@@ -478,8 +478,8 @@ select.is-empty:not(:focus),
 
 hr.form-divider {
   grid-column: span 12;
-  border: 0;
-  border-top: 1px solid var(--rux-border-form-divider);
+  border: none;
+  border-top: 1px solid var(--rux-color-border-default);
   margin: 0;
   padding: 0;
 }
@@ -519,7 +519,7 @@ hr.form-divider {
   content: '';
   flex: 1;
   height: 1px;
-  background: var(--rux-border-form-divider);
+  background: var(--rux-color-border-default);
 }
 
 .form-divider__label {

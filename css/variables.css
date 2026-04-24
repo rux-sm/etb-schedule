@@ -8,9 +8,9 @@
 
   /* --- COLOR PALETTE --- */
 
-  --rux-color-white: oklch(0% 0 255);
-  --rux-color-black: oklch(100% 0 255);
-  --rux-color-gray: oklch(50% 0.010 286);
+  --rux-color-black: oklch(0% 0 255);
+  --rux-color-white: oklch(100% 0 255);
+  --rux-color-gray: oklch(50% 0.0058 271.18);
   --rux-color-wine: oklch(50% 0.2 25);
   --rux-color-dusk: oklch(50% 0.2 65);
   --rux-color-sand: oklch(50% 0.2 100);
@@ -88,35 +88,28 @@
   /* 2A. Surface Colors
   ──────────────────────────────────────────────────────────────── */
 
-  /* Elevated Surface Scale */
+  /* App Header Surfaces */
+  --rux-surface-app-header: oklch(from var(--rux-color-gray) 24% c h);
+
+  /* Base Surface */
   --rux-surface-base: oklch(from var(--rux-color-gray) 0% c h);
-  /* 0% - Pure black canvas */
-  --rux-surface-card: oklch(from var(--rux-color-gray) 12% c h);
-  /* 12% - Subtle lift for schedule background */
+
+  /* Panel Surfaces */
+  --rux-surface-panel: oklch(from var(--rux-color-gray) 24% c h);
+  --rux-surface-header: oklch(from var(--rux-color-gray) 30% c h);
+  --rux-surface-footer: oklch(from var(--rux-color-gray) 30% c h);
+
+  --rux-surface-card: oklch(from var(--rux-color-gray) 0% c h);
+
   --rux-surface-modal: oklch(from var(--rux-color-gray) 18% c h);
-  /* 18% - Higher lift for modals */
 
-  /* App Chrome & Panels */
-  --rux-surface-app-header: oklch(from var(--rux-color-gray) 26% c h);
-  /* 24% - Structural top bar */
-  --rux-surface-panel: oklch(from var(--rux-color-gray) 26% c h);
-  /* 24% - Editor panel (darkened to let 36% buttons pop) */
-  --rux-surface-header: oklch(from var(--rux-color-gray) 32% c h);
-  /* 24% - Match panel */
-  --rux-surface-footer: oklch(from var(--rux-color-gray) 32% c h);
-  /* 24% - Match panel */
-
-  /* Floating / Overlays */
   --rux-surface-menu: oklch(from var(--rux-color-gray) 30% c h);
-  /* 28% - Floating menus */
-  --rux-surface-overlay: oklch(from var(--rux-color-gray) 28% c h);
-  /* 28% - Tooltips/popovers */
 
-  /* Form Fields */
-  --rux-surface-input: oklch(from var(--rux-color-gray) 20% c h);
-  /* 16% - Gently inset compared to the 24% panel */
+  --rux-surface-overlay: oklch(from var(--rux-color-gray) 28% c h);
+
+  /* Input Surfaces */
+  --rux-surface-input: oklch(from var(--rux-color-gray) 14% c h);
   --rux-surface-textarea: var(--rux-surface-input);
-  /* Unified with inputs */
 
   /* 2B. Status Colors
   ──────────────────────────────────────────────────────────────── */
@@ -134,18 +127,15 @@
 
   /* 2C. Button Colors
   ──────────────────────────────────────────────────────────────── */
-  --rux-button-primary-bg: oklch(from var(--rux-color-mana) 60% c h);
+  --rux-button-primary-bg: oklch(from var(--rux-color-mana) 38% c h);
   --rux-button-primary-text: oklch(from var(--rux-color-gray) 92% c h);
   --rux-button-primary-hover: oklch(from var(--rux-button-primary-bg) calc(l + var(--rux-button-hover)) c h);
   --rux-button-primary-active: color-mix(in srgb, var(--color-accent) 70%, white);
-  --rux-button-primary-border: transparent;
-
-
   /* 2C. Text Colors
   ──────────────────────────────────────────────────────────────── */
 
-  --rux-text-primary: oklch(100% 0.014 250);
-  --rux-text-secondary: oklch(from var(--rux-color-gray) 68% c h);
+  --rux-text-primary: var(--rux-color-white);
+  --rux-text-secondary: oklch(from var(--rux-color-gray) 72% c h);
   --rux-text-disabled: oklch(45% 0.014 250);
   --rux-text-hover: oklch(45% 0.014 250);
 
@@ -154,10 +144,9 @@
   /* 2D. Border Roles
   ──────────────────────────────────────────────────────────────── */
 
-  --rux-border-subtle: oklch(100% 0 0 / 6%);
-  --rux-border-default: oklch(100% 0 0 / 20%);
-  --rux-border-hover: oklch(100% 0 0 / 30%);
-  --rux-border-focus: oklch(100% 0 0 / 100%);
+  --rux-color-border-subtle:  oklch(from var(--rux-color-white) l c h / 6%);
+  --rux-color-border-default: oklch(from var(--rux-color-white) l c h / 12%);
+  --rux-color-border-strong:  oklch(from var(--rux-color-white) l c h / 25%);
 
   /* 2E. Semantic Radius Aliases
          See RUX_UI.md for optical nesting guide and depth reference.
@@ -181,19 +170,6 @@
      Tied to specific UI elements. No --rux- prefix.
      Reference Tier 2 tokens; avoid referencing Tier 1 directly.
      ============================================================ */
-
-  /* 3B. Borders
-  ──────────────────────────────────────────────────────────────── */
-
-  --border-subtle: var(--rux-border-subtle);
-  --border-default: var(--rux-border-default);
-  --border-hover: var(--rux-border-hover);
-  --border-focus: var(--rux-border-focus);
-  --border: var(--border-default);
-  /* shorthand — same as --border-default */
-  --header-separator: var(--border-default);
-  /* border token — moved here from text section */
-  --rux-border-form-divider: oklch(from var(--rux-color-gray) 38% c h);
 
   /* 3C. Text
   ──────────────────────────────────────────────────────────────── */
@@ -231,7 +207,6 @@
   --field-bg: var(--rux-surface-input);
   --field-bg-hover: var(--rux-surface-panel);
   /* not currently used */
-  --field-border: var(--rux-surface-modal);
   /*--field-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   /* not currently used */
   --field-disabled-opacity: 0.5;
@@ -314,7 +289,7 @@
 
   /* Ghost */
   --btn-ghost-bg: transparent;
-  --btn-ghost-border: var(--border-default);
+  --btn-ghost-border: var(--rux-color-border-default);
   --btn-ghost-text: var(--text-primary);
   --btn-ghost-hover-bg: oklch(from var(--rux-surface-panel) calc(l + var(--rux-button-hover)) c h);
   --btn-ghost-active-bg: color-mix(in srgb, white 20%, transparent);
@@ -326,7 +301,7 @@
   --btn-toolbar-active-bg: color-mix(in srgb, white 20%, transparent);
   --btn-toolbar-shadow-active: var(--btn-shadow-active-sm);
   --btn-toolbar-text: var(--text-primary);
-  --btn-toolbar-border: var(--border-default);
+  --btn-toolbar-border: var(--rux-color-border-default);
   --btn-toolbar-font-size: var(--rux-font-size-4);
   --btn-toolbar-icon-size: 18px;
   --btn-toolbar-height: 32px;
@@ -563,7 +538,7 @@
   ──────────────────────────────────────────────────────────────── */
 
   --env-ink: var(--text-primary);
-  --env-rule: var(--border-default);
+  --env-rule: var(--rux-color-border-default);
   --env-border: 1px;
   --env-pad: 0.25in;
   --env-panel-pad: 0.375in;

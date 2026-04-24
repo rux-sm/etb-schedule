@@ -198,7 +198,7 @@
   width: 100%;
   flex-shrink: 0;
   padding: 0 var(--rux-space-3);
-  border-bottom: none;
+  border-bottom: 1px solid var(--rux-color-border-subtle);
   background-color: var(--rux-surface-header);
   box-shadow:none;
   position: relative;
@@ -255,6 +255,7 @@
   display: flex;
   align-items: center;
   gap: var(--footer-gap);
+  border-top: 1px solid var(--rux-color-border-subtle);
   flex-wrap: wrap;
   padding: var(--footer-padding-y) var(--footer-padding-x);
   background: var(--footer-bg);
@@ -280,7 +281,7 @@
 
 .cds-accordion__item {
   border-radius: var(--rux-radius-section);
-  border: 1px solid var(--border-default);
+  border: 1px solid var(--rux-color-border-default);
   margin-bottom: 8px;
   overflow: hidden;
 }
