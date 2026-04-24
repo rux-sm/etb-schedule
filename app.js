@@ -236,6 +236,7 @@ const dom = {
   driversBtn: $("driversBtn"),
   notesBtn: $("notesBtn"),
   todoBtn: $("todoBtn"),
+  todayHighlightBtn: $("todayHighlightBtn"),
   todoCard: document.querySelector('[data-js="panel-card-todo"]') || $("todoCard"),
   todoHeader: $("todoHeader"),
   todoList: $("todoList"),
@@ -7997,6 +7998,36 @@ function wireEvents() {
   dom.waitingListBtn?.addEventListener("click", () => {
     const isVisible = !dom.waitingBody.classList.contains("is-hidden");
     setWaitingListVisible(!isVisible);
+  });
+
+  // Today Highlight Toggle
+  let todayHighlightActive = false;
+
+  function applyTodayHighlight() {
+    const todayYMD = ymd(new Date());
+    const todayKeys = new Set(
+      (state.trips || [])
+        .filter((t) => t.tripColor !== "Out of Service" && t.departureDate === todayYMD)
+        .map((t) => String(t.tripKey))
+    );
+    document.querySelectorAll(".schedule-grid__trip-bar").forEach((bar) => {
+      bar.classList.toggle("today-highlighted", todayKeys.has(bar.dataset.tripkey));
+    });
+  }
+
+  function setTodayHighlight(active) {
+    todayHighlightActive = active;
+    if (active) {
+      applyTodayHighlight();
+    } else {
+      document.querySelectorAll(".schedule-grid__trip-bar.today-highlighted")
+        .forEach((bar) => bar.classList.remove("today-highlighted"));
+    }
+    dom.todayHighlightBtn?.setAttribute("aria-pressed", String(active));
+  }
+
+  dom.todayHighlightBtn?.addEventListener("click", () => {
+    setTodayHighlight(!todayHighlightActive);
   });
 
   syncWeekStartUI();

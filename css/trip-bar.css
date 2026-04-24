@@ -224,6 +224,22 @@
 
 }
 
+/* Today highlight toggle — must come after color variants so border overrides win */
+.schedule-grid__trip-bar.today-highlighted {
+  z-index: 600;
+  --tripbar-bg-l: 65%;
+  --tripbar-bg-a: 20%;
+  border-color: rgba(255, 255, 255, 1);
+  border-left-color: rgba(255, 255, 255, 1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+body.trip-bar-selected .schedule-grid__trip-bar.today-highlighted:not(.selected) {
+  opacity: 1;
+}
+
 .schedule-grid__trip-bar__row {
   display: flex;
   align-items: center;
