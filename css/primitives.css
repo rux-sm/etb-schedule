@@ -170,7 +170,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: var(--size-header-row);
+  height: auto;
   width: 100%;
   flex-shrink: 0;
 }
@@ -189,30 +189,30 @@
   gap: 4px;
 }
 
-/* --- Side Panel Headers (Carbon UI Shell Inspired) --- */
-.c-header.c-header--panel {
+/* --- Rux UI --- */
+.rux-panel__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 48px;
+  height: auto;
   width: 100%;
   flex-shrink: 0;
-  padding: 0 var(--rux-space-3);
+  padding: var(--rux-space-4);
   border-bottom: 1px solid var(--rux-color-border-subtle);
   background-color: var(--rux-surface-header);
-  box-shadow:none;
+  box-shadow: none;
   position: relative;
   z-index: 10;
 }
 
-.c-header.c-header--panel .c-header__title {
+.rux-panel__header .c-header__title {
   margin: 0;
   padding: 0;
   font-family: var(--font-sans);
   font-size: var(--heading-2-size);
   font-weight: var(--heading-2-weight);
-  line-height: 32px;
-  height: 32px;
+  line-height: 1;
+  height: auto;
   letter-spacing: var(--heading-2-letter-spacing);
   color: var(--heading-2-color);
   white-space: nowrap;
@@ -220,7 +220,7 @@
   text-shadow: var(--heading-shadow-panel);
 }
 
-.c-header.c-header--panel .c-header__actions {
+.rux-panel__header .c-header__actions {
   display: flex;
   align-items: center;
   height: 100%;
@@ -242,11 +242,11 @@
   box-sizing: border-box;
 }
 
-/* Footer */
-.rux-footer {
+/* Rux UI */
+.rux-panel__footer {
   --footer-bg: var(--rux-surface-footer);
-  --footer-padding-x: var(--rux-space-3);
-  --footer-padding-y: var(--rux-space-3);
+  --footer-padding-x: var(--rux-space-4);
+  --footer-padding-y: var(--rux-space-4);
   --footer-gap: var(--rux-space-2);
   --footer-shadow: 0 -3px 6px rgba(0,0,0,0.16), 0 -3px 6px rgba(0,0,0,0.23);
   /* Tight contact seam */
@@ -265,7 +265,7 @@
 }
 
 /* Direct buttons share space equally */
-.rux-footer>.btn {
+.rux-panel__footer>.btn {
   flex: 1;
 }
 
