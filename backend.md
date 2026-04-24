@@ -227,7 +227,7 @@
   const sheet = ss.getSheetByName(CONFIG.SHEET_CHECKLIST);
   if (!sheet) return { ok: true, rows: [] };
   const rows = readAllAsObjects*(sheet, HEADERS.Checklist)
-  .filter(r => normalizeCellDateToYMD_(r.date) === date);
+  .filter(r => normalizeCellDateToYMD\_(r.date) === date);
   return { ok: true, rows };
   }
 
@@ -244,10 +244,10 @@ if (!sheet) return { ok: false, error: "Checklist sheet not found" };
 const cutoff = new Date();
 cutoff.setDate(cutoff.getDate() - 30);
 const cutoffYMD = cutoff.toISOString().slice(0, 10);
-const all = readAllAsObjects\_(sheet, HEADERS.Checklist);
+const all = readAllAsObjects*(sheet, HEADERS.Checklist);
 const stale = all
 .map((r, i) => ({ r, rowNum: i + 2 }))
-.filter(({ r }) => { const d = normalizeCellDateToYMD_(r.date); return d && d < cutoffYMD; });
+.filter(({ r }) => { const d = normalizeCellDateToYMD*(r.date); return d && d < cutoffYMD; });
 for (let i = stale.length - 1; i >= 0; i--) {
 sheet.deleteRow(stale[i].rowNum);
 }
@@ -264,12 +264,12 @@ fuelCard: String(p.fuelCard || "false"),
 hos: String(p.hos || "false"),
 };
 const matches = fresh
-  .map((r, i) => ({ r, rowNum: i + 2 }))
-  .filter(({ r }) => String(r.tripKey).trim() === tripKey && normalizeCellDateToYMD_(r.date) === date);
+.map((r, i) => ({ r, rowNum: i + 2 }))
+.filter(({ r }) => String(r.tripKey).trim() === tripKey && normalizeCellDateToYMD*(r.date) === date);
 for (let i = matches.length - 1; i >= 0; i--) {
-  sheet.deleteRow(matches[i].rowNum);
+sheet.deleteRow(matches[i].rowNum);
 }
-appendRowByHeaders*(sheet, HEADERS.Checklist, rowObj);
+appendRowByHeaders\_(sheet, HEADERS.Checklist, rowObj);
 
 return { ok: true };
 }

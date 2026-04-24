@@ -6290,7 +6290,8 @@ async function verifyWriteResult() {
       state.assignmentsByTripKey = originalAssignments;
       scheduleAgendaReflow();
       updateDriverWeekIfVisible();
-      clearCacheForCurrentView();
+      try { state.weekCache.clear(); } catch (_) {}
+      if (CACHE?.clearAll) CACHE.clearAll();
     }
   }
 }
