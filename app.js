@@ -321,6 +321,9 @@ const dom = {
   copyDriverReminderBtn: $("copyDriverReminderBtn"),
   tripInfoBody: $("tripInfoBody"),
   copyTripInfoBtn: $("copyTripInfoBtn"),
+  driverWeekScheduleModal: $("driverWeekScheduleModal"),
+  driverWeekScheduleBody: $("driverWeekScheduleBody"),
+  copyDriverWeekScheduleBtn: $("copyDriverWeekScheduleBtn"),
 
   // Envelope Modal
   envelopeModal: $("envelopeModal"),
@@ -3820,7 +3823,7 @@ function renderDriverWeekGrid() {
 
       return `
 <tr>
-<td class="driver-week__name-cell" data-driver-name="${escHtml(name)}">${escHtml(name)}</td>
+<td class="driver-week__name-cell" data-driver-name="${escHtml(name)}">${escHtml(name)}<span class="material-symbols-outlined driver-week__schedule-icon" data-action="showDriverWeekSchedule" data-driver-name="${escHtml(name)}" title="Week schedule for ${escHtml(name)}">sms</span></td>
 ${cells}
 </tr>
 `;
@@ -5098,6 +5101,81 @@ function closeTripDetailsModal() {
 // ======================================================
 // DRIVER CONTACT MODAL
 // ======================================================
+
+function openDriverWeekScheduleModal(driverName) {
+  const weekDates = getWeekDates();
+  const weekStart = weekDates[0];
+  const weekEnd = weekDates[weekDates.length - 1];
+  const startDate = parseYMD(weekStart);
+  const endDate = parseYMD(weekEnd);
+  const firstName = driverName.split(" ")[0];
+
+  const fmtLong = (d) =>
+    d.toLocaleDateString("en-US", { month: "long", day: "numeric" });
+
+  const fmtDayLabel = (ymdStr) => {
+    const d = parseYMD(ymdStr);
+    if (!d) return "";
+    return `${d.toLocaleDateString("en-US", { weekday: "short" }).toUpperCase()} ${d.getMonth() + 1}/${d.getDate()}`;
+  };
+
+  const SEP = "________________";
+
+  const tripsInWeek = (state.trips || []).filter((t) => {
+    const dep = t.departureDate || "";
+    const arr = t.arrivalDate || dep;
+    return !(arr < weekStart || dep > weekEnd);
+  });
+
+  const driverTrips = tripsInWeek
+    .filter((trip) => {
+      const assigns = state.assignmentsByTripKey[String(trip.tripKey)] || [];
+      return assigns.some((a) =>
+        [a.driver1, a.driver2, a.driver3, a.driver4].some(
+          (d) => d && d.trim().toLowerCase() === driverName.trim().toLowerCase()
+        )
+      );
+    })
+    .sort((a, b) => {
+      if (a.departureDate !== b.departureDate)
+        return a.departureDate.localeCompare(b.departureDate);
+      return (a.departureTime || "").localeCompare(b.departureTime || "");
+    });
+
+  let msg = `Hello ${firstName}, here are your trips for:\n${fmtLong(startDate)} – ${fmtLong(endDate)}\n${SEP}\n`;
+
+  if (driverTrips.length === 0) {
+    msg += "\nNo trips assigned this week.";
+  } else {
+    for (const trip of driverTrips) {
+      const assigns = state.assignmentsByTripKey[String(trip.tripKey)] || [];
+      const myAssign = assigns.find((a) =>
+        [a.driver1, a.driver2, a.driver3, a.driver4].some(
+          (d) => d && d.trim().toLowerCase() === driverName.trim().toLowerCase()
+        )
+      );
+      const busId = myAssign?.busId || "";
+      const yardTime = envFormatTime(trip.departureTime || "");
+      const spotTime = envFormatTime(trip.spotTime || "");
+
+      msg += `\n${fmtDayLabel(trip.departureDate)}\n`;
+      const timesParts = [];
+      if (yardTime) timesParts.push(`Yard: ${yardTime}`);
+      if (spotTime) timesParts.push(`Spot: ${spotTime}`);
+      if (timesParts.length) msg += `${timesParts.join(" | ")}\n`;
+      if (busId) msg += `Bus: ${busId}\n`;
+      if (trip.destination) msg += `Dest: ${trip.destination}\n`;
+      if (trip.customer) msg += `Cust: ${trip.customer}\n`;
+      if (trip.itineraryPdfUrl) msg += `Itinerary: ${trip.itineraryPdfUrl}\n`;
+      msg += `${SEP}\n`;
+    }
+  }
+
+  msg += `\nPlease save this message for your records. Thank you!`;
+
+  dom.driverWeekScheduleBody.value = msg;
+  openModalA11y(dom.driverWeekScheduleModal, dom.driverWeekScheduleBody);
+}
 
 function openDriverContactModal(tripKey) {
   const trip = state.tripByKey[tripKey];
@@ -7850,6 +7928,11 @@ function wireEvents() {
   });
 
   dom.driverWeekBody?.addEventListener("click", (e) => {
+    const scheduleIcon = e.target.closest('[data-action="showDriverWeekSchedule"]');
+    if (scheduleIcon) {
+      openDriverWeekScheduleModal(scheduleIcon.dataset.driverName);
+      return;
+    }
     const nameCell = e.target.closest(".driver-week__name-cell");
     if (!nameCell) return;
     selectDriverBars(nameCell.dataset.driverName);
@@ -9232,6 +9315,28 @@ if (dom.dailyMaintenancePlanModal) {
   });
 }
 
+// Driver Week Schedule events
+dom.copyDriverWeekScheduleBtn?.addEventListener("click", async () => {
+  const text = dom.driverWeekScheduleBody.value;
+  if (!text) return;
+  try {
+    if (navigator.clipboard) {
+      await navigator.clipboard.writeText(text);
+      toast("Week schedule copied!");
+    } else {
+      dom.driverWeekScheduleBody.select();
+      document.execCommand("copy");
+      toast("Week schedule copied!");
+    }
+  } catch (_) {
+    dom.driverWeekScheduleBody.select();
+  }
+});
+document.getElementById("closeDriverWeekScheduleBtn")
+  ?.addEventListener("click", () => closeModalA11y(dom.driverWeekScheduleModal));
+document.getElementById("closeDriverWeekScheduleBackdrop")
+  ?.addEventListener("click", () => closeModalA11y(dom.driverWeekScheduleModal));
+
 // Driver Contact events
 if (dom.closeDriverContactBtn) {
   dom.closeDriverContactBtn.addEventListener("click", () => {
@@ -9258,6 +9363,7 @@ document.addEventListener("keydown", (e) => {
     [
       dom.envelopeModal,
       dom.driverContactModal,
+      dom.driverWeekScheduleModal,
       dom.dailyMaintenancePlanModal,
       dom.nextDayReportModal,
       dom.picrossModal,

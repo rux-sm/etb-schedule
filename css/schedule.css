@@ -32,8 +32,6 @@
 .app-header__logo-img {
   height: 22px;
   width: auto;
-  border-bottom: 2px solid transparent;
-  /* Replaced missing elevation-border */
 }
 
 /* --- Typography --- */
@@ -73,7 +71,7 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  padding-inline: 12px;
+  padding-: 12px;
   background-color: var(--rux-surface-app-header);
   box-shadow:none;
 }
@@ -1162,6 +1160,25 @@
 .driver-week__name-cell.is-selected {
   color: var(--rux-accent-color);
   font-weight: 600;
+}
+
+.driver-week__schedule-icon {
+  font-size: 14px;
+  opacity: 0;
+  cursor: pointer;
+  margin-left: 4px;
+  vertical-align: middle;
+  font-variation-settings: 'FILL' 1, 'opsz' 20;
+  transition: opacity var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.driver-week__name-cell:hover .driver-week__schedule-icon {
+  opacity: 0.7;
+}
+
+.driver-week__schedule-icon:hover {
+  opacity: 1 !important;
 }
 
 /* Dim all non-selected trip bars when a driver filter is active */

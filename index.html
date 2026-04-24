@@ -1762,6 +1762,40 @@
       </div>
     </div>
 
+    <!-- Driver Week Schedule Modal -->
+    <div
+      id="driverWeekScheduleModal"
+      class="modal modal--itinerary"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="driverWeekScheduleTitle"
+    >
+      <button
+        id="closeDriverWeekScheduleBackdrop"
+        class="modal__backdrop"
+        aria-label="Close"
+        tabindex="-1"
+      ></button>
+      <div class="modal__box">
+        <div class="c-header c-header--modal">
+          <h2 class="section-title c-header__title" id="driverWeekScheduleTitle">Driver Week Schedule</h2>
+        </div>
+        <div class="modal__body">
+          <div class="driver-contact__section">
+            <div class="driver-contact__section-header">
+              <button id="copyDriverWeekScheduleBtn" class="btn btn--compact" type="button">Copy Week Schedule</button>
+              <label class="driver-contact__label">Week Schedule</label>
+            </div>
+            <textarea id="driverWeekScheduleBody" class="driver-contact__textarea" readonly rows="16"></textarea>
+          </div>
+        </div>
+        <div class="rux-panel__footer">
+          <button id="closeDriverWeekScheduleBtn" class="btn btn--compact" type="button">Close</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Driver Contact Modal -->
     <div
       id="driverContactModal"
