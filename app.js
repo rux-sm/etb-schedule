@@ -4482,23 +4482,6 @@ function updateBusRowVisibility() {
     r.d4Sel.disabled = !enabled || lockedD4;
     r.d4StatusSel.disabled = !enabled || lockedD4;
 
-    // Disable custom dropdown triggers — d2 triggers also locked when toggle is off
-    const busTrigger = busCell.querySelector?.(".select-trigger");
-    [
-      [r.d1Sel,       !enabled],
-      [r.d1StatusSel, !enabled],
-      [r.d2Sel,       !enabled || lockedD2],
-      [r.d2StatusSel, !enabled || lockedD2],
-      [r.d3Sel,       !enabled || lockedD3],
-      [r.d3StatusSel, !enabled || lockedD3],
-      [r.d4Sel,       !enabled || lockedD4],
-      [r.d4StatusSel, !enabled || lockedD4],
-    ].forEach(([sel, shouldDisable]) => {
-      const cell = sel.closest(".select-dropdown") || sel.parentElement;
-      const trigger = cell?.querySelector?.(".select-trigger");
-      if (trigger) trigger.disabled = shouldDisable;
-    });
-    if (busTrigger) busTrigger.disabled = !enabled;
 
     if (!show) {
       r.busSel.value = "None";
@@ -8259,7 +8242,7 @@ function wireEvents() {
       const busTrigger = firstRow?.busSel
         ?.closest?.(".select-dropdown")
         ?.querySelector?.(".select-trigger");
-      if (busTrigger && !busTrigger.disabled) busTrigger.focus();
+      if (busTrigger && !firstRow?.busSel?.disabled) busTrigger.focus();
       return;
     }
 

@@ -1270,8 +1270,8 @@ body.trip-bar-selected .schedule-grid__trip-bar.selected {
   pointer-events: none;
 }
 
-/* Locked triggers: reset trigger's own :disabled opacity so parent is-locked is the sole source */
-.bus-assign__driver-block.is-locked .select-trigger {
+/* Locked triggers: reset trigger's own :has(select:disabled) opacity so parent is-locked is the sole source */
+.bus-assign__driver-block.is-locked .select-dropdown .select-trigger {
   opacity: 1;
 }
 

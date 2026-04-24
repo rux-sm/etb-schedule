@@ -205,10 +205,10 @@ textarea:focus-visible,
   text-align: left;
 }
 
-.select-trigger:disabled {
+.select-dropdown:has(select:disabled) .select-trigger {
   opacity: var(--field-disabled-opacity);
   cursor: not-allowed;
-  border-bottom-style: solid;
+  pointer-events: none;
 }
 
 /* Chevron pseudo-element */
@@ -227,7 +227,6 @@ textarea:focus-visible,
 .select-trigger.is-open {
   outline: 2px solid var(--rux-accent-color);
   outline-offset: -2px;
-  border-bottom-color: transparent;
 }
 
 /* Visually-hidden native fallback for a11y */
