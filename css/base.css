@@ -29,7 +29,7 @@
 }
 
 .schedule-grid-container::-webkit-scrollbar-thumb {
-  background-color: var(--btn-secondary-bg);
+  background-color: var(--rux-button-normal-bg);
   border-radius: 2px;
   border: 2px solid transparent;
   background-clip: padding-box;
@@ -37,7 +37,7 @@
 }
 
 .schedule-grid-container::-webkit-scrollbar-thumb:hover {
-  background-color: var(--btn-secondary-hover);
+  background-color: oklch(from var(--rux-button-normal-bg) calc(l + var(--rux-button-hover)) c h);
 }
 
 /* Hide vertical scrollbars while preserving wheel/trackpad scrolling */
@@ -749,7 +749,7 @@ samp {
 .dropdown-icon.is-active,
 .dropdown__icon.is-active,
 .dropdown-item.is-active {
-  color: var(--rux-color-mana);
+  color: var(--rux-blue);
   /* Carbon uses primary blue to indicate current selection */
   font-weight: 600;
 }

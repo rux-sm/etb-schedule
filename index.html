@@ -49,35 +49,35 @@
 
   <body>
     <div class="app">
-      <header class="c-header c-header--app">
-        <div class="app-header__branding">
-          <div class="app-header__logo-wrap">
+      <header class="rux-app__header">
+        <div class="rux-app__branding">
+          <div class="rux-app__logo-wrap">
             <img
               src="logo.png"
-              class="app-header__logo-img"
+              class="rux-app__logo"
               alt="Escamilla Tour Buses"
             />
           </div>
           <h1
-            class="app-header__title"
+            class="rux-app__title"
             id="topbarTitle"
           >
-            <span class="app-header__title--prefix"
-              ><span class="app-header__title--org">ETB</span>
-              <span class="app-header__title--name">Trip Schedule</span></span
+            <span class="rux-app__title--prefix"
+              ><span class="rux-app__title--org">ETB</span>
+              <span class="rux-app__title--name">Trip Schedule</span></span
             >
             <span
-              class="app-header__version"
+              class="rux-app__version"
               id="appVersionBadge"
               aria-label="Application version"
             ></span>
           </h1>
         </div>
 
-        <div class="c-header__actions">
+        <div class="rux-app__actions">
           <button
             id="tripInputBtn"
-            class="btn btn--icon"
+            class="rux-btn rux-btn--square"
             type="button"
             title="Trip editor"
           >
@@ -85,7 +85,7 @@
           </button>
           <button
             id="driversBtn"
-            class="btn btn--icon"
+            class="rux-btn rux-btn--square"
             type="button"
             title="Driver assignments"
           >
@@ -93,7 +93,7 @@
           </button>
           <button
             id="quoteBtn"
-            class="btn btn--icon"
+            class="rux-btn rux-btn--square"
             type="button"
             title="Quote calculator"
           >
@@ -101,7 +101,7 @@
           </button>
           <button
             id="notesBtn"
-            class="btn btn--icon"
+            class="rux-btn rux-btn--square"
             type="button"
             title="Notes"
           >
@@ -109,7 +109,7 @@
           </button>
           <button
             id="todoBtn"
-            class="btn btn--icon"
+            class="rux-btn rux-btn--square"
             type="button"
             title="Daily checklist"
           >
@@ -117,7 +117,7 @@
           </button>
           <button
             id="todayHighlightBtn"
-            class="btn btn--icon"
+            class="rux-btn rux-btn--square"
             type="button"
             title="Highlight today's trips"
             aria-pressed="false"
@@ -126,7 +126,7 @@
           </button>
           <button
             id="waitingListBtn"
-            class="btn btn--icon"
+            class="rux-btn rux-btn--square"
             type="button"
             title="Waiting list"
           >
@@ -134,16 +134,24 @@
           </button>
           <a
             href="#"
-            class="btn btn--icon"
+            class="rux-btn rux-btn--square"
             title="Home"
             aria-label="Home"
           >
             <span class="material-symbols-outlined">home</span>
           </a>
+          <button
+            id="logBtn"
+            class="rux-btn rux-btn--square"
+            type="button"
+            title="Activity log"
+          >
+            <span class="material-symbols-outlined">history</span>
+          </button>
           <div class="dropdown">
             <button
               id="settingsBtn"
-              class="btn btn--icon"
+              class="rux-btn rux-btn--square"
               type="button"
               aria-haspopup="true"
               aria-expanded="false"
@@ -619,7 +627,7 @@
                 <div class="rux-panel__footer">
                   <button
                     type="button"
-                    class="btn btn--default"
+                    class="rux-btn rux-btn--normal"
                     id="quoteInfoBtn"
                     aria-label="View Calculator Rules & Logic"
                   >
@@ -628,7 +636,7 @@
                   </button>
                   <button
                     type="button"
-                    class="btn btn--accent"
+                    class="rux-btn rux-btn--accent"
                     id="quoteCopySummary"
                   >
                     <span class="material-symbols-outlined">content_copy</span>
@@ -691,7 +699,7 @@
                 <div class="rux-panel__footer">
                   <button
                     type="button"
-                    class="btn btn--accent"
+                    class="rux-btn rux-btn--accent"
                     id="saveNotesBtn"
                   >
                     Save Notes
@@ -715,6 +723,41 @@
                 </div>
               </div>
 
+              <!-- Activity Log Card -->
+              <div
+                class="c-card c-card--compact is-hidden"
+                id="logCard"
+                data-js="panel-card-log"
+              >
+                <div class="rux-panel__header">
+                  <div class="log-header__title-wrap">
+                    <h2 class="c-header__title">Activity Log</h2>
+                    <span id="logFilterBadge" class="log-filter-badge is-hidden"></span>
+                  </div>
+                  <div class="c-header__actions">
+                    <button
+                      id="logClearFilterBtn"
+                      class="rux-btn rux-btn--square is-hidden"
+                      type="button"
+                      title="Show all activity"
+                    >
+                      <span class="material-symbols-outlined">filter_alt_off</span>
+                    </button>
+                    <button
+                      id="logRefreshBtn"
+                      class="rux-btn rux-btn--square"
+                      type="button"
+                      title="Refresh"
+                    >
+                      <span class="material-symbols-outlined">refresh</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="c-card__body">
+                  <div id="logList" data-js="log-list" class="log-list"></div>
+                </div>
+              </div>
+
               <!-- Trip Info Card -->
               <div
                 class="c-card c-card--compact is-hidden"
@@ -722,13 +765,14 @@
                 data-js="panel-card-trip-info"
               >
                 <div class="rux-panel__header">
-                  <h2 class="c-header__title">Trip Editor</h2>
-                  <div class="c-header__actions">
+                  <div class="log-header__title-wrap">
+                    <h2 class="c-header__title">Trip Editor</h2>
                     <span
                       id="tripIdBadge"
-                      class="badge badge--primary trip-id-badge is-hidden"
+                      class="log-filter-badge is-hidden"
                     ></span>
                   </div>
+                  <div class="c-header__actions"></div>
                 </div>
 
                 <div class="c-card__body">
@@ -1143,13 +1187,13 @@
                         <span class="form-divider__label">Requirements</span>
                       </div>
                       <div
-                        class="btn--toggle-grid"
+                        class="rux-btn--toggle-grid"
                         role="group"
                         aria-label="Requirements"
                       >
                         <button
                           type="button"
-                          class="btn--toggle"
+                          class="rux-btn rux-btn--toggle"
                           id="reqSleeper"
                           aria-pressed="false"
                         >
@@ -1162,7 +1206,7 @@
                         </button>
                         <button
                           type="button"
-                          class="btn--toggle"
+                          class="rux-btn rux-btn--toggle"
                           id="req56Pass"
                           aria-pressed="false"
                         >
@@ -1175,7 +1219,7 @@
                         </button>
                         <button
                           type="button"
-                          class="btn--toggle"
+                          class="rux-btn rux-btn--toggle"
                           id="reqFuelCard"
                           aria-pressed="false"
                         >
@@ -1188,7 +1232,7 @@
                         </button>
                         <button
                           type="button"
-                          class="btn--toggle"
+                          class="rux-btn rux-btn--toggle"
                           id="reqHotel"
                           aria-pressed="false"
                         >
@@ -1201,7 +1245,7 @@
                         </button>
                         <button
                           type="button"
-                          class="btn--toggle"
+                          class="rux-btn rux-btn--toggle"
                           id="reqLift"
                           aria-pressed="false"
                         >
@@ -1214,7 +1258,7 @@
                         </button>
                         <button
                           type="button"
-                          class="btn--toggle"
+                          class="rux-btn rux-btn--toggle"
                           id="reqWifi"
                           aria-pressed="false"
                         >
@@ -1227,7 +1271,7 @@
                         </button>
                         <button
                           type="button"
-                          class="btn--toggle"
+                          class="rux-btn rux-btn--toggle"
                           id="reqCoDriver"
                           aria-pressed="false"
                         >
@@ -1240,7 +1284,7 @@
                         </button>
                         <button
                           type="button"
-                          class="btn--toggle"
+                          class="rux-btn rux-btn--toggle"
                           id="reqRelief"
                           aria-pressed="false"
                         >
@@ -1253,7 +1297,7 @@
                         </button>
                         <button
                           type="button"
-                          class="btn--toggle"
+                          class="rux-btn rux-btn--toggle"
                           id="reqRelief2"
                           aria-pressed="false"
                         >
@@ -1296,7 +1340,7 @@
                 <div class="rux-panel__footer">
                   <button
                     type="button"
-                    class="btn btn--danger"
+                    class="rux-btn rux-btn--danger"
                     id="deleteBtn"
                     disabled
                   >
@@ -1305,7 +1349,7 @@
                   </button>
                   <button
                     type="button"
-                    class="btn btn--default"
+                    class="rux-btn rux-btn--normal"
                     id="newBtn"
                   >
                     <span class="material-symbols-outlined">restart_alt</span>
@@ -1313,7 +1357,7 @@
                   </button>
                   <button
                     type="submit"
-                    class="btn btn--accent"
+                    class="rux-btn rux-btn--accent"
                     id="saveBtn"
                     form="tripForm"
                   >
@@ -1357,7 +1401,7 @@
                     <div class="agenda-header__date-left">
                       <button
                         id="prevWeekBtn"
-                        class="btn btn--ghost"
+                        class="rux-btn rux-btn--border"
                         type="button"
                         aria-label="Previous Week"
                         title="Previous Week"
@@ -1367,7 +1411,7 @@
                       </button>
                       <button
                         id="nextWeekBtn"
-                        class="btn btn--ghost"
+                        class="rux-btn rux-btn--border"
                         type="button"
                         aria-label="Next Week"
                         title="Next Week"
@@ -1403,7 +1447,7 @@
                       <div class="weekpicker-trigger-wrap">
                         <button
                           id="agendaLeftBtn"
-                          class="btn btn--ghost"
+                          class="rux-btn rux-btn--border"
                           type="button"
                           aria-label="Select week"
                           title="Select week"
@@ -1420,7 +1464,7 @@
                       </div>
                       <button
                         id="todayBtn"
-                        class="btn btn--ghost"
+                        class="rux-btn rux-btn--border"
                         type="button"
                         aria-label="Today"
                         title="Today"
@@ -1596,14 +1640,14 @@
         <div class="modal__foot">
           <button
             id="itineraryCopyBtn"
-            class="btn btn--accent btn--compact"
+            class="rux-btn rux-btn--accent"
             type="button"
           >
             Copy
           </button>
           <button
             id="itinerarySaveBtn"
-            class="btn btn--compact"
+            class="rux-btn rux-btn--normal"
             type="button"
             aria-label="Close"
           >
@@ -1643,7 +1687,7 @@
 
         <div class="modal__foot">
           <button
-            class="btn btn--compact"
+            class="rux-btn rux-btn--normal"
             type="button"
             data-close-details
             aria-label="Close"
@@ -1691,14 +1735,14 @@
         <div class="modal__foot">
           <button
             id="printNextDayReportBtn"
-            class="btn btn--accent btn--compact"
+            class="rux-btn rux-btn--accent"
             type="button"
           >
             Print
           </button>
           <button
             id="closeNextDayReportBtn"
-            class="btn btn--compact"
+            class="rux-btn rux-btn--normal"
             type="button"
             aria-label="Close"
           >
@@ -1745,14 +1789,14 @@
         <div class="modal__foot">
           <button
             id="printDailyMaintenancePlanBtn"
-            class="btn btn--accent btn--compact"
+            class="rux-btn rux-btn--accent"
             type="button"
           >
             Print
           </button>
           <button
             id="closeDailyMaintenancePlanBtn"
-            class="btn btn--compact"
+            class="rux-btn rux-btn--normal"
             type="button"
             aria-label="Close"
           >
@@ -1784,14 +1828,14 @@
         <div class="modal__body">
           <div class="driver-contact__section">
             <div class="driver-contact__section-header">
-              <button id="copyDriverWeekScheduleBtn" class="btn btn--compact" type="button">Copy Week Schedule</button>
+              <button id="copyDriverWeekScheduleBtn" class="rux-btn rux-btn--normal" type="button">Copy Week Schedule</button>
               <label class="driver-contact__label">Week Schedule</label>
             </div>
             <textarea id="driverWeekScheduleBody" class="driver-contact__textarea" readonly rows="16"></textarea>
           </div>
         </div>
         <div class="rux-panel__footer">
-          <button id="closeDriverWeekScheduleBtn" class="btn btn--compact" type="button">Close</button>
+          <button id="closeDriverWeekScheduleBtn" class="rux-btn rux-btn--normal" type="button">Close</button>
         </div>
       </div>
     </div>
@@ -1824,7 +1868,7 @@
               <label class="envelope-modal__label">Driver Contact Information</label>
               <button
                 id="copyDriverContactBtn"
-                class="btn btn--accent btn--compact"
+                class="rux-btn rux-btn--accent"
                 type="button"
               >
                 Copy Driver Contact Info
@@ -1845,7 +1889,7 @@
               <label class="envelope-modal__label">Trip Reminder</label>
               <button
                 id="copyDriverReminderBtn"
-                class="btn btn--accent btn--compact"
+                class="rux-btn rux-btn--accent"
                 type="button"
               >
                 Copy Trip Reminder
@@ -1866,7 +1910,7 @@
               <label class="envelope-modal__label">Trip Information</label>
               <button
                 id="copyTripInfoBtn"
-                class="btn btn--accent btn--compact"
+                class="rux-btn rux-btn--accent"
                 type="button"
               >
                 Copy Trip Info
@@ -1883,7 +1927,7 @@
         <div class="modal__foot">
           <button
             id="closeDriverContactBtnFooter"
-            class="btn btn--compact"
+            class="rux-btn rux-btn--normal"
             type="button"
             aria-label="Close"
           >
@@ -1959,7 +2003,7 @@
         <div class="modal__foot rux-panel__footer">
           <button
             id="closeEnvelopeBtn"
-            class="btn btn--default"
+            class="rux-btn rux-btn--normal"
             type="button"
             aria-label="Close"
           >
@@ -1967,21 +2011,21 @@
           </button>
           <button
             id="envelopeWhiteBtn"
-            class="btn btn--default"
+            class="rux-btn rux-btn--normal"
             type="button"
           >
             White
           </button>
           <button
             id="envelopeYellowBtn"
-            class="btn btn--default"
+            class="rux-btn rux-btn--normal"
             type="button"
           >
             Yellow
           </button>
           <button
             id="envelopePrintBtn"
-            class="btn btn--accent"
+            class="rux-btn rux-btn--accent"
             type="button"
           >
             Print
@@ -2026,14 +2070,14 @@
             >
               <button
                 id="picrossNormalModeBtn"
-                class="btn btn--compact"
+                class="rux-btn rux-btn--normal"
                 type="button"
               >
                 Normal
               </button>
               <button
                 id="picrossFreeModeBtn"
-                class="btn btn--compact"
+                class="rux-btn rux-btn--normal"
                 type="button"
               >
                 Free
@@ -2097,7 +2141,7 @@
           ></p>
           <button
             id="picrossNextStageBtn"
-            class="btn btn--accent u-w-full"
+            class="rux-btn rux-btn--accent u-w-full"
             type="button"
             hidden
           >
@@ -2108,35 +2152,35 @@
         <div class="modal__foot">
           <button
             id="picrossDailyBtn"
-            class="btn btn--compact"
+            class="rux-btn rux-btn--normal"
             type="button"
           >
             Daily Puzzle
           </button>
           <button
             id="picrossNextBtn"
-            class="btn btn--compact"
+            class="rux-btn rux-btn--normal"
             type="button"
           >
             Next Puzzle
           </button>
           <button
             id="picrossHintBtn"
-            class="btn btn--compact"
+            class="rux-btn rux-btn--normal"
             type="button"
           >
             Hint
           </button>
           <button
             id="picrossResetBtn"
-            class="btn btn--accent btn--compact"
+            class="rux-btn rux-btn--accent"
             type="button"
           >
             Reset
           </button>
           <button
             id="closePicrossBtn"
-            class="btn btn--compact"
+            class="rux-btn rux-btn--normal"
             type="button"
             aria-label="Close"
           >
@@ -2310,7 +2354,7 @@
         <div class="modal__foot">
           <button
             id="quoteInfoCloseBtn"
-            class="btn btn--accent btn--compact"
+            class="rux-btn rux-btn--accent"
             type="button"
             aria-label="Close"
           >

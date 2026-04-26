@@ -28,6 +28,7 @@
   SHEET_NOTES: "WeekNotes",
   SHEET_UNAVAILABILITY: "Unavailability",
   SHEET_CHECKLIST: "Checklist",
+  SHEET_LOG: "Log",
   MAX_BUSES: 10,
   ENFORCE_TRIPID_MATCH_ON_DELETE_IF_PROVIDED: true,
   ITINERARY_FOLDER_ID: "1Xj-FjP53QnfNY-bHiCaU9VLCaeNUisYv",
@@ -80,6 +81,7 @@
   WeekNotes: ["WeekStart", "Notes", "LastUpdated"],
   Unavailability: ["driverName", "dateYmd"],
   Checklist: ["tripKey", "date", "envelope", "reminder", "driverInfo", "fuelCard", "hos"],
+  Log: ["timestamp", "tripKey", "tripId", "action", "field", "oldValue", "newValue"],
   };
 
 /\*\* =============================
@@ -320,11 +322,19 @@ break;
 case "getChecklist":
 data = getChecklist*(p);
 break;
+case "listLog": {
+const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
+const logSheet = ss.getSheetByName(CONFIG.SHEET_LOG);
+const allRows = logSheet ? readAllAsObjects*(logSheet, HEADERS.Log) : [];
+const filterKey = String(p.tripKey || "").trim();
+const filtered = filterKey ? allRows.filter(r => r.tripKey === filterKey) : allRows;
+data = { ok: true, log: filtered.reverse().slice(0, 500) };
+break;
+}
 default:
 data = {
 ok: false,
-error:
-"Unknown fn. Use weekData|listTrips|getTrip|listDrivers|listBuses|getBusAssignments|listBusAssignmentsForRange|logError.",
+error: "Unknown fn. Use weekData|listTrips|getTrip|listDrivers|listBuses|getBusAssignments|listBusAssignmentsForRange|listLog|logError.",
 };
 }
 // JSONP support for static sites: ?callback=foo
@@ -336,7 +346,7 @@ return jsonOut*(data);
 const payload = { ok: false, error: String(err && err.stack ? err.stack : err) };
 const cb = e && e.parameter && e.parameter.callback;
 if (cb) return jsonpOut*(cb, payload);
-return jsonOut\_(payload);
+return jsonOut*(payload);
 }
 }
 /\*\* =============================
@@ -408,42 +418,63 @@ return jsonOut\_(payload);
   /\*\* =============================
 - TRIPS CRUD
 - ============================= \*/
-  function createTrip*(p) {
-  const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
-  const tripsSheet = ss.getSheetByName(CONFIG.SHEET_TRIPS);
-  const busSheet = ss.getSheetByName(CONFIG.SHEET_BUS_ASSIGN);
-  const now = new Date();
-  const departureDate = safeDateYMD*(p.departureDate);
-  const arrivalDate = safeDateYMD*(p.arrivalDate) || departureDate; // default same day if empty
-  if (!departureDate) throw new Error("departureDate is required (YYYY-MM-DD).");
-  // Respect provided tripKey from client (sanitize)
-  const tripKey =
-  String(p.tripKey || "")
-  .trim()
-  .replace(/[^\w-]/g, "") || generateTripKey*();
-  // Reliability: idempotent create (prevents duplicates on retry/double-submit)
-  const existingIdx = findRowIndexByValue*(tripsSheet, "tripKey", tripKey);
-  if (existingIdx > 0) {
-  const existing = getRowObject*(tripsSheet, HEADERS.Trips, existingIdx);
-  return { tripKey, tripId: existing.tripId || "" };
+  function getBusAssignmentRow*(busSheet, tripKey) {
+  const idx = findRowIndexByValue*(busSheet, "tripKey", tripKey);
+  if (idx < 0) return {};
+  return getRowObject\_(busSheet, HEADERS.BusAssignments, idx);
   }
-  const tripId = generateTripId*(departureDate);
-  // Normalize persisted dates to YYYY-MM-DD strings
-  p.departureDate = formatYMD*(departureDate);
-  p.arrivalDate = formatYMD*(arrivalDate);
-  // Normalize persisted times to HH:MM strings (optional but improves consistency)
-  p.departureTime = normalizeTimeOut*(p.departureTime);
-  p.spotTime = normalizeTimeOut*(p.spotTime);
-  p.arrivalTime = normalizeTimeOut*(p.arrivalTime);
-  const tripRowObj = mapTripFromParams*(p, { tripKey, tripId, createdAt: now, updatedAt: now });
-  appendRowByHeaders*(tripsSheet, HEADERS.Trips, tripRowObj);
-  replaceBusAssignments*(busSheet, tripKey, p);
-  return { tripKey, tripId };
-  }
-  function updateTrip*(p) {
-  const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
-  const tripsSheet = ss.getSheetByName(CONFIG.SHEET_TRIPS);
-  const busSheet = ss.getSheetByName(CONFIG.SHEET_BUS_ASSIGN);
+
+function appendLog\_(ss, entry) {
+const sheet = ss.getSheetByName(CONFIG.SHEET_LOG);
+
+if (!sheet) return;
+appendRowByHeaders*(sheet, HEADERS.Log, {
+timestamp: new Date(),
+tripKey: entry.tripKey || "",
+tripId: entry.tripId || "",
+action: entry.action || "",
+field: entry.field || "",
+oldValue: entry.oldValue || "",
+newValue: entry.newValue || "",
+});
+}
+function createTrip*(p) {
+const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET*ID);
+const tripsSheet = ss.getSheetByName(CONFIG.SHEET_TRIPS);
+const busSheet = ss.getSheetByName(CONFIG.SHEET_BUS_ASSIGN);
+const now = new Date();
+const departureDate = safeDateYMD*(p.departureDate);
+const arrivalDate = safeDateYMD*(p.arrivalDate) || departureDate; // default same day if empty
+if (!departureDate) throw new Error("departureDate is required (YYYY-MM-DD).");
+// Respect provided tripKey from client (sanitize)
+const tripKey =
+String(p.tripKey || "")
+.trim()
+.replace(/[^\w-]/g, "") || generateTripKey*();
+// Reliability: idempotent create (prevents duplicates on retry/double-submit)
+const existingIdx = findRowIndexByValue*(tripsSheet, "tripKey", tripKey);
+if (existingIdx > 0) {
+const existing = getRowObject*(tripsSheet, HEADERS.Trips, existingIdx);
+return { tripKey, tripId: existing.tripId || "" };
+}
+const tripId = generateTripId*(departureDate);
+// Normalize persisted dates to YYYY-MM-DD strings
+p.departureDate = formatYMD*(departureDate);
+p.arrivalDate = formatYMD*(arrivalDate);
+// Normalize persisted times to HH:MM strings (optional but improves consistency)
+p.departureTime = normalizeTimeOut*(p.departureTime);
+p.spotTime = normalizeTimeOut*(p.spotTime);
+p.arrivalTime = normalizeTimeOut*(p.arrivalTime);
+const tripRowObj = mapTripFromParams*(p, { tripKey, tripId, createdAt: now, updatedAt: now });
+appendRowByHeaders*(tripsSheet, HEADERS.Trips, tripRowObj);
+replaceBusAssignments*(busSheet, tripKey, p);
+appendLog*(ss, { tripKey, tripId, action: "trip*added" });
+return { tripKey, tripId };
+}
+function updateTrip*(p) {
+const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
+const tripsSheet = ss.getSheetByName(CONFIG.SHEET_TRIPS);
+const busSheet = ss.getSheetByName(CONFIG.SHEET_BUS_ASSIGN);
 
 const tripKey = String(p.tripKey || "").trim().replace(/[^\w-]/g, "");
 if (!tripKey) throw new Error("tripKey is required for update.");
@@ -486,8 +517,40 @@ updatedAt: now,
 itineraryPdfUrl: incomingPdfUrl
 });
 
-updateRowByHeaders*(tripsSheet, HEADERS.Trips, rowIndex, tripRowObj);
+updateRowByHeaders\_(tripsSheet, HEADERS.Trips, rowIndex, tripRowObj);
+
+const TRACKED*FIELDS = [
+"departureDate", "arrivalDate", "destination", "customer",
+"itineraryStatus", "contactStatus", "paymentStatus", "driverStatus", "invoiceStatus",
+"busesNeeded", "notes", "comments",
+];
+for (const field of TRACKED_FIELDS) {
+const oldVal = String(existing[field] || "");
+const newVal = String(tripRowObj[field] || "");
+if (oldVal !== newVal) {
+appendLog*(ss, { tripKey, tripId, action: "field_changed", field, oldValue: oldVal, newValue: newVal });
+}
+}
+
+if (incomingPdfUrl && !existingPdfUrl) {
+appendLog\_(ss, { tripKey, tripId, action: "itinerary_uploaded", newValue: incomingPdfUrl });
+}
+
+const existingBusRow = getBusAssignmentRow*(busSheet, tripKey);
+const DRIVER_FIELDS = [
+"driver1", "driver2", "driver3", "driver4",
+"driver1Status", "driver2Status", "driver3Status", "driver4Status",
+"busNumber",
+];
 replaceBusAssignments*(busSheet, tripKey, p);
+for (const field of DRIVER*FIELDS) {
+const oldVal = String(existingBusRow[field] || "");
+const newVal = String(p[field] || "");
+if (oldVal !== newVal) {
+appendLog*(ss, { tripKey, tripId, action: "field_changed", field, oldValue: oldVal, newValue: newVal });
+}
+}
+
 return { tripKey, tripId };
 }
 
@@ -515,8 +578,11 @@ throw new Error(
 }
 }
 deleteBusAssignmentsForTrip*(busSheet, tripKey);
+const deleteIdx = findRowIndexByValue*(tripsSheet, "tripKey", tripKey);
+const deletedRow = deleteIdx >= 0 ? getRowObject*(tripsSheet, HEADERS.Trips, deleteIdx) : {};
+const deletedTripId = String(deletedRow.tripId || p.tripId || "");
 // Delete trip row by filtering + rewrite (safer than deleteRow shifting)
-ensureHeaders\_(tripsSheet, HEADERS.Trips);
+ensureHeaders*(tripsSheet, HEADERS.Trips);
 const values = tripsSheet.getDataRange().getValues();
 if (values.length <= 1) return { tripKey, deleted: false, note: "No trips to delete" };
 const header = values[0].map(String);
@@ -533,6 +599,9 @@ keep.push(values[r]);
 }
 tripsSheet.clearContents();
 tripsSheet.getRange(1, 1, keep.length, keep[0].length).setValues(keep);
+if (removed) {
+appendLog*(ss, { tripKey, tripId: deletedTripId, action: "trip_deleted" });
+}
 return { tripKey, deleted: removed };
 }
 
@@ -1189,6 +1258,7 @@ const buses = ss.getSheetByName(CONFIG.SHEET_BUSES) || ss.insertSheet(CONFIG.SHE
 const notes = ss.getSheetByName(CONFIG.SHEET_NOTES) || ss.insertSheet(CONFIG.SHEET_NOTES);
 const unavail = ss.getSheetByName(CONFIG.SHEET_UNAVAILABILITY) || ss.insertSheet(CONFIG.SHEET_UNAVAILABILITY);
 const checklist = ss.getSheetByName(CONFIG.SHEET_CHECKLIST) || ss.insertSheet(CONFIG.SHEET_CHECKLIST);
+const log = ss.getSheetByName(CONFIG.SHEET_LOG) || ss.insertSheet(CONFIG.SHEET_LOG);
 ensureHeaders*(trips, HEADERS.Trips);
 ensureHeaders*(bus, HEADERS.BusAssignments);
 ensureHeaders*(drivers, HEADERS.Drivers);
@@ -1196,6 +1266,7 @@ ensureHeaders*(buses, HEADERS.Buses);
 ensureHeaders*(notes, HEADERS.WeekNotes);
 ensureHeaders*(unavail, HEADERS.Unavailability);
 ensureHeaders*(checklist, HEADERS.Checklist);
+ensureHeaders*(log, HEADERS.Log);
 }
 function ensureHeaders*(sheet, headers) {
 const data = sheet.getDataRange().getValues();
@@ -1263,7 +1334,7 @@ obj[h] = idx >= 0 ? row[idx] : "";
 });
 return obj;
 }
-function findRowIndexByValue*(sheet, headerName, value) {
+function findRowIndexByValue\_(sheet, headerName, value) {
 const v = String(value || "").trim();
 if (!v) return -1;
 const header = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0].map(String);
@@ -1534,4 +1605,39 @@ console.error("Failed to delete old PDF:", err);
 
 function forceDriveAuth() {
 DriveApp.getRootFolder();
+}
+
+function fixPdfPermissions() {
+const folderId = "1Xj-FjP53QnfNY-bHiCaU9VLCaeNUisYv";
+const token = ScriptApp.getOAuthToken();
+let pageToken = null;
+let count = 0;
+
+do {
+let url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents&fields=files(id,name),nextPageToken&pageSize=100`;
+if (pageToken) url += `&pageToken=${pageToken}`;
+
+    const resp = UrlFetchApp.fetch(url, {
+      headers: { Authorization: "Bearer " + token },
+      muteHttpExceptions: true
+    });
+    const data = JSON.parse(resp.getContentText());
+
+    for (const file of (data.files || [])) {
+      UrlFetchApp.fetch(`https://www.googleapis.com/drive/v3/files/${file.id}/permissions`, {
+        method: "post",
+        headers: { Authorization: "Bearer " + token },
+        contentType: "application/json",
+        payload: JSON.stringify({ type: "anyone", role: "reader" }),
+        muteHttpExceptions: true
+      });
+      Logger.log("Updated: " + file.name);
+      count++;
+    }
+
+    pageToken = data.nextPageToken || null;
+
+} while (pageToken);
+
+Logger.log("Done. " + count + " files updated.");
 }

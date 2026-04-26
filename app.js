@@ -240,6 +240,12 @@ const dom = {
   todoCard: document.querySelector('[data-js="panel-card-todo"]') || $("todoCard"),
   todoHeader: $("todoHeader"),
   todoList: $("todoList"),
+  logBtn: $("logBtn"),
+  logRefreshBtn: $("logRefreshBtn"),
+  logClearFilterBtn: $("logClearFilterBtn"),
+  logFilterBadge: $("logFilterBadge"),
+  logCard: document.querySelector('[data-js="panel-card-log"]') || $("logCard"),
+  logList: $("logList"),
   waitingListBtn: $("waitingListBtn"),
   quoteBtn: $("quoteBtn"),
   waitingBody: document.querySelector('[data-js="schedule-waiting-body"]') || $("waitingBody"),
@@ -733,7 +739,7 @@ function setRequirementTogglesFromTrip(t = {}) {
 }
 
 function resetRequirementToggles() {
-  document.querySelectorAll(".btn--toggle").forEach((btn) => {
+  document.querySelectorAll(".rux-btn--toggle").forEach((btn) => {
     btn.setAttribute("aria-pressed", "false");
   });
 }
@@ -2589,7 +2595,7 @@ function renderAgenda() {
       dom.agendaBody.innerHTML = `
         <tr><td colspan="8" class="schedule-error__cell">
           <div class="schedule-error__message">Failed to render schedule</div>
-          <button onclick="location.reload()" class="btn btn--accent">Reload Page</button>
+          <button onclick="location.reload()" class="rux-btn rux-btn--accent">Reload Page</button>
         </td></tr>
       `;
     }
@@ -4146,6 +4152,7 @@ const CARD_CONFIG = {
   notes: { card: dom.notesCard, btn: dom.notesBtn },
   quote: { card: dom.quoteCard, btn: dom.quoteBtn },
   todo: { card: dom.todoCard, btn: dom.todoBtn },
+  log: { card: dom.logCard, btn: dom.logBtn },
 };
 
 function getCardPanel(cardType) {
@@ -4817,7 +4824,7 @@ function setModeEdit(tripKey, tripId) {
   dom.action.value = "update";
   dom.tripKey.value = tripKey;
   dom.tripId.value = tripId || "";
-  setTripIdBadge(tripId, true);
+  setTripIdBadge(shortTripId(tripId), true);
   dom.deleteBtn.disabled = false;
 }
 
@@ -6498,7 +6505,7 @@ function buildPrintScheduleTwoPages() {
       headerClone.classList.add("print-header");
       headerClone
         .querySelectorAll(
-          ".c-header__actions, .agenda-header__date-left .btn--ghost, .weekpicker-trigger-wrap, .agenda-header__sync-center, .agenda-header__date-right",
+          ".c-header__actions, .agenda-header__date-left .rux-btn--border, .weekpicker-trigger-wrap, .agenda-header__sync-center, .agenda-header__date-right",
         )
         .forEach((el) => el.remove());
 
@@ -6604,7 +6611,7 @@ function buildPrintScheduleLegalCSSGrid() {
       headerClone.classList.add("print-header");
       headerClone
         .querySelectorAll(
-          ".c-header__actions, .agenda-header__date-left .btn--ghost, .weekpicker-trigger-wrap, .agenda-header__sync-center, .agenda-header__date-right",
+          ".c-header__actions, .agenda-header__date-left .rux-btn--border, .weekpicker-trigger-wrap, .agenda-header__sync-center, .agenda-header__date-right",
         )
         .forEach((el) => el.remove());
       const dateLeft = headerClone.querySelector(".agenda-header__date-left");
@@ -6836,6 +6843,177 @@ window.addEventListener("afterprint", clearPrintRoot);
 // ======================================================
 // 33) DATA LOADING (DRIVERS/BUSES)
 // ======================================================
+const LOG_ACTION_LABELS = {
+  trip_added:         () => "Trip added",
+  trip_deleted:       () => "Trip deleted",
+  itinerary_uploaded: () => "Itinerary uploaded",
+  field_changed: (field, oldVal, newVal) => {
+    const labels = {
+      departureDate:   "Departure date",  arrivalDate:      "Arrival date",
+      departureTime:   "Departure time",  spotTime:         "Spot time",
+      arrivalTime:     "Arrival time",    destination:      "Destination",
+      customer:        "Customer",        contactName:      "Contact name",
+      phone:           "Phone",           invoiceNumber:    "Invoice #",
+      tripColor:       "Trip color",      busesNeeded:      "Bus assignment",
+      busId:           "Bus",             itinerary:        "Itinerary notes",
+      notes:           "Notes",           comments:         "Comments",
+      itineraryStatus: "Itinerary status", contactStatus:   "Contact status",
+      paymentStatus:   "Payment status",  driverStatus:     "Driver status",
+      invoiceStatus:   "Invoice status",
+      envelopePickup:       "Pickup address",
+      envelopeTripContact:  "Trip contact",
+      envelopeTripPhone:    "Trip contact phone",
+      envelopeTripNotes:    "Trip contact notes",
+      driver1: "Driver 1", driver2: "Driver 2",
+      driver3: "Driver 3", driver4: "Driver 4",
+      driver1Status: "Driver 1 status", driver2Status: "Driver 2 status",
+      driver3Status: "Driver 3 status", driver4Status: "Driver 4 status",
+    };
+    const label = labels[field] || field;
+    const fmt = (v) => {
+      if (!v || v === "None") return "";
+      const iso = String(v).match(/^(\d{4}-\d{2}-\d{2})/);
+      return iso ? iso[1] : String(v);
+    };
+    const old = fmt(oldVal);
+    const nw  = fmt(newVal);
+    if (old === nw || (!old && !nw)) return null;
+    if (old && nw) return `${label}: ${old} → ${nw}`;
+    if (nw)        return `${label}: ${nw}`;
+    return `${label} removed`;
+  },
+};
+
+let logActiveTripKey = null;
+
+function shortTripId(tripId) {
+  return tripId ? tripId.replace(/^TRIP-20/, "") : "—";
+}
+
+async function fetchActivityLog(tripKey = null) {
+  const params = tripKey ? { tripKey } : {};
+  const data = await fetchAPI("listLog", params);
+  if (!data.ok) throw new Error(data.error);
+  return data.log || [];
+}
+
+function setLogFilter(tripKey) {
+  logActiveTripKey = tripKey || null;
+  const badge = dom.logFilterBadge;
+  const clearBtn = dom.logClearFilterBtn;
+  if (logActiveTripKey) {
+    const trip = state.tripByKey?.[logActiveTripKey];
+    const label = shortTripId(trip?.tripId || logActiveTripKey);
+    if (badge) { badge.textContent = label; badge.classList.remove("is-hidden"); }
+    if (clearBtn) clearBtn.classList.remove("is-hidden");
+  } else {
+    if (badge) { badge.textContent = ""; badge.classList.add("is-hidden"); }
+    if (clearBtn) clearBtn.classList.add("is-hidden");
+  }
+  if (getCardPanel("log")) {
+    fetchActivityLog(logActiveTripKey).then(renderLogList).catch(console.error);
+  }
+}
+
+function renderLogList(entries) {
+  if (!dom.logList) return;
+  if (logActiveTripKey && entries?.length > 0 && entries[0].tripId && dom.logFilterBadge) {
+    dom.logFilterBadge.textContent = shortTripId(entries[0].tripId);
+  }
+  if (!entries || entries.length === 0) {
+    dom.logList.innerHTML = '<p class="log-empty">No activity recorded yet.</p>';
+    return;
+  }
+  const LOG_GROUP_THRESHOLD_MS = 60 * 1000; // group entries within 1 minute
+
+  const groups = [];
+  let currentGroup = null;
+  let prevTs = 0;
+
+  for (const e of entries) {
+    const ts = e.timestamp ? new Date(e.timestamp).getTime() : 0;
+    const key = e.tripKey || "";
+    if (!currentGroup || key !== currentGroup.key || (prevTs - ts) > LOG_GROUP_THRESHOLD_MS) {
+      currentGroup = { key, tripId: e.tripId || e.tripKey || "—", timestamp: e.timestamp, items: [] };
+      groups.push(currentGroup);
+    }
+    currentGroup.items.push(e);
+    prevTs = ts;
+  }
+
+  const rows = groups.map((group) => {
+    const ts = group.timestamp ? new Date(group.timestamp) : null;
+    const date = ts ? ts.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—";
+    const time = ts ? ts.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true, timeZoneName: undefined }) : "—";
+
+    // Build driver name map from this group's field changes (driver1 → name)
+    const driverNames = {};
+    for (const e of group.items) {
+      if (e.action === "field_changed" && /^driver[1-4]$/.test(e.field)) {
+        const name = e.newValue || e.oldValue;
+        if (name && name !== "None") driverNames[e.field] = name;
+      }
+    }
+
+    const actionLines = group.items
+      .map((e) => {
+        if (e.action !== "field_changed") {
+          const labelFn = LOG_ACTION_LABELS[e.action];
+          return labelFn ? labelFn(e.field, e.oldValue, e.newValue) : (e.action || null);
+        }
+
+        const fmt = (v) => {
+          if (!v || v === "None") return "";
+          const s = String(v);
+          // Strip ISO timestamp to YYYY-MM-DD only if it looks like a full datetime
+          const iso = s.match(/^(\d{4}-\d{2}-\d{2})T/);
+          return iso ? iso[1] : s;
+        };
+        const old = fmt(e.oldValue);
+        const nw  = fmt(e.newValue);
+        if (old === nw || (!old && !nw)) return null;
+
+        // Suppress busNumber — internal sequencing, not useful
+        if (e.field === "busNumber") return null;
+
+        // Driver status: use driver's name as label if known
+        const statusMatch = e.field.match(/^(driver[1-4])Status$/);
+        if (statusMatch) {
+          const name = driverNames[statusMatch[1]];
+          const label = name ? `${name} status` : `Driver ${statusMatch[1].slice(-1)} status`;
+          if (!nw) return null; // suppress "status removed" — driver unassign covers it
+          if (old && nw) return `${label}: ${old} → ${nw}`;
+          return `${label}: ${nw}`;
+        }
+
+        // Driver name change
+        const driverMatch = e.field.match(/^driver([1-4])$/);
+        if (driverMatch) {
+          const n = driverMatch[1];
+          if (!nw) return `Driver ${n} unassigned`;
+          if (!old) return `Driver ${n}: ${nw}`;
+          return `Driver ${n}: ${old} → ${nw}`;
+        }
+
+        // All other fields
+        const labels = LOG_ACTION_LABELS.field_changed;
+        return labels ? labels(e.field, e.oldValue, e.newValue) : null;
+      })
+      .filter(Boolean)
+      .map(action => `<div class="log-entry__action">${action}</div>`)
+      .join("");
+    if (!actionLines) return null;
+    return `<div class="log-entry">
+      <div class="log-entry__meta">
+        <span class="log-entry__trip">${shortTripId(group.tripId)}</span>
+        <span class="log-entry__time">${date} · ${time}</span>
+      </div>
+      ${actionLines}
+    </div>`;
+  });
+  dom.logList.innerHTML = `<div class="log-entries">${rows.filter(Boolean).join("")}</div>`;
+}
+
 async function loadDriversAndBuses(forceRefresh = false) {
   // Try cache first (only for drivers, buses always fetch fresh)
   if (!forceRefresh) {
@@ -6965,6 +7143,7 @@ function selectTripBar(barEl) {
     const overlay = document.getElementById("driver-col-hl");
     if (overlay) overlay.hidden = true;
     selectedTripBar = null;
+    setLogFilter(null);
     return;
   }
 
@@ -6993,6 +7172,7 @@ function selectTripBar(barEl) {
   document.querySelectorAll(`.schedule-grid__trip-bar[data-tripkey="${CSS.escape(tripKey)}"]`)
     .forEach(el => el.classList.add("selected"));
   document.body.classList.add("trip-bar-selected");
+  setLogFilter(tripKey);
 
   const sidx = parseInt(selectedTripBar.dataset.sidx, 10);
   const eidx = parseInt(selectedTripBar.dataset.eidx, 10);
@@ -8032,6 +8212,17 @@ function wireEvents() {
 
   dom.todoBtn?.addEventListener("click", () => toggleCard("todo"));
 
+  dom.logBtn?.addEventListener("click", () => {
+    toggleCard("log");
+    if (getCardPanel("log")) fetchActivityLog(logActiveTripKey).then(renderLogList).catch(console.error);
+  });
+
+  dom.logRefreshBtn?.addEventListener("click", () => {
+    fetchActivityLog(logActiveTripKey).then(renderLogList).catch(console.error);
+  });
+
+  dom.logClearFilterBtn?.addEventListener("click", () => setLogFilter(null));
+
   // Track notes dirty state
   dom.scheduleNotes?.addEventListener("input", () => {
     state.notesDirty = dom.scheduleNotes.value !== state.savedNotesValue;
@@ -8592,7 +8783,7 @@ function wireEvents() {
 
 
   // Toggle buttons — click toggles aria-pressed
-  document.querySelectorAll(".btn--toggle").forEach((btn) => {
+  document.querySelectorAll(".rux-btn--toggle").forEach((btn) => {
     btn.addEventListener("click", () => {
       const pressed = btn.getAttribute("aria-pressed") === "true";
       btn.setAttribute("aria-pressed", pressed ? "false" : "true");

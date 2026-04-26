@@ -22,7 +22,7 @@ textarea,
   display: block;
   width: 100%;
   box-sizing: border-box;
-  height: var(--form-height);
+  height: var(--rux-form-height);
   padding: 0 var(--input-padding-x);
   background-color: var(--field-bg);
   border: none;

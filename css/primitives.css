@@ -197,7 +197,8 @@
   height: auto;
   width: 100%;
   flex-shrink: 0;
-  padding: var(--rux-space-4);
+  padding-inline: var(--rux-space-4);
+  padding-block: var(--rux-space-4);
   border-bottom: 1px solid var(--rux-color-border-subtle);
   background-color: var(--rux-surface-header);
   box-shadow: none;
@@ -229,7 +230,6 @@
 
 .c-header__actions span.material-symbols-outlined {
   text-rendering: optimizeLegibility;
-  text-shadow: var(--btn-ghost-text-shadow);
 }
 
 .c-card__body {
@@ -265,7 +265,7 @@
 }
 
 /* Direct buttons share space equally */
-.rux-panel__footer>.btn {
+.rux-panel__footer > .rux-btn {
   flex: 1;
 }
 
@@ -305,7 +305,7 @@
 }
 
 .cds-accordion__heading:hover {
-  background-color: var(--btn-secondary-hover);
+  background-color: oklch(from var(--rux-button-normal-bg) calc(l + var(--rux-button-hover)) c h);
 }
 
 .cds-accordion__title {

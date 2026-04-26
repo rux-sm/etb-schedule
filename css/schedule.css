@@ -1,17 +1,34 @@
 /* Print styles moved to css/print.css */
 
 /* ==========================================================================
-   APP HEADER - CARBON UI SHELL (48px)
+   APP HEADER — rux-app
    ========================================================================== */
 
-/* --- Branding Layout --- */
-.app-header__branding {
+.rux-app__header {
+  --app-height: var(--size-header-row);
+  --app-bg: var(--rux-surface-app-header);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: var(--app-height);
+  padding-inline: var(--rux-space-4);
+  background-color: var(--app-bg);
+  box-shadow: none;
+}
+
+.rux-app__branding {
   display: flex;
   align-items: center;
   height: 100%;
 }
 
-.app-header__logo-wrap {
+.rux-app__logo-wrap {
   display: flex;
   align-items: center;
   height: 100%;
@@ -19,8 +36,8 @@
   padding-right: var(--space-lg);
 }
 
-/* The Carbon Vertical Divider */
-.app-header__logo-wrap::after {
+/* Vertical divider */
+.rux-app__logo-wrap::after {
   content: "";
   width: 1px;
   height: 20px;
@@ -29,13 +46,12 @@
   right: 0;
 }
 
-.app-header__logo-img {
+.rux-app__logo {
   height: 22px;
   width: auto;
 }
 
-/* --- Typography --- */
-.app-header__title {
+.rux-app__title {
   margin-left: var(--space-lg);
   font-size: var(--heading-1-size);
   line-height: var(--heading-1-line-height);
@@ -46,18 +62,17 @@
   gap: 4px;
   font-weight: var(--heading-1-weight);
   text-rendering: optimizeLegibility;
-
 }
 
-.app-header__title--org {
+.rux-app__title--org {
   font-weight: 400;
 }
 
-.app-header__title--name {
+.rux-app__title--name {
   font-weight: 600;
 }
 
-.app-header__version {
+.rux-app__version {
   align-self: center;
   font-size: 12px;
   font-weight: 400;
@@ -66,14 +81,11 @@
   letter-spacing: 0.02em;
 }
 
-/* --- App Header Variant Overrides --- */
-.c-header.c-header--app {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  padding-: 12px;
-  background-color: var(--rux-surface-app-header);
-  box-shadow:none;
+.rux-app__actions {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 4px;
 }
 
 /* Page-level heading utility used in schedule/header contexts */
@@ -304,7 +316,7 @@
   font-weight: 700;
   letter-spacing: 0;
 
-  text-shadow: var(--btn-ghost-text-shadow);
+
   text-rendering: optimizeLegibility;
 }
 
@@ -316,7 +328,7 @@
   letter-spacing: 0;
 
   text-rendering: optimizeLegibility;
-  text-shadow: var(--btn-ghost-text-shadow);
+
 }
 
 .agenda-header__week-date .wk-sep {
@@ -327,7 +339,7 @@
   letter-spacing: 0;
 
   text-rendering: optimizeLegibility;
-  text-shadow: var(--btn-ghost-text-shadow);
+
 }
 
 .agenda-header__week-date .wk-year {
@@ -338,7 +350,7 @@
   letter-spacing: 0;
 
   text-rendering: optimizeLegibility;
-  text-shadow: var(--btn-ghost-text-shadow);
+
 }
 
 /* ==========================================================================
@@ -815,9 +827,9 @@
   background: var(--rux-accent-color);
   color: var(--text-primary);
   border-radius: var(--rux-radius-2);
-  text-shadow: var(--text-shadow);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   font-weight: 600;
-  box-shadow: var(--btn-shadow-inset);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .schedule-grid__row {
@@ -1111,7 +1123,7 @@
 }
 
 .driver-week__table tbody tr:nth-child(even) td.driver-week__cell--unavailable {
-  background-color: var(--rux-color-wine);
+  background-color: var(--rux-red);
 }
 
 .driver-week__table th:last-child,
@@ -1209,7 +1221,7 @@ body.trip-bar-selected .schedule-grid__trip-bar.selected {
 }
 
 .driver-week__cell--unavailable {
-  background: var(--rux-color-wine);
+  background: var(--rux-red);
   color: var(--text-primary);
 }
 
@@ -1490,4 +1502,85 @@ body.trip-bar-selected .schedule-grid__trip-bar.selected {
   font-size: 14px;
   font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 16;
   flex-shrink: 0;
+}
+
+/* ==========================================================================
+   ACTIVITY LOG PANEL
+   ========================================================================== */
+
+.log-header__title-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--rux-space-2);
+  min-width: 0;
+}
+
+.log-filter-badge {
+  font-size: var(--rux-font-size-2);
+  font-family: var(--font-mono);
+  font-weight: var(--rux-font-weight-medium);
+  color: var(--rux-accent-color);
+  background: oklch(from var(--rux-accent-color) l c h / 12%);
+  padding: 2px var(--rux-space-2);
+  border-radius: var(--rux-radius-badge);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+.log-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--rux-space-3);
+}
+
+.log-empty {
+  color: var(--text-secondary);
+  font-size: var(--rux-font-size-3);
+  text-align: center;
+  padding: var(--rux-space-6) 0;
+  margin: 0;
+}
+
+.log-entries {
+  display: flex;
+  flex-direction: column;
+}
+
+.log-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--rux-space-2) var(--rux-space-3);
+  border-bottom: 1px solid var(--rux-color-border-subtle);
+}
+
+.log-entry:nth-child(even) {
+  background-color: oklch(from var(--rux-surface-panel) calc(l + 0.03) c h);
+}
+
+.log-entry__meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--rux-space-2);
+}
+
+.log-entry__trip {
+  font-family: var(--font-mono);
+  font-size: var(--rux-font-size-2);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.log-entry__time {
+  font-size: var(--rux-font-size-2);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.log-entry__action {
+  font-size: var(--rux-font-size-3);
+  color: var(--text-primary);
 }

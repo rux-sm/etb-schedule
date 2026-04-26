@@ -282,7 +282,7 @@
     display: flex !important;
   }
 
-  .print-header-logo .app-header__logo-img {
+  .print-header-logo .rux-app__logo {
     height: 24px;
     width: auto;
     object-fit: contain;
@@ -434,7 +434,7 @@
     line-height: 1.2 !important;
   }
 
-  #printRoot.print-mode-letter-full .print-header-logo .app-header__logo-img {
+  #printRoot.print-mode-letter-full .print-header-logo .rux-app__logo {
     height: 24px !important;
   }
 
