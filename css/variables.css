@@ -122,6 +122,20 @@
   --rux-status-green-alpha: oklch(from var(--rux-green) l c h / 15%);
   --rux-status-blue: oklch(from var(--rux-blue) 90% .3 h);
   --rux-status-blue-alpha: oklch(from var(--rux-blue) l c h / 15%);
+  --rux-status-orange:              oklch(from var(--rux-orange) 90% .3 h);
+  --rux-status-orange-alpha:        oklch(from var(--rux-orange) l c h / 15%);
+  --rux-status-cyan:                oklch(from var(--rux-cyan) 90% .3 h);
+  --rux-status-cyan-alpha:          oklch(from var(--rux-cyan) l c h / 15%);
+  --rux-status-purple:              oklch(from var(--rux-purple) 90% .3 h);
+  --rux-status-purple-alpha:        oklch(from var(--rux-purple) l c h / 15%);
+  --rux-status-pink:                oklch(from var(--rux-pink) 90% .3 h);
+  --rux-status-pink-alpha:          oklch(from var(--rux-pink) l c h / 15%);
+  --rux-status-auto:                oklch(from var(--rux-red) 90% .3 h);
+  --rux-status-auto-alpha:          oklch(from var(--rux-red) l c h / 15%);
+  --rux-status-auto-confirmed:      oklch(from var(--rux-blue) 90% .3 h);
+  --rux-status-auto-confirmed-alpha: oklch(from var(--rux-blue) l c h / 15%);
+  --rux-status-one-way:             oklch(from var(--rux-accent-color) 90% .3 h);
+  --rux-status-one-way-alpha:       oklch(from var(--rux-accent-color) l c h / 15%);
 
   /* 2C. Button Colors
   ──────────────────────────────────────────────────────────────── */

@@ -862,48 +862,22 @@
                       value="false"
                     />
 
-                    <div class="form-group col-6">
-                      <label for="destination">Destination</label>
+                    <div class="form-group col-5">
+                      <label for="tripDate">Departure date</label>
                       <input
-                        type="text"
-                        id="destination"
-                        name="destination"
-                        placeholder=""
-                        required
-                      />
-                    </div>
-
-                    <div class="form-group col-6">
-                      <label for="customer">Customer</label>
-                      <input
-                        type="text"
-                        id="customer"
-                        name="customer"
-                        placeholder=""
+                        type="date"
+                        id="tripDate"
+                        name="departureDate"
                         required
                       />
                     </div>
 
                     <div class="form-group col-5">
-                      <label for="contactName">Name</label>
+                      <label for="arrivalDate">Arrival date</label>
                       <input
-                        type="text"
-                        id="contactName"
-                        name="contactName"
-                        placeholder=""
-                        required
-                      />
-                    </div>
-
-                    <div class="form-group col-5">
-                      <label for="phone">Phone</label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        autocomplete="tel"
-                        inputmode="tel"
-                        placeholder=""
+                        type="date"
+                        id="arrivalDate"
+                        name="arrivalDate"
                       />
                     </div>
 
@@ -935,21 +909,47 @@
                     </div>
 
                     <div class="form-group col-6">
-                      <label for="tripDate">Departure date</label>
+                      <label for="destination">Destination</label>
                       <input
-                        type="date"
-                        id="tripDate"
-                        name="departureDate"
+                        type="text"
+                        id="destination"
+                        name="destination"
+                        placeholder=""
                         required
                       />
                     </div>
 
                     <div class="form-group col-6">
-                      <label for="arrivalDate">Arrival date</label>
+                      <label for="customer">Customer</label>
                       <input
-                        type="date"
-                        id="arrivalDate"
-                        name="arrivalDate"
+                        type="text"
+                        id="customer"
+                        name="customer"
+                        placeholder=""
+                        required
+                      />
+                    </div>
+
+                    <div class="form-group col-6">
+                      <label for="contactName">Name</label>
+                      <input
+                        type="text"
+                        id="contactName"
+                        name="contactName"
+                        placeholder=""
+                        required
+                      />
+                    </div>
+
+                    <div class="form-group col-6">
+                      <label for="phone">Phone</label>
+                      <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        autocomplete="tel"
+                        inputmode="tel"
+                        placeholder=""
                       />
                     </div>
 
@@ -977,49 +977,6 @@
                         type="time"
                         id="arrivalTime"
                         name="arrivalTime"
-                      />
-                    </div>
-
-                    <div class="form-group col-8">
-                      <label for="notes">Notes</label>
-                      <input
-                        type="text"
-                        id="notes"
-                        name="notes"
-                        placeholder=""
-                      />
-                    </div>
-
-                    <div class="form-group col-4">
-                      <label for="tripColor">Color</label>
-                      <select
-                        id="tripColor"
-                        name="tripColor"
-                      >
-                        <option
-                          value=""
-                          selected
-                        >
-                          Auto
-                        </option>
-                        <option value="Out of Service">OOS</option>
-                        <option value="One-Way">1-Way</option>
-                        <option value="Orange">Orange</option>
-                        <option value="Yellow">Yellow</option>
-                        <option value="Green">Green</option>
-                        <option value="Cyan">Cyan</option>
-                        <option value="Purple">Purple</option>
-                        <option value="Pink">Pink</option>
-                      </select>
-                    </div>
-
-                    <div class="form-group col-12">
-                      <label for="comments">Comments</label>
-                      <input
-                        type="text"
-                        id="comments"
-                        name="comments"
-                        placeholder=""
                       />
                     </div>
 
@@ -1163,6 +1120,39 @@
                       />
                     </div>
 
+                    <div class="form-group col-6">
+                      <label for="tripColor">Color</label>
+                      <select
+                        id="tripColor"
+                        name="tripColor"
+                      >
+                        <option
+                          value=""
+                          selected
+                        >
+                          Auto
+                        </option>
+                        <option value="Out of Service">OOS</option>
+                        <option value="One-Way">1-Way</option>
+                        <option value="Orange">Orange</option>
+                        <option value="Yellow">Yellow</option>
+                        <option value="Green">Green</option>
+                        <option value="Cyan">Cyan</option>
+                        <option value="Purple">Purple</option>
+                        <option value="Pink">Pink</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group col-12">
+                      <label for="notes">Notes</label>
+                      <input
+                        type="text"
+                        id="notes"
+                        name="notes"
+                        placeholder=""
+                      />
+                    </div>
+
                     <textarea
                       id="itinerary"
                       name="itinerary"
@@ -1299,6 +1289,15 @@
                           >
                           Relief 2
                         </button>
+                      </div>
+                      <div class="form-group col-12" style="margin-top: var(--form-section-gap)">
+                        <label for="comments">Trip Notes</label>
+                        <input
+                          type="text"
+                          id="comments"
+                          name="comments"
+                          placeholder=""
+                        />
                       </div>
                     </div>
                     <div

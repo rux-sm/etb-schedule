@@ -5415,6 +5415,7 @@ function createEnvelopePageElement() {
           <span class="env-value env-notes-line" data-field="notes1"></span>
           <span class="env-value env-notes-line" data-field="notes2"></span>
           <span class="env-value env-notes-line" data-field="notes3"></span>
+          <span class="env-value env-notes-line" data-field="notes4"></span>
         </div>
       </div>
     </div>
@@ -5623,6 +5624,8 @@ function fillEnvelopePage(pageEl, trip, assignment) {
   } else {
     set("notes3", "");
   }
+
+  set("notes4", (trip.comments || "").toUpperCase());
 
   // CC FOR TRIP checkbox — pre-check YES if fuel card required
   const ccYesEl = pageEl.querySelector('[data-field="ccYes"]');
