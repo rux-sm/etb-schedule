@@ -28,13 +28,13 @@ npx prettier --write .
 
 ## Architecture
 
-### Frontend (`index.html`, `app.js`, `css/`)
+### Frontend (`index.html`, `js/app.js`, `css/`)
 
-Single-page app. All logic lives in `app.js`. The Google Apps Script endpoint is set in `CONFIG.ENDPOINT`. Data is fetched via **JSONP** (using a `?callback=` param) because the GAS web app is cross-origin and doesn't support CORS on all request types.
+Single-page app. All logic lives in `js/app.js`. The Google Apps Script endpoint is set in `CONFIG.ENDPOINT`. Data is fetched via **JSONP** (using a `?callback=` param) because the GAS web app is cross-origin and doesn't support CORS on all request types.
 
 `css/main.css` is the single CSS entry point — it `@import`s all other stylesheets in load order.
 
-### Backend (`backend.md`)
+### Backend (`docs/backend.md`)
 
 The backend is a **Google Apps Script** project deployed as a web app. The source is kept in `backend.md` for reference and must be manually deployed in the Google Apps Script editor. It is **not** deployed from this repo.
 
@@ -43,11 +43,11 @@ The backend is a **Google Apps Script** project deployed as a web app. The sourc
 - All write operations acquire a script lock and invalidate a 2-minute `CacheService` cache
 - The primary data fetch is `weekData` — it returns trips + bus assignments + week notes + driver unavailability for a date range in one call
 
-Google Sheets data model (sheet names and column headers) is defined in the `HEADERS` constant in `backend.md`.
+Google Sheets data model (sheet names and column headers) is defined in the `HEADERS` constant in `docs/backend.md`.
 
 ### CSS Design System (Rux UI)
 
-Documented in full in `RUX_UI.md`. The key rule:
+Documented in full in `docs/RUX_UI.md`. The key rule:
 
 **3-tier token architecture** — all component CSS must only reference Tier 3 tokens:
 
@@ -63,4 +63,4 @@ Never reference Tier 1 tokens directly from component CSS. Use `oklch()` for all
 
 ### Known design system issues
 
-`RUX_UI.md` tracks outstanding token migration work. Key blockers: broken `--blu`, `--base-*`, and `--wald-05` references in `variables.css`; a debug `--border-subtle: rgb(255,0,0)` value still in place; legacy `--md-*`, `--core-*`, and short-code color aliases (`--gra`, `--red`, etc.) not yet migrated to `--rux-*`.
+`docs/RUX_UI.md` tracks outstanding token migration work. Key blockers: broken `--blu`, `--base-*`, and `--wald-05` references in `variables.css`; a debug `--border-subtle: rgb(255,0,0)` value still in place; legacy `--md-*`, `--core-*`, and short-code color aliases (`--gra`, `--red`, etc.) not yet migrated to `--rux-*`.

@@ -83,8 +83,6 @@ button {
     "opsz" var(--rux-button-icon-opsz);
 }
 
-/* ── 3. Color Variants ──────────────────────────────────────────────────── */
-
 .rux-btn--primary  { --btn-background: var(--rux-button-primary-bg); }
 .rux-btn--secondary  { --btn-background: var(--rux-button-secondary-bg); }
 .rux-btn--danger  { --btn-background: var(--rux-button-danger-bg); }

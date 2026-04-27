@@ -278,28 +278,6 @@ const dom = {
   weekStartToggle: $("weekStartToggle"),
   refreshBtn2: $("refreshBtn2"),
   nextDayReportBtn: $("nextDayReportBtn"),
-  picrossBtn: $("picrossBtn"),
-
-  // Picross Modal
-  picrossModal: $("picrossModal"),
-  closePicrossBtn: $("closePicrossBtn"),
-  closePicrossBackdrop: $("closePicrossBackdrop"),
-  picrossDailyBtn: $("picrossDailyBtn"),
-  picrossNextBtn: $("picrossNextBtn"),
-  picrossHintBtn: $("picrossHintBtn"),
-  picrossNormalModeBtn: $("picrossNormalModeBtn"),
-  picrossFreeModeBtn: $("picrossFreeModeBtn"),
-  picrossResetBtn: $("picrossResetBtn"),
-  picrossGrid: $("picrossGrid"),
-  picrossCluesTop: $("picrossCluesTop"),
-  picrossCluesLeft: $("picrossCluesLeft"),
-  picrossDailyProgress: $("picrossDailyProgress"),
-  picrossTodaySummary: $("picrossTodaySummary"),
-  picrossStatus: $("picrossStatus"),
-  picrossPuzzleMeta: $("picrossPuzzleMeta"),
-  picrossTimer: $("picrossTimer"),
-  picrossGrade: $("picrossGrade"),
-
   // Next Day Report Modal
   nextDayReportModal: $("nextDayReportModal"),
   nextDayReportBody: $("nextDayReportBody"),
@@ -4901,43 +4879,6 @@ function closeItineraryModal() {
 }
 
 // ======================================================
-// 27A) PICROSS MODAL
-// ======================================================
-let picrossController = null;
-
-function getPicrossController() {
-  if (picrossController) return picrossController;
-  if (typeof window.createPicrossController !== "function") return null;
-
-  picrossController = window.createPicrossController({
-    dom,
-    openModalA11y,
-    closeModalA11y,
-  });
-  return picrossController;
-}
-
-function initPicrossGame() {
-  getPicrossController()?.initGame();
-}
-
-function nextPicrossPuzzle() {
-  getPicrossController()?.nextPuzzle();
-}
-
-function openPicrossDailyPuzzle() {
-  getPicrossController()?.openDailyPuzzle();
-}
-
-function openPicrossModal() {
-  getPicrossController()?.openModal();
-}
-
-function closePicrossModal() {
-  getPicrossController()?.closeModal();
-}
-
-// ======================================================
 // 28) MOBILE TRIP DETAILS MODAL
 // ======================================================
 // ======================================================
@@ -5415,7 +5356,7 @@ function createEnvelopePageElement() {
       <div class="env-header">
         <div class="env-day" data-field="day"></div>
         <div class="env-brand">
-          <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+          <img src="assets/logo.png" alt="Logo" onerror="this.style.display='none'">
           <div class="env-addr">${brandAddr}</div>
         </div>
       </div>
@@ -5491,7 +5432,7 @@ function createAlternateEnvelopePageElement() {
       <div class="env-header">
         <div class="env-day" data-field="day"></div>
         <div class="env-brand">
-          <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+          <img src="assets/logo.png" alt="Logo" onerror="this.style.display='none'">
           <div class="env-addr">${brandAddr}</div>
         </div>
       </div>
@@ -6512,7 +6453,7 @@ function buildPrintScheduleTwoPages() {
       const dateLeft = headerClone.querySelector(".agenda-header__date-left");
       if (dateLeft) {
         const logoImg = document.createElement("img");
-        logoImg.src = "logo.png";
+        logoImg.src = "assets/logo.png";
         logoImg.className = "print-header-logo-img";
         logoImg.alt = "Logo";
         dateLeft.insertBefore(logoImg, dateLeft.firstChild);
@@ -6617,7 +6558,7 @@ function buildPrintScheduleLegalCSSGrid() {
       const dateLeft = headerClone.querySelector(".agenda-header__date-left");
       if (dateLeft) {
         const logoImg = document.createElement("img");
-        logoImg.src = "logo.png";
+        logoImg.src = "assets/logo.png";
         logoImg.className = "print-header-logo-img";
         logoImg.alt = "Logo";
         dateLeft.insertBefore(logoImg, dateLeft.firstChild);
@@ -8325,17 +8266,6 @@ function wireEvents() {
     }
   });
 
-  dom.closePicrossBtn?.addEventListener("click", closePicrossModal);
-  dom.closePicrossBackdrop?.addEventListener("click", closePicrossModal);
-  dom.picrossDailyBtn?.addEventListener("click", openPicrossDailyPuzzle);
-  dom.picrossNextBtn?.addEventListener("click", nextPicrossPuzzle);
-  dom.picrossResetBtn?.addEventListener("click", initPicrossGame);
-  document.addEventListener("keydown", (e) => {
-    if (!dom.picrossModal?.hidden && e.key === "Escape") {
-      closePicrossModal();
-    }
-  });
-
   /* agendaBody click listener removed - refactoring to use delegation in wireDelegatedBarEvents */
   dom.busGrid.addEventListener("change", (e) => {
     const sel = e.target;
@@ -8884,12 +8814,7 @@ function wireSettingsMenu() {
     loadDriversAndBuses(true).then(() => refreshWeekData());
   });
 
-  // 6. Picross
-  dom.picrossBtn?.addEventListener("click", () => {
-    openPicrossModal();
-  });
-
-  // 7. Auto-close whenever ANY dropdown item is clicked inside this menu
+  // 6. Auto-close whenever ANY dropdown item is clicked inside this menu
   dom.settingsMenu.addEventListener("click", (e) => {
     if (e.target.closest(".dropdown__item")) {
       dom.settingsMenu.hidden = true;
@@ -9557,7 +9482,6 @@ document.addEventListener("keydown", (e) => {
       dom.driverWeekScheduleModal,
       dom.dailyMaintenancePlanModal,
       dom.nextDayReportModal,
-      dom.picrossModal,
       dom.tripDetailsModal,
       dom.itineraryModal,
     ].find((modalEl) => modalEl && !modalEl.hidden) || null;

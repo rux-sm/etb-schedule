@@ -1,9 +1,9 @@
-/_ ==================================================================
-RUX UI : VISUAL COMPONENT SPEC
-Component: [ Button ] Variant: [ Default ]
-================================================================== _/
+/* ==================================================================
+   RUX UI : VISUAL COMPONENT SPEC
+   Component: [ Button ]    Variant: [ Default ]
+   ================================================================== */
 
-      Typography: [ ____________________ ]
+      Typography: [ ____________________ ] 
       Height:     [ 30px ]
       Radius:     [ 8px ]
 
@@ -11,21 +11,19 @@ Component: [ Button ] Variant: [ Default ]
                    |             |
              +-----|-------------|-----+  - - - - -
              |     v             v     |          |
+ [ Pad L ]   |                         |   [ Pad R ]
+ [ ____px ]-->   [Icon] <-Gap-> [Text] <-- [ ____px ]
+             |    ____px               |          |
+             |     ^             ^     |          |
+             +-----|-------------|-----+  - - - - -
+                   |             |
+                 [ Pad Bot: ____px ]
 
-[ Pad L ] | | [ Pad R ]
-[ ____px ]--> [Icon] <-Gap-> [Text] <-- [ ____px ]
-| \_**\_px | |
-| ^ ^ | |
-+-----|-------------|-----+ - - - - -
-| |
-[ Pad Bot: \_\_**px ]
-
-Tokens:
-
-- Background: var(--color-\***\*\_\_\*\***)
-- Content: var(--color-\***\*\_\_\*\***)
-- Border: var(--color-\***\*\_\_\*\***)
-  ================================================================== \*/
+   Tokens:
+   - Background: var(--color-__________)
+   - Content:    var(--color-__________)
+   - Border:     var(--color-__________)
+================================================================== */
 
 # Rux UI — Design System Guide & Migration Tracker
 
@@ -56,17 +54,14 @@ Tier 3 — Component Tokens    (component-specific, consume Tier 2)
 ## Naming Convention
 
 ### Tier 1 — Reference
-
 ```
 --rux-{palette}-{scale}         color scales
 --rux-space-{size}              spacing (xs / sm / md / lg / xl)
 --rux-border-radius-{size}      radius (sm / md / lg / xl)
 ```
-
 Examples: `--rux-blue-500`, `--rux-gray-800`, `--rux-space-md`
 
 ### Tier 2 — System / Semantic
-
 ```
 --rux-surface-{role}            background surfaces
 --rux-color-{role}              semantic color roles
@@ -74,17 +69,14 @@ Examples: `--rux-blue-500`, `--rux-gray-800`, `--rux-space-md`
 --rux-border-{role}             border roles      ← TO DO
 --rux-space-{role}              layout spacing    ← use Tier 1 aliases
 ```
-
 Examples: `--rux-surface-panel`, `--rux-color-status-red`, `--rux-accent-color`
 
 ### Tier 3 — Component
-
 ```
 --{component}-{property}
 --{component}-{variant}-{property}
 --{component}-{state}-{property}
 ```
-
 Examples: `--btn-primary-bg`, `--tripbar-height`, `--field-border`
 
 **No `--rux-` prefix on component tokens.** The prefix is reserved for Tiers 1 and 2 only.
@@ -113,22 +105,19 @@ Examples: `--btn-primary-bg`, `--tripbar-height`, `--field-border`
 ### ❌ Issues to Fix (Blockers)
 
 #### 1. Broken / undefined token references
-
 These variables are referenced but not defined anywhere in the file:
 
-| Reference     | Used in                                 | Fix                                              |
-| ------------- | --------------------------------------- | ------------------------------------------------ |
-| `--blu`       | `--color-primary: var(--blu)`           | Rename to `var(--rux-blue-500)` or define alias  |
-| `--blu-dark`  | `--color-accent: var(--blu-dark)`       | Define as `var(--rux-blue-600)`                  |
-| `--blu-alert` | `--color-status-blue: var(--blu-alert)` | Define as `var(--rux-blue-300)`                  |
-| `--wald-05`   | `--color-success: var(--wald-05)`       | Replace with `var(--rux-green-500)`              |
-| `--aube-05`   | `--color-warning: var(--aube-05)`       | Replace with `var(--rux-yellow-400)`             |
-| `--base-*`    | `--text-primary: var(--base-12)` etc.   | Audit all `--base-*` refs, map to `--rux-gray-*` |
+| Reference | Used in | Fix |
+|---|---|---|
+| `--blu` | `--color-primary: var(--blu)` | Rename to `var(--rux-blue-500)` or define alias |
+| `--blu-dark` | `--color-accent: var(--blu-dark)` | Define as `var(--rux-blue-600)` |
+| `--blu-alert` | `--color-status-blue: var(--blu-alert)` | Define as `var(--rux-blue-300)` |
+| `--wald-05` | `--color-success: var(--wald-05)` | Replace with `var(--rux-green-500)` |
+| `--aube-05` | `--color-warning: var(--aube-05)` | Replace with `var(--rux-yellow-400)` |
+| `--base-*` | `--text-primary: var(--base-12)` etc. | Audit all `--base-*` refs, map to `--rux-gray-*` |
 
 #### 2. `--border-subtle: rgb(255, 0, 0)` — debug value left in
-
 Pure red, obviously wrong. Set to a proper low-contrast border color:
-
 ```css
 --border-subtle: oklch(100% 0 0 / 8%);
 ```
@@ -138,7 +127,6 @@ Pure red, obviously wrong. Set to a proper low-contrast border color:
 ### 🔄 Needs Migration (Naming Cleanup)
 
 #### 3. Short-code color aliases — legacy, not self-documenting
-
 The following aliases use abbreviated names that conflict with the `--rux-*` convention. They should either be removed (replaced by direct `--rux-*` references) or renamed to the full convention.
 
 ```css
@@ -162,15 +150,12 @@ The following aliases use abbreviated names that conflict with the `--rux-*` con
 > Note: Each color group also has `-alpha` and `-alert` variants. These can become Tier 2 system tokens (e.g., `--rux-color-status-red-alpha`) instead of keeping arbitrary aliases.
 
 #### 4. `--core-*` legacy surface system — superseded by `--surface-*`
-
 ```css
 --core-01 through --core-09   →   map to --rux-gray-* or --surface-* equivalents
 ```
-
 Check which CSS files still consume `--core-*` and migrate them to `--surface-*` / `--rux-surface-*`.
 
 #### 5. `--color-*` semantic tokens — move to `--rux-color-*` namespace
-
 ```css
 /* Currently: */
 --color-primary, --color-secondary, --color-accent
@@ -186,9 +171,7 @@ Check which CSS files still consume `--core-*` and migrate them to `--surface-*`
 ```
 
 #### 6. `--surface-*` / `--border-*` / `--text-*` — add `--rux-` prefix
-
 These are Tier 2 system tokens but currently lack the `--rux-` prefix:
-
 ```css
 --surface-00/01/02/03/04  →  --rux-surface-00/01/02/03/04
 --border-default/hover/focus/subtle  →  --rux-border-*
@@ -197,20 +180,15 @@ These are Tier 2 system tokens but currently lack the `--rux-` prefix:
 ```
 
 #### 7. Duplicate spacing scale — consolidate
-
 Two scales exist with different values at `md` and `lg`:
-
 ```css
---rux-space-md: 16px vs --space-md: 12px ← different! --rux-space-lg: 24px vs --space-lg: 16px ←
-  different!;
+--rux-space-md: 16px   vs   --space-md: 12px   ← different!
+--rux-space-lg: 24px   vs   --space-lg: 16px   ← different!
 ```
-
 Decide on one canonical scale and migrate all `--space-*` usage to `--rux-space-*`.
 
 #### 8. `--md-*` Material Design tokens — replace with Rux equivalents
-
 Still referenced in buttons, toggle, header actions, and light theme overrides:
-
 ```
 --md-ref-palette-neutral-40    →  var(--rux-gray-600)
 --md-ref-palette-neutral-80    →  var(--rux-gray-200)
@@ -226,18 +204,18 @@ Still referenced in buttons, toggle, header actions, and light theme overrides:
 
 ## Component Inventory — Token Coverage
 
-| Component     | File             | Tokens Defined              | Status                    |
-| ------------- | ---------------- | --------------------------- | ------------------------- |
-| Buttons       | `button.css`     | `--btn-*` (full set)        | ✅ Complete               |
-| Trip Bar      | `variables.css`  | `--tripbar-*` (full set)    | ✅ Defined — verify usage |
-| Form / Fields | `form.css`       | `--field-*`                 | 🔄 Partial                |
-| Layout        | `layout.css`     | `--size-*`, `--panel-width` | 🔄 Partial                |
-| Modals        | `modals.css`     | (none yet)                  | ❌ Not started            |
-| Dropdowns     | `dropdown.css`   | (none yet)                  | ❌ Not started            |
-| Schedule grid | `schedule.css`   | `--schedule-*`              | 🔄 Partial                |
-| Primitives    | `primitives.css` | (mixed)                     | 🔄 Partial                |
-| Typography    | `base.css`       | heading tokens done         | 🔄 Missing body/label     |
-| Print         | `print.css`      | `--env-*`                   | ✅ Defined                |
+| Component | File | Tokens Defined | Status |
+|---|---|---|---|
+| Buttons | `button.css` | `--btn-*` (full set) | ✅ Complete |
+| Trip Bar | `variables.css` | `--tripbar-*` (full set) | ✅ Defined — verify usage |
+| Form / Fields | `form.css` | `--field-*` | 🔄 Partial |
+| Layout | `layout.css` | `--size-*`, `--panel-width` | 🔄 Partial |
+| Modals | `modals.css` | (none yet) | ❌ Not started |
+| Dropdowns | `dropdown.css` | (none yet) | ❌ Not started |
+| Schedule grid | `schedule.css` | `--schedule-*` | 🔄 Partial |
+| Primitives | `primitives.css` | (mixed) | 🔄 Partial |
+| Typography | `base.css` | heading tokens done | 🔄 Missing body/label |
+| Print | `print.css` | `--env-*` | ✅ Defined |
 
 ---
 
@@ -274,7 +252,7 @@ Based on an audit of every structural container in the app, **8px is the consist
 
 - It's `--rux-space-sm` — already the primary small spacing unit
 - It's the dominant gap in headers (8px), dropdown menus (8px padding), toggle grids (0 8px), control rows, and form column gaps
-- 16px appears as _internal body padding_ inside containers, not as the optical gap between curves
+- 16px appears as *internal body padding* inside containers, not as the optical gap between curves
 - At depth 3–4, the gap halves to **4px** (`--rux-space-xs`) for micro-elements like badges
 
 The scale is a clean halving sequence — every step is exactly `−8px` (or `−4px` at the micro level):
@@ -295,39 +273,39 @@ Depth 4 │ --rux-radius-xs    2px │ Atoms: badges, chips       ( 4 − 2)
 
 ### Semantic Aliases (use these in component CSS)
 
-| Token                  | Maps to           | Use for                          |
-| ---------------------- | ----------------- | -------------------------------- |
-| `--rux-radius-overlay` | `--rux-radius-xl` | Modals, sheets, popovers         |
-| `--rux-radius-surface` | `--rux-radius-lg` | Cards, panels, sidebars          |
-| `--rux-radius-section` | `--rux-radius-md` | Grouped sections inside cards    |
+| Token | Maps to | Use for |
+|---|---|---|
+| `--rux-radius-overlay` | `--rux-radius-xl` | Modals, sheets, popovers |
+| `--rux-radius-surface` | `--rux-radius-lg` | Cards, panels, sidebars |
+| `--rux-radius-section` | `--rux-radius-md` | Grouped sections inside cards |
 | `--rux-radius-control` | `--rux-radius-sm` | Inputs, selects, toolbar buttons |
-| `--rux-radius-badge`   | `--rux-radius-xs` | Chips, tags, mini-badges         |
-| `--rux-radius-button`  | `--rux-radius-xl` | Pill/squircle buttons            |
+| `--rux-radius-badge` | `--rux-radius-xs` | Chips, tags, mini-badges |
+| `--rux-radius-button` | `--rux-radius-xl` | Pill/squircle buttons |
 
 ### Usage Example
 
 ```css
 /* A card panel (depth 1) */
 .card {
-  border-radius: var(--rux-radius-surface); /* 16px */
+  border-radius: var(--rux-radius-surface);   /* 16px */
   padding: 12px;
   corner-shape: squircle;
 }
 
 /* A section grouped inside the card (depth 2) */
 .card__section {
-  border-radius: var(--rux-radius-section); /* 10px — 16 minus ~6px gap */
+  border-radius: var(--rux-radius-section);   /* 10px — 16 minus ~6px gap */
   corner-shape: squircle;
 }
 
 /* An input inside the section (depth 3) */
 .card__section input {
-  border-radius: var(--rux-radius-control); /* 6px — 10 minus ~4px gap */
+  border-radius: var(--rux-radius-control);   /* 6px — 10 minus ~4px gap */
 }
 
 /* A badge inside the input (depth 4) */
 .badge {
-  border-radius: var(--rux-radius-badge); /* 3px — 6 minus ~3px gap */
+  border-radius: var(--rux-radius-badge);     /* 3px — 6 minus ~3px gap */
 }
 ```
 
@@ -336,8 +314,8 @@ Depth 4 │ --rux-radius-xs    2px │ Atoms: badges, chips       ( 4 − 2)
 Pair `corner-shape: squircle` with any radius value to get the Apple superellipse curve instead of a circular arc. The optical nesting scale works identically — the formula is the same, just the curve shape differs:
 
 ```css
-border-radius: var(--rux-radius-surface); /* controls the size */
-corner-shape: squircle; /* controls the curve shape */
+border-radius: var(--rux-radius-surface);  /* controls the size */
+corner-shape: squircle;                    /* controls the curve shape */
 ```
 
 Apply `corner-shape: squircle` consistently at all depth levels for visual coherence — mixing squircle and circular corners at different nesting levels looks inconsistent.
@@ -370,4 +348,4 @@ Alpha variants:  append -alpha  (e.g. --rux-blue-500-alpha)
 
 ---
 
-_Last updated: April 2026_
+*Last updated: April 2026*
