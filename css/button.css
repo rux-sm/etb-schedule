@@ -2,10 +2,10 @@
    BUTTONS — .rux-btn
    ==========================================================================
    #1  Element reset
-   #2  .rux-btn — base + auto hover/active + focus + disabled + icons
-   #3  Color variants — --accent  --normal  --danger  --border
-   #4  .rux-btn--square — icon-only 28×28
-   #5  .rux-btn--toggle — full-width requirement toggles
+   #2  .rux-btn — base + states + icons
+   #3  Color variants — --accent  --normal  --danger  --success  --border
+   #4  .rux-btn--square — icon-only 28×28 (extends .rux-btn)
+   #5  .rux-btn--toggle — full-width toggles (extends .rux-btn)
    #6  Toggle grid + requirement label
    #7  Form action containers
    ========================================================================== */
@@ -21,7 +21,7 @@ button {
 /* ── 2. Base ─────────────────────────────────────────────────────────────── */
 
 .rux-btn {
-  --btn-background:        var(--rux-button-normal-bg);
+  --btn-background:        var(--rux-button-secondary-bg);
   --btn-text:              var(--rux-button-text);
   --btn-border:            transparent;
   --btn-hover-background:  oklch(from var(--btn-background) calc(l + var(--rux-button-hover)) c h);
@@ -45,11 +45,11 @@ button {
   user-select:         none;
   -webkit-user-select: none;
 
-  cursor:              pointer;
-  border-radius:       var(--rux-radius-button);
-  border:              1px solid var(--btn-border);
-  background-color:    var(--btn-background);
-  color:               var(--btn-text);
+  cursor:           pointer;
+  border-radius:    var(--rux-radius-button);
+  border:           1px solid var(--btn-border);
+  background-color: var(--btn-background);
+  color:            var(--btn-text);
 
   transition:
     background-color var(--transition-fast),
@@ -59,15 +59,19 @@ button {
 }
 
 .rux-btn:hover  { background-color: var(--btn-hover-background); }
-
-.rux-btn:active {
-  background-color: var(--btn-active-background);
-  transform: scale(0.97);
-}
+.rux-btn:active { background-color: var(--btn-active-background); transform: scale(0.97); }
 
 .rux-btn:focus-visible {
   outline: 3px solid var(--rux-white);
   border-color: transparent;
+}
+
+.rux-btn:disabled,
+.rux-btn[aria-disabled="true"] {
+  background-color: var(--rux-surface-modal) !important;
+  color:            var(--text-disabled) !important;
+  cursor:           not-allowed;
+  pointer-events:   none;
 }
 
 .rux-btn .material-symbols-outlined {
@@ -79,74 +83,33 @@ button {
     "opsz" var(--rux-button-icon-opsz);
 }
 
-.rux-btn:disabled,
-.rux-btn[aria-disabled="true"] {
-  background-color: var(--rux-surface-modal) !important;
-  color:            var(--text-disabled) !important;
-  cursor:           not-allowed;
-  pointer-events:   none;
-}
-
 /* ── 3. Color Variants ──────────────────────────────────────────────────── */
 
-.rux-btn--accent   { --btn-background: var(--rux-button-accent-bg); }
-.rux-btn--normal   { --btn-background: var(--rux-button-normal-bg); }
-.rux-btn--danger   { --btn-background: var(--rux-button-danger-bg); }
-.rux-btn--success  { --btn-background: var(--rux-button-success-bg); }
+.rux-btn--primary  { --btn-background: var(--rux-button-primary-bg); }
+.rux-btn--secondary  { --btn-background: var(--rux-button-secondary-bg); }
+.rux-btn--danger  { --btn-background: var(--rux-button-danger-bg); }
 
-.rux-btn--border {
+.rux-btn--tertiary {
   --btn-background:        transparent;
   --btn-border:            var(--rux-color-border-default);
   --btn-hover-background:  oklch(from var(--rux-white) l c h / 0.08);
   --btn-active-background: oklch(from var(--rux-white) l c h / 0.15);
 }
 
-/* ── 4. Square (icon-only) ──────────────────────────────────────────────── */
+/* ── 4. Square — icon-only 28×28 ────────────────────────────────────────── */
 
 .rux-btn--square {
   --btn-background:        transparent;
   --btn-hover-background:  oklch(from var(--rux-surface-panel) calc(l + var(--rux-button-hover)) c h);
-  --btn-active-background: var(--rux-button-accent-bg);
+  --btn-active-background: var(--rux-button-primary-bg);
 
-  box-sizing:       border-box;
-  display:          flex;
-  align-items:      center;
-  justify-content:  center;
-  width:            28px;
-  height:           28px;
-  min-width:        28px;
-  padding:          0;
-  cursor:           pointer;
-  border-radius:    var(--rux-radius-button);
-  border:           1px solid transparent;
-  background-color: var(--btn-background);
-  color:            var(--rux-button-text);
-
-  transition:
-    background-color var(--transition-fast),
-    border-color     var(--transition-fast),
-    color            var(--transition-fast);
+  width:     28px;
+  min-width: 28px;
+  padding:   0;
 }
 
-.rux-btn--square:hover  { background-color: var(--btn-hover-background); }
-.rux-btn--square:active { background-color: var(--btn-active-background); }
-
-.rux-btn--square[aria-pressed="true"] {
-  background-color: var(--rux-button-accent-bg);
-}
-
-.rux-btn--square:focus-visible {
-  outline: 3px solid var(--rux-white);
-  border-color: transparent;
-}
-
-.rux-btn--square:disabled,
-.rux-btn--square[aria-disabled="true"] {
-  background-color: var(--rux-surface-modal) !important;
-  color:            var(--text-disabled) !important;
-  cursor:           not-allowed;
-  pointer-events:   none;
-}
+.rux-btn--square:active          { transform: none; }
+.rux-btn--square[aria-pressed="true"] { background-color: var(--rux-button-primary-bg); }
 
 .rux-btn--square .material-symbols-outlined {
   font-size: var(--rux-button-square-icon-size);
@@ -158,64 +121,24 @@ button {
   transition: font-variation-settings var(--transition-fast);
 }
 
-/* ── 5. Toggle ──────────────────────────────────────────────────────────── */
+/* ── 5. Toggle — full-width requirement toggles ─────────────────────────── */
 
 .rux-btn--toggle {
-  --btn-background:        var(--rux-button-normal-bg);
+  --btn-background:        var(--rux-button-secondary-bg);
   --btn-hover-background:  oklch(from var(--btn-background) calc(l + var(--rux-button-hover)) c h);
-  --btn-active-background: var(--rux-button-accent-bg);
+  --btn-active-background: var(--rux-button-primary-bg);
 
-  box-sizing:          border-box;
-  display:             inline-flex;
-  align-items:         center;
-  justify-content:     center;
-  gap:                 8px;
-  height:              28px;
-  padding:             0 8px;
-  width:               100%;
-  min-width:           0;
-
-  font-family:         var(--font-sans);
-  font-size:           var(--rux-font-size-4);
-  font-weight:         var(--rux-font-weight-medium);
-  line-height:         1;
-  white-space:         nowrap;
-  user-select:         none;
-  -webkit-user-select: none;
-
-  cursor:              pointer;
-  border-radius:       var(--rux-radius-button);
-  border:              1px solid transparent;
-  background-color:    var(--btn-background);
-  color:               var(--rux-button-text);
-
-  transition:
-    background-color var(--transition-fast),
-    border-color     var(--transition-fast),
-    color            var(--transition-fast),
-    transform        0.1s ease;
+  width:     100%;
+  min-width: 0;
+  padding:   0 8px;
 }
 
-.rux-btn--toggle:hover  { background-color: var(--btn-hover-background); }
-.rux-btn--toggle:active { background-color: var(--btn-active-background); }
+.rux-btn--toggle:active { transform: none; }
 
 .rux-btn--toggle[aria-pressed="true"],
 .rux-btn--toggle.is-active {
-  background-color: var(--rux-button-accent-bg);
+  background-color:       var(--rux-button-primary-bg);
   --rux-button-icon-fill: 1;
-}
-
-.rux-btn--toggle:focus-visible {
-  outline: 3px solid var(--rux-white);
-  border-color: transparent;
-}
-
-.rux-btn--toggle:disabled,
-.rux-btn--toggle[aria-disabled="true"] {
-  background-color: var(--rux-surface-modal) !important;
-  color:            var(--text-disabled) !important;
-  cursor:           not-allowed;
-  pointer-events:   none;
 }
 
 /* ── 6. Toggle Grid & Requirement Label ─────────────────────────────────── */

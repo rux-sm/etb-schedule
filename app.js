@@ -2595,7 +2595,7 @@ function renderAgenda() {
       dom.agendaBody.innerHTML = `
         <tr><td colspan="8" class="schedule-error__cell">
           <div class="schedule-error__message">Failed to render schedule</div>
-          <button onclick="location.reload()" class="rux-btn rux-btn--accent">Reload Page</button>
+          <button onclick="location.reload()" class="rux-btn rux-btn--primary">Reload Page</button>
         </td></tr>
       `;
     }
@@ -6505,7 +6505,7 @@ function buildPrintScheduleTwoPages() {
       headerClone.classList.add("print-header");
       headerClone
         .querySelectorAll(
-          ".c-header__actions, .agenda-header__date-left .rux-btn--border, .weekpicker-trigger-wrap, .agenda-header__sync-center, .agenda-header__date-right",
+          ".c-header__actions, .agenda-header__date-left .rux-btn--tertiary, .weekpicker-trigger-wrap, .agenda-header__sync-center, .agenda-header__date-right",
         )
         .forEach((el) => el.remove());
 
@@ -6611,7 +6611,7 @@ function buildPrintScheduleLegalCSSGrid() {
       headerClone.classList.add("print-header");
       headerClone
         .querySelectorAll(
-          ".c-header__actions, .agenda-header__date-left .rux-btn--border, .weekpicker-trigger-wrap, .agenda-header__sync-center, .agenda-header__date-right",
+          ".c-header__actions, .agenda-header__date-left .rux-btn--tertiary, .weekpicker-trigger-wrap, .agenda-header__sync-center, .agenda-header__date-right",
         )
         .forEach((el) => el.remove());
       const dateLeft = headerClone.querySelector(".agenda-header__date-left");

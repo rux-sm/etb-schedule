@@ -305,7 +305,7 @@
 }
 
 .cds-accordion__heading:hover {
-  background-color: oklch(from var(--rux-button-normal-bg) calc(l + var(--rux-button-hover)) c h);
+  background-color: oklch(from var(--rux-button-secondary-bg) calc(l + var(--rux-button-hover)) c h);
 }
 
 .cds-accordion__title {

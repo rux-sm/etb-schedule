@@ -468,10 +468,28 @@ p.arrivalTime = normalizeTimeOut*(p.arrivalTime);
 const tripRowObj = mapTripFromParams*(p, { tripKey, tripId, createdAt: now, updatedAt: now });
 appendRowByHeaders*(tripsSheet, HEADERS.Trips, tripRowObj);
 replaceBusAssignments*(busSheet, tripKey, p);
-appendLog*(ss, { tripKey, tripId, action: "trip*added" });
-return { tripKey, tripId };
+appendLog*(ss, { tripKey, tripId, action: "trip_added" });
+
+const CREATION*FIELDS = [
+"destination", "customer", "contactName", "phone",
+"departureDate", "arrivalDate", "departureTime", "spotTime", "arrivalTime",
+"itineraryStatus", "contactStatus", "paymentStatus", "driverStatus", "invoiceStatus",
+"invoiceNumber", "busesNeeded", "notes", "comments",
+"req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqRelief2",
+"reqCoDriver", "reqHotel", "reqFuelCard", "reqWifi",
+"envelopePickup", "envelopeTripContact", "envelopeTripPhone",
+];
+for (const field of CREATION_FIELDS) {
+const val = String(tripRowObj[field] || "");
+if (val && val !== "false") {
+appendLog*(ss, { tripKey, tripId, action: "field_changed", field, oldValue: "", newValue: val });
 }
-function updateTrip*(p) {
+}
+
+return { tripKey, tripId };
+
+}
+function updateTrip\_(p) {
 const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
 const tripsSheet = ss.getSheetByName(CONFIG.SHEET_TRIPS);
 const busSheet = ss.getSheetByName(CONFIG.SHEET_BUS_ASSIGN);
@@ -520,15 +538,25 @@ itineraryPdfUrl: incomingPdfUrl
 updateRowByHeaders\_(tripsSheet, HEADERS.Trips, rowIndex, tripRowObj);
 
 const TRACKED*FIELDS = [
-"departureDate", "arrivalDate", "destination", "customer",
+"destination", "customer", "contactName", "phone",
+"departureDate", "arrivalDate", "departureTime", "spotTime", "arrivalTime",
 "itineraryStatus", "contactStatus", "paymentStatus", "driverStatus", "invoiceStatus",
-"busesNeeded", "notes", "comments",
+"invoiceNumber", "busesNeeded", "tripColor", "notes", "itinerary", "comments",
+"req56Pass", "reqSleeper", "reqLift", "reqRelief", "reqRelief2", "reqCoDriver", "reqHotel", "reqFuelCard", "reqWifi",
+"envelopePickup", "envelopeTripContact", "envelopeTripPhone", "envelopeTripNotes",
+"itineraryPdfUrl",
 ];
+const DATE_FIELDS = new Set(["departureDate", "arrivalDate"]);
+const TIME_FIELDS = new Set(["departureTime", "spotTime", "arrivalTime"]);
 for (const field of TRACKED_FIELDS) {
-const oldVal = String(existing[field] || "");
+const oldVal = DATE_FIELDS.has(field)
+? String(ymdFromCell_(existing[field]) || "")
+: TIME_FIELDS.has(field)
+? String(normalizeTimeOut_(existing[field]) || "")
+: String(existing[field] || "");
 const newVal = String(tripRowObj[field] || "");
 if (oldVal !== newVal) {
-appendLog*(ss, { tripKey, tripId, action: "field_changed", field, oldValue: oldVal, newValue: newVal });
+appendLog\_(ss, { tripKey, tripId, action: "field_changed", field, oldValue: oldVal, newValue: newVal });
 }
 }
 
@@ -540,7 +568,6 @@ const existingBusRow = getBusAssignmentRow*(busSheet, tripKey);
 const DRIVER_FIELDS = [
 "driver1", "driver2", "driver3", "driver4",
 "driver1Status", "driver2Status", "driver3Status", "driver4Status",
-"busNumber",
 ];
 replaceBusAssignments*(busSheet, tripKey, p);
 for (const field of DRIVER*FIELDS) {

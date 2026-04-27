@@ -125,10 +125,9 @@
 
   /* 2C. Button Colors
   ──────────────────────────────────────────────────────────────── */
-  --rux-button-accent-bg:  oklch(from var(--rux-blue)  60% c h);
-  --rux-button-normal-bg:  oklch(from var(--rux-gray)  60% c h);
+  --rux-button-primary-bg:  oklch(from var(--rux-blue)  60% c h);
+  --rux-button-secondary-bg:  oklch(from var(--rux-gray)  60% c h);
   --rux-button-danger-bg:  oklch(from var(--rux-red)   60% c h);
-  --rux-button-success-bg: oklch(from var(--rux-green) 60% c h);
   --rux-button-text:       var(--rux-white);
   --rux-button-hover:      0.08;
   /* 2C. Text Colors
