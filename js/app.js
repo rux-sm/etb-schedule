@@ -1700,17 +1700,22 @@ function maybeApplyPendingDefaults() {
 function updateInvoiceNumberColor() {
   const numInput = $("invoiceNumber");
   if (!numInput) return;
+  const icon = numInput.closest(".invoice-num-wrap")?.querySelector(".invoice-num-icon");
   numInput.classList.remove("status-pending", "status-assigned", "status-ok");
+  if (icon) icon.style.color = "";
   if (numInput.disabled) return;
   const invoiceStatus = String($("invoiceStatus")?.value || "").trim().toLowerCase();
   const hasNumber = !!numInput.value.trim();
+  let cls, iconColor;
   if (invoiceStatus === "paid in full") {
-    numInput.classList.add("status-ok");
+    cls = "status-ok"; iconColor = "var(--rux-status-green)";
   } else if (hasNumber) {
-    numInput.classList.add("status-assigned");
+    cls = "status-assigned"; iconColor = "var(--rux-status-yellow)";
   } else {
-    numInput.classList.add("status-pending");
+    cls = "status-pending"; iconColor = "var(--rux-status-red)";
   }
+  numInput.classList.add(cls);
+  if (icon) icon.style.color = iconColor;
 }
 
 function updateInvoiceNumberVisibility() {
