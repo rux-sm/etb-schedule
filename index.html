@@ -862,7 +862,7 @@
                       value="false"
                     />
 
-                    <div class="form-group col-5">
+                    <div class="form-group col-6">
                       <label for="tripDate">Departure date</label>
                       <input
                         type="date"
@@ -872,40 +872,13 @@
                       />
                     </div>
 
-                    <div class="form-group col-5">
+                    <div class="form-group col-6">
                       <label for="arrivalDate">Arrival date</label>
                       <input
                         type="date"
                         id="arrivalDate"
                         name="arrivalDate"
                       />
-                    </div>
-
-                    <div class="form-group col-2">
-                      <label for="busesNeeded">Buses</label>
-                      <select
-                        id="busesNeeded"
-                        name="busesNeeded"
-                        required
-                      >
-                        <option
-                          value=""
-                          disabled
-                          selected
-                        >
-                          -
-                        </option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                      </select>
                     </div>
 
                     <div class="form-group col-6">
@@ -1009,41 +982,9 @@
                       />
                     </div>
 
-                    <div class="form-group col-6">
-                      <label for="itineraryStatus">Itinerary status</label>
-                      <select
-                        id="itineraryStatus"
-                        name="itineraryStatus"
-                        required
-                      >
-                        <option
-                          value=""
-                          disabled
-                          selected
-                        ></option>
-                        <option value="Pending">Pending</option>
-                        <option value="Received">Received</option>
-                        <option value="Not Required">Not Required</option>
-                      </select>
-                    </div>
+                    <input type="hidden" id="itineraryStatus" name="itineraryStatus" value="" />
 
-                    <div class="form-group col-6">
-                      <label for="contactStatus">Contact status</label>
-                      <select
-                        id="contactStatus"
-                        name="contactStatus"
-                        required
-                      >
-                        <option
-                          value=""
-                          disabled
-                          selected
-                        ></option>
-                        <option value="Pending">Pending</option>
-                        <option value="Received">Received</option>
-                        <option value="Not Required">Not Required</option>
-                      </select>
-                    </div>
+                    <input type="hidden" id="contactStatus" name="contactStatus" value="" />
 
                     <div class="form-group col-6">
                       <label for="paymentStatus">Approval status</label>
@@ -1120,29 +1061,6 @@
                       />
                     </div>
 
-                    <div class="form-group col-6">
-                      <label for="tripColor">Color</label>
-                      <select
-                        id="tripColor"
-                        name="tripColor"
-                      >
-                        <option
-                          value=""
-                          selected
-                        >
-                          Auto
-                        </option>
-                        <option value="Out of Service">OOS</option>
-                        <option value="One-Way">1-Way</option>
-                        <option value="Orange">Orange</option>
-                        <option value="Yellow">Yellow</option>
-                        <option value="Green">Green</option>
-                        <option value="Cyan">Cyan</option>
-                        <option value="Purple">Purple</option>
-                        <option value="Pink">Pink</option>
-                      </select>
-                    </div>
-
                     <div class="form-group col-12">
                       <label for="notes">Notes</label>
                       <input
@@ -1166,6 +1084,56 @@
                     >
                       <div class="form-divider col-12">
                         <span class="form-divider__label">Requirements</span>
+                      </div>
+                      <div class="form-grid" style="width:100%">
+                        <div class="form-group col-6">
+                          <label for="busesNeeded">Buses</label>
+                          <select
+                            id="busesNeeded"
+                            name="busesNeeded"
+                            required
+                          >
+                            <option
+                              value=""
+                              disabled
+                              selected
+                            >
+                              -
+                            </option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                          </select>
+                        </div>
+                        <div class="form-group col-6">
+                          <label for="tripColor">Trip Type</label>
+                          <select
+                            id="tripColor"
+                            name="tripColor"
+                          >
+                            <option
+                              value=""
+                              selected
+                            >
+                              Auto
+                            </option>
+                            <option value="Out of Service">OOS</option>
+                            <option value="One-Way">1-Way</option>
+                            <option value="Orange">Orange</option>
+                            <option value="Yellow">Yellow</option>
+                            <option value="Green">Green</option>
+                            <option value="Cyan">Cyan</option>
+                            <option value="Purple">Purple</option>
+                            <option value="Pink">Pink</option>
+                          </select>
+                        </div>
                       </div>
                       <div
                         class="rux-btn--toggle-grid"
@@ -1291,7 +1259,7 @@
                         </button>
                       </div>
                       <div class="form-group col-12" style="margin-top: var(--form-section-gap)">
-                        <label for="comments">Trip Notes</label>
+                        <label for="comments">Driver Instructions</label>
                         <input
                           type="text"
                           id="comments"
@@ -2091,6 +2059,22 @@
       >
         <span class="material-symbols-outlined">delete</span>
         <span>Delete Itinerary PDF</span>
+      </button>
+      <button
+        id="ctxContactNotRequiredBtn"
+        class="context-menu__item"
+        type="button"
+      >
+        <span class="material-symbols-outlined">phone_disabled</span>
+        <span>Contact Not Required</span>
+      </button>
+      <button
+        id="ctxItineraryNotRequiredBtn"
+        class="context-menu__item"
+        type="button"
+      >
+        <span class="material-symbols-outlined">description_off</span>
+        <span>Itinerary Not Required</span>
       </button>
     </div>
 

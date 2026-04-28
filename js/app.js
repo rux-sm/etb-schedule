@@ -331,6 +331,8 @@ const dom = {
   ctxEditTripInfoBtn: $("ctxEditTripInfoBtn"),
   ctxAttachItineraryPdfBtn: $("ctxAttachItineraryPdfBtn"),
   ctxRemoveItineraryPdfBtn: $("ctxRemoveItineraryPdfBtn"),
+  ctxContactNotRequiredBtn: $("ctxContactNotRequiredBtn"),
+  ctxItineraryNotRequiredBtn: $("ctxItineraryNotRequiredBtn"),
   ctxCopyBtn: $("ctxCopyBtn"),
 
   // Cell Context Menu
@@ -4849,7 +4851,7 @@ function clearTripInfoCardForNextTrip() {
   syncBusPanelState();
   refreshBusSelectOptions();
 
-  ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus", "invoiceStatus"].forEach(
+  ["paymentStatus", "driverStatus", "invoiceStatus"].forEach(
     (id) => updateStatusSelect($(id)),
   );
   updateInvoiceNumberVisibility();
@@ -5933,8 +5935,6 @@ function setTripFormFromState(tripKey) {
   if ($("envelopeTripNotes")) $("envelopeTripNotes").value = t.envelopeTripNotes || "";
 
   [
-    "itineraryStatus",
-    "contactStatus",
     "paymentStatus",
     "driverStatus",
     "invoiceStatus",
@@ -6067,8 +6067,6 @@ async function openTripForEdit(tripKey) {
 
     // Sync custom dropdown triggers
     [
-      "itineraryStatus",
-      "contactStatus",
       "paymentStatus",
       "driverStatus",
       "invoiceStatus",
@@ -7437,6 +7435,30 @@ function wireDelegatedBarEvents() {
     // No need to manually hide "Deleting PDF..." here, as the save process's "Saving..." notice will replace it.
   });
 
+  dom.ctxContactNotRequiredBtn?.addEventListener("click", async () => {
+    if (!activeContextTripKey) return;
+    const capturedTripKey = activeContextTripKey;
+    closeTripContextMenu();
+    if (dom.tripKey?.value !== capturedTripKey) {
+      await openTripForEdit(capturedTripKey);
+    }
+    $("contactStatus").value = "Not Required";
+    state.tripFormDirty = true;
+    dom.saveBtn.click();
+  });
+
+  dom.ctxItineraryNotRequiredBtn?.addEventListener("click", async () => {
+    if (!activeContextTripKey) return;
+    const capturedTripKey = activeContextTripKey;
+    closeTripContextMenu();
+    if (dom.tripKey?.value !== capturedTripKey) {
+      await openTripForEdit(capturedTripKey);
+    }
+    $("itineraryStatus").value = "Not Required";
+    state.tripFormDirty = true;
+    dom.saveBtn.click();
+  });
+
   dom.itineraryPdfInput?.addEventListener("change", async (e) => {
     const input = e.target;
     const file = input.files && input.files[0];
@@ -7993,7 +8015,7 @@ function wireEvents() {
   };
   // Call once on load
   observeBusGrid();
-  ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus", "invoiceStatus"].forEach(
+  ["paymentStatus", "driverStatus", "invoiceStatus"].forEach(
     (id) => {
       const el = $(id);
       updateStatusSelect(el);
@@ -8512,14 +8534,13 @@ function wireEvents() {
     $("driverStatus").value = worst;
     $("driverStatus").dispatchEvent(new Event("change", { bubbles: true }));
 
-    // Auto-set Contact status to Received when both Trip contact and Trip contact phone are filled
+    // Auto-derive contact status from contact fields (preserve "Not Required" if already set)
     const envelopeContact = String($("envelopeTripContact")?.value || "").trim();
     const envelopePhone = String($("envelopeTripPhone")?.value || "").trim();
     let contactStatusValue = $("contactStatus").value;
-    if (envelopeContact && envelopePhone) {
-      contactStatusValue = "Received";
+    if (contactStatusValue !== "Not Required") {
+      contactStatusValue = (envelopeContact && envelopePhone) ? "Received" : "Pending";
       $("contactStatus").value = contactStatusValue;
-      $("contactStatus").dispatchEvent(new Event("change", { bubbles: true }));
     }
 
     // Construct trip from form
@@ -8535,7 +8556,15 @@ function wireEvents() {
       departureTime: $("departureTime").value,
       spotTime: $("spotTime").value,
       arrivalTime: $("arrivalTime").value,
-      itineraryStatus: $("itineraryStatus").value,
+      itineraryStatus: (() => {
+        const cur = $("itineraryStatus").value;
+        if (cur === "Not Required") return cur;
+        const hasPdf = !!(existingTrip?.itineraryPdfUrl);
+        const hasContent = !!(dom.itineraryField?.value?.trim());
+        const derived = (hasPdf || hasContent) ? "Received" : "Pending";
+        $("itineraryStatus").value = derived;
+        return derived;
+      })(),
       contactStatus: contactStatusValue,
       paymentStatus: $("paymentStatus").value,
       driverStatus: $("driverStatus").value,
@@ -8643,7 +8672,7 @@ function wireEvents() {
     // Reset custom selects to placeholder so triggers sync (form.reset doesn't fire change)
     setSelectToPlaceholder("busesNeeded");
     setSelectToPlaceholder("tripColor");
-    ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus", "invoiceStatus"].forEach(
+    ["paymentStatus", "driverStatus", "invoiceStatus"].forEach(
       setSelectToPlaceholder,
     );
 
@@ -8671,7 +8700,7 @@ function wireEvents() {
     });
     syncBusSelectEmptyState();
 
-    ["itineraryStatus", "contactStatus", "paymentStatus", "driverStatus", "invoiceStatus"].forEach(
+    ["paymentStatus", "driverStatus", "invoiceStatus"].forEach(
       (id) => updateStatusSelect($(id)),
     );
     updateInvoiceNumberVisibility();
