@@ -1703,8 +1703,8 @@ function updateInvoiceNumberColor() {
   const icon = numInput.closest(".invoice-num-wrap")?.querySelector(".invoice-num-icon");
   numInput.classList.remove("status-pending", "status-assigned", "status-ok");
   if (icon) icon.style.color = "";
-  if (numInput.disabled) return;
   const invoiceStatus = String($("invoiceStatus")?.value || "").trim().toLowerCase();
+  if (!invoiceStatus) return;
   const hasNumber = !!numInput.value.trim();
   let cls, iconColor;
   if (invoiceStatus === "paid in full") {
