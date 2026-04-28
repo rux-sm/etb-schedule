@@ -1263,68 +1263,48 @@ body.trip-bar-selected .schedule-grid__trip-bar.selected {
   opacity: 0.6;
 }
 
-#busGrid.bus-assign,
+/* Bus assignment — per-bus vertical group layout */
+#busGrid.bus-assign {
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-section-gap);
+}
+
+.bus-assign__row-group {
+  display: flex;
+  flex-direction: row;
+  gap: var(--form-col-gap);
+  align-items: flex-start;
+}
+
+.bus-assign__bus-cell {
+  width: 64px;
+  flex-shrink: 0;
+}
+
+.bus-assign__driver-stack {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bus-grid-row-gap);
+}
+
+.bus-assign__driver-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--form-col-gap);
+}
+
 .bus-assign-header {
   display: grid;
   grid-template-columns: 64px 1fr 1fr;
   column-gap: var(--form-col-gap);
-}
-
-#busGrid.bus-assign {
-  row-gap: var(--bus-grid-row-gap);
-  align-items: start;
-}
-
-.bus-assign-header {
   margin-top: var(--form-section-gap);
   margin-bottom: var(--bus-header-margin);
 }
 
 .bus-assign-header .field-label {
   margin-bottom: 0;
-}
-
-/* Relief slots pin to their driver's column so they appear stacked below Driver 1 / Driver 2 */
-.bus-assign__driver-block--relief1 {
-  grid-column: 2;
-}
-
-.bus-assign__driver-block--relief2 {
-  grid-column: 3;
-}
-
-/* Locked state: visible but dimmed and non-interactive until the toggle unlocks the slot */
-.bus-assign__driver-block.is-locked {
-  opacity: var(--field-disabled-opacity);
-  pointer-events: none;
-}
-
-/* Locked triggers: reset trigger's own :has(select:disabled) opacity so parent is-locked is the sole source */
-.bus-assign__driver-block.is-locked .select-dropdown .select-trigger {
-  opacity: 1;
-}
-
-/* Driver + Status block: driver on top, status below (Carbon-style grouped layout) */
-.bus-assign__driver-block {
-  display: flex;
-  flex-direction: column;
-  gap: var(--bus-driver-block-gap);
-  min-width: 0;
-}
-
-.bus-assign__driver-block .select-dropdown:first-child,
-.bus-assign__driver-block>select:first-child {
-  flex: 1;
-  min-width: 0;
-}
-
-.bus-assign__status-wrap {
-  flex-shrink: 0;
-}
-
-.bus-assign__status-cell {
-  min-width: 0;
-  width: 100%;
 }
 
 /* Standardized status pattern - apply colors directly from semantic tokens */

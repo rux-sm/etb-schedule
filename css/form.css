@@ -303,6 +303,21 @@ textarea:focus-visible,
   color: var(--rux-status-blue);
 }
 
+#invoiceNumber.status-pending {
+  background-color: color-mix(in srgb, var(--rux-status-red) 20%, var(--field-bg));
+  color: var(--rux-status-red);
+}
+
+#invoiceNumber.status-assigned {
+  background-color: color-mix(in srgb, var(--rux-status-yellow) 20%, var(--field-bg));
+  color: var(--rux-status-yellow);
+}
+
+#invoiceNumber.status-ok {
+  background-color: color-mix(in srgb, var(--rux-status-green) 20%, var(--field-bg));
+  color: var(--rux-status-green);
+}
+
 /* ── 8. Empty State ──────────────────────────────────────────────────────── */
 
 input[type="date"].is-empty:not(:focus)::-webkit-datetime-edit,

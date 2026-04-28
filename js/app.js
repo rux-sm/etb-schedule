@@ -1697,6 +1697,22 @@ function maybeApplyPendingDefaults() {
   if (changed) ids.forEach((id) => updateStatusSelect($(id)));
 }
 
+function updateInvoiceNumberColor() {
+  const numInput = $("invoiceNumber");
+  if (!numInput) return;
+  numInput.classList.remove("status-pending", "status-assigned", "status-ok");
+  if (numInput.disabled) return;
+  const invoiceStatus = String($("invoiceStatus")?.value || "").trim().toLowerCase();
+  const hasNumber = !!numInput.value.trim();
+  if (invoiceStatus === "paid in full") {
+    numInput.classList.add("status-ok");
+  } else if (hasNumber) {
+    numInput.classList.add("status-assigned");
+  } else {
+    numInput.classList.add("status-pending");
+  }
+}
+
 function updateInvoiceNumberVisibility() {
   const el = $("invoiceStatus");
   const numGroup = $("invoiceNumberGroup");
@@ -1721,6 +1737,7 @@ function updateInvoiceNumberVisibility() {
 
   // Intentionally DO NOT clear numInput.value when hiding, so toggling status
   // does not wipe an already-entered invoice number.
+  updateInvoiceNumberColor();
 }
 
 function refreshEmptyStateUI() {
@@ -1801,6 +1818,11 @@ function syncEmptyStateForForm() {
         updateInvoiceNumberVisibility();
         updateStatusSelect(invSel);
       });
+    }
+
+    const invNumInput = $("invoiceNumber");
+    if (invNumInput) {
+      invNumInput.addEventListener("input", updateInvoiceNumberColor);
     }
 
     // Auto-set Contact status to Received when both Trip contact and Trip contact phone are filled
@@ -4433,57 +4455,42 @@ function refreshBusSelectOptions() {
 
 function updateBusRowVisibility() {
   const raw = Number(dom.busesNeeded.value);
-  const n = raw > 0 ? Math.min(10, raw) : 0;
+  const n   = raw > 0 ? Math.min(10, raw) : 0;
 
   const wantsD2 = document.getElementById("reqCoDriver")?.getAttribute("aria-pressed") === "true";
   const wantsD3 = document.getElementById("reqRelief")?.getAttribute("aria-pressed") === "true";
   const wantsD4 = document.getElementById("reqRelief2")?.getAttribute("aria-pressed") === "true";
 
   state.busRows.forEach((r, idx) => {
-    const show = idx < n || idx === 0;
+    const show    = idx < n || idx === 0;
     const enabled = raw > 0 && idx < n;
 
     const showD2 = show && (wantsD2 || (r.d2Sel.value && r.d2Sel.value !== "None"));
     const showD3 = show && (wantsD3 || (r.d3Sel.value && r.d3Sel.value !== "None"));
     const showD4 = show && (wantsD4 || (r.d4Sel.value && r.d4Sel.value !== "None"));
 
-    // d2/d3/d4 are visible but locked (dimmed, non-interactive) when the row is active
-    // but their toggle is off and no driver has been assigned to that slot.
-    const lockedD2 = show && !showD2;
-    const lockedD3 = show && !showD3;
-    const lockedD4 = show && !showD4;
+    r.rowGroup.classList.toggle("is-hidden", !show);
+    r.d1Row.classList.toggle("is-hidden", false);
+    r.d2Row.classList.toggle("is-hidden", !showD2);
+    r.d3Row.classList.toggle("is-hidden", !showD3);
+    r.d4Row.classList.toggle("is-hidden", !showD4);
 
-    const busCell = r.busSel.closest(".select-dropdown") || r.busSel;
-    busCell.classList.toggle("is-hidden", !show);
-    r.d1Block.classList.toggle("is-hidden", !show);
-    r.d2Block.classList.toggle("is-hidden", !show);   // always visible when row is active
-    r.d2Block.classList.toggle("is-locked", lockedD2);
-    r.d3Block.classList.toggle("is-hidden", !show);   // always visible when row is active
-    r.d3Block.classList.toggle("is-locked", lockedD3);
-    r.d4Block.classList.toggle("is-hidden", !show);   // always visible when row is active
-    r.d4Block.classList.toggle("is-locked", lockedD4);
-
-    r.busSel.disabled = !enabled;
-    r.d1Sel.disabled = !enabled;
+    r.busSel.disabled      = !enabled;
+    r.d1Sel.disabled       = !enabled;
     r.d1StatusSel.disabled = !enabled;
-    r.d2Sel.disabled = !enabled || lockedD2;
-    r.d2StatusSel.disabled = !enabled || lockedD2;
-    r.d3Sel.disabled = !enabled || lockedD3;
-    r.d3StatusSel.disabled = !enabled || lockedD3;
-    r.d4Sel.disabled = !enabled || lockedD4;
-    r.d4StatusSel.disabled = !enabled || lockedD4;
-
+    r.d2Sel.disabled       = !enabled || !showD2;
+    r.d2StatusSel.disabled = !enabled || !showD2;
+    r.d3Sel.disabled       = !enabled || !showD3;
+    r.d3StatusSel.disabled = !enabled || !showD3;
+    r.d4Sel.disabled       = !enabled || !showD4;
+    r.d4StatusSel.disabled = !enabled || !showD4;
 
     if (!show) {
       r.busSel.value = "None";
-      r.d1Sel.value = "None";
-      r.d1StatusSel.value = "";
-      r.d2Sel.value = "None";
-      r.d2StatusSel.value = "";
-      r.d3Sel.value = "None";
-      r.d3StatusSel.value = "";
-      r.d4Sel.value = "None";
-      r.d4StatusSel.value = "";
+      r.d1Sel.value = "None"; r.d1StatusSel.value = "";
+      r.d2Sel.value = "None"; r.d2StatusSel.value = "";
+      r.d3Sel.value = "None"; r.d3StatusSel.value = "";
+      r.d4Sel.value = "None"; r.d4StatusSel.value = "";
     }
   });
 
@@ -4504,75 +4511,52 @@ function setBusesNeededAndSync(value) {
 function buildBusRowsOnce() {
   dom.busGrid.innerHTML = "";
   state.busRows.length = 0;
-
   dom.busGrid.classList.add("bus-assign");
 
+  const makeDriverRow = (dSel, dStatusSel) => {
+    const row = document.createElement("div");
+    row.className = "bus-assign__driver-row";
+    row.appendChild(dSel);
+    row.appendChild(dStatusSel);
+    return row;
+  };
+
   for (let i = 1; i <= 10; i++) {
-    const busSel = makeSelect(`bus${i}`);
-    const d1Sel = makeSelect(`bus${i}_driver1`);
+    const busSel      = makeSelect(`bus${i}`);
+    const d1Sel       = makeSelect(`bus${i}_driver1`);
     const d1StatusSel = makeDriverStatusSelect(`bus${i}_driver1Status`);
-    const d2Sel = makeSelect(`bus${i}_driver2`);
+    const d2Sel       = makeSelect(`bus${i}_driver2`);
     const d2StatusSel = makeDriverStatusSelect(`bus${i}_driver2Status`);
-
-    busSel.classList.add("bus-assign__cell");
-
-    const d1Block = document.createElement("div");
-    d1Block.className = "bus-assign__driver-block";
-    d1Block.appendChild(d1Sel);
-    const d1StatusWrap = document.createElement("div");
-    d1StatusWrap.className = "bus-assign__status-wrap";
-    d1StatusSel.classList.add("bus-assign__status-cell");
-    d1StatusWrap.appendChild(d1StatusSel);
-    d1Block.appendChild(d1StatusWrap);
-
-    const d2Block = document.createElement("div");
-    d2Block.className = "bus-assign__driver-block";
-    d2Block.appendChild(d2Sel);
-    const d2StatusWrap = document.createElement("div");
-    d2StatusWrap.className = "bus-assign__status-wrap";
-    d2StatusSel.classList.add("bus-assign__status-cell");
-    d2StatusWrap.appendChild(d2StatusSel);
-    d2Block.appendChild(d2StatusWrap);
-
-    const d3Sel = makeSelect(`bus${i}_driver3`);
+    const d3Sel       = makeSelect(`bus${i}_driver3`);
     const d3StatusSel = makeDriverStatusSelect(`bus${i}_driver3Status`);
-    const d3Block = document.createElement("div");
-    d3Block.className = "bus-assign__driver-block bus-assign__driver-block--relief1";
-    d3Block.appendChild(d3Sel);
-    const d3StatusWrap = document.createElement("div");
-    d3StatusWrap.className = "bus-assign__status-wrap";
-    d3StatusSel.classList.add("bus-assign__status-cell");
-    d3StatusWrap.appendChild(d3StatusSel);
-    d3Block.appendChild(d3StatusWrap);
-
-    const d4Sel = makeSelect(`bus${i}_driver4`);
+    const d4Sel       = makeSelect(`bus${i}_driver4`);
     const d4StatusSel = makeDriverStatusSelect(`bus${i}_driver4Status`);
-    const d4Block = document.createElement("div");
-    d4Block.className = "bus-assign__driver-block bus-assign__driver-block--relief2";
-    d4Block.appendChild(d4Sel);
-    const d4StatusWrap = document.createElement("div");
-    d4StatusWrap.className = "bus-assign__status-wrap";
-    d4StatusSel.classList.add("bus-assign__status-cell");
-    d4StatusWrap.appendChild(d4StatusSel);
-    d4Block.appendChild(d4StatusWrap);
 
-    dom.busGrid.append(busSel, d1Block, d2Block, d3Block, d4Block);
+    const busCell = document.createElement("div");
+    busCell.className = "bus-assign__bus-cell";
+    busCell.appendChild(busSel);
+
+    const d1Row = makeDriverRow(d1Sel, d1StatusSel);
+    const d2Row = makeDriverRow(d2Sel, d2StatusSel);
+    const d3Row = makeDriverRow(d3Sel, d3StatusSel);
+    const d4Row = makeDriverRow(d4Sel, d4StatusSel);
+
+    const driverStack = document.createElement("div");
+    driverStack.className = "bus-assign__driver-stack";
+    driverStack.append(d1Row, d2Row, d3Row, d4Row);
+
+    const rowGroup = document.createElement("div");
+    rowGroup.className = "bus-assign__row-group";
+    rowGroup.append(busCell, driverStack);
+
+    dom.busGrid.appendChild(rowGroup);
 
     state.busRows.push({
-      row: null,
-      busSel,
-      d1Sel,
-      d1StatusSel,
-      d2Sel,
-      d2StatusSel,
-      d3Sel,
-      d3StatusSel,
-      d4Sel,
-      d4StatusSel,
-      d1Block,
-      d2Block,
-      d3Block,
-      d4Block,
+      rowGroup, busCell,
+      busSel, d1Sel, d1StatusSel, d1Row,
+      d2Sel, d2StatusSel, d2Row,
+      d3Sel, d3StatusSel, d3Row,
+      d4Sel, d4StatusSel, d4Row,
     });
   }
 
