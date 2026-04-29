@@ -63,9 +63,8 @@
             id="topbarTitle"
           >
             <span class="rux-app__title--prefix"
-              ><span class="rux-app__title--org">ETB</span>
-              <span class="rux-app__title--name">Trip Schedule</span></span
-            >
+              >
+              <span class="rux-app__title--name">Trip Schedule</span>
             <span
               class="rux-app__version"
               id="appVersionBadge"
@@ -640,6 +639,7 @@
               <div
                 class="c-card c-card--compact is-hidden"
                 id="driverWeekCard"
+                11
                 data-js="panel-card-drivers"
               >
                 <div class="rux-panel__header">
@@ -1354,26 +1354,6 @@
                 >
                   <div class="c-header c-header--schedule">
                     <div class="agenda-header__date-left">
-                      <button
-                        id="prevWeekBtn"
-                        class="rux-btn rux-btn--tertiary"
-                        type="button"
-                        aria-label="Previous Week"
-                        title="Previous Week"
-                      >
-                        <span class="material-symbols-outlined">arrow_back_ios_new</span>
-                        Prev
-                      </button>
-                      <button
-                        id="nextWeekBtn"
-                        class="rux-btn rux-btn--tertiary"
-                        type="button"
-                        aria-label="Next Week"
-                        title="Next Week"
-                      >
-                        Next
-                        <span class="material-symbols-outlined">arrow_forward_ios</span>
-                      </button>
                       <div
                         id="dateWrapper"
                         class="date-picker-wrapper"
@@ -1399,6 +1379,24 @@
                       </span>
                     </div>
                     <div class="c-header__actions">
+                      <button
+                        id="prevWeekBtn"
+                        class="rux-btn rux-btn--tertiary"
+                        type="button"
+                        aria-label="Previous Week"
+                        title="Previous Week"
+                      >
+                        <span class="material-symbols-outlined">keyboard_arrow_left</span>
+                      </button>
+                      <button
+                        id="nextWeekBtn"
+                        class="rux-btn rux-btn--tertiary"
+                        type="button"
+                        aria-label="Next Week"
+                        title="Next Week"
+                      >
+                        <span class="material-symbols-outlined">keyboard_arrow_right</span>
+                      </button>
                       <div class="weekpicker-trigger-wrap">
                         <button
                           id="agendaLeftBtn"
@@ -1407,7 +1405,6 @@
                           aria-label="Select week"
                           title="Select week"
                         >
-                          <span class="material-symbols-outlined">calendar_month</span>
                           Week
                         </button>
                         <input
@@ -1417,16 +1414,6 @@
                           aria-label="Select week"
                         />
                       </div>
-                      <button
-                        id="todayBtn"
-                        class="rux-btn rux-btn--tertiary"
-                        type="button"
-                        aria-label="Today"
-                        title="Today"
-                      >
-                        <span class="material-symbols-outlined">calendar_today</span>
-                        Today
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -1460,7 +1447,7 @@
                         >
                           <span class="schedule-grid__day-label">
                             <span class="schedule-grid__day-date"></span>
-                            <span class="schedule-grid__day-name">Sun</span>
+                            <span class="schedule-grid__day-name">Sunday</span>
                           </span>
                         </th>
 
@@ -1470,7 +1457,7 @@
                         >
                           <span class="schedule-grid__day-label">
                             <span class="schedule-grid__day-date"></span>
-                            <span class="schedule-grid__day-name">Mon</span>
+                            <span class="schedule-grid__day-name">Monday</span>
                           </span>
                         </th>
 
@@ -1480,7 +1467,7 @@
                         >
                           <span class="schedule-grid__day-label">
                             <span class="schedule-grid__day-date"></span>
-                            <span class="schedule-grid__day-name">Tue</span>
+                            <span class="schedule-grid__day-name">Tuesday</span>
                           </span>
                         </th>
 
@@ -1490,7 +1477,7 @@
                         >
                           <span class="schedule-grid__day-label">
                             <span class="schedule-grid__day-date"></span>
-                            <span class="schedule-grid__day-name">Wed</span>
+                            <span class="schedule-grid__day-name">Wednesday</span>
                           </span>
                         </th>
 
@@ -1500,7 +1487,7 @@
                         >
                           <span class="schedule-grid__day-label">
                             <span class="schedule-grid__day-date"></span>
-                            <span class="schedule-grid__day-name">Thu</span>
+                            <span class="schedule-grid__day-name">Thursday</span>
                           </span>
                         </th>
 
@@ -1510,7 +1497,7 @@
                         >
                           <span class="schedule-grid__day-label">
                             <span class="schedule-grid__day-date"></span>
-                            <span class="schedule-grid__day-name">Fri</span>
+                            <span class="schedule-grid__day-name">Friday</span>
                           </span>
                         </th>
 
@@ -1520,7 +1507,7 @@
                         >
                           <span class="schedule-grid__day-label">
                             <span class="schedule-grid__day-date"></span>
-                            <span class="schedule-grid__day-name">Sat</span>
+                            <span class="schedule-grid__day-name">Saturday</span>
                           </span>
                         </th>
                       </tr>

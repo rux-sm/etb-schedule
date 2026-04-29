@@ -210,8 +210,8 @@
   margin: 0;
   padding: 0;
   font-family: var(--font-sans);
-  font-size: var(--rux-font-size-5);
-  font-weight: var(--rux-font-weight-medium);
+  font-size: var(--rux-font-size-7);
+  font-weight: var(--rux-font-weight-semibold);
   line-height: 1;
   height: auto;
   letter-spacing: var(--heading-2-letter-spacing);

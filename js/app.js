@@ -5563,8 +5563,8 @@ function fillEnvelopePage(pageEl, trip, assignment) {
     if (el) el.innerHTML = html;
   };
 
-  const busCount = parseInt(trip.busesNeeded, 10) || 1;
-  const busLabel = busCount === 1 ? "1 BUS" : `${busCount} BUSES`;
+  const busIndex  = assignment.busIndex  ?? 0;
+  const totalBuses = assignment.totalBuses ?? (parseInt(trip.busesNeeded, 10) || 1);
 
   const tripDateStr = envFormatDate(trip.departureDate);
   const returnDateStr = envFormatDate(trip.arrivalDate);
@@ -5588,35 +5588,40 @@ function fillEnvelopePage(pageEl, trip, assignment) {
   set("phone", trip.envelopeTripPhone || "");
   set("startodo", "");
   set("endodo", "");
-  set("notes1", busLabel);
-
   const REQ_ITEMS = [
-    { key: "req56Pass",  icon: "tatami_seat",      label: "56 Pass Req" },
-    { key: "reqSleeper", icon: "airline_seat_flat", label: "Sleeper Req" },
-    { key: "reqLift",    icon: "accessible",        label: "Lift Req" },
-    { key: "reqHotel",   icon: "apartment",         label: "Hotel Req" },
-    { key: "reqWifi",    icon: "wifi",              label: "Wifi Req" },
+    { key: "req56Pass",  icon: "tatami_seat",      label: "56 Pass" },
+    { key: "reqSleeper", icon: "airline_seat_flat", label: "Sleeper" },
+    { key: "reqLift",    icon: "accessible",        label: "Lift"    },
+    { key: "reqHotel",   icon: "apartment",         label: "Hotel"   },
+    { key: "reqWifi",    icon: "wifi",              label: "Wifi"    },
   ];
+
+  const notesLines = [];
+
+  const comments = (trip.comments || "").trim().toUpperCase();
+  if (comments) notesLines.push({ text: comments });
+
   const activeReqs = REQ_ITEMS.filter((r) => trip[r.key]);
   if (activeReqs.length) {
     const html = activeReqs
-      .map(
-        (r) =>
-          `<span class="env-req-item"><span class="material-symbols-outlined env-req-icon">${r.icon}</span><span class="env-req-label">${r.label}</span></span>`,
-      )
+      .map((r) => `<span class="env-req-item"><span class="material-symbols-outlined env-req-icon">${r.icon}</span><span class="env-req-label">${r.label}</span></span>`)
       .join("");
-    setHTML("notes2", html);
-  } else {
-    set("notes2", "");
+    notesLines.push({ html });
   }
 
   if (trip.reqFuelCard) {
-    setHTML("notes3", `<span class="env-req-item"><span class="material-symbols-outlined env-req-icon">credit_card</span><span class="env-req-label">Fuel Card  _______________</span></span>`);
-  } else {
-    set("notes3", "");
+    notesLines.push({ html: `<span class="env-req-item"><span class="material-symbols-outlined env-req-icon">credit_card</span><span class="env-req-label">Fuel Card  _______________</span></span>` });
   }
 
-  set("notes4", (trip.comments || "").toUpperCase());
+  if (totalBuses > 1) {
+    notesLines.push({ text: `Bus ${busIndex + 1} of ${totalBuses}` });
+  }
+
+  ["notes1", "notes2", "notes3", "notes4"].forEach((slot, i) => {
+    const line = notesLines[i];
+    if (line?.html) setHTML(slot, line.html);
+    else set(slot, line?.text ?? "");
+  });
 
   // CC FOR TRIP checkbox — pre-check YES if fuel card required
   const ccYesEl = pageEl.querySelector('[data-field="ccYes"]');
@@ -5685,7 +5690,8 @@ function openEnvelopeModal(tripKey) {
   const assignments = [];
 
   if (rawAssignments.length) {
-    rawAssignments.forEach((a) => {
+    const totalBuses = rawAssignments.length;
+    rawAssignments.forEach((a, busIndex) => {
       const busId = a.busId || trip.busId || "";
       const d1 = (a.driver1 || "").toString().trim();
 
@@ -5699,23 +5705,25 @@ function openEnvelopeModal(tripKey) {
       const d4Raw = (a.driver4 || "").toString().trim();
       const hasD4 = d4Raw && d4Raw.toLowerCase() !== "none" && d4Raw !== "—";
 
+      const pos = { busIndex, totalBuses };
+
       // Variant 1: driver1 primary; if no co-driver, show relief 1 in that spot
       const d1CoDriver = d2 || (hasD3 ? d3Raw : "");
       const d1CoIsRelief = !hasD2 && hasD3;
-      assignments.push({ busId, driver1: d1, driver2: d1CoDriver, driver2IsRelief: d1CoIsRelief });
+      assignments.push({ busId, driver1: d1, driver2: d1CoDriver, driver2IsRelief: d1CoIsRelief, ...pos });
 
       // Variant 2: swapped (co-driver primary), only if real co-driver exists
       if (hasD2) {
-        assignments.push({ busId, driver1: d2, driver2: d1 });
+        assignments.push({ busId, driver1: d2, driver2: d1, ...pos });
       }
 
       // Relief driver variants — co-driver field: relief 1 gets primary driver;
       // relief 2 gets relief 1 as co (if present), otherwise primary driver.
-      if (hasD3) assignments.push({ busId, driver1: d3Raw, driver2: d1, isRelief: true });
-      if (hasD4) assignments.push({ busId, driver1: d4Raw, driver2: d1, isRelief: true });
+      if (hasD3) assignments.push({ busId, driver1: d3Raw, driver2: d1, isRelief: true, ...pos });
+      if (hasD4) assignments.push({ busId, driver1: d4Raw, driver2: d1, isRelief: true, ...pos });
     });
   } else {
-    assignments.push({ busId: trip.busId || "", driver1: "", driver2: "" });
+    assignments.push({ busId: trip.busId || "", driver1: "", driver2: "", busIndex: 0, totalBuses: 1 });
   }
 
   // Store the envelope assignments so print/save logic uses the same variants
@@ -8723,13 +8731,6 @@ function wireEvents() {
 
   document.addEventListener("keydown", (e) => {
     if (!dom.tripDetailsModal?.hidden && e.key === "Escape") closeTripDetailsModal();
-  });
-
-  $("todayBtn")?.addEventListener("click", () => {
-    const today = new Date();
-    // dom.weekPicker.value = toLocalDateInputValue(today); // Removed
-    state.currentDate = startOfWeek(today);
-    updateWeekDates();
   });
 
 

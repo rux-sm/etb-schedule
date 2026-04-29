@@ -157,9 +157,9 @@
   /* 2D. Border Roles
   ──────────────────────────────────────────────────────────────── */
 
-  --rux-color-border-subtle:  oklch(from var(--rux-white) l c h / 6%);
-  --rux-color-border-default: oklch(from var(--rux-white) l c h / 12%);
-  --rux-color-border-strong:  oklch(from var(--rux-white) l c h / 25%);
+  --rux-color-border-subtle:  oklch(from var(--rux-white) l c h / 4%);
+  --rux-color-border-default: oklch(from var(--rux-white) l c h / 16%);
+  --rux-color-border-strong:  oklch(from var(--rux-white) l c h / 24%);
 
   /* 2E. Semantic Radius Aliases
          See RUX_UI.md for optical nesting guide and depth reference.
@@ -171,11 +171,11 @@
   /* cards, panels, sidebars */
   --rux-radius-section: var(--rux-radius-2);
   /* groups nested inside cards */
-  --rux-radius-control: var(--rux-radius-2);
+  --rux-radius-control: var(--rux-radius-1);
   /* inputs, selects, toolbars */
   --rux-radius-badge: var(--rux-radius-2);
   /* chips, tags, mini-badges */
-  --rux-radius-button: var(--rux-radius-2);
+  --rux-radius-button: var(--rux-radius-1);
   /* pill / squircle buttons */
 
   /* ============================================================
@@ -306,7 +306,7 @@
   --space-xl: var(--rux-space-6);
   /* 24px — note: --rux-space-5 (20px) has no alias */
   --panel-width: 384px;
-  --layout-panel-gap: var(--rux-space-4);
+  --layout-panel-gap: var(--rux-space-3);
   --card-padding: 16px;
   --size-header-row: 40px;
   --size-header-action: 40px;
