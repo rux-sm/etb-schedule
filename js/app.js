@@ -1020,12 +1020,16 @@ async function withRetry(
  * Main API - Modern fetch-based implementation
  */
 const api = {
-  listDrivers(activeOnly = true) {
-    return fetchAPI("listDrivers", { activeOnly: activeOnly ? "true" : "false" });
+  listDrivers(activeOnly = true, bustCache = false) {
+    const params = { activeOnly: activeOnly ? "true" : "false" };
+    if (bustCache) params.bustCache = "true";
+    return fetchAPI("listDrivers", params);
   },
 
-  listBuses(activeOnly = true) {
-    return fetchAPI("listBuses", { activeOnly: activeOnly ? "true" : "false" });
+  listBuses(activeOnly = true, bustCache = false) {
+    const params = { activeOnly: activeOnly ? "true" : "false" };
+    if (bustCache) params.bustCache = "true";
+    return fetchAPI("listBuses", params);
   },
 
   weekData(start, end, notesKey) {
@@ -6967,9 +6971,9 @@ async function loadDriversAndBuses(forceRefresh = false) {
   // Always fetch buses fresh (no caching) to ensure hasLift data is current
   const [driversResp, busesResp] = await Promise.all([
     forceRefresh || !state.driversList.length
-      ? api.listDrivers(true)
+      ? api.listDrivers(true, forceRefresh)
       : Promise.resolve({ ok: true, drivers: state.driversList }),
-    api.listBuses(true),
+    api.listBuses(true, forceRefresh),
   ]);
 
   state.driversList = driversResp?.ok && driversResp.drivers ? driversResp.drivers : [];
@@ -8308,11 +8312,6 @@ function wireEvents() {
     }
   });
 
-  dom.busesNeeded.addEventListener("input", () => {
-    updateBusRowVisibility();
-    syncBusPanelState();
-    maybeApplyPendingDefaults();
-  });
   dom.busesNeeded.addEventListener("change", () => {
     updateBusRowVisibility();
     syncBusPanelState();
