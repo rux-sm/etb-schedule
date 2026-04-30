@@ -211,6 +211,7 @@ const dom = {
   weekPicker: $("weekPicker"),
   agendaLeftBtn: $("agendaLeftBtn"),
 
+  todayBtn: $("todayBtn"),
   prevWeekBtn: $("prevWeekBtn"),
   nextWeekBtn: $("nextWeekBtn"),
 
@@ -7999,6 +8000,10 @@ function wireEvents() {
     }
   }, CONFIG.AUTO_REFRESH_INTERVAL);
 
+  dom.todayBtn?.addEventListener("click", () => {
+    state.currentDate = startOfWeek(new Date());
+    updateWeekDates();
+  });
   dom.prevWeekBtn.addEventListener("click", () => changeWeek(-1));
   dom.nextWeekBtn.addEventListener("click", () => changeWeek(1));
 
