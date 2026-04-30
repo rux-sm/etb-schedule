@@ -7730,24 +7730,6 @@ function wrapSelectInGlassDropdown(sel, opts) {
     const v = (sel.value ?? "").trim();
     const lcValue = v.toLowerCase();
 
-    // Add icon if applicable
-    const iconName = getSelectedIcon();
-    if (iconName) {
-      const iconSpan = document.createElement("span");
-      iconSpan.className = "material-symbols-outlined dropdown-icon is-active";
-
-      const colorClass = getStatusColorClass(
-        statusId || (sel.name && sel.name.endsWith("Status") ? "driverStatus" : null),
-        lcValue,
-      );
-      if (colorClass) {
-        iconSpan.classList.add(colorClass);
-      }
-
-      iconSpan.textContent = iconName;
-      trigger.appendChild(iconSpan);
-    }
-
     // Add text container to flex grow properly
     const textSpan = document.createElement("span");
     textSpan.style.flex = "1";
@@ -7807,22 +7789,13 @@ function wrapSelectInGlassDropdown(sel, opts) {
       const isStatusField =
         (statusId && statusIds.has(statusId)) || (sel.name && sel.name.endsWith("Status"));
       if (isStatusField && v) {
-        // Bus driver slots: use fixed role icon based on slot name
-        const roleIcon = sel.name ? getBusDriverRoleIcon(sel.name) : "";
-        const itemStatusId = statusId || "driverStatus";
-        const itemIconName = roleIcon || getStatusIcon(itemStatusId, lcValue);
-        if (itemIconName) {
-          const iconSpan = document.createElement("span");
-          iconSpan.className = "material-symbols-outlined dropdown-icon";
-
-          const colorClass = getStatusColorClass(itemStatusId, lcValue);
-          if (colorClass) {
-            iconSpan.classList.add(colorClass);
-            btn.classList.add(colorClass);
-          }
-
-          iconSpan.textContent = itemIconName;
-          btn.appendChild(iconSpan);
+        // Apply status color class to button (icons removed, but colors remain via class)
+        const colorClass = getStatusColorClass(
+          statusId || "driverStatus",
+          lcValue,
+        );
+        if (colorClass) {
+          btn.classList.add(colorClass);
         }
       }
 
