@@ -94,11 +94,10 @@
   --rux-surface-base: oklch(from var(--rux-gray) 0% c h);
 
   /* Panel Surfaces */
-  --rux-surface-panel: oklch(from var(--rux-gray) 28% c h);
-  --rux-surface-header: oklch(from var(--rux-gray) 32% c h);
-  --rux-surface-footer: oklch(from var(--rux-gray) 32% c h);
-
-  --rux-surface-card: oklch(from var(--rux-gray) 0% c h);
+  --rux-surface-panel: oklch(from var(--rux-gray) 24% c h);
+  --rux-surface-header: oklch(from var(--rux-gray) 40% c h);
+  --rux-surface-card: oklch(from var(--rux-gray) 32% c h);
+  --rux-surface-footer: oklch(from var(--rux-gray) 40% c h);
 
   --rux-surface-modal: oklch(from var(--rux-gray) 18% c h);
 
@@ -107,7 +106,7 @@
   --rux-surface-overlay: oklch(from var(--rux-gray) 28% c h);
 
   /* Input Surfaces */
-  --rux-surface-input: oklch(from var(--rux-gray) 14% c h);
+  --rux-surface-input: oklch(from var(--rux-gray) 24% c h);
   --rux-surface-textarea: var(--rux-surface-input);
 
   /* 2B. Status Colors
@@ -207,8 +206,8 @@
   --form-section-gap: 16px;
   --form-label-color:  var(--rux-text-secondary);
   /* fixed: was var(--rux-blue) direct Tier 1 ref */
-  --form-label-font-size: var(--rux-font-size-3);
-  --form-label-weight: var(--rux-font-weight-regular);
+  --form-label-font-size: var(--rux-font-size-2);
+  --form-label-weight: var(--rux-font-weight-medium);
   --form-label-spacing: 0.02em;
   --form-label-indent: 2px;
 
@@ -253,8 +252,8 @@
   /* 3E. Shadows & Effects
   ──────────────────────────────────────────────────────────────── */
 
-  /*--heading-shadow-panel: 0px 1px 2px rgba(0, 0, 0, 0.6), 0px 2px 4px rgba(0, 0, 0, 0.3);
-  --label-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --heading-shadow-panel: 0px 1px 2px rgba(0, 0, 0, 0.6), 0px 2px 4px rgba(0, 0, 0, 0.3);
+  /*--label-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); */
   --text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   --overlay-hover: rgba(0, 0, 0, 0.05);
 

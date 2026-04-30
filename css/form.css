@@ -73,16 +73,16 @@ input[type="time"]::-webkit-datetime-edit-fields-wrapper {
 ::-webkit-calendar-picker-indicator {
   opacity: 1; /* Override any native transparency */
   cursor: pointer;
-  padding: 6px;
+  padding: 0px;
   margin-inline-start: 0px;
   /* Dims the pure white icon to ~68% lightness, visually matching var(--text-secondary) */
-  filter: brightness(0.7); 
+  filter: brightness(0.7);
   transition: filter var(--transition-fast);
 }
 
 /* Brighten icon to pure white on hover for better UX */
 ::-webkit-calendar-picker-indicator:hover {
-  filter: brightness(1); 
+  filter: brightness(1);
 }
 
 /* Firefox Fallback */
@@ -135,7 +135,6 @@ textarea::placeholder {
   color: var(--text-placeholder);
   opacity: 1;
 }
-
 
 input:focus,
 select:focus,
@@ -305,8 +304,6 @@ textarea:disabled {
   color: var(--rux-status-blue);
 }
 
-
-
 /* ── 8. Empty State ──────────────────────────────────────────────────────── */
 
 input[type="date"].is-empty:not(:focus)::-webkit-datetime-edit,
@@ -322,7 +319,7 @@ select.is-empty:not(:focus),
 /* ── 9. Labels ───────────────────────────────────────────────────────────── */
 
 .form-grid label,
-.form-group>label,
+.form-group > label,
 .field-label {
   display: block;
   font-size: var(--form-label-font-size);
@@ -414,6 +411,7 @@ select.is-empty:not(:focus),
   width: 100%;
   gap: var(--form-row-gap) var(--form-col-gap);
   align-items: start;
+  padding: none;
 }
 
 /* Reset stray margins on all grid children */
@@ -490,7 +488,6 @@ hr.form-divider {
 /* ── 12. Responsive ──────────────────────────────────────────────────────── */
 
 @container form-grid (max-width: 350px) {
-
   .col-2,
   .col-4,
   .col-5,
@@ -508,7 +505,6 @@ hr.form-divider {
   }
 }
 
-
 /* ── Section Dividers ────────────────────────────────────────── */
 .form-divider {
   grid-column: span 12;
@@ -519,7 +515,7 @@ hr.form-divider {
 }
 
 .form-divider::after {
-  content: '';
+  content: "";
   flex: 1;
   height: 1px;
   background: var(--rux-color-border-default);
@@ -532,4 +528,27 @@ hr.form-divider {
   color: var(--text-secondary);
   white-space: nowrap;
   flex-shrink: 0;
+}
+
+/* ── Section Cards ───────────────────────────────────────────── */
+.form-section-card {
+  grid-column: span 12;
+  display: grid;
+  grid-template-columns: subgrid;
+  row-gap: var(--form-row-gap);
+  padding: var(--rux-space-5);
+  background: var(--rux-surface-card);
+  border: 1px solid var(--rux-color-border-subtle);
+  border-radius: var(--rux-radius-section);
+}
+
+.form-section-card__label {
+  grid-column: 1 / -1;
+  font-size: var(--form-section-label-size);
+  font-weight: var(--form-section-label-weight);
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  padding-bottom: var(--rux-space-3);
+  border-bottom: 1px solid var(--rux-color-border-subtle);
 }

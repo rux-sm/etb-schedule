@@ -1161,9 +1161,14 @@
   background-color: oklch(from var(--rux-surface-panel) calc(l + var(--rux-button-hover)) c h);
 }
 
-.driver-week__name-cell.is-selected {
-  color: var(--rux-accent-color);
+.driver-week__table tbody tr .driver-week__name-cell.is-selected {
+  background-color: var(--rux-button-primary-bg);
+  color: var(--rux-white);
   font-weight: 600;
+}
+
+.driver-week__table tbody tr .driver-week__name-cell.is-selected:hover {
+  background-color: oklch(from var(--rux-button-primary-bg) calc(l + var(--rux-button-hover)) c h);
 }
 
 .driver-week__schedule-icon {
@@ -1291,7 +1296,7 @@ body.trip-bar-selected .schedule-grid__trip-bar.selected {
   display: grid;
   grid-template-columns: 64px 1fr 1fr;
   column-gap: var(--form-col-gap);
-  margin-top: var(--form-section-gap);
+  margin-top: none;
   margin-bottom: var(--bus-header-margin);
 }
 

@@ -1735,13 +1735,7 @@ function updateInvoiceNumberVisibility() {
   const show = v === "invoiced" || v === "deposit received" || v === "paid in full";
 
   if (numInput) {
-    numInput.disabled = !show;
-    // Visually update empty state if we just enabled/disabled it
-    if (!show && !numInput.value) {
-      numInput.classList.add("is-empty");
-    } else if (show && !numInput.value) {
-      numInput.classList.add("is-empty");
-    }
+    if (!numInput.value) numInput.classList.add("is-empty");
   }
 
   // Intentionally DO NOT clear numInput.value when hiding, so toggling status
@@ -8564,7 +8558,13 @@ function wireEvents() {
       contactStatus: contactStatusValue,
       paymentStatus: $("paymentStatus").value,
       driverStatus: $("driverStatus").value,
-      invoiceStatus: $("invoiceStatus").value,
+      invoiceStatus: (() => {
+        const sel = $("invoiceStatus");
+        if ($("invoiceNumber").value.trim() && sel?.value === "Pending Invoice") {
+          sel.value = "Invoiced";
+        }
+        return sel?.value || "";
+      })(),
       invoiceNumber: $("invoiceNumber").value,
       tripColor: $("tripColor").value,
       busesNeeded: $("busesNeeded").value,
@@ -8747,59 +8747,54 @@ function wireEvents() {
 // 37) WIRE SETTINGS MENU
 // ======================================================
 function wireSettingsMenu() {
-  console.log("[wireSettingsMenu] settingsBtn:", dom.settingsBtn);
-  console.log("[wireSettingsMenu] settingsMenu:", dom.settingsMenu);
-  if (!dom.settingsBtn || !dom.settingsMenu) {
-    console.error("[wireSettingsMenu] settingsBtn or settingsMenu not found!");
-    return;
+  if (!dom.settingsBtn || !dom.settingsMenu) return;
+
+  function settingsOutsideClick(e) {
+    if (!dom.settingsMenu.contains(e.target) && !dom.settingsBtn.contains(e.target)) {
+      closeSettings();
+    }
   }
 
-  // Toggle Menu
+  function closeSettings() {
+    dom.settingsMenu.hidden = true;
+    dom.settingsBtn.setAttribute("aria-expanded", "false");
+    document.removeEventListener("click", settingsOutsideClick);
+  }
 
   dom.settingsBtn.addEventListener("click", (e) => {
-    console.log("[wireSettingsMenu] settingsBtn clicked");
     e.stopPropagation();
-    const isHidden = dom.settingsMenu.hidden;
-    dom.settingsMenu.hidden = !isHidden;
-    dom.settingsBtn.setAttribute("aria-expanded", isHidden);
-  });
-
-  // Close on click outside
-  document.addEventListener("click", (e) => {
-    if (
-      !dom.settingsMenu.hidden &&
-      !dom.settingsMenu.contains(e.target) &&
-      !dom.settingsBtn.contains(e.target)
-    ) {
-      dom.settingsMenu.hidden = true;
-      dom.settingsBtn.setAttribute("aria-expanded", "false");
+    if (dom.settingsMenu.hidden) {
+      closeAllFloatingMenus();
+      dom.settingsMenu.hidden = false;
+      dom.settingsBtn.setAttribute("aria-expanded", "true");
+      requestAnimationFrame(() => document.addEventListener("click", settingsOutsideClick));
+    } else {
+      closeSettings();
     }
   });
 
   // 1. Jump directly to Today
   dom.todayBtn2?.addEventListener("click", () => {
-    const today = new Date();
-    // dom.weekPicker.value = toLocalDateInputValue(today); // Removed
-    state.currentDate = startOfWeek(today);
+    state.currentDate = startOfWeek(new Date());
     updateWeekDates();
-    dom.settingsMenu.hidden = true;
+    closeSettings();
   });
 
   // Next Day Maintenance Report
   dom.nextDayReportBtn?.addEventListener("click", () => {
-    dom.settingsMenu.hidden = true;
+    closeSettings();
     generateNextDayReport();
   });
 
   // Daily Maintenance Plan
   dom.dailyMaintenancePlanBtn?.addEventListener("click", () => {
-    dom.settingsMenu.hidden = true;
+    closeSettings();
     generateDailyMaintenancePlan();
   });
 
   // 3. Print (Legal, 2 pages)
   dom.printBtn2?.addEventListener("click", () => {
-    dom.settingsMenu.hidden = true;
+    closeSettings();
     setSidePanelMode("off");
     requestAnimationFrame(() => {
       setPrintPageSize("legal");
@@ -8810,7 +8805,7 @@ function wireSettingsMenu() {
 
   // 3b. Print Full (Letter, 1 page)
   dom.printBtn2Full?.addEventListener("click", () => {
-    dom.settingsMenu.hidden = true;
+    closeSettings();
     setSidePanelMode("off");
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
@@ -8829,7 +8824,7 @@ function wireSettingsMenu() {
 
   // 5. Refresh
   dom.refreshBtn2?.addEventListener("click", () => {
-    dom.settingsMenu.hidden = true;
+    closeSettings();
     CACHE.clearAll();
     state.weekCache.clear();
     loadDriversAndBuses(true).then(() => refreshWeekData());
@@ -8837,10 +8832,7 @@ function wireSettingsMenu() {
 
   // 6. Auto-close whenever ANY dropdown item is clicked inside this menu
   dom.settingsMenu.addEventListener("click", (e) => {
-    if (e.target.closest(".dropdown__item")) {
-      dom.settingsMenu.hidden = true;
-      dom.settingsBtn.setAttribute("aria-expanded", "false");
-    }
+    if (e.target.closest(".dropdown__item")) closeSettings();
   });
 }
 

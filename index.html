@@ -863,12 +863,11 @@
                     />
 
                     <!-- ── Section 1: Trip Details ─────────────────────── -->
-                    <div class="form-divider col-12">
-                      <span class="form-divider__label">Trip Details</span>
-                    </div>
+                    <div class="form-section-card">
+                      <div class="form-section-card__label">Trip Details</div>
 
                     <div class="form-group col-6">
-                      <label for="tripDate">Departure date</label>
+                      <label for="tripDate">Departure Date</label>
                       <input
                         type="date"
                         id="tripDate"
@@ -878,7 +877,7 @@
                     </div>
 
                     <div class="form-group col-6">
-                      <label for="arrivalDate">Arrival date</label>
+                      <label for="arrivalDate">Arrival Date</label>
                       <input
                         type="date"
                         id="arrivalDate"
@@ -932,7 +931,7 @@
                     </div>
 
                     <div class="form-group col-4">
-                      <label for="departureTime">Departure time</label>
+                      <label for="departureTime">Departure Time</label>
                       <input
                         type="time"
                         id="departureTime"
@@ -941,7 +940,7 @@
                     </div>
 
                     <div class="form-group col-4">
-                      <label for="spotTime">Spot time</label>
+                      <label for="spotTime">Spot Time</label>
                       <input
                         type="time"
                         id="spotTime"
@@ -950,7 +949,7 @@
                     </div>
 
                     <div class="form-group col-4">
-                      <label for="arrivalTime">Arrival time</label>
+                      <label for="arrivalTime">Arrival Time</label>
                       <input
                         type="time"
                         id="arrivalTime"
@@ -1002,17 +1001,17 @@
                         <option value="10">10</option>
                       </select>
                     </div>
+                    </div>
 
                     <!-- ── Section 2: Approval ─────────────────────────── -->
-                    <div class="form-divider col-12">
-                      <span class="form-divider__label">Approval</span>
-                    </div>
+                    <div class="form-section-card">
+                      <div class="form-section-card__label">Approval</div>
 
                     <input type="hidden" id="itineraryStatus" name="itineraryStatus" value="" />
                     <input type="hidden" id="contactStatus" name="contactStatus" value="" />
 
-                    <div class="form-group col-8">
-                      <label for="paymentStatus">Approval status</label>
+                    <div class="form-group col-6">
+                      <label for="paymentStatus">Contract</label>
                       <select
                         id="paymentStatus"
                         name="paymentStatus"
@@ -1030,8 +1029,8 @@
                       </select>
                     </div>
 
-                    <div class="form-group col-4">
-                      <label for="invoiceStatus">Invoice status</label>
+                    <div class="form-group col-6">
+                      <label for="invoiceStatus">Invoice</label>
                       <select
                         id="invoiceStatus"
                         name="invoiceStatus"
@@ -1044,32 +1043,31 @@
                         ></option>
                         <option value="Pending Invoice">Pending</option>
                         <option value="Invoiced">Invoiced</option>
-                        <option value="Deposit Received">Dep Rec</option>
-                        <option value="Paid in Full">Paid</option>
+                        <option value="Deposit Received">Deposit Paid</option>
+                        <option value="Paid in Full">Paid in Full</option>
                       </select>
                     </div>
 
-                    <div class="form-group col-8">
-                      <label for="notes">Notes</label>
+                    <div class="form-group col-6">
+                      <label for="notes">Purchase Order</label>
                       <input
                         type="text"
                         id="notes"
                         name="notes"
-                        placeholder=""
+                        placeholder="PO # or note…"
                       />
                     </div>
 
                     <div
-                      class="form-group col-4"
+                      class="form-group col-6"
                       id="invoiceNumberGroup"
                     >
-                      <label for="invoiceNumber">Invoice number</label>
+                      <label for="invoiceNumber">Invoice Number</label>
                       <input
                         type="text"
                         id="invoiceNumber"
                         name="invoiceNumber"
                         placeholder=""
-                        disabled
                       />
                     </div>
 
@@ -1078,7 +1076,7 @@
                       id="driverStatusGroup"
                       aria-hidden="true"
                     >
-                      <label for="driverStatus">Driver status</label>
+                      <label for="driverStatus">Driver Status</label>
                       <select
                         id="driverStatus"
                         name="driverStatus"
@@ -1094,14 +1092,14 @@
                         <option value="Confirmed">Confirmed</option>
                       </select>
                     </div>
-
-                    <!-- ── Section 3: Envelope ─────────────────────────── -->
-                    <div class="form-divider col-12">
-                      <span class="form-divider__label">Envelope</span>
                     </div>
 
+                    <!-- ── Section 3: Envelope ─────────────────────────── -->
+                    <div class="form-section-card">
+                      <div class="form-section-card__label">Envelope</div>
+
                     <div class="form-group col-12">
-                      <label for="envelopePickup">Pick up address</label>
+                      <label for="envelopePickup">Pick Up Address</label>
                       <input
                         type="text"
                         id="envelopePickup"
@@ -1110,7 +1108,7 @@
                     </div>
 
                     <div class="form-group col-6">
-                      <label for="envelopeTripContact">Trip contact</label>
+                      <label for="envelopeTripContact">Trip Contact</label>
                       <input
                         type="text"
                         id="envelopeTripContact"
@@ -1119,7 +1117,7 @@
                     </div>
 
                     <div class="form-group col-6">
-                      <label for="envelopeTripPhone">Trip contact phone</label>
+                      <label for="envelopeTripPhone">Trip Contact Phone</label>
                       <input
                         type="tel"
                         id="envelopeTripPhone"
@@ -1145,18 +1143,17 @@
                       class="is-hidden"
                       aria-label="Itinerary Content"
                     ></textarea>
+                    </div>
 
                     <!-- ── Section 4: Requirements ─────────────────────── -->
                     <div
                       id="requirementsSection"
-                      class="col-12"
+                      class="form-section-card"
                       data-js="trip-requirements-section"
                     >
-                      <div class="form-divider col-12">
-                        <span class="form-divider__label">Requirements</span>
-                      </div>
+                      <div class="form-section-card__label">Requirements</div>
                       <div
-                        class="rux-btn--toggle-grid"
+                        class="rux-btn--toggle-grid col-12"
                         role="group"
                         aria-label="Requirements"
                       >
@@ -1283,19 +1280,18 @@
                     <!-- ── Section 5: Bus Assignment ───────────────────── -->
                     <div
                       id="assignmentsOverridesSection"
-                      class="col-12"
+                      class="form-section-card"
                       data-js="trip-assignments-section"
                     >
-                      <div class="form-divider">
-                        <span class="form-divider__label">Bus Assignment</span>
-                      </div>
-                      <div class="bus-assign-header">
+                      <div class="form-section-card__label">Bus Assignment</div>
+                      <div class="bus-assign-header col-12">
                         <span class="field-label">Bus</span>
                         <span class="field-label">Driver</span>
                         <span class="field-label">Status</span>
                       </div>
                       <div
                         id="busGrid"
+                        class="col-12"
                         data-js="trip-bus-grid"
                       ></div>
                     </div>
