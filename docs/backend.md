@@ -112,7 +112,8 @@ const HEADERS = {
 /** =============================
  * PERF: WEEK CACHE (biggest win)
  * ============================= */
-const WEEK_CACHE_TTL_SECONDS = 120; // 60–300 typical
+const WEEK_CACHE_TTL_SECONDS = 300; // matches 5-min frontend poll interval
+const REF_CACHE_TTL_SECONDS = 600; // 10 min — drivers/buses change rarely
 const WEEK_CACHE_PREFIX = "weekData:v4:";
 function weekCacheKey_(startYmd, endYmd) {
   return `${WEEK_CACHE_PREFIX}${startYmd}..${endYmd}`;
@@ -266,24 +267,18 @@ function setChecklist_(p) {
   const sheet = ss.getSheetByName(CONFIG.SHEET_CHECKLIST);
   if (!sheet) return { ok: false, error: "Checklist sheet not found" };
 
-  // Prune rows older than 30 days
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - 30);
   const cutoffYMD = cutoff.toISOString().slice(0, 10);
   const all = readAllAsObjects_(sheet, HEADERS.Checklist);
-  const stale = all
-    .map((r, i) => ({ r, rowNum: i + 2 }))
-    .filter(({ r }) => {
-      const d = normalizeCellDateToYMD_(r.date);
-      return d && d < cutoffYMD;
-    });
-  for (let i = stale.length - 1; i >= 0; i--) {
-    sheet.deleteRow(stale[i].rowNum);
-  }
-
-  // Upsert: find existing row for this tripKey + date
-  const fresh = readAllAsObjects_(sheet, HEADERS.Checklist);
-  const rowObj = {
+  // Single pass: drop stale rows and the existing upsert target together
+  const keep = all.filter((r) => {
+    const d = normalizeCellDateToYMD_(r.date);
+    if (!d || d < cutoffYMD) return false;
+    if (String(r.tripKey).trim() === tripKey && d === date) return false;
+    return true;
+  });
+  keep.push({
     tripKey,
     date,
     envelope: String(p.envelope || "false"),
@@ -291,17 +286,15 @@ function setChecklist_(p) {
     driverInfo: String(p.driverInfo || "false"),
     fuelCard: String(p.fuelCard || "false"),
     hos: String(p.hos || "false"),
-  };
-  const matches = fresh
-    .map((r, i) => ({ r, rowNum: i + 2 }))
-    .filter(
-      ({ r }) => String(r.tripKey).trim() === tripKey && normalizeCellDateToYMD_(r.date) === date,
-    );
-  for (let i = matches.length - 1; i >= 0; i--) {
-    sheet.deleteRow(matches[i].rowNum);
+  });
+  // Batch rewrite: 2 Sheets API calls instead of N deleteRow calls
+  const headers = HEADERS.Checklist;
+  sheet.clearContents();
+  sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+  if (keep.length) {
+    const rows = keep.map((r) => headers.map((h) => (r[h] !== undefined ? r[h] : "")));
+    sheet.getRange(2, 1, rows.length, headers.length).setValues(rows);
   }
-  appendRowByHeaders_(sheet, HEADERS.Checklist, rowObj);
-
   return { ok: true };
 }
 
@@ -833,36 +826,66 @@ function getTrip_(tripKey) {
   return { ok: true, trip: normalizeTripForApi_(trip) };
 }
 function listDrivers_(p) {
+  const activeOnly = String(p.activeOnly || "").toLowerCase() === "true";
+  const cacheKey = `listDrivers:v1:${activeOnly}`;
+  const cache = CacheService.getScriptCache();
+  const hit = p.bustCache !== "true" && cache.get(cacheKey);
+  if (hit) return JSON.parse(hit);
   const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
   const sheet = ss.getSheetByName(CONFIG.SHEET_DRIVERS);
   const all = readAllAsObjects_(sheet, HEADERS.Drivers);
-  const activeOnly = String(p.activeOnly || "").toLowerCase() === "true";
   const drivers = activeOnly
     ? all.filter((d) => String(d.active).toLowerCase() === "true" || d.active === true)
     : all;
-  return { ok: true, drivers };
+  const result = { ok: true, drivers };
+  cache.put(cacheKey, JSON.stringify(result), REF_CACHE_TTL_SECONDS);
+  return result;
 }
 function listBuses_(p) {
+  const activeOnly = String(p.activeOnly || "").toLowerCase() === "true";
+  const cacheKey = `listBuses:v1:${activeOnly}`;
+  const cache = CacheService.getScriptCache();
+  const hit = p.bustCache !== "true" && cache.get(cacheKey);
+  if (hit) return JSON.parse(hit);
   const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
   const sheet = ss.getSheetByName(CONFIG.SHEET_BUSES);
-  // Change HEADERS.Drivers to HEADERS.Buses below:
   const all = readAllAsObjects_(sheet, HEADERS.Buses);
-  const activeOnly = String(p.activeOnly || "").toLowerCase() === "true";
   const buses = activeOnly
     ? all.filter((b) => String(b.active).toLowerCase() === "true" || b.active === true)
     : all;
-  return { ok: true, buses };
+  const result = { ok: true, buses };
+  cache.put(cacheKey, JSON.stringify(result), REF_CACHE_TTL_SECONDS);
+  return result;
 }
 function getBusAssignments_(tripKey) {
   if (!tripKey) return { ok: false, error: "tripKey required" };
   const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
   const sheet = ss.getSheetByName(CONFIG.SHEET_BUS_ASSIGN);
-  const all = readAllAsObjects_(sheet, HEADERS.BusAssignments);
-  const rows = all
-    .filter((r) => String(r.tripKey).trim() === String(tripKey).trim())
-    .sort((a, b) => Number(a.busNumber) - Number(b.busNumber));
+  const headers = HEADERS.BusAssignments;
+  const last = sheet.getLastRow();
+  if (last < 2) return { ok: true, assignments: [] };
+  // Read actual header row for name-based mapping (order-independent)
+  const headerRow = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0].map(String);
+  const col = headerRow.indexOf("tripKey") + 1;
+  if (col < 1) return { ok: true, assignments: [] };
+  const cells = sheet
+    .getRange(2, col, last - 1, 1)
+    .createTextFinder(String(tripKey).trim())
+    .matchEntireCell(true)
+    .findAll();
+  const rows = cells.map((cell) => {
+    const vals = sheet.getRange(cell.getRow(), 1, 1, headerRow.length).getValues()[0];
+    const obj = {};
+    headers.forEach((h) => {
+      const idx = headerRow.indexOf(h);
+      obj[h] = idx >= 0 ? vals[idx] : "";
+    });
+    return obj;
+  });
+  rows.sort((a, b) => Number(a.busNumber) - Number(b.busNumber));
   return { ok: true, assignments: rows };
 }
+
 /**
  * weekData (FAST + CACHED)
  * Returns trips + bus assignments + unavailability for trips overlapping [start,end] in ONE call.

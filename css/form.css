@@ -305,39 +305,7 @@ textarea:disabled {
   color: var(--rux-status-blue);
 }
 
-.invoice-num-wrap {
-  position: relative;
-}
 
-.invoice-num-icon {
-  position: absolute;
-  left: var(--input-padding-x);
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: var(--input-font-size);
-  pointer-events: none;
-  color: var(--rux-text-secondary);
-}
-
-#invoiceNumber {
-  padding-left: calc(var(--input-padding-x) + 1.2em + var(--icon-text-gap));
-}
-
-#invoiceNumber.status-pending,
-#invoiceNumber.status-pending:disabled {
-  background-color: color-mix(in srgb, var(--rux-status-red) 20%, var(--field-bg));
-  color: var(--rux-status-red);
-}
-
-#invoiceNumber.status-assigned {
-  background-color: color-mix(in srgb, var(--rux-status-yellow) 20%, var(--field-bg));
-  color: var(--rux-status-yellow);
-}
-
-#invoiceNumber.status-ok {
-  background-color: color-mix(in srgb, var(--rux-status-green) 20%, var(--field-bg));
-  color: var(--rux-status-green);
-}
 
 /* ── 8. Empty State ──────────────────────────────────────────────────────── */
 
