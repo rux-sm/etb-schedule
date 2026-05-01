@@ -410,7 +410,7 @@
   font-size: 0.75rem;
   font-weight: 400;
   color: var(--text-muted);
-  padding: var(--rux-space-3);
+  padding: var(--rux-space-4);
   background-color: var(--rux-surface-panel);
 }
 
@@ -1048,7 +1048,7 @@
 /* Print styles (Legal V1 table + V2 grid) moved to css/print.css */
 
 #driverWeekCard .c-card__body {
-  padding: var(--space-lg);
+  padding: var(--rux-space-6);
   display: flex;
   flex-direction: column;
   /* overflow: hidden removed to allow child scroll */

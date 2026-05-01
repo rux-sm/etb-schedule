@@ -5574,8 +5574,8 @@ function fillEnvelopePage(pageEl, trip, assignment) {
   set("driver", fullName(driver1));
   // If there is no real co-driver, field stays blank
   set("codriver", fullName(driver2));
-  set("driverlabel", assignment?.isRelief ? "RELIEF DRIVER:" : "DRIVER:");
-  const coDriverLabel = assignment?.driver2IsRelief ? "RELIEF:" : assignment?.isRelief ? "DRIVER:" : "CO-DRIVER:";
+  set("driverlabel", assignment?.isConsolidatedCo ? "CO-DRIVER:" : assignment?.isRelief ? "RELIEF DRIVER:" : "DRIVER:");
+  const coDriverLabel = assignment?.isConsolidatedCo ? "DRIVER(S):" : assignment?.driver2IsRelief ? "RELIEF:" : assignment?.isRelief ? "DRIVER:" : "CO-DRIVER:";
   set("codriverlabel", coDriverLabel);
   set("tripdate", tripDateStr);
   set("returndate", showReturn ? returnDateStr : "");
@@ -5690,6 +5690,21 @@ function openEnvelopeModal(tripKey) {
 
   if (rawAssignments.length) {
     const totalBuses = rawAssignments.length;
+
+    // Find any driver2 who appears on every bus — they get one consolidated envelope
+    const coDriverCount = {};
+    rawAssignments.forEach((a) => {
+      const d2 = (a.driver2 || "").toString().trim();
+      if (d2 && d2.toLowerCase() !== "none" && d2 !== "—") {
+        coDriverCount[d2] = (coDriverCount[d2] || 0) + 1;
+      }
+    });
+    const universalCodrivers = new Set(
+      Object.entries(coDriverCount)
+        .filter(([, cnt]) => cnt === rawAssignments.length && rawAssignments.length > 1)
+        .map(([name]) => name)
+    );
+
     rawAssignments.forEach((a, busIndex) => {
       const busId = a.busId || trip.busId || "";
       const d1 = (a.driver1 || "").toString().trim();
@@ -5712,7 +5727,8 @@ function openEnvelopeModal(tripKey) {
       assignments.push({ busId, driver1: d1, driver2: d1CoDriver, driver2IsRelief: d1CoIsRelief, ...pos });
 
       // Variant 2: swapped (co-driver primary), only if real co-driver exists
-      if (hasD2) {
+      // Skip per-bus variant for universal co-drivers — they get one consolidated envelope below
+      if (hasD2 && !universalCodrivers.has(d2)) {
         assignments.push({ busId, driver1: d2, driver2: d1, ...pos });
       }
 
@@ -5720,6 +5736,23 @@ function openEnvelopeModal(tripKey) {
       // relief 2 gets relief 1 as co (if present), otherwise primary driver.
       if (hasD3) assignments.push({ busId, driver1: d3Raw, driver2: d1, isRelief: true, ...pos });
       if (hasD4) assignments.push({ busId, driver1: d4Raw, driver2: d1, isRelief: true, ...pos });
+    });
+
+    // Add one consolidated envelope per universal co-driver listing all buses
+    universalCodrivers.forEach((coDriverName) => {
+      const allBusIds = rawAssignments.map((a) => a.busId || "").filter(Boolean).join(" · ");
+      const primaryDrivers = rawAssignments
+        .map((a) => (a.driver1 || "").toString().trim())
+        .filter(Boolean)
+        .join(" / ");
+      assignments.push({
+        busId: allBusIds,
+        driver1: coDriverName,
+        driver2: primaryDrivers,
+        isConsolidatedCo: true,
+        busIndex: 0,
+        totalBuses,
+      });
     });
   } else {
     assignments.push({ busId: trip.busId || "", driver1: "", driver2: "", busIndex: 0, totalBuses: 1 });
@@ -5737,7 +5770,11 @@ function openEnvelopeModal(tripKey) {
       const bus = a.busId || "—";
       const d1 = a.driver1 || "—";
       const d2 = a.driver2 ? ` / ${a.driver2}` : "";
-      opt.textContent = a.isRelief ? `Bus ${bus} — ${d1} (Relief)` : `Bus ${bus} — ${d1}${d2}`;
+      opt.textContent = a.isConsolidatedCo
+        ? `All Buses — ${d1} (Co-Driver)`
+        : a.isRelief
+          ? `Bus ${bus} — ${d1} (Relief)`
+          : `Bus ${bus} — ${d1}${d2}`;
       select.appendChild(opt);
     });
     select.selectedIndex = 0;

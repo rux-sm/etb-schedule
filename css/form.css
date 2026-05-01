@@ -32,6 +32,7 @@ textarea,
   color: var(--rux-text-primary);
   text-align: left;
   outline: none;
+  box-shadow: var(--field-shadow);
   cursor: text;
   transition:
     background-color 0.11s cubic-bezier(0.2, 0, 0.38, 0.9),
@@ -146,7 +147,7 @@ textarea:focus-visible,
 .select-trigger:focus-visible {
   outline: none;
   border-color: var(--rux-accent-color);
-  /*box-shadow: 0 0 0 2px var(--focus-ring-color), var(--field-shadow);*/
+  box-shadow: 0 0 0 2px var(--focus-ring-color), var(--field-shadow);
 }
 
 /* ── 6b. Driver double-booking conflict highlight ──────────────────────────── */
@@ -409,7 +410,7 @@ select.is-empty:not(:focus),
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   width: 100%;
-  gap: var(--form-row-gap) var(--form-col-gap);
+  gap: var(--form-card-gap) var(--form-col-gap);
   align-items: start;
   padding: none;
 }
@@ -540,6 +541,7 @@ hr.form-divider {
   background: var(--rux-surface-card);
   border: 1px solid var(--rux-color-border-subtle);
   border-radius: var(--rux-radius-section);
+  box-shadow: var(--card-shadow);
 }
 
 .form-section-card__label {

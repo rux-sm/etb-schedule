@@ -10,7 +10,7 @@
 
   --rux-black:  oklch(0% 0 255);
   --rux-white:  oklch(100% 0 255);
-  --rux-gray:   oklch(50% 0.0058 271.18);
+  --rux-gray:   oklch(50% 0.006 270);
   --rux-red:    oklch(50% 0.2 25);
   --rux-orange: oklch(50% 0.2 65);
   --rux-yellow: oklch(50% 0.2 100);
@@ -87,27 +87,26 @@
   /* 2A. Surface Colors
   ──────────────────────────────────────────────────────────────── */
 
-  /* App Header Surfaces */
-  --rux-surface-app-header: oklch(from var(--rux-gray) 24% c h);
-
-  /* Base Surface */
+ /* Base Surface - Keep this pure black for the calendar contrast */
   --rux-surface-base: oklch(from var(--rux-gray) 0% c h);
 
-  /* Panel Surfaces */
-  --rux-surface-panel: oklch(from var(--rux-gray) 24% c h);
-  --rux-surface-header: oklch(from var(--rux-gray) 40% c h);
-  --rux-surface-card: oklch(from var(--rux-gray) 32% c h);
-  --rux-surface-footer: oklch(from var(--rux-gray) 40% c h);
+  /* Level 1: The App Canvas (Sidebar & Header) */
+  --rux-surface-app-header: oklch(from var(--rux-gray) 24% c h); /* Brought down from 24% */
+  --rux-surface-panel: oklch(from var(--rux-gray) 20% c h);      /* Brought down from 24% */
 
-  --rux-surface-modal: oklch(from var(--rux-gray) 18% c h);
+  /* Level 2: The Grouping Cards */
+  --rux-surface-card: oklch(from var(--rux-gray) 26% c h);       /* +8% jump from Panel */
 
-  --rux-surface-menu: oklch(from var(--rux-gray) 30% c h);
-
-  --rux-surface-overlay: oklch(from var(--rux-gray) 28% c h);
-
-  /* Input Surfaces */
-  --rux-surface-input: oklch(from var(--rux-gray) 24% c h);
+  /* Level 3: Interactive/Overlay Elements */
+  --rux-surface-input: oklch(from var(--rux-gray) 36% c h);      /* +8% jump from Card (Fixed from 48%) */
   --rux-surface-textarea: var(--rux-surface-input);
+  --rux-surface-menu: oklch(from var(--rux-gray) 26% c h);       /* Menus sit at the same elevation as inputs */
+
+  /* Structural/Contextual Elements */
+  --rux-surface-header: oklch(from var(--rux-gray) 26% c h);     /* Slightly raised from panel, but lower than cards */
+  --rux-surface-footer: oklch(from var(--rux-gray) 26% c h);     /* Matches header */
+  --rux-surface-overlay: oklch(from var(--rux-gray) 24% c h);    
+  --rux-surface-modal: oklch(from var(--rux-gray) 32% c h);      /* Modals should float high */
 
   /* 2B. Status Colors
   ──────────────────────────────────────────────────────────────── */
@@ -187,9 +186,9 @@
   ──────────────────────────────────────────────────────────────── */
 
   --text-primary: oklch(from var(--rux-gray) 100% c h);
-  --text-secondary: oklch(from var(--rux-gray) 72% c h);
-  --text-placeholder: oklch(from var(--rux-gray) 52% c h);
-  --text-disabled: oklch(from var(--rux-gray) 42% c h);
+  --text-secondary: oklch(from var(--rux-gray) 75% c h);
+  --text-placeholder: oklch(from var(--rux-gray) 45% c h);
+  --text-disabled: oklch(from var(--rux-gray) 35% c h);
   --text-muted: var(--text-secondary);
   /* alias — in heavy use; same as --text-secondary */
 
@@ -199,11 +198,12 @@
   --rux-form-height: 28px;
   /* was --rux-form-height; dropped --rux- prefix (Tier 3 token) */
   --form-row-gap: 8px;
+  --form-card-gap: var(--rux-space-4);
   --form-col-gap: 8px;
   --form-label-gap: 8px;
   /* was --rux-form-label-gap; dropped --rux- prefix */
-  --form-label-margin: 4px;
-  --form-section-gap: 16px;
+  --form-label-margin: var(--rux-space-2);
+  --form-section-gap: var(--rux-space-3);
   --form-label-color:  var(--rux-text-secondary);
   /* fixed: was var(--rux-blue) direct Tier 1 ref */
   --form-label-font-size: var(--rux-font-size-2);
@@ -218,9 +218,12 @@
 
   --field-bg: var(--rux-surface-input);
   --field-bg-hover: var(--rux-surface-panel);
-  /* not currently used */
-  /*--field-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  /* not currently used */
+  --field-shadow:
+    0 4px 6px -1px oklch(0% 0 0 / 0.2),
+    0 2px 4px -2px oklch(0% 0 0 / 0.2);
+  --card-shadow:
+    0 8px 16px -4px oklch(0% 0 0 / 0.4),
+    0 4px 6px -4px oklch(0% 0 0 / 0.4);
   --field-disabled-opacity: 0.5;
   --input-padding-x: var(--rux-space-2);
   --input-font-size: var(--rux-font-size-4);
