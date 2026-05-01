@@ -308,7 +308,7 @@
   --space-xl: var(--rux-space-6);
   /* 24px — note: --rux-space-5 (20px) has no alias */
   --panel-width: 384px;
-  --layout-panel-gap: var(--rux-space-3);
+  --layout-panel-gap: var(--rux-space-4);
   --card-padding: 16px;
   --size-header-row: 40px;
   --size-header-action: 40px;
