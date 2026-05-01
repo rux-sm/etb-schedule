@@ -350,17 +350,17 @@
    The core grid containing bus rows and day columns
    ========================================================================== */
 
-.schedule-grid-container {
+.schedule-viewport {
   width: 100%;
   height: auto;
   overflow-x: auto;
   overflow-y: auto;
-  border-inline-start: none;
+  border: 1px solid var(--rux-color-border-default);
+  border-radius: var(--rux-radius-section);
 }
 
 
-.o-app-layout__main .schedule-grid-container {
-  border-radius: var(--rux-radius-section);
+.o-app-layout__main .schedule-viewport {
   margin-bottom: 0;
 }
 
@@ -641,51 +641,8 @@
 
 /* ==========================================================================
    SCHEDULE GRID BORDERS
-   Centralized container and cell borders (1px solid var(--rux-color-border-default))
+   Container border handles the outer frame; cells handle inner gridlines only.
    ========================================================================== */
-
-/* Outer Boundaries */
-.schedule-grid__header-cell:first-child,
-.schedule-grid__cell:first-child,
-.schedule-grid__bus-cell {
-  border-inline-start: 1px solid var(--rux-color-border-default);
-  /* Left boundary */
-}
-
-.schedule-grid__header-cell {
-  border-top: 1px solid var(--rux-color-border-default);
-  /* Top boundary */
-}
-
-.schedule-grid__header-cell:first-child {
-  border-start-start-radius: var(--rux-radius-section);
-}
-
-.schedule-grid__header-cell:last-child {
-  border-start-end-radius: var(--rux-radius-section);
-}
-
-.schedule-grid__header-cell:last-child,
-.schedule-grid__cell:last-child {
-  border-inline-end: 1px solid var(--rux-color-border-default);
-  /* Right boundary */
-}
-
-/* Bottom outer boundary */
-.schedule-grid tbody tr:last-child>.schedule-grid__cell,
-.schedule-grid tbody tr:last-child>.schedule-grid__bus-cell {
-  border-bottom: 1px solid var(--rux-color-border-default);
-}
-
-.schedule-grid tbody tr:last-child>.schedule-grid__cell:first-child,
-.schedule-grid tbody tr:last-child>.schedule-grid__bus-cell:first-child {
-  border-end-start-radius: var(--rux-radius-section);
-}
-
-.schedule-grid tbody tr:last-child>.schedule-grid__cell:last-child,
-.schedule-grid tbody tr:last-child>.schedule-grid__bus-cell:last-child {
-  border-end-end-radius: var(--rux-radius-section);
-}
 
 /* Inner Gridlines */
 .schedule-grid__header-cell,
@@ -694,6 +651,17 @@
   /* Vertical tracking lines */
   border-bottom: 1px solid var(--rux-color-border-default);
   /* Horizontal tracking lines */
+}
+
+/* Edge clearing — container border handles the outer frame */
+.schedule-grid__header-cell:last-child,
+.schedule-grid__cell:last-child {
+  border-inline-end: none;
+}
+
+.schedule-grid tbody tr:last-child > .schedule-grid__cell,
+.schedule-grid tbody tr:last-child > .schedule-grid__bus-cell {
+  border-bottom: none;
 }
 
 /* ==========================================================================

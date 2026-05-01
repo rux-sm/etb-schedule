@@ -201,7 +201,7 @@
   padding-block: var(--rux-space-4);
   border-bottom: 1px solid var(--rux-color-border-subtle);
   background-color: var(--rux-surface-header);
-  box-shadow: none;
+  box-shadow: var(--panel-header-shadow);
   position: relative;
   z-index: 10;
 }
@@ -248,8 +248,6 @@
   --footer-padding-x: var(--rux-space-4);
   --footer-padding-y: var(--rux-space-4);
   --footer-gap: var(--rux-space-2);
-  --footer-shadow: 0 -3px 6px rgba(0,0,0,0.16), 0 -3px 6px rgba(0,0,0,0.23);
-  /* Tight contact seam */
 
   flex-shrink: 0;
   display: flex;
@@ -259,7 +257,7 @@
   flex-wrap: wrap;
   padding: var(--footer-padding-y) var(--footer-padding-x);
   background: var(--footer-bg);
-  box-shadow: none;
+  box-shadow: var(--panel-footer-shadow);
   position: relative;
   z-index: 10;
 }

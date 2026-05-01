@@ -98,7 +98,7 @@
   --rux-surface-card: oklch(from var(--rux-gray) 26% c h);       /* +8% jump from Panel */
 
   /* Level 3: Interactive/Overlay Elements */
-  --rux-surface-input: oklch(from var(--rux-gray) 36% c h);      /* +8% jump from Card (Fixed from 48%) */
+  --rux-surface-input: oklch(from var(--rux-gray) 20% c h);      /* +8% jump from Card (Fixed from 48%) */
   --rux-surface-textarea: var(--rux-surface-input);
   --rux-surface-menu: oklch(from var(--rux-gray) 26% c h);       /* Menus sit at the same elevation as inputs */
 
@@ -137,11 +137,11 @@
 
   /* 2C. Button Colors
   ──────────────────────────────────────────────────────────────── */
-  --rux-button-primary-bg:  oklch(from var(--rux-blue)  60% c h);
-  --rux-button-secondary-bg:  oklch(from var(--rux-gray)  60% c h);
-  --rux-button-danger-bg:  oklch(from var(--rux-red)   60% c h);
+  --rux-button-primary-bg:  oklch(from var(--rux-blue)  50% c h);
+  --rux-button-secondary-bg:  oklch(from var(--rux-gray)  50% c h);
+  --rux-button-danger-bg:  oklch(from var(--rux-red)   50% c h);
   --rux-button-text:       var(--rux-white);
-  --rux-button-hover:      0.08;
+  --rux-button-hover:      0.1;
   /* 2C. Text Colors
   ──────────────────────────────────────────────────────────────── */
 
@@ -173,7 +173,7 @@
   /* inputs, selects, toolbars */
   --rux-radius-badge: var(--rux-radius-2);
   /* chips, tags, mini-badges */
-  --rux-radius-button: var(--rux-radius-1);
+  --rux-radius-button: var(--rux-radius-2);
   /* pill / squircle buttons */
 
   /* ============================================================
@@ -218,9 +218,10 @@
 
   --field-bg: var(--rux-surface-input);
   --field-bg-hover: var(--rux-surface-panel);
-  --field-shadow:
+  /* --field-shadow:
     0 4px 6px -1px oklch(0% 0 0 / 0.2),
-    0 2px 4px -2px oklch(0% 0 0 / 0.2);
+    0 2px 4px -2px oklch(0% 0 0 / 0.2); */
+  --field-shadow: inset 0 2px 4px oklch(0% 0 0 / 35%);
   --card-shadow:
     0 8px 16px -4px oklch(0% 0 0 / 0.4),
     0 4px 6px -4px oklch(0% 0 0 / 0.4);
@@ -259,6 +260,8 @@
   /*--label-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); */
   --text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   --overlay-hover: rgba(0, 0, 0, 0.05);
+  --panel-header-shadow: 0 8px 8px -8px oklch(0% 0 0 / 60%);
+  --panel-footer-shadow: 0 -8px 8px -8px oklch(0% 0 0 / 60%);
 
   --btn-shadow-inset: 0 2px 4px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.5);
   --btn-shadow-active: inset 0 2px 4px rgba(0, 0, 0, 1);

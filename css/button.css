@@ -38,7 +38,7 @@ button {
 
   font-family:         var(--font-sans);
   font-size:           var(--rux-font-size-4);
-  font-weight:         var(--rux-font-weight-medium);
+  font-weight:         var(--rux-font-weight-regular);
   line-height:         1;
   white-space:         nowrap;
   text-decoration:     none;
@@ -101,8 +101,8 @@ button {
   --btn-hover-background:  oklch(from var(--rux-surface-panel) calc(l + var(--rux-button-hover)) c h);
   --btn-active-background: var(--rux-button-primary-bg);
 
-  width:     28px;
-  min-width: 28px;
+  width:     32px;
+  min-width: 32px;
   padding:   0;
 }
 

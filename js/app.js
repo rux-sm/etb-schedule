@@ -6310,28 +6310,24 @@ async function verifyWriteResult() {
         toastProgress(100, "Saved ✓");
         toastHide(300);
 
-        // Final sync: clear in-memory week cache so the next explicit
-        // load gets fresh data, but skip an immediate full week
-        // refresh to avoid extra loading during rapid edits.
-        state.weekCache.clear();
+        // Sync server-derived field values (e.g. itineraryStatus) back to
+        // state — the optimistic object may differ from what GAS stored.
+        refreshWeekData({ silent: true });
       } else {
-        // Verification never saw the trip on the server — treat as failure.
-        // Roll back optimistic changes so UI matches the last known server state.
-        rollbackState();
-        toast(
-          "Save could not be verified — changes were rolled back. Please try saving again.",
-          "danger",
-          3500,
-        );
+        // Verification timed out — the save may still have landed (GAS was
+        // slow). Fetch the real server state instead of blindly rolling back;
+        // if the write succeeded the trip will appear, if it failed it won't.
+        toast("Verification timed out — reloading from server…", "warning", 3000);
+        refreshWeekData({ silent: false });
       }
     }
   } catch (e) {
     console.error(e);
-    // On verification error, always restore previous state so UI does not
-    // show trips that may not exist on the server.
+    // Network error during getTrip polling — can't determine outcome.
+    // Restore previous state as a safe fallback; user can retry.
     rollbackState();
     toast(
-      "Connection error during verification — schedule restored to the previous state.",
+      "Connection error — could not verify save. Please check your connection and try again.",
       "danger",
       3000,
     );

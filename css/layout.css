@@ -55,7 +55,7 @@
 
 /* Margin below center schedule card only */
 .o-app-layout__main {
-  padding-bottom: var(--rux-space-3);
+  padding-bottom: var(--rux-space-4);
 }
 
 /* Sidebar symmetry: structural reset only (visual skin lives in component layer) */
@@ -80,16 +80,16 @@
   /* Let the table container own scrolling. */
 }
 
-.o-app-layout__main .schedule-grid-container {
+.o-app-layout__main .schedule-viewport {
   overflow-x: auto;
   min-height: 0;
 }
 
-.o-app-layout.is-resizing .o-app-layout__main .schedule-grid-container {
+.o-app-layout.is-resizing .o-app-layout__main .schedule-viewport {
   overflow-x: hidden;
 }
 
-.schedule-grid-container--fluid {
+.schedule-viewport--fluid {
   flex: 1;
   min-height: 0;
 }
@@ -115,7 +115,7 @@
   box-shadow: none;
 }
 
-.o-app-layout__main .schedule-grid-container {
+.o-app-layout__main .schedule-viewport {
   flex: 1;
   min-height: 0;
   overflow-x: auto;

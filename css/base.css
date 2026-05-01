@@ -11,24 +11,24 @@
 
 /* ── SCROLLBARS — Hide vertical, keep horizontal where intended ───────── */
 /* Main schedule horizontal scrollbar remains visible */
-.schedule-grid-container::-webkit-scrollbar {
+.schedule-viewport::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-.schedule-grid-container::-webkit-scrollbar:vertical {
+.schedule-viewport::-webkit-scrollbar:vertical {
   width: 0;
 }
 
-.schedule-grid-container::-webkit-scrollbar:horizontal {
+.schedule-viewport::-webkit-scrollbar:horizontal {
   height: 16px;
 }
 
-.schedule-grid-container::-webkit-scrollbar-track {
+.schedule-viewport::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.schedule-grid-container::-webkit-scrollbar-thumb {
+.schedule-viewport::-webkit-scrollbar-thumb {
   background-color: var(--rux-button-secondary-bg);
   border-radius: 2px;
   border: 2px solid transparent;
@@ -36,7 +36,7 @@
   transition: background-color 0.2s ease;
 }
 
-.schedule-grid-container::-webkit-scrollbar-thumb:hover {
+.schedule-viewport::-webkit-scrollbar-thumb:hover {
   background-color: oklch(from var(--rux-button-secondary-bg) calc(l + var(--rux-button-hover)) c h);
 }
 
