@@ -155,8 +155,8 @@
 .o-app-layout__sidebar--left>.c-card,
 .o-app-layout__sidebar--right>.c-card {
   position: fixed;
-  top: calc(var(--size-header-row) + var(--rux-space-3));
-  bottom: var(--rux-space-3);
+  top: calc(var(--size-header-row) + var(--rux-space-4));
+  bottom: var(--rux-space-4);
   width: var(--panel-width);
   box-shadow: none;
   transition:none;
