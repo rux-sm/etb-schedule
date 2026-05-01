@@ -6212,10 +6212,37 @@ async function openTripForEdit(tripKey) {
 
     if (!tripResp?.ok) throw new Error(tripResp?.error || "Trip not found");
 
-    const serverTrip = tripResp.trip || {};
-    const serverAssigns = assignResp?.ok && assignResp.assignments ? assignResp.assignments : [];
+    const serverTrip   = tripResp.trip || {};
+    const localAssigns = state.assignmentsByTripKey[String(tripKey)] || [];
+    const rawAssigns   = (assignResp?.ok && assignResp.assignments?.length)
+      ? assignResp.assignments
+      : localAssigns;
 
-    populateFormFromData(serverTrip, serverAssigns);
+    // Fill empty driver/status fields from weekData local state — guards against
+    // getBusAssignments returning a partial record (transient GAS error, partial write)
+    // and against the race where driver options aren't loaded yet when values are set.
+    const mergedAssigns = rawAssigns.map((a) => {
+      const local = localAssigns.find((l) => l.busNumber === Number(a.busNumber));
+      return {
+        ...a,
+        driver1:       a.driver1       || local?.driver1       || "",
+        driver2:       a.driver2       || local?.driver2       || "",
+        driver3:       a.driver3       || local?.driver3       || "",
+        driver4:       a.driver4       || local?.driver4       || "",
+        driver1Status: a.driver1Status || local?.driver1Status || "",
+        driver2Status: a.driver2Status || local?.driver2Status || "",
+        driver3Status: a.driver3Status || local?.driver3Status || "",
+        driver4Status: a.driver4Status || local?.driver4Status || "",
+      };
+    });
+
+    // Ensure driver/bus select options are populated before setting values —
+    // weekData can resolve from cache before loadDriversAndBuses completes.
+    if (!state.driversList.length || !state.busesList.length) {
+      await loadDriversAndBuses(false);
+    }
+
+    populateFormFromData(serverTrip, mergedAssigns);
     setFormDisabled(false);
     setSidePanelMode("trip");
     state.tripFormDirty = false;
