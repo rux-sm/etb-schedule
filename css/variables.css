@@ -167,9 +167,9 @@
   ──────────────────────────────────────────────────────────────── */
 
   --rux-radius-badge:   var(--rux-radius-0);  /* chips, mini-badges — 4px */
-  --rux-radius-control: var(--rux-radius-1);  /* inputs, selects, toolbars — 6px */
+  --rux-radius-control: var(--rux-radius-2);  /* inputs, selects, toolbars — 6px */
   --rux-radius-button:  var(--rux-radius-2);  /* buttons — 8px */
-  --rux-radius-section: var(--rux-radius-2);  /* groups nested inside cards — 8px */
+  --rux-radius-section: var(--rux-radius-6);  /* groups nested inside cards — 8px */
   --rux-radius-surface: var(--rux-radius-3);  /* cards, panels — 12px */
   --rux-radius-overlay: var(--rux-radius-4);  /* modals, popovers — 16px */
 
@@ -248,6 +248,11 @@
   --rux-button-square-icon-wght: 400;
   --rux-button-square-icon-grad: 0;
   --rux-button-square-icon-opsz: 24;
+
+  --rux-btn-height:   32px;
+  --rux-btn-radius:   var(--rux-radius-button);
+  --rux-btn-padding:  0 16px;
+  --rux-btn-gap:      8px;
 
   /* 3D. Shadows & Effects
   ──────────────────────────────────────────────────────────────── */

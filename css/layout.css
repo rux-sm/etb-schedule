@@ -166,13 +166,13 @@
 
 .o-app-layout__sidebar--left>.c-card {
   left: var(--rux-space-3);
-  border-radius: var(--rux-panel-radius-left) 0 0 var(--rux-panel-radius-left) !important;
+  border-radius: var(--rux-space-6);
   transform: translateX(0);
 }
 
 .o-app-layout__sidebar--right>.c-card {
   right: var(--rux-space-3);
-  border-radius: 0 var(--rux-panel-radius-right) var(--rux-panel-radius-right) 0 !important;
+  border-radius: var(--rux-space-6);
   transform: translateX(0);
 }
 

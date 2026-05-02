@@ -213,7 +213,7 @@
   
   /* iOS-style border and corners */
   border: 1px solid var(--rux-color-border-subtle);
-  border-radius: 20px 20px 0 0;
+  border-radius: var(--rux-space-6) var(--rux-space-6) 0 0 ;
   
   /* Shadow for depth */
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
@@ -261,7 +261,7 @@
   --footer-bg: var(--rux-surface-footer);
   --footer-padding-x: var(--rux-space-4);
   --footer-padding-y: var(--rux-space-4);
-  --footer-gap: var(--rux-space-2);
+  --footer-gap: var(--rux-space-3);
 
   flex-shrink: 0;
   display: flex;
@@ -271,7 +271,7 @@
   flex-wrap: wrap;
   padding: var(--footer-padding-y) var(--footer-padding-x);
  
- 
+ border-radius: 0 0 var(--rux-space-6) var(--rux-space-6);
  
   z-index: 10;
   position: sticky;
