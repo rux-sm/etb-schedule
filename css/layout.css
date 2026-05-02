@@ -44,6 +44,8 @@
   overflow: visible;
   min-height: 0;
   gap: var(--layout-panel-gap);
+  padding-left: var(--layout-panel-gap);
+  padding-right: var(--layout-panel-gap);
 }
 
 .o-app-layout__sidebar--right,
@@ -155,22 +157,22 @@
 .o-app-layout__sidebar--left>.c-card,
 .o-app-layout__sidebar--right>.c-card {
   position: fixed;
-  top: calc(var(--size-header-row) + var(--rux-space-4));
-  bottom: var(--rux-space-4);
+  top: calc(var(--size-header-row) + var(--rux-space-3));
+  bottom: var(--rux-space-3);
   width: var(--panel-width);
   box-shadow: none;
   transition:none;
 }
 
 .o-app-layout__sidebar--left>.c-card {
-  left: 0;
-  border-radius: 0 16px 16px 0 !important;
+  left: var(--rux-space-3);
+  border-radius: var(--rux-panel-radius-left) 0 0 var(--rux-panel-radius-left) !important;
   transform: translateX(0);
 }
 
 .o-app-layout__sidebar--right>.c-card {
-  right: 0;
-  border-radius: 16px 0 0 16px !important;
+  right: var(--rux-space-3);
+  border-radius: 0 var(--rux-panel-radius-right) var(--rux-panel-radius-right) 0 !important;
   transform: translateX(0);
 }
 
@@ -187,16 +189,39 @@
 .o-app-layout__sidebar--left>.c-card:not(.is-hidden),
 .o-app-layout__sidebar--right>.c-card:not(.is-hidden) {
   flex: auto;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 1fr;
+  overflow: clip;
 }
 
+/* Header: row 1 — paints above the body via z-index */
+.o-app-layout__sidebar--left>.c-card:not(.is-hidden) .rux-panel__header,
+.o-app-layout__sidebar--right>.c-card:not(.is-hidden) .rux-panel__header {
+  grid-row: 1;
+  grid-column: 1;
+  z-index: 2;
+}
+
+/* Body: spans all rows so it fills the full card height behind header/footer */
 .o-app-layout__sidebar--left>.c-card:not(.is-hidden) .c-card__body,
 .o-app-layout__sidebar--right>.c-card:not(.is-hidden) .c-card__body {
-  flex: auto;
+  grid-row: 1 / -1;
+  grid-column: 1;
   overflow-y: auto;
   min-height: 0;
+  z-index: 1;
+  
+  padding-top: calc(var(--panel-header-h) + var(--panel-body-top-gap));
+  padding-bottom: calc(var(--panel-footer-h) + var(--panel-body-bottom-gap));
+}
+
+/* Footer: row 3 — paints above the body via z-index */
+.o-app-layout__sidebar--left>.c-card:not(.is-hidden) .rux-panel__footer,
+.o-app-layout__sidebar--right>.c-card:not(.is-hidden) .rux-panel__footer {
+  grid-row: 3;
+  grid-column: 1;
+  align-self: end;
 }
 
 .o-app-layout__sidebar--right.is-hidden {

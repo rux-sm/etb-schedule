@@ -157,7 +157,7 @@
   border-inline-start: none;
   position: relative;
   isolation: isolate;
-  overflow: hidden;
+  overflow: clip;
   box-shadow: var(--card-shadow);
 }
 
@@ -199,11 +199,25 @@
   flex-shrink: 0;
   padding-inline: var(--rux-space-4);
   padding-block: var(--rux-space-4);
-  border-bottom: 1px solid var(--rux-color-border-subtle);
-  background-color: var(--rux-surface-header);
-  box-shadow: var(--panel-header-shadow);
-  position: relative;
   z-index: 10;
+
+  /* 1. Position Sticky: Essential so content scrolls UNDER the header to show the blur */
+  position: sticky;
+  top: 0;
+
+ background: var(--rux-surface-header); 
+  
+  /* The blur effect */
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px); /* Required for Safari */
+  
+  /* iOS-style border and corners */
+  border: 1px solid var(--rux-color-border-subtle);
+  border-radius: 20px 20px 0 0;
+  
+  /* Shadow for depth */
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  
 }
 
 .rux-panel__header .c-header__title {
@@ -256,10 +270,18 @@
   border-top: 1px solid var(--rux-color-border-subtle);
   flex-wrap: wrap;
   padding: var(--footer-padding-y) var(--footer-padding-x);
-  background: var(--footer-bg);
-  box-shadow: var(--panel-footer-shadow);
-  position: relative;
+ 
+ 
+ 
   z-index: 10;
+  position: sticky;
+  bottom: 0;
+  background-color: color-mix(in srgb, var(--rux-surface-header), transparent 75%);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(10px) saturate(150%);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+
 }
 
 /* Direct buttons share space equally */

@@ -2,64 +2,78 @@
 
   color-scheme: dark;
 
-  /* -------------------------------------------------------------------------- */
-  /* SECTION 1: PRIMITIVE TOKENS                                                */
-  /* -------------------------------------------------------------------------- */
+  /* ============================================================
+     TIER 1 — PRIMITIVE TOKENS
+     Raw values. No semantic meaning. Never reference directly
+     from component CSS — use Tier 2 or Tier 3 tokens instead.
+     ============================================================ */
 
-  /* --- COLOR PALETTE --- */
+  /* 1A. Color Seeds
+  ──────────────────────────────────────────────────────────────── */
 
-  --rux-black:  oklch(0% 0 255);
-  --rux-white:  oklch(100% 0 255);
-  --rux-gray:   oklch(50% 0.006 270);
-  --rux-red:    oklch(50% 0.2 25);
-  --rux-orange: oklch(50% 0.2 65);
-  --rux-yellow: oklch(50% 0.2 100);
-  --rux-green:  oklch(50% 0.2 155);
-  --rux-cyan:   oklch(50% 0.2 210);
-  --rux-blue:   oklch(50% 0.2 255);
-  --rux-purple: oklch(50% 0.2 300);
-  --rux-pink:   oklch(50% 0.2 350);
+  --rux-color-black:  oklch(0% 0 255);
+  --rux-color-white:  oklch(100% 0 255);
+  --rux-color-gray:   oklch(50% 0.006 270);
+  --rux-color-red:    oklch(50% 0.2 25);
+  --rux-color-orange: oklch(50% 0.2 65);
+  --rux-color-yellow: oklch(50% 0.2 100);
+  --rux-color-green:  oklch(50% 0.2 155);
+  --rux-color-cyan:   oklch(50% 0.2 210);
+  --rux-color-blue:   oklch(50% 0.2 255);
+  --rux-color-purple: oklch(50% 0.2 300);
+  --rux-color-pink:   oklch(50% 0.2 350);
 
-  /* --- TYPOGRAPHY SCALE --- */
+  /* 1B. Font Families
+  ──────────────────────────────────────────────────────────────── */
 
-  --rux-font-family-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  --rux-font-family-mono: ui-monospace, "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  --rux-font-family-icons: "Material Symbols Outlined";
+  --rux-font-sans:  system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --rux-font-mono:  ui-monospace, "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --rux-font-icons: "Material Symbols Outlined";
 
-  --rux-font-size-1: 0.625rem;   /* 10px */
-  --rux-font-size-2: 0.6875rem;  /* 11px */
-  --rux-font-size-3: 0.75rem;    /* 12px */
-  --rux-font-size-4: 0.875rem;   /* 14px */
-  --rux-font-size-5: 1rem;       /* 16px */
-  --rux-font-size-6: 1.125rem;   /* 18px */
-  --rux-font-size-7: 1.25rem;    /* 20px */
-  --rux-font-size-8: 1.5rem;     /* 24px */
+  /* 1C. Font Size Scale
+  ──────────────────────────────────────────────────────────────── */
 
-  --rux-font-weight-light: 300;
-  --rux-font-weight-regular: 400;
-  --rux-font-weight-medium: 500;
-  --rux-font-weight-semibold: 600;
-  --rux-font-weight-bold: 700;
-  --rux-font-weight-black: 900;
+  --rux-size-1: 0.625rem;   /* 10px */
+  --rux-size-2: 0.6875rem;  /* 11px */
+  --rux-size-3: 0.75rem;    /* 12px */
+  --rux-size-4: 0.875rem;   /* 14px */
+  --rux-size-5: 1rem;       /* 16px */
+  --rux-size-6: 1.125rem;   /* 18px */
+  --rux-size-7: 1.25rem;    /* 20px */
+  --rux-size-8: 1.5rem;     /* 24px */
+
+  /* 1D. Font Weight Scale
+  ──────────────────────────────────────────────────────────────── */
+
+  --rux-weight-light:    300;
+  --rux-weight-regular:  400;
+  --rux-weight-medium:   500;
+  --rux-weight-semibold: 600;
+  --rux-weight-bold:     700;
+  --rux-weight-black:    900;
+
+  /* 1E. Line Height Scale
+  ──────────────────────────────────────────────────────────────── */
 
   --rux-line-height-1: 1;
   --rux-line-height-2: 1.25;
   --rux-line-height-3: 1.3;
   --rux-line-height-4: 1.5;
 
-  /* --- SPACING SCALE --- */
+  /* 1F. Spacing Scale
+  ──────────────────────────────────────────────────────────────── */
 
   --rux-space-0: 0;
-  --rux-space-1: 0.25rem;    /* 4px  */
-  --rux-space-2: 0.375rem;   /* 6px  */
-  --rux-space-3: 0.5rem;     /* 8px  */
+  --rux-space-1: 0.25rem;    /*  4px */
+  --rux-space-2: 0.375rem;   /*  6px */
+  --rux-space-3: 0.5rem;     /*  8px */
   --rux-space-4: 0.75rem;    /* 12px */
   --rux-space-5: 1rem;       /* 16px */
   --rux-space-6: 1.25rem;    /* 20px */
   --rux-space-7: 1.5rem;     /* 24px */
-  --rux-space-8: 1.75rem;    /* 28px */
 
-  /* --- BORDER RADIUS SCALE --- */
+  /* 1G. Border Radius Scale
+  ──────────────────────────────────────────────────────────────── */
 
   --rux-radius-0: 4px;
   --rux-radius-1: 6px;
@@ -67,216 +81,163 @@
   --rux-radius-3: 12px;
   --rux-radius-4: 16px;
   --rux-radius-5: 20px;
-  --rux-radius-6: 24px;
-  --rux-radius-7: 28px;
-  --rux-radius-8: 32px;
 
-  /* --- MOTION SCALE --- */
+  /* 1H. Motion Scale
+  ──────────────────────────────────────────────────────────────── */
 
   --rux-duration-1: 110ms;
   --rux-duration-2: 200ms;
   --rux-duration-3: 300ms;
 
   --rux-ease-1: cubic-bezier(0.2, 0, 0.38, 0.9); /* snappy UI interactions */
-  --rux-ease-2: cubic-bezier(0.4, 0, 0.2, 1); /* larger motion / entrances */
+  --rux-ease-2: cubic-bezier(0.4, 0, 0.2, 1);    /* larger motion / entrances */
 
-  /* -------------------------------------------------------------------------- */
-  /* SECTION 2: SEMANTIC TOKENS                                                 */
-  /* -------------------------------------------------------------------------- */
+  /* ============================================================
+     TIER 2 — SEMANTIC TOKENS
+     Contextual roles. Reference Tier 1 only.
+     Consumed by Tier 3 component tokens.
+     ============================================================ */
 
-  /* 2A. Surface Colors
+  /* 2A. Surfaces
+     Word suffix = color seed (Tier 1): --rux-color-blue
+     Number suffix = elevation level (Tier 2): --rux-bg-1
+     Higher number = higher elevation = lighter in dark mode
   ──────────────────────────────────────────────────────────────── */
 
- /* Base Surface - Keep this pure black for the calendar contrast */
-  --rux-surface-base: oklch(from var(--rux-gray) 0% c h);
+  --rux-bg-1:       oklch(from var(--rux-color-gray) 0% c h);    /* App canvas — pure black */
+  --rux-bg-2:       oklch(from var(--rux-color-gray) 22% c h);   /* Panels, sidebar, inputs */
+  --rux-bg-3:       oklch(from var(--rux-color-gray) 26% c h);   /* Headers, footers, menus */
+  --rux-bg-4:       oklch(from var(--rux-color-gray) 30% c h);   /* Cards, grouped sections */
+  --rux-bg-5:       oklch(from var(--rux-color-gray) 32% c h);   /* Modals — highest elevation */
+  --rux-bg-overlay: oklch(from var(--rux-color-gray) 70% c h);   /* Scrim / backdrop */
 
-  /* Level 1: The App Canvas (Sidebar & Header) */
-  --rux-surface-app-header: oklch(from var(--rux-gray) 24% c h); /* Brought down from 24% */
-  --rux-surface-panel: oklch(from var(--rux-gray) 20% c h);      /* Brought down from 24% */
-
-  /* Level 2: The Grouping Cards */
-  --rux-surface-card: oklch(from var(--rux-gray) 26% c h);       /* +8% jump from Panel */
-
-  /* Level 3: Interactive/Overlay Elements */
-  --rux-surface-input: oklch(from var(--rux-gray) 20% c h);      /* +8% jump from Card (Fixed from 48%) */
-  --rux-surface-textarea: var(--rux-surface-input);
-  --rux-surface-menu: oklch(from var(--rux-gray) 26% c h);       /* Menus sit at the same elevation as inputs */
-
-  /* Structural/Contextual Elements */
-  --rux-surface-header: oklch(from var(--rux-gray) 26% c h);     /* Slightly raised from panel, but lower than cards */
-  --rux-surface-footer: oklch(from var(--rux-gray) 26% c h);     /* Matches header */
-  --rux-surface-overlay: oklch(from var(--rux-gray) 24% c h);    
-  --rux-surface-modal: oklch(from var(--rux-gray) 32% c h);      /* Modals should float high */
-
-  /* 2B. Status Colors
+  /* 2B. Accent & Status Colors
   ──────────────────────────────────────────────────────────────── */
 
-  --rux-accent-color: oklch(from var(--rux-blue) 75% c h);
-  --rux-status-red: oklch(from var(--rux-red) 90% .3 h);
-  --rux-status-red-alpha: oklch(from var(--rux-red) l c h / 15%);
-  --rux-status-yellow: oklch(from var(--rux-yellow) 90% .3 h);
-  --rux-status-yellow-alpha: oklch(from var(--rux-yellow) l c h / 15%);
-  --rux-status-green: oklch(from var(--rux-green) 90% .3 h);
-  --rux-status-green-alpha: oklch(from var(--rux-green) l c h / 15%);
-  --rux-status-blue: oklch(from var(--rux-blue) 90% .3 h);
-  --rux-status-blue-alpha: oklch(from var(--rux-blue) l c h / 15%);
-  --rux-status-orange:              oklch(from var(--rux-orange) 90% .3 h);
-  --rux-status-orange-alpha:        oklch(from var(--rux-orange) l c h / 15%);
-  --rux-status-cyan:                oklch(from var(--rux-cyan) 90% .3 h);
-  --rux-status-cyan-alpha:          oklch(from var(--rux-cyan) l c h / 15%);
-  --rux-status-purple:              oklch(from var(--rux-purple) 90% .3 h);
-  --rux-status-purple-alpha:        oklch(from var(--rux-purple) l c h / 15%);
-  --rux-status-pink:                oklch(from var(--rux-pink) 90% .3 h);
-  --rux-status-pink-alpha:          oklch(from var(--rux-pink) l c h / 15%);
-  --rux-status-auto:                oklch(from var(--rux-red) 90% .3 h);
-  --rux-status-auto-alpha:          oklch(from var(--rux-red) l c h / 15%);
-  --rux-status-auto-confirmed:      oklch(from var(--rux-blue) 90% .3 h);
-  --rux-status-auto-confirmed-alpha: oklch(from var(--rux-blue) l c h / 15%);
-  --rux-status-one-way:             oklch(from var(--rux-accent-color) 90% .3 h);
-  --rux-status-one-way-alpha:       oklch(from var(--rux-accent-color) l c h / 15%);
+  --rux-color-accent:                oklch(from var(--rux-color-blue) 75% c h);
+
+  --rux-status-red:                  oklch(from var(--rux-color-red)    90% .3 h);
+  --rux-status-red-alpha:            oklch(from var(--rux-color-red)    l c h / 15%);
+  --rux-status-yellow:               oklch(from var(--rux-color-yellow) 90% .3 h);
+  --rux-status-yellow-alpha:         oklch(from var(--rux-color-yellow) l c h / 15%);
+  --rux-status-green:                oklch(from var(--rux-color-green)  90% .3 h);
+  --rux-status-green-alpha:          oklch(from var(--rux-color-green)  l c h / 15%);
+  --rux-status-blue:                 oklch(from var(--rux-color-blue)   90% .3 h);
+  --rux-status-blue-alpha:           oklch(from var(--rux-color-blue)   l c h / 15%);
+  --rux-status-orange:               oklch(from var(--rux-color-orange) 90% .3 h);
+  --rux-status-orange-alpha:         oklch(from var(--rux-color-orange) l c h / 15%);
+  --rux-status-cyan:                 oklch(from var(--rux-color-cyan)   90% .3 h);
+  --rux-status-cyan-alpha:           oklch(from var(--rux-color-cyan)   l c h / 15%);
+  --rux-status-purple:               oklch(from var(--rux-color-purple) 90% .3 h);
+  --rux-status-purple-alpha:         oklch(from var(--rux-color-purple) l c h / 15%);
+  --rux-status-pink:                 oklch(from var(--rux-color-pink)   90% .3 h);
+  --rux-status-pink-alpha:           oklch(from var(--rux-color-pink)   l c h / 15%);
+  --rux-status-auto:                 oklch(from var(--rux-color-red)    90% .3 h);
+  --rux-status-auto-alpha:           oklch(from var(--rux-color-red)    l c h / 15%);
+  --rux-status-auto-confirmed:       oklch(from var(--rux-color-blue)   90% .3 h);
+  --rux-status-auto-confirmed-alpha: oklch(from var(--rux-color-blue)   l c h / 15%);
+  --rux-status-one-way:              oklch(from var(--rux-color-accent) 90% .3 h);
+  --rux-status-one-way-alpha:        oklch(from var(--rux-color-accent) l c h / 15%);
 
   /* 2C. Button Colors
   ──────────────────────────────────────────────────────────────── */
-  --rux-button-primary-bg:  oklch(from var(--rux-blue)  50% c h);
-  --rux-button-secondary-bg:  oklch(from var(--rux-gray)  50% c h);
-  --rux-button-danger-bg:  oklch(from var(--rux-red)   50% c h);
-  --rux-button-text:       var(--rux-white);
-  --rux-button-hover:      0.1;
-  /* 2C. Text Colors
+
+  --rux-btn-bg-primary:   oklch(from var(--rux-color-blue) 50% c h);
+  --rux-btn-bg-secondary: oklch(from var(--rux-color-gray) 50% c h);
+  --rux-btn-bg-danger:    oklch(from var(--rux-color-red)  50% c h);
+  --rux-btn-text:         var(--rux-color-white);
+  --rux-btn-hover-lift:   0.1; /* lightness delta used in calc(l + 0.1) */
+
+  /* 2D. Text Roles
   ──────────────────────────────────────────────────────────────── */
 
-  --rux-text-primary: var(--rux-white);
-  --rux-text-secondary: oklch(from var(--rux-gray) 72% c h);
-  --rux-text-disabled: oklch(45% 0.014 250);
-  --rux-text-hover: oklch(45% 0.014 250);
+  --rux-text-1: var(--rux-color-white);
+  --rux-text-2: oklch(from var(--rux-color-gray) 72% c h);
+  --rux-text-3: oklch(45% 0.014 250);
 
-
-
-  /* 2D. Border Roles
+  /* 2E. Border Roles
   ──────────────────────────────────────────────────────────────── */
 
-  --rux-color-border-subtle:  oklch(from var(--rux-white) l c h / 4%);
-  --rux-color-border-default: oklch(from var(--rux-white) l c h / 16%);
-  --rux-color-border-strong:  oklch(from var(--rux-white) l c h / 24%);
+  --rux-border-1: oklch(from var(--rux-color-white) l c h /  4%); /* Subtle */
+  --rux-border-2: oklch(from var(--rux-color-white) l c h / 16%); /* Default */
+  --rux-border-3: oklch(from var(--rux-color-white) l c h / 24%); /* Strong */
 
-  /* 2E. Semantic Radius Aliases
-         See RUX_UI.md for optical nesting guide and depth reference.
+  /* 2F. Semantic Radius Aliases
+     See docs/RUX_UI.md for the optical nesting guide.
   ──────────────────────────────────────────────────────────────── */
 
-  --rux-radius-overlay: var(--rux-radius-5);
-  /* modals, popovers, sheets */
-  --rux-radius-surface: var(--rux-radius-5);
-  /* cards, panels, sidebars */
-  --rux-radius-section: var(--rux-radius-2);
-  /* groups nested inside cards */
-  --rux-radius-control: var(--rux-radius-1);
-  /* inputs, selects, toolbars */
-  --rux-radius-badge: var(--rux-radius-2);
-  /* chips, tags, mini-badges */
-  --rux-radius-button: var(--rux-radius-2);
-  /* pill / squircle buttons */
+  --rux-radius-badge:   var(--rux-radius-0);  /* chips, mini-badges — 4px */
+  --rux-radius-control: var(--rux-radius-1);  /* inputs, selects, toolbars — 6px */
+  --rux-radius-button:  var(--rux-radius-2);  /* buttons — 8px */
+  --rux-radius-section: var(--rux-radius-2);  /* groups nested inside cards — 8px */
+  --rux-radius-surface: var(--rux-radius-3);  /* cards, panels — 12px */
+  --rux-radius-overlay: var(--rux-radius-4);  /* modals, popovers — 16px */
 
   /* ============================================================
      TIER 3 — COMPONENT TOKENS
-     Tied to specific UI elements. No --rux- prefix.
-     Reference Tier 2 tokens; avoid referencing Tier 1 directly.
+     Element-scoped. Reference Tier 2 only (never Tier 1).
+     Naming migration in progress: will move to --rux-{comp}-{property}
+     when component CSS files are updated.
      ============================================================ */
 
-  /* 3C. Text
+  /* 3A. Text
   ──────────────────────────────────────────────────────────────── */
 
-  --text-primary: oklch(from var(--rux-gray) 100% c h);
-  --text-secondary: oklch(from var(--rux-gray) 75% c h);
-  --text-placeholder: oklch(from var(--rux-gray) 45% c h);
-  --text-disabled: oklch(from var(--rux-gray) 35% c h);
-  --text-muted: var(--text-secondary);
-  /* alias — in heavy use; same as --text-secondary */
+  --text-primary:     oklch(from var(--rux-color-gray) 100% c h);
+  --text-secondary:   oklch(from var(--rux-color-gray) 75% c h);
+  --text-placeholder: oklch(from var(--rux-color-gray) 45% c h);
+  --text-disabled:    oklch(from var(--rux-color-gray) 35% c h);
+  --text-muted:       var(--text-secondary);
 
-  /* 3D. Fields / Inputs
+  /* 3B. Form & Fields
   ──────────────────────────────────────────────────────────────── */
 
-  --rux-form-height: 28px;
-  /* was --rux-form-height; dropped --rux- prefix (Tier 3 token) */
-  --form-row-gap: 8px;
-  --form-card-gap: var(--rux-space-4);
-  --form-col-gap: 8px;
-  --form-label-gap: 8px;
-  /* was --rux-form-label-gap; dropped --rux- prefix */
-  --form-label-margin: var(--rux-space-2);
-  --form-section-gap: var(--rux-space-3);
-  --form-label-color:  var(--rux-text-secondary);
-  /* fixed: was var(--rux-blue) direct Tier 1 ref */
-  --form-label-font-size: var(--rux-font-size-2);
-  --form-label-weight: var(--rux-font-weight-medium);
-  --form-label-spacing: 0.02em;
-  --form-label-indent: 2px;
+  --rux-form-height:             28px;
+  --form-row-gap:                8px;
+  --form-card-gap:               var(--rux-space-4);
+  --form-col-gap:                8px;
+  --form-label-gap:              8px;
+  --form-label-margin:           var(--rux-space-2);
+  --form-section-gap:            var(--rux-space-3);
+  --form-label-color:            var(--rux-text-2);
+  --form-label-font-size:        var(--rux-size-2);
+  --form-label-weight:           var(--rux-weight-medium);
+  --form-label-spacing:          0.02em;
+  --form-label-indent:           2px;
 
-  --form-section-label-color: var(--rux-text-secondary);
-  --form-section-label-size: var(--rux-font-size-3);
-  --form-section-label-weight: var(--rux-font-weight-regular);
-  --form-section-label-spacing: 0.02em;
+  --form-section-label-color:    var(--rux-text-2);
+  --form-section-label-size:     var(--rux-size-3);
+  --form-section-label-weight:   var(--rux-weight-regular);
+  --form-section-label-spacing:  0.02em;
 
-  --field-bg: var(--rux-surface-input);
-  --field-bg-hover: var(--rux-surface-panel);
-  /* --field-shadow:
-    0 4px 6px -1px oklch(0% 0 0 / 0.2),
-    0 2px 4px -2px oklch(0% 0 0 / 0.2); */
-  --field-shadow: inset 0 2px 4px oklch(0% 0 0 / 35%);
-  --card-shadow:
-    0 8px 16px -4px oklch(0% 0 0 / 0.4),
-    0 4px 6px -4px oklch(0% 0 0 / 0.4);
+  --field-bg:               var(--rux-bg-2);
+  --field-bg-hover:         var(--rux-bg-2);
+  --field-shadow:           inset 0 2px 4px oklch(0% 0 0 / 35%);
   --field-disabled-opacity: 0.5;
-  --input-padding-x: var(--rux-space-2);
-  --input-font-size: var(--rux-font-size-4);
-  --input-weight: var(--rux-font-weight-regular);
-  /* added: was referenced in form.css but never defined */
+  --input-padding-x:        var(--rux-space-2);
+  --input-font-size:        var(--rux-size-4);
+  --input-weight:           var(--rux-weight-regular);
 
-  --icon-field-size: 18px;
-  /* display size */
-  --icon-field-fill: 1;
-  /* 0 = outlined, 1 = filled */
-  --icon-field-wght: 400;
-  /* stroke weight: 100–700 */
-  --icon-field-grad: 0;
-  /* visual weight offset: -50–200 */
-  --icon-field-opsz: 18;
-  /* optical size: 20–48 */
+  --icon-field-size:  18px;
+  --icon-field-fill:  1;
+  --icon-field-wght:  400;
+  --icon-field-grad:  0;
+  --icon-field-opsz:  18;
   --icon-field-inset: 0px;
-  /* safe inset from corner radius */
-  --icon-text-gap: 4px;
-  /* gap between icon and label */
+  --icon-text-gap:    4px;
 
-  --chevron-size: 14px;
-  /* width & height of dropdown chevron */
-  --chevron-inset: 0px;
-  /* distance from right edge */
+  --chevron-size:    14px;
+  --chevron-inset:   0px;
   --chevron-opacity: 0.8;
-  /* resting opacity */
 
-  /* 3E. Shadows & Effects
+  /* 3C. Button
   ──────────────────────────────────────────────────────────────── */
 
-  --heading-shadow-panel: 0px 1px 2px rgba(0, 0, 0, 0.6), 0px 2px 4px rgba(0, 0, 0, 0.3);
-  /*--label-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); */
-  --text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-  --overlay-hover: rgba(0, 0, 0, 0.05);
-  --panel-header-shadow: 0 8px 8px -8px oklch(0% 0 0 / 60%);
-  --panel-footer-shadow: 0 -8px 8px -8px oklch(0% 0 0 / 60%);
-
-  --btn-shadow-inset: 0 2px 4px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  --btn-shadow-active: inset 0 2px 4px rgba(0, 0, 0, 1);
+  --btn-shadow-inset:     0 2px 4px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  --btn-shadow-active:    inset 0 2px 4px rgba(0, 0, 0, 1);
   --btn-shadow-active-sm: inset 0 2px 4px rgba(0, 0, 0, 1);
 
-  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  --card-shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  --card-shadow-context: 0 8px 16px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  --card-shadow-left: -4px 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  --card-shadow-right: 4px 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-
-  /* 3F. Buttons
-  ──────────────────────────────────────────────────────────────── */
-
-  --rux-button-icon-size: var(--rux-font-size-6);
+  --rux-button-icon-size: var(--rux-size-6);
   --rux-button-icon-fill: 1;
   --rux-button-icon-wght: 400;
   --rux-button-icon-grad: 0;
@@ -288,228 +249,328 @@
   --rux-button-square-icon-grad: 0;
   --rux-button-square-icon-opsz: 24;
 
-  /* 3G. Interactive
+  /* 3D. Shadows & Effects
   ──────────────────────────────────────────────────────────────── */
 
-  --focus-ring-color: var(--rux-accent-color);
-  --focus-ring: inset 0 0 0 2px var(--focus-ring-color);
-  --transition-fast: var(--rux-duration-1) var(--rux-ease-1);
+  --heading-shadow-panel: 0px 1px 2px rgba(0, 0, 0, 0.6), 0px 2px 4px rgba(0, 0, 0, 0.3);
+  --text-shadow:          0 1px 2px rgba(0, 0, 0, 0.8);
+  --overlay-hover:        rgba(0, 0, 0, 0.05);
+  --panel-header-shadow:  0 8px 8px -8px oklch(0% 0 0 / 60%);
+  --panel-footer-shadow:  0 -8px 8px -8px oklch(0% 0 0 / 60%);
+  --panel-header-h:       3rem;
+  --panel-body-top-gap:   0.75rem;
+  --panel-footer-h:       3rem;
+  --panel-body-bottom-gap: 1.25rem;
+  --panel-body-left-gap: 1rem;
+
+  --card-shadow:          0 1px 3px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --card-shadow-hover:    0 4px 8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --card-shadow-context:  0 8px 16px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --card-shadow-left:     -4px 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --card-shadow-right:    4px 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  /* 3E. Interactive
+  ──────────────────────────────────────────────────────────────── */
+
+  --focus-ring-color:    var(--rux-color-accent);
+  --focus-ring:          inset 0 0 0 2px var(--focus-ring-color);
+  --transition-fast:     var(--rux-duration-1) var(--rux-ease-1);
   --control-radius-icon: 8px;
 
-  /* 3H. Spacing & Layout
+  /* 3F. Spacing & Layout
   ──────────────────────────────────────────────────────────────── */
 
-  --layout-container-max: 100%;
-  --space-xs: var(--rux-space-1);
-  /* 4px */
-  --space-sm: var(--rux-space-2);
-  /* 8px */
-  --space-md: var(--rux-space-3);
-  /* 12px */
-  --space-lg: var(--rux-space-4);
-  /* 16px */
-  --space-xl: var(--rux-space-6);
-  /* 24px — note: --rux-space-5 (20px) has no alias */
-  --panel-width: 384px;
-  --layout-panel-gap: var(--rux-space-4);
-  --card-padding: 16px;
-  --size-header-row: 40px;
-  --size-header-action: 40px;
-  --size-toolbar-action: 32px;
-  --schedule-row-height: 100px;
-  --bus-col-w: 34px;
-  --week-picker-height: 32px;
-  --day-row-h: 34px;
-  --schedule-edge-inset-right: 16px;
-  --print-scale: 1;
-  /* runtime default — JS overrides this */
-  --sync-progress: 0%;
-  /* runtime default — JS overrides this */
-  --waiting-list-dynamic-height: var(--schedule-row-height);
-  /* runtime default — JS overrides this */
+  --layout-container-max:        100%;
+  --space-xs:                    var(--rux-space-1);  /*  4px */
+  --space-sm:                    var(--rux-space-2);  /*  6px */
+  --space-md:                    var(--rux-space-3);  /*  8px */
+  --space-lg:                    var(--rux-space-4);  /* 12px */
+  --space-xl:                    var(--rux-space-6);  /* 20px */
+  --panel-width:                 384px;
+  --layout-panel-gap:            var(--rux-space-3);
+  --card-padding:                16px;
+  --size-header-row:             40px;
+  --size-header-action:          40px;
+  --size-toolbar-action:         32px;
+  --schedule-row-height:         100px;
+  --bus-col-w:                   34px;
+  --week-picker-height:          32px;
+  --day-row-h:                   34px;
+  --schedule-edge-inset-right:   16px;
+  --print-scale:                 1;    /* runtime — JS overrides */
+  --sync-progress:               0%;   /* runtime — JS overrides */
+  --waiting-list-dynamic-height: var(--schedule-row-height); /* runtime — JS overrides */
 
-  /* 3I. Typography
+  /* 3G. Panel / Sidebar
   ──────────────────────────────────────────────────────────────── */
 
-  --font-sans: var(--rux-font-family-sans);
-  --font-mono: var(--rux-font-family-mono);
+  --rux-panel-radius:       var(--rux-radius-overlay);  /* 16px — elevated panels */
+  --rux-panel-radius-left:  var(--rux-radius-overlay);
+  --rux-panel-radius-right: var(--rux-radius-overlay);
 
-  --heading-1-size: var(--rux-font-size-5);
-  --heading-1-weight: var(--rux-font-weight-regular);
-  --heading-1-line-height: var(--rux-line-height-3);
+  /* 3H. Typography
+  ──────────────────────────────────────────────────────────────── */
+
+  --font-sans: var(--rux-font-sans);
+  --font-mono: var(--rux-font-mono);
+
+  --heading-1-size:           var(--rux-size-5);
+  --heading-1-weight:         var(--rux-weight-regular);
+  --heading-1-line-height:    var(--rux-line-height-3);
   --heading-1-letter-spacing: 0.5px;
-  --heading-1-color: var(--text-primary);
+  --heading-1-color:          var(--text-primary);
 
-  --heading-2-size: var(--rux-font-size-7);
-  --heading-2-weight: var(--rux-font-weight-regular);
-  --heading-2-line-height: var(--rux-line-height-2);
+  --heading-2-size:           var(--rux-size-7);
+  --heading-2-weight:         var(--rux-weight-regular);
+  --heading-2-line-height:    var(--rux-line-height-2);
   --heading-2-letter-spacing: 0.05px;
-  --heading-2-color: var(--text-primary);
+  --heading-2-color:          var(--text-primary);
 
-  /* 3J. Day Header
+  /* 3I. Day Header
   ──────────────────────────────────────────────────────────────── */
 
-  --day-header-date-color: var(--text-primary);
-  --day-header-date-size: var(--rux-font-size-4);
-  --day-header-date-weight: var(--rux-font-weight-semibold);
+  --day-header-date-color:          var(--text-primary);
+  --day-header-date-size:           var(--rux-size-4);
+  --day-header-date-weight:         var(--rux-weight-semibold);
   --day-header-date-letter-spacing: 0;
-  --day-header-date-line-height: var(--rux-line-height-1);
-  --day-header-name-color: var(--text-primary);
-  --day-header-name-size: var(--rux-font-size-4);
-  --day-header-name-weight: var(--rux-font-weight-regular);
+  --day-header-date-line-height:    var(--rux-line-height-1);
+  --day-header-name-color:          var(--text-primary);
+  --day-header-name-size:           var(--rux-size-4);
+  --day-header-name-weight:         var(--rux-weight-regular);
   --day-header-name-letter-spacing: 0;
-  --day-header-name-line-height: var(--rux-line-height-1);
+  --day-header-name-line-height:    var(--rux-line-height-1);
 
-  /* 3K. Bus Column
+  /* 3J. Bus Column
   ──────────────────────────────────────────────────────────────── */
 
-  --bus-num-color: var(--text-primary);
-  --bus-num-size: var(--rux-font-size-4);
-  --bus-num-weight: var(--rux-font-weight-medium);
+  --bus-num-color:          var(--text-primary);
+  --bus-num-size:           var(--rux-size-4);
+  --bus-num-weight:         var(--rux-weight-medium);
   --bus-num-letter-spacing: 0;
-  --bus-num-line-height: var(--rux-line-height-1);
-  --bus-lift-color: var(--rux-accent-color);
-  --bus-sleeper-color: var(--text-primary);
-  --bus-accent-color: var(--rux-surface-card);
+  --bus-num-line-height:    var(--rux-line-height-1);
+  --bus-lift-color:         var(--rux-color-accent);
+  --bus-sleeper-color:      var(--text-primary);
+  --bus-accent-color:       var(--rux-bg-4);
 
-  --bus-grid-row-gap: 4px;
-  /* moved from 3D — bus layout, not form fields */
+  --bus-grid-row-gap:    4px;
   --bus-driver-block-gap: 4px;
-  --bus-header-margin: 4px;
+  --bus-header-margin:    4px;
 
-  /* 3L. Trip Bar
+  /* 3K. Trip Bar
   ──────────────────────────────────────────────────────────────── */
 
-  --tripbar-height: 99px;
-  --tripbar-radius: 7px;
-  --tripbar-lane-step: 100px;
+  --tripbar-height:         99px;
+  --tripbar-radius:         7px;
+  --tripbar-lane-step:      100px;
   --tripbar-bg-mix-percent: 100%;
-  --tripbar-dim-opacity: 0.60;
-  --tripbar-text-shadow: 0 1px 2px rgba(0, 0, 0, 1);
-  --tripbar-shadow-hover: 0 10px 20px rgba(0, 0, 0, 0.5), 0 6px 6px rgba(0, 0, 0, 0.3);
-  --tripbar-color: var(--rux-status-blue-alpha);
-  --tripbar-border-color: var(--rux-accent-color);
+  --tripbar-dim-opacity:    0.60;
+  --tripbar-text-shadow:    0 1px 2px rgba(0, 0, 0, 1);
+  --tripbar-shadow-hover:   0 10px 20px rgba(0, 0, 0, 0.5), 0 6px 6px rgba(0, 0, 0, 0.3);
+  --tripbar-color:          var(--rux-status-blue-alpha);
+  --tripbar-border-color:   var(--rux-color-accent);
 
-  --tripbar-badge-text-color: var(--text-primary);
-  --tripbar-r1-color: var(--text-primary);
-  --tripbar-r2-color: var(--text-secondary);
-  --tripbar-r4-color: var(--text-primary);
-  --tripbar-time-color: var(--tripbar-r4-color);
+  --tripbar-badge-text-color:   var(--text-primary);
+  --tripbar-r1-color:           var(--text-primary);
+  --tripbar-r2-color:           var(--text-secondary);
+  --tripbar-r4-color:           var(--text-primary);
+  --tripbar-time-color:         var(--tripbar-r4-color);
   --tripbar-time-color-flagged: var(--rux-status-yellow);
-  --tripbar-r5-color: var(--text-primary);
-  --tripbar-r6-color: var(--text-secondary);
-  --tripbar-r7-color: var(--text-primary);
+  --tripbar-r5-color:           var(--text-primary);
+  --tripbar-r6-color:           var(--text-secondary);
+  --tripbar-r7-color:           var(--text-primary);
 
   --tripbar-hover-brightness-from: 1.05;
-  --tripbar-hover-brightness-to: 1.15;
-  --tripbar-hover-saturate-from: 1;
-  --tripbar-hover-saturate-to: 1.25;
+  --tripbar-hover-brightness-to:   1.15;
+  --tripbar-hover-saturate-from:   1;
+  --tripbar-hover-saturate-to:     1.25;
 
-  --tripbar-inset: 0px;
-  --tripbar-inset-left: 0px;
-  --tripbar-inset-right: 1px;
-  --tripbar-inset-top: 0px;
+  --tripbar-inset:        0px;
+  --tripbar-inset-left:   0px;
+  --tripbar-inset-right:  1px;
+  --tripbar-inset-top:    0px;
   --tripbar-inset-bottom: 0px;
-  --tripbar-padding-x: 0px;
-  --tripbar-padding-y: 0px;
-  --tripbar-row-gap: 1px;
-  --tripbar-gap-inline: 2px;
-  --tripbar-gap-drivers: 6px;
+  --tripbar-padding-x:    0px;
+  --tripbar-padding-y:    0px;
+  --tripbar-row-gap:      1px;
+  --tripbar-gap-inline:   2px;
+  --tripbar-gap-drivers:  6px;
 
-  --tripbar-r1-font-size: var(--rux-font-size-3);
-  --tripbar-r1-row-height: 14px;
-  --tripbar-r1-font-weight: var(--rux-font-weight-medium);
-  --tripbar-r1-line-height: 14px;
+  --tripbar-r1-font-size:      var(--rux-size-3);
+  --tripbar-r1-row-height:     14px;
+  --tripbar-r1-font-weight:    var(--rux-weight-medium);
+  --tripbar-r1-line-height:    14px;
   --tripbar-r1-letter-spacing: 0.02em;
 
-  --tripbar-r2-font-size: var(--rux-font-size-2);
-  --tripbar-r2-row-height: 12px;
-  --tripbar-r2-font-weight: var(--rux-font-weight-medium);
-  --tripbar-r2-line-height: 12px;
+  --tripbar-r2-font-size:      var(--rux-size-2);
+  --tripbar-r2-row-height:     12px;
+  --tripbar-r2-font-weight:    var(--rux-weight-medium);
+  --tripbar-r2-line-height:    12px;
   --tripbar-r2-letter-spacing: 0.02em;
 
-  --tripbar-r3-row-height: 12px;
+  --tripbar-r3-row-height:     12px;
 
-  --tripbar-r4-font-size: var(--rux-font-size-3);
-  --tripbar-r4-row-height: 13px;
-  --tripbar-r4-font-weight: var(--rux-font-weight-medium);
-  --tripbar-r4-line-height: 13px;
+  --tripbar-r4-font-size:      var(--rux-size-3);
+  --tripbar-r4-row-height:     13px;
+  --tripbar-r4-font-weight:    var(--rux-weight-medium);
+  --tripbar-r4-line-height:    13px;
   --tripbar-r4-letter-spacing: 0em;
 
-  --tripbar-r5-row-height: 14px;
+  --tripbar-r5-row-height:     14px;
 
-  --tripbar-r6-font-size: var(--rux-font-size-1);
-  --tripbar-r6-row-height: 12px;
-  --tripbar-r6-font-weight: var(--rux-font-weight-regular);
-  --tripbar-r6-line-height: 12px;
+  --tripbar-r6-font-size:      var(--rux-size-1);
+  --tripbar-r6-row-height:     12px;
+  --tripbar-r6-font-weight:    var(--rux-weight-regular);
+  --tripbar-r6-line-height:    12px;
   --tripbar-r6-letter-spacing: 0.02em;
 
-  --tripbar-r7-font-size: var(--rux-font-size-3);
-  --tripbar-r7-row-height: 14px;
-  --tripbar-r7-font-weight: var(--rux-font-weight-bold);
-  --tripbar-r7-line-height: 14px;
+  --tripbar-r7-font-size:      var(--rux-size-3);
+  --tripbar-r7-row-height:     14px;
+  --tripbar-r7-font-weight:    var(--rux-weight-bold);
+  --tripbar-r7-line-height:    14px;
   --tripbar-r7-letter-spacing: 0.05em;
 
-  --tripbar-mini-badge: 14px;
-  --tripbar-badge-radius: 0;
-  --tripbar-danger-size: 16px;
-  --tripbar-danger-font: var(--rux-font-size-2);
-  --tripbar-danger-offset: 4px;
-  --tripbar-multi-badge-font-size: var(--rux-font-size-2);
-  --tripbar-multi-bus-indent: 0px;
+  --tripbar-mini-badge:            14px;
+  --tripbar-badge-radius:          0;
+  --tripbar-danger-size:           16px;
+  --tripbar-danger-font:           var(--rux-size-2);
+  --tripbar-danger-offset:         4px;
+  --tripbar-multi-badge-font-size: var(--rux-size-2);
+  --tripbar-multi-bus-indent:      0px;
 
-  /* 3M. Icons
+  /* 3L. Icons
   ──────────────────────────────────────────────────────────────── */
 
-  --icon-bus-size: 18px;
-  --icon-bus-fill: 1;
-  --icon-bus-opsz: 20;
+  --icon-bus-size:     18px;
+  --icon-bus-fill:     1;
+  --icon-bus-opsz:     20;
   --icon-tripbar-size: 14px;
   --icon-tripbar-fill: 1;
   --icon-tripbar-opsz: 20;
-  --icon-status-size: 14px;
-  --icon-btn-size: 32px;
-
-  --icon-arrow-size: 40px;
-  /* trip bar directional arrows — moved here from 3D */
+  --icon-status-size:  14px;
+  --icon-btn-size:     32px;
+  --icon-arrow-size:   40px;
   --icon-arrow-offset: 4px;
 
-  /* 3N. Envelope / Print
+  /* 3L. Envelope / Print
   ──────────────────────────────────────────────────────────────── */
 
-  --env-ink: var(--text-primary);
-  --env-rule: var(--rux-color-border-default);
-  --env-border: 1px;
-  --env-pad: 0.25in;
-  --env-panel-pad: 0.375in;
+  --env-ink:         var(--text-primary);
+  --env-rule:        var(--rux-border-2);
+  --env-border:      1px;
+  --env-pad:         0.25in;
+  --env-panel-pad:   0.375in;
   --env-section-gap: 0.125in;
-  --env-label-size: 0.625rem;
-  --env-tiny-size: 0.5625rem;
-  --env-pickup: color-mix(in srgb, var(--rux-accent-color) 12%, transparent);
+  --env-label-size:  0.625rem;
+  --env-tiny-size:   0.5625rem;
+  --env-pickup:      color-mix(in srgb, var(--rux-color-accent) 12%, transparent);
 
-  /* 3O. Z-Index
+  /* 3M. Z-Index
   ──────────────────────────────────────────────────────────────── */
 
   --z-dropdown: 1000;
-  --z-modal: 10100;
+  --z-modal:    10100;
 
-  /* 3P. Status & Role Mappings
+  /* 3N. Status & Role Mappings
   ──────────────────────────────────────────────────────────────── */
 
-  --color-secondary: oklch(from var(--rux-gray) 35% c h);
-  --color-accent: var(--rux-accent-color);
-  --color-danger: var(--rux-status-red);
-  --color-danger-soft: var(--rux-status-red-alpha);
-  --color-success: var(--rux-status-green);
-  --color-warning: var(--rux-status-yellow);
+  --color-secondary:       oklch(from var(--rux-color-gray) 35% c h);
+  --color-accent:          var(--rux-color-accent);
+  --color-danger:          var(--rux-status-red);
+  --color-danger-soft:     var(--rux-status-red-alpha);
+  --color-success:         var(--rux-status-green);
+  --color-warning:         var(--rux-status-yellow);
 
-  --color-status-pending: var(--rux-status-red);
-  --color-status-ok: var(--rux-status-green);
+  --color-status-pending:  var(--rux-status-red);
+  --color-status-ok:       var(--rux-status-green);
   --color-status-assigned: var(--rux-status-yellow);
-  --color-status-blue: var(--rux-status-blue);
+  --color-status-blue:     var(--rux-status-blue);
 
   --color-conflict-accent: var(--rux-status-red);
-  /* same value as --color-danger; kept separate in case conflict red diverges */
-  --color-conflict-bg: var(--rux-status-red-alpha);
+  --color-conflict-bg:     var(--rux-status-red-alpha);
+
+  /* ============================================================
+     COMPAT — Migration aliases
+     Old token names pointing to their new equivalents.
+     Remove each group once the referencing CSS file is updated
+     to use the new names directly.
+     ============================================================ */
+
+  /* Tier 1: Color seeds */
+  --rux-black:  var(--rux-color-black);
+  --rux-white:  var(--rux-color-white);
+  --rux-gray:   var(--rux-color-gray);
+  --rux-red:    var(--rux-color-red);
+  --rux-orange: var(--rux-color-orange);
+  --rux-yellow: var(--rux-color-yellow);
+  --rux-green:  var(--rux-color-green);
+  --rux-cyan:   var(--rux-color-cyan);
+  --rux-blue:   var(--rux-color-blue);
+  --rux-purple: var(--rux-color-purple);
+  --rux-pink:   var(--rux-color-pink);
+
+  /* Tier 1: Font families */
+  --rux-font-family-sans:  var(--rux-font-sans);
+  --rux-font-family-mono:  var(--rux-font-mono);
+  --rux-font-family-icons: var(--rux-font-icons);
+
+  /* Tier 1: Font sizes */
+  --rux-font-size-1: var(--rux-size-1);
+  --rux-font-size-2: var(--rux-size-2);
+  --rux-font-size-3: var(--rux-size-3);
+  --rux-font-size-4: var(--rux-size-4);
+  --rux-font-size-5: var(--rux-size-5);
+  --rux-font-size-6: var(--rux-size-6);
+  --rux-font-size-7: var(--rux-size-7);
+  --rux-font-size-8: var(--rux-size-8);
+
+  /* Tier 1: Font weights */
+  --rux-font-weight-light:    var(--rux-weight-light);
+  --rux-font-weight-regular:  var(--rux-weight-regular);
+  --rux-font-weight-medium:   var(--rux-weight-medium);
+  --rux-font-weight-semibold: var(--rux-weight-semibold);
+  --rux-font-weight-bold:     var(--rux-weight-bold);
+  --rux-font-weight-black:    var(--rux-weight-black);
+
+  /* Tier 1: Radius (removed steps) */
+  --rux-radius-6: 24px;
+  --rux-radius-7: 28px;
+  --rux-radius-8: 32px;
+
+  /* Tier 1: Spacing (removed step) */
+  --rux-space-8: 1.75rem;
+
+  /* Tier 2: Surfaces */
+  --rux-surface-base:       var(--rux-bg-1);
+  --rux-surface-panel:      var(--rux-bg-2);
+  --rux-surface-input:      var(--rux-bg-2);
+  --rux-surface-textarea:   var(--rux-bg-2);
+  --rux-surface-app-header: var(--rux-bg-3);
+  --rux-surface-header:     color-mix(in srgb, var(--rux-bg-3) 10%, transparent);
+  --rux-surface-footer:     var(--rux-bg-3);
+  --rux-surface-menu:       var(--rux-bg-3);
+  --rux-surface-card:       var(--rux-bg-4);
+  --rux-surface-modal:      var(--rux-bg-5);
+  --rux-surface-overlay:    var(--rux-bg-overlay);
+
+  /* Tier 2: Accent */
+  --rux-accent-color: var(--rux-color-accent);
+
+  /* Tier 2: Button colors */
+  --rux-button-primary-bg:   var(--rux-btn-bg-primary);
+  --rux-button-secondary-bg: var(--rux-btn-bg-secondary);
+  --rux-button-danger-bg:    var(--rux-btn-bg-danger);
+  --rux-button-text:         var(--rux-btn-text);
+  --rux-button-hover:        var(--rux-btn-hover-lift);
+
+  /* Tier 2: Text roles */
+  --rux-text-primary:   var(--rux-text-1);
+  --rux-text-secondary: var(--rux-text-2);
+  --rux-text-disabled:  var(--rux-text-3);
+  --rux-text-hover:     var(--rux-text-3);
+
+  /* Tier 2: Border roles */
+  --rux-color-border-subtle:  var(--rux-border-1);
+  --rux-color-border-default: var(--rux-border-2);
+  --rux-color-border-strong:  var(--rux-border-3);
 
 }
